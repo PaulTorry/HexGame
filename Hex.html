@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+	 <title>Hex Lib test</title>
+   <style>
+   body {background-color: black}
+   </style>
+	 <meta charset="UTF-8"/>
+	 <link rel="stylesheet" href="" type="text/css"/>
+	 <script>
+   "use strict"
+	 var cos30 = Math.sqrt(3)/2;
+   var size = 50
+   var boardRadius = 3;
+   var hexes = findHexWithin(boardRadius);
+   var hexObjects = setupHexes(hexes);
+   var offset = {x:400,y:400};
+   var selected = {hex : null,    state:"1"};
+	 var has = 10;
+	 var it = 0;
+
+   function setupHexes(hexArray){
+     var hexesObj = {};
+     for(var i=0; i<hexArray.length; i++){
+       hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = {hex: hexArray[i], objects: {terain:null, owner:1, ship:{type:"basic"}}}
+     }
+          console.log("hexesObj");
+     console.log(hexesObj);
+               console.log("  ");
+     return hexesObj;
+   }
+
+   function Vec(x, y){     return {x:x, y:y};   }
+
+
+   function divideVec(a, b){     return {x: (b.x != 0 ? a.x/b.x : 0),  y: (b.y != 0 ? a.y/b.y : 0)}      }
+   function addVec(a, b){     return {x: a.x + b.x, y: a.y + b.y};   }
+   function scaleVec(a, m){     return {x: a.x * m, y: a.y * m};   }
+   function dotProd(a, b){     return  a.x * b.x + a.y * b.y;   }
+   function reverseVec(a) {     return multVec(a, -1.0)}
+
+   function Hex(p,q,r){     return {p:p, q:q, r:r};   }
+
+   function Axial(p, q){     return {p:p, q:q}   }
+
+   function hexToAxial(p, q, r){     return {p:p, q:q}   }
+   function axialToHex(p, q){     return {p:p, q:q, r: -p-q}   }
+
+   function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
+
+   function getXYfromHex( hexCoord, size, offset ){
+     var hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
+         hexCentre = addVec(hexCentre, scaleVec(hexVec.r, hexCoord.r))
+         hexCentre = addVec(scaleVec(hexCentre, size), offset)
+         return hexCentre
+   }
+
+   function getHexFromXY(xyScaledOffset, offset, size){
+     var iv = invHexVec;
+     var xyScaled = addVec(xyScaledOffset, scaleVec(offset,-1));
+     var xy = scaleVec(xyScaled, 1/size);
+     return {p:dotProd(xy,iv.p), q:dotProd(xy,iv.q), r:dotProd(xy,iv.r)}
+   }
+
+   var hexVec = {
+      p: Vec(1,0),   q: Vec((-1/2), cos30),  r: Vec((-1/2), -cos30)
+   }
+
+   var invHexVec = {
+      p: Vec(2/(3),0),   q: Vec((-2/6), 2*cos30/3),  r: Vec((-2/6), -2*cos30/3)
+   }
+
+   function coord_as_string(a){ return "" + a.x  + "," + a.y  + " "; }
+
+   function hex_round(h){
+       var qi = Math.round(h.q);
+       var ri = Math.round(h.r);
+       var pi = Math.round(h.p);
+       var q_diff = Math.abs(qi - h.q);
+       var r_diff = Math.abs(ri - h.r);
+       var p_diff = Math.abs(pi - h.p);
+       if (q_diff > r_diff && q_diff > p_diff)    {           qi = -ri - pi;    }
+       else  if (r_diff > p_diff)                 {           ri = -qi - pi;        }
+         else                                    {            pi = -qi - ri;        }
+       return Hex(pi, qi, ri);
+   }
+
+  function doo(event){
+
+  var clickHex = hex_round(getHexFromXY({x: event.offsetX, y:event.offsetY}, offset, size))
+  console.log(clickHex + "  " + clickHex.p);
+  if(hexDistance(clickHex, Hex(0,0,0))<3){ selected.hex = clickHex};
+  drawScreen();
+}
+
+  var hexAxisList = [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0},
+     {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
+
+     var hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1},
+        {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
+
+  function drawScreen(){
+    var line = [];
+  //  console.log(hexes);
+  console.log(hexObjects);
+    for(var ho in hexObjects){
+
+      if(hexObjects.hasOwnProperty(ho)){
+        console.log("hexObjects[ho]" + ho);
+        console.log(hexObjects[ho]);
+        console.log(hexObjects[ho].hex, size, offset);
+        line.push(drawHexFromObject(hexObjects[ho], size, getXYfromHex(hexObjects[ho].hex, size, offset), size, offset));
+      }
+    }
+
+    // for(var i=0; i< hexes.length; i++){
+    //   line.push(drawHex( size -1, getXYfromHex(hexes[i], size, offset  ), 2 , "grey"));
+    // }
+
+    console.log(selected.hex);
+    if(selected.hex){line.push(drawHex( size -1, getXYfromHex(selected.hex, size, offset  ), 4 , "white"))};
+
+	  document.querySelector("svg").innerHTML = document.querySelector("svg").innerHTML = line;
+   }
+
+	  function drawHex( size, center, stroke, colour) {
+      var drawstring ="";
+      var positions = "";
+      for(var i=0; i<hexAxisList.length; i++){
+        positions = positions.concat(coord_as_string(getXYfromHex(  hexAxisList[i], size, center )))
+      }
+	    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='" + colour + "' stroke-width='" + stroke + "' fill='none' />" ;
+
+      return drawstring;
+   	 }
+
+     //@// TODO: TEST me
+
+     function drawHexFromObject( hexobject, size, center) {
+       var drawstring ="";
+       var positions = "";
+       console.log(drawHexFromObject);
+        console.log(hexobject);
+       console.log(hexobject.hex, size, center);
+       for(var i=0; i<hexAxisList.length; i++){
+          positions = positions + coord_as_string(getXYfromHex(hexAxisList[i], size, center ));
+      }
+ 	    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='white' stroke-width='2' fill='none' />" ;
+      console.log(drawstring);
+       return drawstring;
+    	 }
+
+
+    function findHexWithin(n){
+      var list = []
+      for(var i = -n; i<=n; i++){
+        for(var j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
+          list.push(axialToHex(i, j));
+    //      console.log("n: " + n + " i: " + i + " j: " + j);
+        }
+      }
+      return list;
+    }
+
+	  </script>
+
+
+ </head>
+	 <body>
+
+  <svg width="800" height="800" style="position: absolute; left='400px'; right='400px' ">  </svg>
+
+	</body>
+	<script>
+    document.body.addEventListener("click", doo) ;
+    drawScreen();
+  </script>
+
+ </html>
