@@ -9,11 +9,15 @@
   <link rel="stylesheet" href="" type="text/css"/>
   <script>
   "use strict"
-  //	 var cos30 = Math.sqrt(3)/2;
-  var hexSize = 55
+
+  var offset = {x:100,y:100};
+  var hexSize = 25
+
+  var offsetNEW = {x:400,y:400};
+  var hexSizeNEW = 55
   var hexes = findHexWithin(3);
   var hexObjects = setupHexes(hexes);
-  var offset = {x:400,y:400};
+
   var selected = {hex : null,    state:"1"};
 
   function findHexWithin(n){
@@ -50,18 +54,21 @@
 
   function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
 
+  function getRealXYfromScreenXY(a){return addVec(a,scaleVec(offsetNEW,-1))}
+  function getScreenXYfromRealXY(a){return addVec(a,offsetNEW)}
+
   function getXYfromHex( hexCoord, hexSize, offset ){
     var hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
     hexCentre = addVec(hexCentre, scaleVec(hexVec.r, hexCoord.r))
-    hexCentre = addVec(scaleVec(hexCentre, hexSize), offset)
+    hexCentre = scaleVec(hexCentre, hexSizeNEW)
     return hexCentre
   }
 
   function getHexFromXY(xyScaledOffset, offset, hexSize){
     // var iv = invHexVec;
     var {p, q, r} = invHexVec;
-    var xyScaled = addVec(xyScaledOffset, scaleVec(offset,-1));
-    var xy = scaleVec(xyScaled, 1/hexSize);
+    var xyScaled = xyScaledOffset;
+    var xy = scaleVec(xyScaled, 1/hexSizeNEW);
     //return {p:dotProd(xy,iv.p), q:dotProd(xy,iv.q), r:dotProd(xy,iv.r)}
     return {p:dotProd(xy,p), q:dotProd(xy,q), r:dotProd(xy,r)}
   }
@@ -91,9 +98,9 @@
 
   function doo(event){
 
-    var clickHex = hex_round(getHexFromXY({x: event.offsetX, y:event.offsetY}, offset, hexSize))
+    var clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY}), offset, hexSize))
     console.log(clickHex + "  " + clickHex.p);
-    if(hexDistance(clickHex, Hex(0,0,0))<4){ selected.hex = clickHex};
+    if(hexDistance(clickHex, Hex(0,0,0))<6){ selected.hex = clickHex};
     drawScreen();
   }
 
@@ -120,7 +127,7 @@
     var drawstring ="";
     var positions = "";
     for(var i=0; i<hexAxisList.length; i++){
-      positions = positions.concat(coord_as_string(getXYfromHex(  hexAxisList[i], hexSize, center )))
+      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex( hexAxisList[i]),center ))));
     }
     drawstring = drawstring + "<polygon points= '" + positions + "' stroke='" + colour + "' stroke-width='" + stroke + "' fill='none' />" ;
 
@@ -137,24 +144,14 @@
     var positions = "";
     console.log(drawHexFromObject);    console.log(hexobject);    console.log(hexobject.hex, hexSize, center);
     for(var i=0; i<hexAxisList.length; i++){
-      positions = positions + coord_as_string(getXYfromHex(hexAxisList[i], hexSize, center ));
+      positions = positions + coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex(hexAxisList[i]), center )));  /// HERE IS OFFSET
     }
     drawstring = drawstring + "<polygon points= '" + positions + "' stroke='white' stroke-width='2' fill='none' />" ;
     console.log(drawstring);
     return drawstring;
   }
 
-  function OLDdrawHexFromObject( hexobject, hexSize, center) {
-    var drawstring ="";
-    var positions = "";
-    console.log(drawHexFromObject);    console.log(hexobject);    console.log(hexobject.hex, hexSize, center);
-    for(var i=0; i<hexAxisList.length; i++){
-      positions = positions + coord_as_string(getXYfromHex(hexAxisList[i], hexSize, center ));
-    }
-    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='white' stroke-width='2' fill='none' />" ;
-    console.log(drawstring);
-    return drawstring;
-  }
+
 
 
   </script>
