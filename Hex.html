@@ -31,9 +31,11 @@
   function setupHexes(hexArray){
     var hexesObj = {};
     for(var i=0; i<hexArray.length; i++){
-      hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = {hex: hexArray[i], objects: {terain:null, owner:1, ship:{type:"basic"}}}
+      var buildingHex = {hex: hexArray[i], objects: {terain:null, owner:1, ship:{type:"basic"}}};
+      if(Math.random()>0.5){buildingHex.terain = "gas"};
+      hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
     }
-    //      console.log("hexesObj: " + hexesObj + "/n");
+          console.log("hexesObj: " + hexesObj.toString() + "/n");
     return hexesObj;
   }
 
@@ -103,9 +105,20 @@
     for(var ho in hexObjects){
       if(hexObjects.hasOwnProperty(ho)){
         //      console.log("hexObjects[ho]" + ho);        console.log(hexObjects[ho]);        console.log(hexObjects[ho].hex, hexSize, offset);
-        line.push(drawHexFromObject(hexObjects[ho]));
+        var colour = "white";
+        line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , colour));
+        // line.push(drawHexFromObject(hexObjects[ho]));
       }
     }
+    for(var ho in hexObjects){
+      if(hexObjects.hasOwnProperty(ho) && hexObjects[ho].terain == "gas"){
+        //      console.log("hexObjects[ho]" + ho);        console.log(hexObjects[ho]);        console.log(hexObjects[ho].hex, hexSize, offset);
+        line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , "white", "darkslateblue"));
+        // line.push(drawHexFromObject(hexObjects[ho]));
+      }
+    }
+
+
   //  console.log(selected.hex);
     if(selected.hex){line.push(drawHex(  getXYfromHex(selected.hex), 4 , "red"))};
     document.querySelector("svg").innerHTML = document.querySelector("svg").innerHTML = line;
@@ -113,34 +126,17 @@
 
     function coord_as_string(a){ return "" + a.x  + "," + a.y  + " "; }
 
-  function drawHex( center, stroke, colour) {
+  function drawHex( center, stroke, colour, fill) {
+    if(!fill)(fill = "none");
     var drawstring ="";
     var positions = "";
     for(var i=0; i<hexAxisList.length; i++){
       positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex( hexAxisList[i]),center ))));
     }
-    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='" + colour + "' stroke-width='" + stroke + "' fill='none' />" ;
+    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='" + colour + "' stroke-width='" + stroke + "' fill='" + fill + "' />" ;
 
     return drawstring;
   }
-
-
-
-  //@// TODO: TEST me
-
-  function drawHexFromObject( hexobject) {
-    var center = getXYfromHex(hexobject.hex )
-    var drawstring ="";
-    var positions = "";
-    console.log(drawHexFromObject);    console.log(hexobject);    console.log(hexobject.hex,  center);
-    for(var i=0; i<hexAxisList.length; i++){
-      positions = positions + coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex(hexAxisList[i]), center )));  /// HERE IS OFFSET
-    }
-    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='white' stroke-width='2' fill='none' />" ;
-    console.log(drawstring);
-    return drawstring;
-  }
-
 
 
 
