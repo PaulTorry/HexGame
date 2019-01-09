@@ -10,17 +10,17 @@
   <script>
   "use strict"
 
-  var screenOffset = {x:400,y:400};
-  var hexSizeNEW = 55
-  var hexes = findHexWithin(3);
-  var hexObjects = setupHexes(hexes);
+  let screenOffset = {x:400,y:400};
+  let hexSizeNEW = 55
+  let hexes = findHexWithin(3);
+  let hexObjects = setupHexes(hexes);
 
-  var selected = {hex : null,    state:"1"};
+  let selected = {hex : null,    state:"1"};
 
   function findHexWithin(n){
-    var list = []
-    for(var i = -n; i<=n; i++){
-      for(var j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
+    let list = []
+    for(let i = -n; i<=n; i++){
+      for(let j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
         list.push(axialToHex(i, j));
         //      console.log("n: " + n + " i: " + i + " j: " + j);
       }
@@ -29,9 +29,9 @@
   }
 
   function setupHexes(hexArray){
-    var hexesObj = {};
-    for(var i=0; i<hexArray.length; i++){
-      var buildingHex = {hex: hexArray[i], objects: {terain:null, owner:1, ship:{type:"basic"}}};
+    let hexesObj = {};
+    for(let i=0; i<hexArray.length; i++){
+      let buildingHex = {hex: hexArray[i], objects: {terain:null, owner:1, ship:{type:"basic"}}};
       if(Math.random()>0.5){buildingHex.terain = "gas"};
       hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
     }
@@ -57,31 +57,31 @@
   function getScreenXYfromRealXY(a){return addVec(a,screenOffset)}
 
   function getXYfromHex(hexCoord){
-    var hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
+    let hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
     hexCentre = addVec(hexCentre, scaleVec(hexVec.r, hexCoord.r))
     hexCentre = scaleVec(hexCentre, hexSizeNEW)
     return hexCentre
   }
 
   function getHexFromXY(xyScaled){
-    var {p, q, r} = invHexVec;
-    var xy = scaleVec(xyScaled, 1/hexSizeNEW);
+    let {p, q, r} = invHexVec;
+    let xy = scaleVec(xyScaled, 1/hexSizeNEW);
     return {p:dotProd(xy,p), q:dotProd(xy,q), r:dotProd(xy,r)}
   }
 
-  var hexVec = {p: Vec(1,0),   q: Vec((-1/2), Math.sqrt(3)/2),  r: Vec((-1/2), -Math.sqrt(3)/2) }
-  var invHexVec = {p: Vec(2/(3),0),   q: Vec((-2/6), Math.sqrt(3)/3),  r: Vec((-2/6), -Math.sqrt(3)/3) }
+  const hexVec = {p: Vec(1,0),   q: Vec((-1/2), Math.sqrt(3)/2),  r: Vec((-1/2), -Math.sqrt(3)/2) }
+  const invHexVec = {p: Vec(2/(3),0),   q: Vec((-2/6), Math.sqrt(3)/3),  r: Vec((-2/6), -Math.sqrt(3)/3) }
 
-  var hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
-  var hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
+  const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
+  const hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
 
   function hex_round(h){
-    var qi = Math.round(h.q);
-    var ri = Math.round(h.r);
-    var pi = Math.round(h.p);
-    var q_diff = Math.abs(qi - h.q);
-    var r_diff = Math.abs(ri - h.r);
-    var p_diff = Math.abs(pi - h.p);
+    let qi = Math.round(h.q);
+    let ri = Math.round(h.r);
+    let pi = Math.round(h.p);
+    let q_diff = Math.abs(qi - h.q);
+    let r_diff = Math.abs(ri - h.r);
+    let p_diff = Math.abs(pi - h.p);
     if (q_diff > r_diff && q_diff > p_diff)    {           qi = -ri - pi;    }
     else  if (r_diff > p_diff)                 {           ri = -qi - pi;        }
     else                                    {            pi = -qi - ri;        }
@@ -93,24 +93,24 @@
 
   function doo(event){
 
-    var clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
+    let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
   //  console.log(clickHex + "  " + clickHex.p);
     if(hexDistance(clickHex, Hex(0,0,0))<6){ selected.hex = clickHex};
     drawScreen();
   }
 
   function drawScreen(){
-    var line = [];
+    let line = [];
     //  console.log(hexes);    console.log(hexObjects);
-    for(var ho in hexObjects){
+    for(let ho in hexObjects){
       if(hexObjects.hasOwnProperty(ho)){
         //      console.log("hexObjects[ho]" + ho);        console.log(hexObjects[ho]);        console.log(hexObjects[ho].hex, hexSize, offset);
-        var colour = "white";
+        let colour = "white";
         line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , colour));
         // line.push(drawHexFromObject(hexObjects[ho]));
       }
     }
-    for(var ho in hexObjects){
+    for(let ho in hexObjects){
       if(hexObjects.hasOwnProperty(ho) && hexObjects[ho].terain == "gas"){
         //      console.log("hexObjects[ho]" + ho);        console.log(hexObjects[ho]);        console.log(hexObjects[ho].hex, hexSize, offset);
         line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , "white", "darkslateblue"));
@@ -126,11 +126,10 @@
 
     function coord_as_string(a){ return "" + a.x  + "," + a.y  + " "; }
 
-  function drawHex( center, stroke, colour, fill) {
-    if(!fill)(fill = "none");
-    var drawstring ="";
-    var positions = "";
-    for(var i=0; i<hexAxisList.length; i++){
+  function drawHex( center, stroke, colour, fill="none") {
+    let drawstring ="";
+    let positions = "";
+    for(let i=0; i<hexAxisList.length; i++){
       positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex( hexAxisList[i]),center ))));
     }
     drawstring = drawstring + "<polygon points= '" + positions + "' stroke='" + colour + "' stroke-width='" + stroke + "' fill='" + fill + "' />" ;
