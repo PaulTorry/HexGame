@@ -124,7 +124,7 @@
     document.querySelector("svg").innerHTML = document.querySelector("svg").innerHTML = line;
   }
 
-    function coord_as_string(a){ return "" + a.x  + "," + a.y  + " "; }
+    function coord_as_string(a){ return `${a.x},${a.y} `; }
 
   function drawHex( center, stroke, colour, fill="none") {
     let drawstring ="";
@@ -132,7 +132,7 @@
     for(let i=0; i<hexAxisList.length; i++){
       positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex( hexAxisList[i]),center ))));
     }
-    drawstring = drawstring + "<polygon points= '" + positions + "' stroke='" + colour + "' stroke-width='" + stroke + "' fill='" + fill + "' />" ;
+    drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
 
     return drawstring;
   }
