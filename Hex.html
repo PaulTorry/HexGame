@@ -14,8 +14,10 @@
   let hexSizeNEW = 55
   let hexes = findHexWithin(3);
   let hexObjects = setupHexes(hexes);
+  let playerColours = ["green", "red", "blue", "orange", "purple", "brown"]
 
-  let selected = {hex : null,    state:"1"};
+  let selected = {hex: null,    state:"1"};
+  let ships = [{type:"scout", life:"2", shield:"3", location:Vec(0,0), prevLocation:Vec(1,0)}];
 
   function findHexWithin(n){
     let list = []
@@ -28,14 +30,18 @@
     return list;
   }
 
+  function randomInt(num) {return Math.floor(Math.random() * num);}
+
   function setupHexes(hexArray){
     let hexesObj = {};
     for(let i=0; i<hexArray.length; i++){
-      let buildingHex = {hex: hexArray[i], objects: {terain:null, owner:1, ship:{type:"basic"}}};
-      if(Math.random()>0.5){buildingHex.terain = "gas"};
+      let buildingHex = {hex: hexArray[i], objects: {terain:null, ship:{type:null, owner:1}, station:{type:null, owner:1}}};
+      if(Math.random()<0.3){buildingHex.terain = "gas"};
+      if(Math.random()<0.3){buildingHex.ship = {type:"scout", owner:randomInt(2)}};
+      if(Math.random()<0.1){buildingHex.station = {type:"base", owner:randomInt(2)}};
       hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
     }
-          console.log("hexesObj: " + hexesObj.toString() + "/n");
+      //    console.log("hexesObj: " + hexesObj.toString() + "/n");
     return hexesObj;
   }
 
@@ -71,6 +77,9 @@
 
   const hexVec = {p: Vec(1,0),   q: Vec((-1/2), Math.sqrt(3)/2),  r: Vec((-1/2), -Math.sqrt(3)/2) }
   const invHexVec = {p: Vec(2/(3),0),   q: Vec((-2/6), Math.sqrt(3)/3),  r: Vec((-2/6), -Math.sqrt(3)/3) }
+
+  const triangleVec = [Vec(1,0), Vec(-1,0), Vec(0,-1)];
+  const squareVec = [Vec(1,1), Vec(-1,1), Vec(-1,-1), Vec(1,-1)];
 
   const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
   const hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
@@ -111,10 +120,19 @@
       }
     }
     for(let ho in hexObjects){
-      if(hexObjects.hasOwnProperty(ho) && hexObjects[ho].terain == "gas"){
-        //      console.log("hexObjects[ho]" + ho);        console.log(hexObjects[ho]);        console.log(hexObjects[ho].hex, hexSize, offset);
-        line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , "white", "darkslateblue"));
-        // line.push(drawHexFromObject(hexObjects[ho]));
+      if(hexObjects.hasOwnProperty(ho)){
+        if( hexObjects[ho].terain == "gas"){
+          line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , "white", "grey"));
+        }
+        if( hexObjects[ho].ship){
+          console.log(hexObjects[ho]);
+          console.log(playerColours[hexObjects[ho].ship.owner]);
+          line.push(drawPolygon(triangleVec, 15, addVec(getXYfromHex(hexObjects[ho].hex),Vec(0,-15)), 2 , playerColours[hexObjects[ho].ship.owner], "white"));
+        }
+        if( hexObjects[ho].station){
+          line.push(drawPolygon(squareVec, 10, addVec(getXYfromHex(hexObjects[ho].hex),Vec(0,15)), 2 , "white", "white"));
+        }
+
       }
     }
 
@@ -137,6 +155,26 @@
     return drawstring;
   }
 
+  function drawTriangle( center, stroke, colour, fill="none") {
+    let drawstring ="";
+    let positions = "";
+    let triangleVec = [{x:1.0,y:0.0}, {x:-1.0,y:0.0}, {x:0.0,y:1.0}];
+        for(let i=0; i<triangleVec.length; i++){
+      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(triangleVec[i],10),center))));
+    }
+    drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
+    return drawstring;
+  }
+
+  function drawPolygon( pointVec, size, center, stroke, colour, fill="none") {
+    let drawstring ="";
+    let positions = "";
+    for(let i=0; i<pointVec.length; i++){
+      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(pointVec[i],size),center))));
+    }
+    drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
+    return drawstring;
+  }
 
 
   </script>
