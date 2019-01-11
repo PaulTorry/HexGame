@@ -16,7 +16,7 @@
   let hexObjects = setupHexes(hexes);
   let playerColours = ["green", "red", "blue", "orange", "purple", "brown"]
   let playerTurn = 0;
-
+  let currentShip = null;
   let selected = {hex: null,    state:"1"};
   let possibleMoves = [];
 
@@ -51,16 +51,17 @@
 
   function Vec(x, y){     return {x:x, y:y};   }
 
-  function addVec(a, b){     return {x: a.x + b.x, y: a.y + b.y};   }
-  function scaleVec(a, m){     return {x: a.x * m, y: a.y * m};   }
-  function dotProd(a, b){     return  a.x * b.x + a.y * b.y;   }
+  function addVec(a, b){ return Vec(a.x + b.x, a.y + b.y)   }
+  function scaleVec(a, m){ return Vec(a.x * m, a.y * m)    }
+  function dotProd(a, b){ return  a.x * b.x + a.y * b.y;   }
 
+  function Hex(p,q,r){ return {p:p, q:q, r:r};   }
+  function addHex(a, b){ return Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
+  function compareHexes(a, b){ return a.p==b.p && a.q==b.q && a.r==b.r}
+  function Axial(p, q){ return {p:p, q:q}   }
+  function hexToAxial(p, q, r){ return Axial(p, q)}
+  function axialToHex(p, q){ return Hex(p, q, -p-q)  }
 
-  function Hex(p,q,r){     return {p:p, q:q, r:r};   }
-  function addHex(a, b){   return Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
-  function Axial(p, q){     return {p:p, q:q}   }
-  function hexToAxial(p, q, r){     return {p:p, q:q}   }
-  function axialToHex(p, q){     return {p:p, q:q, r: -p-q}   }
 
   function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
 
@@ -70,15 +71,14 @@
   function getXYfromHex(hexCoord){
     let hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
     hexCentre = addVec(hexCentre, scaleVec(hexVec.r, hexCoord.r))
-    hexCentre = scaleVec(hexCentre, hexSize
-    )
+    hexCentre = scaleVec(hexCentre, hexSize    )
     return hexCentre
   }
 
   function getHexFromXY(xyScaled){
     let {p, q, r} = invHexVec;
     let xy = scaleVec(xyScaled, 1/hexSize);
-    return {p:dotProd(xy,p), q:dotProd(xy,q), r:dotProd(xy,r)}
+    return Hex(dotProd(xy,p), dotProd(xy,q), dotProd(xy,r))
   }
 
   const hexVec = {p: Vec(1,0),   q: Vec((-1/2), Math.sqrt(3)/2),  r: Vec((-1/2), -Math.sqrt(3)/2) }
@@ -116,19 +116,35 @@
 
     let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
     if(hexDistance(clickHex, Hex(0,0,0))<6){
-      selected.hex = clickHex;
-      possibleMoves = [];
-      for(let local in hexNeighbours){
-        console.log(hexNeighbours[local] );
-        console.log(clickHex );
-        let hex = addHex(hexNeighbours[local] , clickHex)
-        if(hexDistance(hex, Hex(0,0,0)) < 4 ){
-          possibleMoves.push(hex);
-        }
+
+      if (possibleMoves.length > 0 && possibleMoves.find( e =>  compareHexes(e, clickHex))) {
+        console.log(clickHex);
+        currentShip.location = clickHex;
+        currentShip = null;
+        selected.hex = null;
+        possibleMoves = [];
       }
-      console.log(possibleMoves);
+      else if (selected.hex && compareHexes(selected.hex , clickHex)){
+        currentShip = shipArray.find(e => compareHexes(e.location,clickHex));
+        if(currentShip) shipSelected();
+      }
+      else{selected.hex = clickHex};
+
     };
     drawScreen();
+  }
+
+  function shipSelected(){
+    possibleMoves = [];
+    for(let local in hexNeighbours){
+    //  console.log(hexNeighbours[local] );
+    //  console.log(selected.hex );
+      let hex = addHex(hexNeighbours[local] , selected.hex)
+      if(hexDistance(hex, Hex(0,0,0)) < 4 ){
+        possibleMoves.push(hex);
+      }
+    }
+  //  console.log(possibleMoves);
   }
 
 
@@ -162,8 +178,6 @@
     }
 
     }
-
-
 
     document.querySelector("svg").innerHTML = document.querySelector("svg").innerHTML = line;
   }
