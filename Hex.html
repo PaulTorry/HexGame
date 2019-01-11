@@ -11,20 +11,25 @@
   "use strict"
 
   let screenOffset = {x:400,y:400};
-  let hexSizeNEW = 55
+  let hexSize = 55
   let hexes = findHexWithin(3);
   let hexObjects = setupHexes(hexes);
   let playerColours = ["green", "red", "blue", "orange", "purple", "brown"]
+  let playerTurn = 0;
 
   let selected = {hex: null,    state:"1"};
-  let ships = [{type:"scout", life:"2", shield:"3", location:Vec(0,0), prevLocation:Vec(1,0)}];
+  let possibleMoves = [];
+
+  let shipArray = [
+    {type:"scout", life:"2", shield:"3", owner:"1", location:Hex(0,0,0), prevLocation:Hex(1,0,-1)},
+    {type:"scout", life:"2", shield:"3", owner:"0", location:Hex(0,1,-1), prevLocation:Hex(1,0,-1)},
+  ];
 
   function findHexWithin(n){
     let list = []
     for(let i = -n; i<=n; i++){
       for(let j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
         list.push(axialToHex(i, j));
-        //      console.log("n: " + n + " i: " + i + " j: " + j);
       }
     }
     return list;
@@ -41,18 +46,18 @@
       if(Math.random()<0.1){buildingHex.station = {type:"base", owner:randomInt(2)}};
       hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
     }
-      //    console.log("hexesObj: " + hexesObj.toString() + "/n");
     return hexesObj;
   }
 
   function Vec(x, y){     return {x:x, y:y};   }
-  // function divideVec(a, b){     return {x: (b.x != 0 ? a.x/b.x : 0),  y: (b.y != 0 ? a.y/b.y : 0)}      }
+
   function addVec(a, b){     return {x: a.x + b.x, y: a.y + b.y};   }
   function scaleVec(a, m){     return {x: a.x * m, y: a.y * m};   }
   function dotProd(a, b){     return  a.x * b.x + a.y * b.y;   }
 
 
   function Hex(p,q,r){     return {p:p, q:q, r:r};   }
+  function addHex(a, b){   return Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
   function Axial(p, q){     return {p:p, q:q}   }
   function hexToAxial(p, q, r){     return {p:p, q:q}   }
   function axialToHex(p, q){     return {p:p, q:q, r: -p-q}   }
@@ -65,24 +70,31 @@
   function getXYfromHex(hexCoord){
     let hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
     hexCentre = addVec(hexCentre, scaleVec(hexVec.r, hexCoord.r))
-    hexCentre = scaleVec(hexCentre, hexSizeNEW)
+    hexCentre = scaleVec(hexCentre, hexSize
+    )
     return hexCentre
   }
 
   function getHexFromXY(xyScaled){
     let {p, q, r} = invHexVec;
-    let xy = scaleVec(xyScaled, 1/hexSizeNEW);
+    let xy = scaleVec(xyScaled, 1/hexSize);
     return {p:dotProd(xy,p), q:dotProd(xy,q), r:dotProd(xy,r)}
   }
 
   const hexVec = {p: Vec(1,0),   q: Vec((-1/2), Math.sqrt(3)/2),  r: Vec((-1/2), -Math.sqrt(3)/2) }
   const invHexVec = {p: Vec(2/(3),0),   q: Vec((-2/6), Math.sqrt(3)/3),  r: Vec((-2/6), -Math.sqrt(3)/3) }
 
-  const triangleVec = [Vec(1,0), Vec(-1,0), Vec(0,-1)];
-  const squareVec = [Vec(1,1), Vec(-1,1), Vec(-1,-1), Vec(1,-1)];
-
   const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
   const hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
+
+  const hexTopAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:0}, {p:0, q:0, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
+  const hexBotAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:0}, {p:0, q:0, r:0}]
+
+  const hexVert = hexAxisList.map((x) => scaleVec(getXYfromHex(x),1/hexSize));
+  const hexTopVert = hexTopAxisList.map((x) => scaleVec(getXYfromHex(x),1/hexSize));
+  const hexBotVert = hexBotAxisList.map((x) => scaleVec(getXYfromHex(x),1/hexSize));
+  const triangleVert = [Vec(1,0), Vec(-1,0), Vec(0,-1)];
+  const squareVert = [Vec(1,1), Vec(-1,1), Vec(-1,-1), Vec(1,-1)];
 
   function hex_round(h){
     let qi = Math.round(h.q);
@@ -103,83 +115,73 @@
   function doo(event){
 
     let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
-  //  console.log(clickHex + "  " + clickHex.p);
-    if(hexDistance(clickHex, Hex(0,0,0))<6){ selected.hex = clickHex};
+    if(hexDistance(clickHex, Hex(0,0,0))<6){
+      selected.hex = clickHex;
+      possibleMoves = [];
+      for(let local in hexNeighbours){
+        console.log(hexNeighbours[local] );
+        console.log(clickHex );
+        let hex = addHex(hexNeighbours[local] , clickHex)
+        if(hexDistance(hex, Hex(0,0,0)) < 4 ){
+          possibleMoves.push(hex);
+        }
+      }
+      console.log(possibleMoves);
+    };
     drawScreen();
   }
 
+
   function drawScreen(){
     let line = [];
-    //  console.log(hexes);    console.log(hexObjects);
+
     for(let ho in hexObjects){
       if(hexObjects.hasOwnProperty(ho)){
-        //      console.log("hexObjects[ho]" + ho);        console.log(hexObjects[ho]);        console.log(hexObjects[ho].hex, hexSize, offset);
-        let colour = "white";
-        line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , colour));
-        // line.push(drawHexFromObject(hexObjects[ho]));
-      }
-    }
-    for(let ho in hexObjects){
-      if(hexObjects.hasOwnProperty(ho)){
+        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize ));
+
         if( hexObjects[ho].terain == "gas"){
-          line.push(drawHex(getXYfromHex(hexObjects[ho].hex), 2 , "white", "grey"));
-        }
-        if( hexObjects[ho].ship){
-          console.log(hexObjects[ho]);
-          console.log(playerColours[hexObjects[ho].ship.owner]);
-          line.push(drawPolygon(triangleVec, 15, addVec(getXYfromHex(hexObjects[ho].hex),Vec(0,-15)), 2 , playerColours[hexObjects[ho].ship.owner], "white"));
-        }
-        if( hexObjects[ho].station){
-          line.push(drawPolygon(squareVec, 10, addVec(getXYfromHex(hexObjects[ho].hex),Vec(0,15)), 2 , "white", "white"));
+          line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "white", "grey"));
         }
 
+        if( hexObjects[ho].station){
+          line.push(drawPolygon(squareVert, getXYfromHex(hexObjects[ho].hex),Vec(0,15), 10, 2 , "white", "white"));
+        }
       }
     }
 
+    for(let sh in shipArray){
+      line.push(drawPolygon(triangleVert, getXYfromHex(shipArray[sh].location) ,Vec(0,-15), 15,  2 , playerColours[shipArray[sh].owner], "white"));
+    }
 
-  //  console.log(selected.hex);
-    if(selected.hex){line.push(drawHex(  getXYfromHex(selected.hex), 4 , "red"))};
+    if(selected.hex){
+      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , "red"));
+    //  line.push(drawPolygon(hexTopVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , "red"));
+    //  line.push(drawPolygon(hexBotVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , "red"));
+    for (let p in possibleMoves){
+      line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize, 5 , "green"));
+    }
+
+    }
+
+
+
     document.querySelector("svg").innerHTML = document.querySelector("svg").innerHTML = line;
   }
 
-    function coord_as_string(a){ return `${a.x},${a.y} `; }
+  function coord_as_string(a){ return `${a.x},${a.y} `; }
 
-  function drawHex( center, stroke, colour, fill="none") {
+  function drawPolygon( pointVec, center, offset=Vec(0,0), size=hexSize, stroke=2, colour="white", fill="none") {
     let drawstring ="";
     let positions = "";
-    for(let i=0; i<hexAxisList.length; i++){
-      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(getXYfromHex( hexAxisList[i]),center ))));
-    }
-    drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
-
-    return drawstring;
-  }
-
-  function drawTriangle( center, stroke, colour, fill="none") {
-    let drawstring ="";
-    let positions = "";
-    let triangleVec = [{x:1.0,y:0.0}, {x:-1.0,y:0.0}, {x:0.0,y:1.0}];
-        for(let i=0; i<triangleVec.length; i++){
-      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(triangleVec[i],10),center))));
-    }
-    drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
-    return drawstring;
-  }
-
-  function drawPolygon( pointVec, size, center, stroke, colour, fill="none") {
-    let drawstring ="";
-    let positions = "";
+    let location = addVec(center, offset );
     for(let i=0; i<pointVec.length; i++){
-      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(pointVec[i],size),center))));
+      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(pointVec[i],size),location))));
     }
     drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
     return drawstring;
   }
 
-
-  </script>
-
-
+</script>
 </head>
 <body>
 
