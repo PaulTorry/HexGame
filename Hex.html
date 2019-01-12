@@ -113,6 +113,15 @@
     return Hex(pi, qi, ri);
   }
 
+  function applyDamage(dammage, ship){
+    let {type, hull, shield} = ship
+    for(let dam = dammage; dam > 0 && hull > 0; dam--){
+      if (shield > 0){shield--} else{hull--};
+    }
+    ship.hull = hull;
+    ship.shield = shield;
+  }
+
 
   //  UI and Draw -------------------------------------------------------------------------
 
@@ -130,7 +139,7 @@
         if(hexDistance(clickHex, Hex(0,0,0))<6){selected = {hex:clickHex, state:1}}
         else{
           selected = {hex:null, state:0}
-        possibleMoves = []; possibleAttacks = [];
+          possibleMoves = []; possibleAttacks = [];
         }
       }
     }
@@ -141,7 +150,18 @@
         makeMenu();
       }
       else if(possibleMoves.length > 0 && possibleMoves.find( e =>  compareHexes(e, clickHex))) {
-        console.log(clickHex);
+        currentShip.location = clickHex;
+        currentShip = null;
+        selected = {hex:null, state:0} ;
+        possibleMoves = []; possibleAttacks = []; //attacks if have some
+      }
+      else if(possibleAttacks.find( e =>  compareHexes(e, clickHex))) {
+        let target = shipArray.find(e => compareHexes(e.location,clickHex));
+        if(target){
+          applyDamage(2, target);
+
+        }else{console.log("error in attacks");}
+
         currentShip.location = clickHex;
         currentShip = null;
         selected = {hex:null, state:0} ;
@@ -180,17 +200,17 @@
   function setPossibleMoves(){
     possibleMoves = [];
     for(let local in hexNeighbours){
-    //  console.log(hexNeighbours[local] );
-    //  console.log(selected.hex );
+      //  console.log(hexNeighbours[local] );
+      //  console.log(selected.hex );
       let hex = addHex(hexNeighbours[local] , selected.hex)
-      if(hexDistance(hex, Hex(0,0,0)) < 4 ){
+      if(hexDistance(hex, Hex(0,0,0)) < 4 && !shipArray.find(e => compareHexes(e.location,hex))){
         possibleMoves.push(hex);
       }
       if(shipArray.find(e => compareHexes(e.location,hex))) {
         possibleAttacks.push(hex);
       }
     }
-  //  console.log(possibleMoves);
+    //  console.log(possibleMoves);
   }
 
 
@@ -218,13 +238,13 @@
 
     if(selected.hex){
       line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , "red"));
-    for (let p in possibleMoves){
-      line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize, 5 , "green"));
-    }
-    for (let p in possibleAttacks){
-      line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),Vec(0,0), hexSize, 5 , "purple"));
-    }
-    line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , selectedColour[selected.state]));
+      for (let p in possibleMoves){
+        line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize, 5 , "green"));
+      }
+      for (let p in possibleAttacks){
+        line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),Vec(0,0), hexSize, 5 , "purple"));
+      }
+      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , selectedColour[selected.state]));
     }
 
     if (selected.state == 3){
@@ -242,14 +262,14 @@
     let location = addVec(center, offset );
     for(let i=0; i<pointVec.length; i++){
       positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(pointVec[i],size),location))));
-    //  console.log(positions);
+      //  console.log(positions);
     }
     drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
     return drawstring;
   }
 
   function drawText( text, center, offset=Vec(0,0), size=20, fill="white") {
-  //  let location = addVec(center, offset );
+    //  let location = addVec(center, offset );
     let pos = getScreenXYfromRealXY(addVec(center, offset))
     return  `<text x="${pos.x}" y="${pos.y}" fill="${fill}" style="font:bold ${size}px sans-serif"> ${text} </text>`
   }
