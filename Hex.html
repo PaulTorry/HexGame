@@ -12,7 +12,8 @@
 
   let screenOffset = {x:400,y:400};
   let hexSize = 55
-  let hexes = findHexWithin(3);
+  let boardSize = 4
+  let hexes = findHexWithin(boardSize);
   let hexObjects = setupHexes(hexes);
   let playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
   let selectedColour = ["white","red", "blue", "orange"]
@@ -22,6 +23,8 @@
   let possibleMoves = [];
   let possibleAttacks = [];
   let menu = [];
+
+  let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
 
   let shipArray = [
     {type:"scout", hull:"2", shield:"3", owner:"1", location:Hex(0,0,0), prevLocation:Hex(1,0,-1)},
@@ -38,14 +41,16 @@
     return list;
   }
 
+
+
   function randomInt(num) {return Math.floor(Math.random() * num);}
 
   function setupHexes(hexArray){
     let hexesObj = {};
     for(let i=0; i<hexArray.length; i++){
-      let buildingHex = {hex: hexArray[i], objects: {terain:null, ship:{type:null, owner:1}, station:{type:null, owner:1}}};
-      if(Math.random()<0.3){buildingHex.terain = "gas"};
-      if(Math.random()<0.3){buildingHex.ship = {type:"scout", owner:randomInt(2)}};
+      let buildingHex = {hex: hexArray[i], terain:"space", station:null};
+      if(Math.random()<0.3){buildingHex.terain = "nebula"};
+    //  if(Math.random()<0.3){buildingHex.ship = {type:"scout", owner:randomInt(2)}};
       if(Math.random()<0.1){buildingHex.station = {type:"base", owner:randomInt(2)}};
       hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
     }
@@ -137,7 +142,7 @@
         possibleMoves = []; possibleAttacks = [];
       }
       else{
-        if(hexDistance(clickHex, Hex(0,0,0))<6){selected = {hex:clickHex, state:1}}
+        if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
         else{
           selected = {hex:null, state:0}
           possibleMoves = []; possibleAttacks = [];
@@ -191,7 +196,7 @@
       else{selected = {hex:null, state:0}}
     }
     else if (selected.state == 0){
-      if(hexDistance(clickHex, Hex(0,0,0))<6){selected = {hex:clickHex, state:1}}
+      if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
     }
 
     drawScreen();
@@ -200,20 +205,79 @@
   function makeMenu(){menu = ["hi"]}
 
   function setPossibleMoves(){
+    let candiateMoves = findPossibleMoves(selected.hex);
     possibleMoves = [];
-    for(let local in hexNeighbours){
-      //  console.log(hexNeighbours[local] );
-      //  console.log(selected.hex );
-      let hex = addHex(hexNeighbours[local] , selected.hex)
-      if(hexDistance(hex, Hex(0,0,0)) < 4 && !shipArray.find(e => compareHexes(e.location,hex))){
+    for(let local in candiateMoves){
+      let hex = candiateMoves[local]
+      if(hexDistance(hex, Hex(0,0,0)) <= boardSize && !shipArray.find(e => compareHexes(e.location,hex))){
         possibleMoves.push(hex);
       }
       if(shipArray.find(e => compareHexes(e.location,hex))) {
         possibleAttacks.push(hex);
       }
     }
-    //  console.log(possibleMoves);
   }
+
+  function findPossibleMoves(center, moveLeft = 5){
+    let frontier = [{loc:center, cost:0}];
+    let visited = {[hexID(center)]: {loc:center, cost:true, from:null}}
+    let itts = 0
+    while (frontier.length > 0 && itts < 1000){
+      let current = frontier.shift();
+      itts ++;
+      for (let next in hexNeighbours){
+        let hex = addHex(hexNeighbours[next] , current.loc)
+        if (hexDistance(hex, Hex(0,0,0)) <= boardSize ){
+
+          let cost = current.cost + getTerrainCost( current.loc, hex);
+          if(!(visited[hexID(hex)] && cost >= visited[hexID(hex)].cost) && cost < moveLeft){ // TODO WTF
+          frontier.push({loc:hex, cost:cost});
+          visited[hexID(hex)] = {loc:hex, cost:current.cost + 1, from:current.loc};
+          }
+          // console.log(current);
+          // console.log(hex);
+          // console.log(frontier);
+          // console.log(visited);
+        }
+      }
+    }
+    let visitedArray = [];
+    for (let v in visited){
+      if (visited.hasOwnProperty(v)){
+        visitedArray.push(visited[v].loc)
+      }
+
+
+    }
+    return visitedArray
+
+  }
+
+  function getTerrainCost(a, b){
+
+    console.log(hexObjects);
+    console.log(b)
+    console.log(hexObjects[hexID(a)].terain);
+    console.log(hexObjects[hexID(b)].terain);
+    console.log(hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain);
+    return terainCost[hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain]
+//return 2;
+  }
+
+  //   possibleMoves = [];
+  //   for(let local in hexNeighbours){
+  //     //  console.log(hexNeighbours[local] );
+  //     //  console.log(selected.hex );
+  //     let hex = addHex(hexNeighbours[local] , selected.hex)
+  //     if(hexDistance(hex, Hex(0,0,0)) < 4 && !shipArray.find(e => compareHexes(e.location,hex))){
+  //       possibleMoves.push(hex);
+  //     }
+  //     if(shipArray.find(e => compareHexes(e.location,hex))) {
+  //       possibleAttacks.push(hex);
+  //     }
+  //   }
+  //   //  console.log(possibleMoves);
+  // }
 
 
   function drawScreen(){
@@ -223,7 +287,7 @@
       if(hexObjects.hasOwnProperty(ho)){
         line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize ));
 
-        if( hexObjects[ho].terain == "gas"){
+        if( hexObjects[ho].terain == "nebula"){
           line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "white", "grey"));
         }
 
