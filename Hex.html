@@ -10,7 +10,11 @@
   <script>
   "use strict"
 
-  let screenOffset = {x:400,y:400};
+
+  let screenSize = 800;
+  let screenOffset = {x:-screenSize/2,y:-screenSize/2};
+  let mouseDownLocation = {x:0,y:0};
+  let scale = 1;
   let hexSize = 40
   let boardSize = 6
   let hexes = findHexWithin(boardSize);
@@ -72,8 +76,12 @@
 
   function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
 
-  function getRealXYfromScreenXY(a){return addVec(a,scaleVec(screenOffset,-1))}
-  function getScreenXYfromRealXY(a){return addVec(a,screenOffset)}
+//  function getRealXYfromScreenXY(a){return addVec(a,scaleVec(screenOffset,-1))}
+function getRealXYfromScreenXY(a){
+//  console.log(addVec(scaleVec(a,1/scale),screenOffset));
+  return addVec(scaleVec(a,1/scale),screenOffset)
+}
+//  function getScreenXYfromRealXY(a){return addVec(a,screenOffset)}
 
   function getXYfromHex(hexCoord){
     let hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
@@ -129,27 +137,60 @@
 
   //  UI and Draw -------------------------------------------------------------------------
 
+  function mousedown(event){
+    mouseDownLocation = {x: event.offsetX, y: event.offsetY}
+    document.body.querySelector("#board").addEventListener("mousemove", drag);
+   document.body.querySelector("#board").addEventListener("mouseup", e => {
+     document.body.querySelector("#board").removeEventListener("mousemove", drag);
+   });
+  }
+
+  function mouseWheel(event){
+    console.log(event.deltaY);
+    if (event.deltaY>0){
+      scale *= 1.1;
+      screenOffset = scaleVec(screenOffset,1/1.1);
+    }
+    if (event.deltaY<0){
+      scale /= 1.1;
+      screenOffset = scaleVec(screenOffset,1.1);
+    }
+            reScale();
+  }
+
+  function drag(event){
+    screenOffset = addVec(screenOffset,scaleVec(addVec(scaleVec(mouseDownLocation,-1),{x: event.offsetX, y: event.offsetY}),-1/(scale)))
+    mouseDownLocation =  {x: event.offsetX, y: event.offsetY} ;
+        reScale();
+  }
+
+function menuClick(event){
+  console.log("click" + selected.state);
+  if(selected.state == 3){
+    if(event.offsetY < 100){
+      hexObjects[hexID(selected.hex)].station = {type: "base", owner: playerTurn}
+      selected = {hex:null, state:0}
+      possibleMoves = []; possibleAttacks = [];
+    }
+  }
+  drawScreen();
+}
+
   function doo(event){
     let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
     onHexClicked(clickHex);
-
     drawScreen();
     drawMenu();
   }
 
 function onHexClicked(clickHex){
   if(selected.state ==3){
-    if(event.offsetY < 100){
-      hexObjects[hexID(selected.hex)].station = {type: "base", owner: 1}
-      selected = {hex:null, state:0}
-      possibleMoves = []; possibleAttacks = [];
-    }
-    else{
+
       if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
       else{
         selected = {hex:null, state:0}
         possibleMoves = []; possibleAttacks = [];
-      }
+
     }
   }
 
@@ -255,10 +296,10 @@ function onHexClicked(clickHex){
 
     for(let ho in hexObjects){
       if(hexObjects.hasOwnProperty(ho)){
-        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2, "black", "black"  ));
+        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 1, "#25202D", "#120F22"  ));
 
         if( hexObjects[ho].terain == "nebula"){
-          line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "grey", "grey"));
+          line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "#25202D", "grey"));
         }
 
         if( hexObjects[ho].station){
@@ -273,23 +314,28 @@ function onHexClicked(clickHex){
     }
 
     if(selected.hex){
-      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , "red"));
+  //    line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , "red"));
       for (let p in possibleMoves){
-        line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize -5, 3 , "green"));
+      line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize -5, 3 , "green"));
       }
       for (let p in possibleAttacks){
         line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),Vec(0,0), hexSize -5, 3 , "purple"));
       }
       line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , selectedColour[selected.state]));
     }
-
+    reScale();
+//     document.querySelector("#board").setAttribute("viewBox",`${screenOffset.x} ${screenOffset.y} ${screenSize/scale} ${screenSize/scale}`);
      document.querySelector("#board").innerHTML = line;
   }
+
+function reScale(){
+  document.querySelector("#board").setAttribute("viewBox",`${screenOffset.x} ${screenOffset.y} ${screenSize/scale} ${screenSize/scale}`);
+}
 
   function drawMenu(){
     let line = [];
     if (selected.state == 3){
-      line.push(`<polygon points='50,50 100,50 100,100 50,100' stroke='white' stroke-width=2' fill='white' />`);
+      line.push(`<polygon points='20,20 60,20 60,60 20,60' stroke='white' stroke-width=2' fill='white' />`);
     }
     document.querySelector("#menu").innerHTML = line;
   }
@@ -297,18 +343,16 @@ function onHexClicked(clickHex){
   function coord_as_string(a){ return `${a.x},${a.y} `; }
 
   function drawPolygon( pointVec, center, offset=Vec(0,0), size=hexSize, stroke=2, colour="white", fill="none") {
-    let drawstring ="";
     let positions = "";
     let location = addVec(center, offset );
     for(let i=0; i<pointVec.length; i++){
-      positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(pointVec[i],size),location))));
+      positions = positions.concat(coord_as_string(addVec(scaleVec(pointVec[i],size),location)));
     }
-    drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
-    return drawstring;
+    return `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
   }
 
   function drawText( text, center, offset=Vec(0,0), size=20, fill="white") {
-    let pos = getScreenXYfromRealXY(addVec(center, offset))
+    let pos = addVec(center, offset)
     return  `<text x="${pos.x}" y="${pos.y}" fill="${fill}" style="font:bold ${size}px sans-serif"> ${text} </text>`
   }
 
@@ -316,12 +360,15 @@ function onHexClicked(clickHex){
 </head>
 <body>
 
-  <svg id="board" width="800" height="800" style="position: absolute; left='400px'; right='400px' ">  </svg>
-  <svg id="menu" width="400" height="200" style="position: absolute; left='200px'; right='200px' ">  </svg>
+  <svg viewBox="-400 -400 800 800" id="board" width="800" height="800" style="position: absolute; left: 000px; top: 120px; border-style: solid; ">  </svg>
+  <svg id="menu" width="800" height="100" style="position: absolute; border-style: solid; left: 000px;">  </svg>
 
 </body>
 <script>
-document.body.addEventListener("click", doo) ;
+document.body.querySelector("#board").addEventListener("click", doo) ;
+document.body.querySelector("#board").addEventListener("mousedown", mousedown);
+document.body.querySelector("#board").addEventListener("wheel", mouseWheel);
+document.body.querySelector("#menu").addEventListener("click", menuClick);
 drawScreen();
 </script>
 
