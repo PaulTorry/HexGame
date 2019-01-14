@@ -3,7 +3,7 @@
 <head>
   <title>Hex Lib test</title>
   <style>
-  body {background-color: black}
+  body {background-color: #181818}
   </style>
   <meta charset="UTF-8"/>
   <link rel="stylesheet" href="" type="text/css"/>
@@ -11,8 +11,8 @@
   "use strict"
 
   let screenOffset = {x:400,y:400};
-  let hexSize = 55
-  let boardSize = 4
+  let hexSize = 40
+  let boardSize = 6
   let hexes = findHexWithin(boardSize);
   let hexObjects = setupHexes(hexes);
   let playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
@@ -40,8 +40,6 @@
     }
     return list;
   }
-
-
 
   function randomInt(num) {return Math.floor(Math.random() * num);}
 
@@ -132,73 +130,78 @@
   //  UI and Draw -------------------------------------------------------------------------
 
   function doo(event){
-
     let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
+    onHexClicked(clickHex);
 
-    if(selected.state ==3){
-      if(event.offsetY < 100){
-        hexObjects[hexID(selected.hex)].station = {type: "base", owner: 1}
+    drawScreen();
+    drawMenu();
+  }
+
+function onHexClicked(clickHex){
+  if(selected.state ==3){
+    if(event.offsetY < 100){
+      hexObjects[hexID(selected.hex)].station = {type: "base", owner: 1}
+      selected = {hex:null, state:0}
+      possibleMoves = []; possibleAttacks = [];
+    }
+    else{
+      if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+      else{
         selected = {hex:null, state:0}
         possibleMoves = []; possibleAttacks = [];
       }
-      else{
-        if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
-        else{
-          selected = {hex:null, state:0}
-          possibleMoves = []; possibleAttacks = [];
-        }
-      }
     }
+  }
 
-    else if (selected.state == 2){
-      if (selected.hex && compareHexes(selected.hex , clickHex)){
+  else if (selected.state == 2){
+    if (selected.hex && compareHexes(selected.hex , clickHex)){
+      selected.state =3;
+      possibleMoves = []; possibleAttacks = [];
+      makeMenu();
+    }
+    else if(possibleMoves.length > 0 && possibleMoves.find( e =>  compareHexes(e, clickHex))) {
+      currentShip.location = clickHex;
+      currentShip = null;
+      selected = {hex:null, state:0} ;
+      possibleMoves = []; possibleAttacks = []; //attacks if have some
+    }
+    else if(possibleAttacks.find(e =>  compareHexes(e, clickHex))) {
+      let target = shipArray.find(e => compareHexes(e.location,clickHex));
+      if(target){
+        applyDamage(2, target);
+        if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
+      }else{console.log("error in attacks");}
+
+      currentShip = null;
+      selected = {hex:null, state:0} ;
+      possibleMoves = []; possibleAttacks = [];
+    }
+    else if(hexDistance(clickHex, Hex(0,0,0))<6){
+      selected = {hex:clickHex, state:1};
+      possibleMoves = []; possibleAttacks = [];
+    };
+  }
+
+  else if (selected.state == 1){
+    if (selected.hex && compareHexes(selected.hex , clickHex)){
+      currentShip = shipArray.find(e => compareHexes(e.location,clickHex));
+      if(currentShip){
+        setPossibleMoves();
+        selected.state = 2
+      }
+      else{
         selected.state =3;
         possibleMoves = []; possibleAttacks = [];
         makeMenu();
       }
-      else if(possibleMoves.length > 0 && possibleMoves.find( e =>  compareHexes(e, clickHex))) {
-        currentShip.location = clickHex;
-        currentShip = null;
-        selected = {hex:null, state:0} ;
-        possibleMoves = []; possibleAttacks = []; //attacks if have some
-      }
-      else if(possibleAttacks.find(e =>  compareHexes(e, clickHex))) {
-        let target = shipArray.find(e => compareHexes(e.location,clickHex));
-        if(target){
-          applyDamage(2, target);
-          if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
-        }else{console.log("error in attacks");}
-
-        currentShip = null;
-        selected = {hex:null, state:0} ;
-        possibleMoves = []; possibleAttacks = [];
-      }
-      else if(hexDistance(clickHex, Hex(0,0,0))<6){
-        selected = {hex:clickHex, state:1};
-        possibleMoves = []; possibleAttacks = [];
-      };
     }
-
-    else if (selected.state == 1){
-      if (selected.hex && compareHexes(selected.hex , clickHex)){
-        currentShip = shipArray.find(e => compareHexes(e.location,clickHex));
-        if(currentShip){
-          setPossibleMoves();
-          selected.state = 2
-        }
-        else{
-          selected.state =3;
-          possibleMoves = []; possibleAttacks = [];
-          makeMenu();
-        }
-      }
-      else{selected = {hex:null, state:0}}
-    }
-    else if (selected.state == 0){
-      if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
-    }
-    drawScreen();
+    else{selected = {hex:null, state:0}}
   }
+
+  else if (selected.state == 0){
+    if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+  }
+}
 
   function makeMenu(){menu = ["hi"]}
 
@@ -242,30 +245,9 @@
   }
 
   function getTerrainCost(a, b){
-
-    console.log(hexObjects);
-    console.log(b)
-    console.log(hexObjects[hexID(a)].terain);
-    console.log(hexObjects[hexID(b)].terain);
-    console.log(hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain);
     return terainCost[hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain]
-    //return 2;
   }
 
-  //   possibleMoves = [];
-  //   for(let local in hexNeighbours){
-  //     //  console.log(hexNeighbours[local] );
-  //     //  console.log(selected.hex );
-  //     let hex = addHex(hexNeighbours[local] , selected.hex)
-  //     if(hexDistance(hex, Hex(0,0,0)) < 4 && !shipArray.find(e => compareHexes(e.location,hex))){
-  //       possibleMoves.push(hex);
-  //     }
-  //     if(shipArray.find(e => compareHexes(e.location,hex))) {
-  //       possibleAttacks.push(hex);
-  //     }
-  //   }
-  //   //  console.log(possibleMoves);
-  // }
 
 
   function drawScreen(){
@@ -273,10 +255,10 @@
 
     for(let ho in hexObjects){
       if(hexObjects.hasOwnProperty(ho)){
-        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize ));
+        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2, "black", "black"  ));
 
         if( hexObjects[ho].terain == "nebula"){
-          line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "white", "grey"));
+          line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "grey", "grey"));
         }
 
         if( hexObjects[ho].station){
@@ -291,21 +273,25 @@
     }
 
     if(selected.hex){
-      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , "red"));
+      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , "red"));
       for (let p in possibleMoves){
-        line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize, 5 , "green"));
+        line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize -5, 3 , "green"));
       }
       for (let p in possibleAttacks){
-        line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),Vec(0,0), hexSize, 5 , "purple"));
+        line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),Vec(0,0), hexSize -5, 3 , "purple"));
       }
-      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize, 5 , selectedColour[selected.state]));
+      line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , selectedColour[selected.state]));
     }
 
+     document.querySelector("#board").innerHTML = line;
+  }
+
+  function drawMenu(){
+    let line = [];
     if (selected.state == 3){
-      line.push(`<polygon points='50,50 100,50 100,100 50,100' stroke='white' stroke-width=2' fill='none' />`);
+      line.push(`<polygon points='50,50 100,50 100,100 50,100' stroke='white' stroke-width=2' fill='white' />`);
     }
-
-    document.querySelector("svg").innerHTML = document.querySelector("svg").innerHTML = line;
+    document.querySelector("#menu").innerHTML = line;
   }
 
   function coord_as_string(a){ return `${a.x},${a.y} `; }
@@ -316,14 +302,12 @@
     let location = addVec(center, offset );
     for(let i=0; i<pointVec.length; i++){
       positions = positions.concat(coord_as_string(getScreenXYfromRealXY(addVec(scaleVec(pointVec[i],size),location))));
-      //  console.log(positions);
     }
     drawstring = drawstring + `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
     return drawstring;
   }
 
   function drawText( text, center, offset=Vec(0,0), size=20, fill="white") {
-    //  let location = addVec(center, offset );
     let pos = getScreenXYfromRealXY(addVec(center, offset))
     return  `<text x="${pos.x}" y="${pos.y}" fill="${fill}" style="font:bold ${size}px sans-serif"> ${text} </text>`
   }
@@ -332,7 +316,8 @@
 </head>
 <body>
 
-  <svg width="800" height="800" style="position: absolute; left='400px'; right='400px' ">  </svg>
+  <svg id="board" width="800" height="800" style="position: absolute; left='400px'; right='400px' ">  </svg>
+  <svg id="menu" width="400" height="200" style="position: absolute; left='200px'; right='200px' ">  </svg>
 
 </body>
 <script>
