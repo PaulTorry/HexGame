@@ -50,7 +50,7 @@
     for(let i=0; i<hexArray.length; i++){
       let buildingHex = {hex: hexArray[i], terain:"space", station:null};
       if(Math.random()<0.3){buildingHex.terain = "nebula"};
-    //  if(Math.random()<0.3){buildingHex.ship = {type:"scout", owner:randomInt(2)}};
+      //  if(Math.random()<0.3){buildingHex.ship = {type:"scout", owner:randomInt(2)}};
       if(Math.random()<0.1){buildingHex.station = {type:"base", owner:randomInt(2)}};
       hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
     }
@@ -180,7 +180,6 @@
     }
 
     else if (selected.state == 1){
-
       if (selected.hex && compareHexes(selected.hex , clickHex)){
         currentShip = shipArray.find(e => compareHexes(e.location,clickHex));
         if(currentShip){
@@ -198,7 +197,6 @@
     else if (selected.state == 0){
       if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
     }
-
     drawScreen();
   }
 
@@ -228,29 +226,19 @@
       for (let next in hexNeighbours){
         let hex = addHex(hexNeighbours[next] , current.loc)
         if (hexDistance(hex, Hex(0,0,0)) <= boardSize ){
-
           let cost = current.cost + getTerrainCost( current.loc, hex);
           if(!(visited[hexID(hex)] && cost >= visited[hexID(hex)].cost) && cost < moveLeft){ // TODO WTF
-          frontier.push({loc:hex, cost:cost});
-          visited[hexID(hex)] = {loc:hex, cost:current.cost + 1, from:current.loc};
+            frontier.push({loc:hex, cost:cost});
+            visited[hexID(hex)] = {loc:hex, cost:current.cost + 1, from:current.loc};
           }
-          // console.log(current);
-          // console.log(hex);
-          // console.log(frontier);
-          // console.log(visited);
         }
       }
     }
     let visitedArray = [];
     for (let v in visited){
-      if (visited.hasOwnProperty(v)){
-        visitedArray.push(visited[v].loc)
-      }
-
-
+      if (visited.hasOwnProperty(v)){visitedArray.push(visited[v].loc)}
     }
     return visitedArray
-
   }
 
   function getTerrainCost(a, b){
@@ -261,7 +249,7 @@
     console.log(hexObjects[hexID(b)].terain);
     console.log(hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain);
     return terainCost[hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain]
-//return 2;
+    //return 2;
   }
 
   //   possibleMoves = [];
