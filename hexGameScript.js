@@ -41,38 +41,11 @@ function setupHexes(hexArray){
 
 function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
-function getXYfromHex(hexCoord){
-  const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
-  let hexCentre = hexVec.p.scale(hexCoord.p).add(hexVec.q.scale(hexCoord.q))
-  hexCentre = hexCentre.add(hexVec.r.scale(hexCoord.r))
-  hexCentre = hexCentre.scale(hexSize)
-  return hexCentre
-}
-
-function getHexFromXY(xyScaled){
-  const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
-  let {p, q, r} = invHexVec;
-  let xy = xyScaled.scale(1/hexSize);
-  return new Hex(xy.dot(p), xy.dot(q),xy.dot(r))
-}
-
-
-//const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
+function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexSize)}
 
 
 
-function hex_round(h){
-  let qi = Math.round(h.q);
-  let ri = Math.round(h.r);
-  let pi = Math.round(h.p);
-  let q_diff = Math.abs(qi - h.q);
-  let r_diff = Math.abs(ri - h.r);
-  let p_diff = Math.abs(pi - h.p);
-  if (q_diff > r_diff && q_diff > p_diff)    {           qi = -ri - pi;    }
-  else  if (r_diff > p_diff)                 {           ri = -qi - pi;        }
-  else                                    {            pi = -qi - ri;        }
-  return new Hex(pi, qi, ri);
-}
+
 
 function applyDamage(dammage, ship){
   let {type, hull, shield} = ship
@@ -127,7 +100,7 @@ drawScreen();
 }
 
 function doo(event){
-  let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY))))
+  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).scale(1/hexSize))
   onHexClicked(clickHex);
   drawScreen();
   drawMenu();
