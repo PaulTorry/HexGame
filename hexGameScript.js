@@ -1,6 +1,5 @@
 "use strict"
 
-<<<<<<< HEAD
 class Vec {
   constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
 
@@ -9,15 +8,11 @@ class Vec {
   dot(b){    return this.x * b.x + this.y * b.y; }
 
   static getArray(input, Vecs){
-    let [xx, yy, ...rest] = input;
-    if (xx == null || yy == null){return Vecs}
-    else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
-  }
+   let [xx, yy, ...rest] = input;
+   if (xx == null || yy == null){return Vecs}
+   else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
+ }
 }
-
-//console.log(Vec.getArray([2,3,4,5],[]));
-
-function hexID(a){return ""+ a.p + "," + a.q}
 
 class Hex{
   constructor(p=0,q=0,r=0){ this.p=p; this.q=q; this.r=r; }
@@ -29,31 +24,17 @@ class Hex{
     if (pp == null || qq == null || rr == null){return Hexes}
     else {  return Hex.getArray(rest,Hexes.concat(new Hex(pp,qq,rr))) }
   }
-
 }
 
-console.log(Hex.getArray([2,3,4,5,6,7],[]));
-
-function addHex (a, b){  return new Hex(a.p+b.p, a.q+b.q, a.r+b.r);}
-// function (a, b){ return new Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
-function compareHexes(a, b){ return a.p==b.p && a.q==b.q && a.r==b.r}
-function Axial(p, q){ return {p:p, q:q}   }
-function hexToAxial(p, q, r){ return Axial(p, q)}
-function axialToHex(p, q){ return new Hex(p, q, -p-q)  }
-
-
-function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2      }
 
 //
-
+// function addVec(a, b){ return a.add(b)}//new Vec(a.x + b.x, a.y + b.y)   }
 // function scaleVec(a, m){ return a.scale(m)}
 // function dotProd(a, b){ return  a.dot(b);   }
 
-=======
->>>>>>> parent of e5d5c88... Classed Vec
 let screenSize = 800;
-let screenOffset = {x:-screenSize/2,y:-screenSize/2};
-let mouseDownLocation = {x:0,y:0};
+let screenOffset = new Vec(-screenSize/2,-screenSize/2);
+let mouseDownLocation = new Vec(0,0);
 let scale = 1;
 let hexSize = 40
 let boardSize = 6
@@ -101,79 +82,59 @@ function setupHexes(hexArray){
   return hexesObj;
 }
 
-function Vec(x, y){     return {x:x, y:y};   }
 
-<<<<<<< HEAD
 
-=======
-function addVec(a, b){ return Vec(a.x + b.x, a.y + b.y)   }
-function scaleVec(a, m){ return Vec(a.x * m, a.y * m)    }
-function dotProd(a, b){ return  a.x * b.x + a.y * b.y;   }
+//function Vec(x, y){     return {x:x, y:y};   }
+
+
 function hexID(a){return ""+ a.p + "," + a.q}
->>>>>>> parent of e5d5c88... Classed Vec
 
+//function Hex(p,q,r){ return {p:p, q:q, r:r};   }
+function addHex(a, b){ return new Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
+function compareHexes(a, b){ return a.p==b.p && a.q==b.q && a.r==b.r}
+function Axial(p, q){ return {p:p, q:q}   }
+function hexToAxial(p, q, r){ return Axial(p, q)}
+function axialToHex(p, q){ return new Hex(p, q, -p-q)  }
 
 
 function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
 
-//  function getRealXYfromScreenXY(a){return addVec(a,scaleVec(screenOffset,-1))}
+
 function getRealXYfromScreenXY(a){
-//  console.log(addVec(scaleVec(a,1/scale),screenOffset));
-return addVec(scaleVec(a,1/scale),screenOffset)
+
+return a.scale(1/scale).add(screenOffset)
 }
-<<<<<<< HEAD
+
 
 function getXYfromHex(hexCoord){
   const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
   let hexCentre = hexVec.p.scale(hexCoord.p).add(hexVec.q.scale(hexCoord.q))
   hexCentre = hexCentre.add(hexVec.r.scale(hexCoord.r))
   hexCentre = hexCentre.scale(hexSize)
-=======
-//  function getScreenXYfromRealXY(a){return addVec(a,screenOffset)}
-
-function getXYfromHex(hexCoord){
-  let hexCentre = addVec(scaleVec(hexVec.p, hexCoord.p), scaleVec(hexVec.q, hexCoord.q))
-  hexCentre = addVec(hexCentre, scaleVec(hexVec.r, hexCoord.r))
-  hexCentre = scaleVec(hexCentre, hexSize    )
->>>>>>> parent of e5d5c88... Classed Vec
   return hexCentre
 }
 
 function getHexFromXY(xyScaled){
   const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
   let {p, q, r} = invHexVec;
-<<<<<<< HEAD
   let xy = xyScaled.scale(1/hexSize);
   return new Hex(xy.dot(p), xy.dot(q),xy.dot(r))
 }
 
-const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,1,0)]
-//[{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
+const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
+const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
 
-const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),
-               new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
-const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
-const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
-=======
-  let xy = scaleVec(xyScaled, 1/hexSize);
-  return Hex(dotProd(xy,p), dotProd(xy,q), dotProd(xy,r))
-}
-
-const hexVec = {p: Vec(1,0),   q: Vec((-1/2), Math.sqrt(3)/2),  r: Vec((-1/2), -Math.sqrt(3)/2) }
-const invHexVec = {p: Vec(2/(3),0),   q: Vec((-2/6), Math.sqrt(3)/3),  r: Vec((-2/6), -Math.sqrt(3)/3) }
-
-const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
-const hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
+//const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
+const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]
 
 const hexTopAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:0}, {p:0, q:0, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
 const hexBotAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:0}, {p:0, q:0, r:0}]
 
-const hexVert = hexAxisList.map((x) => scaleVec(getXYfromHex(x),1/hexSize));
-const hexTopVert = hexTopAxisList.map((x) => scaleVec(getXYfromHex(x),1/hexSize));
-const hexBotVert = hexBotAxisList.map((x) => scaleVec(getXYfromHex(x),1/hexSize));
-const triangleVert = [Vec(1,0), Vec(-1,0), Vec(0,-1)];
-const squareVert = [Vec(1,1), Vec(-1,1), Vec(-1,-1), Vec(1,-1)];
->>>>>>> parent of e5d5c88... Classed Vec
+const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),
+               new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
+
+const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
+const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
 function hex_round(h){
   let qi = Math.round(h.q);
@@ -202,7 +163,7 @@ function applyDamage(dammage, ship){
 //  UI and Draw -------------------------------------------------------------------------
 
 function mousedown(event){
-  mouseDownLocation = {x: event.offsetX, y: event.offsetY}
+  mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
   document.body.querySelector("#board").addEventListener("mousemove", drag);
  document.body.querySelector("#board").addEventListener("mouseup", e => {
    document.body.querySelector("#board").removeEventListener("mousemove", drag);
@@ -213,18 +174,18 @@ function mouseWheel(event){
   console.log(event.deltaY);
   if (event.deltaY>0){
     scale *= 1.1;
-    screenOffset = scaleVec(screenOffset,1/1.1);
+    screenOffset = screenOffset.scale(1/1.1);
   }
   if (event.deltaY<0){
     scale /= 1.1;
-    screenOffset = scaleVec(screenOffset,1.1);
+    screenOffset = screenOffset.scale(1.1);
   }
           reScale();
 }
 
 function drag(event){
-  screenOffset = addVec(screenOffset,scaleVec(addVec(scaleVec(mouseDownLocation,-1),{x: event.offsetX, y: event.offsetY}),-1/(scale)))
-  mouseDownLocation =  {x: event.offsetX, y: event.offsetY} ;
+  screenOffset = screenOffset.add(mouseDownLocation.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)))
+  mouseDownLocation =  new Vec( event.offsetX, event.offsetY) ;
       reScale();
 }
 
@@ -241,7 +202,7 @@ drawScreen();
 }
 
 function doo(event){
-  let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY({x: event.offsetX, y:event.offsetY})))
+  let clickHex = hex_round(getHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY))))
   onHexClicked(clickHex);
   drawScreen();
   drawMenu();
@@ -250,7 +211,7 @@ function doo(event){
 function onHexClicked(clickHex){
 if(selected.state ==3){
 
-    if(hexDistance(clickHex,new Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+    if(hexDistance(clickHex, new Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
     else{
       selected = {hex:null, state:0}
       possibleMoves = []; possibleAttacks = [];
@@ -315,7 +276,7 @@ function setPossibleMoves(){
   possibleMoves = [];
   for(let local in candiateMoves){
     let hex = candiateMoves[local]
-    if(hexDistance(hex,new Hex(0,0,0)) <= boardSize && !shipArray.find(e => compareHexes(e.location,hex))){
+    if(hexDistance(hex, new Hex(0,0,0)) <= boardSize && !shipArray.find(e => compareHexes(e.location,hex))){
       possibleMoves.push(hex);
     }
     if(shipArray.find(e => compareHexes(e.location,hex))) {
@@ -332,7 +293,7 @@ function findPossibleMoves(center, moveLeft = 5){
     let current = frontier.shift();
     itts ++;
     for (let next in hexNeighbours){
-      let hex = addHex(hexNeighbours[next],current.loc)
+      let hex = addHex(hexNeighbours[next] , current.loc)
       if (hexDistance(hex, new Hex(0,0,0)) <= boardSize ){
         let cost = current.cost + getTerrainCost( current.loc, hex);
         if(!(visited[hexID(hex)] && cost >= visited[hexID(hex)].cost) && cost < moveLeft){ // TODO WTF
@@ -350,6 +311,11 @@ function findPossibleMoves(center, moveLeft = 5){
 }
 
 function getTerrainCost(a, b){
+  console.log(hexID(a));
+  console.log(hexID(b));
+    console.log(hexObjects[hexID(a)]);
+      console.log( hexObjects[hexID(b)]);
+      console.log("\n");
   return terainCost[hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain]
 }
 
@@ -360,32 +326,32 @@ function drawScreen(){
 
   for(let ho in hexObjects){
     if(hexObjects.hasOwnProperty(ho)){
-      line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 1, "#25202D", "#120F22"  ));
+      line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),new Vec(0,0), hexSize, 1, "#25202D", "#120F22"  ));
 
       if( hexObjects[ho].terain == "nebula"){
-        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),Vec(0,0), hexSize, 2 , "#25202D", "grey"));
+        line.push(drawPolygon(hexVert, getXYfromHex(hexObjects[ho].hex),new Vec(0,0), hexSize, 2 , "#25202D", "grey"));
       }
 
       if( hexObjects[ho].station){
-        line.push(drawPolygon(squareVert, getXYfromHex(hexObjects[ho].hex),Vec(0,15), 10, 2 , playerColours[hexObjects[ho].station.owner], "white"));
+        line.push(drawPolygon(squareVert, getXYfromHex(hexObjects[ho].hex),new Vec(0,15), 10, 2 , playerColours[hexObjects[ho].station.owner], "white"));
       }
     }
   }
 
   for(let sh in shipArray){
-    line.push(drawPolygon(triangleVert, getXYfromHex(shipArray[sh].location) ,Vec(0,0), 30,  2 , playerColours[shipArray[sh].owner], playerColours[shipArray[sh].owner]));
-    line.push(drawText(`${shipArray[sh].shield},${shipArray[sh].hull}`, getXYfromHex(shipArray[sh].location) ,Vec(-15,0)));
+    line.push(drawPolygon(triangleVert, getXYfromHex(shipArray[sh].location) ,new Vec(0,0), 30,  2 , playerColours[shipArray[sh].owner], playerColours[shipArray[sh].owner]));
+    line.push(drawText(`${shipArray[sh].shield},${shipArray[sh].hull}`, getXYfromHex(shipArray[sh].location) ,new Vec(-15,0)));
   }
 
   if(selected.hex){
 //    line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , "red"));
     for (let p in possibleMoves){
-    line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),Vec(0,0), hexSize -5, 3 , "green"));
+    line.push(drawPolygon(hexVert, getXYfromHex(possibleMoves[p]),new Vec(0,0), hexSize -5, 3 , "green"));
     }
     for (let p in possibleAttacks){
-      line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),Vec(0,0), hexSize -5, 3 , "purple"));
+      line.push(drawPolygon(hexVert, getXYfromHex(possibleAttacks[p]),new Vec(0,0), hexSize -5, 3 , "purple"));
     }
-    line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),Vec(0,0), hexSize -5, 3 , selectedColour[selected.state]));
+    line.push(drawPolygon(hexVert, getXYfromHex(selected.hex),new Vec(0,0), hexSize -5, 3 , selectedColour[selected.state]));
   }
   reScale();
 //     document.querySelector("#board").setAttribute("viewBox",`${screenOffset.x} ${screenOffset.y} ${screenSize/scale} ${screenSize/scale}`);
@@ -399,23 +365,23 @@ document.querySelector("#board").setAttribute("viewBox",`${screenOffset.x} ${scr
 function drawMenu(){
   let line = [];
   if (selected.state == 3){
-    line.push(`<polygon points='20,20 60,20 60,60 20,60' stroke='white' stroke-width=2' fill='white' />`);
+    line.push(`<polygon points='20,20 60,20 60,60 20,60' stroke='white' stroke-width=2' fill='white' />`);
   }
   document.querySelector("#menu").innerHTML = line;
 }
 
 function coord_as_string(a){ return `${a.x},${a.y} `; }
 
-function drawPolygon( pointVec, center, offset=Vec(0,0), size=hexSize, stroke=2, colour="white", fill="none") {
+function drawPolygon( pointVec, center, offset= new Vec(0,0), size=hexSize, stroke=2, colour="white", fill="none") {
   let positions = "";
-  let location = addVec(center, offset );
+  let location = center.add(offset );
   for(let i=0; i<pointVec.length; i++){
-    positions = positions.concat(coord_as_string(addVec(scaleVec(pointVec[i],size),location)));
+    positions = positions.concat(coord_as_string(pointVec[i].scale(size).add(location)));
   }
-  return `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
+  return `<polygon points='${positions}' stroke='${colour}' stroke-width='${stroke}' fill='${fill}' />` ;
 }
 
-function drawText( text, center, offset=Vec(0,0), size=20, fill="white") {
-  let pos = addVec(center, offset)
+function drawText( text, center, offset= new Vec(0,0), size=20, fill="white") {
+  let pos = center.add(offset)
   return  `<text x="${pos.x}" y="${pos.y}" fill="${fill}" style="font:bold ${size}px sans-serif"> ${text} </text>`
 }
