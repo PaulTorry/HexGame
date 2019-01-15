@@ -1,6 +1,6 @@
 "use strict"
 
-class Vec {
+class Vec{
   constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
 
   add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
@@ -28,6 +28,17 @@ class Hex{
     if (pp == null || qq == null || rr == null){return Hexes}
     else {  return Hex.getArray(rest,Hexes.concat(new Hex(pp,qq,rr))) }
   }
+
+  static findWithin(n){
+    let list = []
+    for(let i = -n; i<=n; i++){
+      for(let j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
+        list.push(new Hex(i, j, -i-j));
+      }
+    }
+    return list;
+  }
+
 }
 
 let screenSize = 800;
@@ -36,8 +47,7 @@ let mouseDownLocation = new Vec(0,0);
 let scale = 1;
 let hexSize = 40
 let boardSize = 6
-let hexes = findHexWithin(boardSize);
-let hexObjects = setupHexes(hexes);
+let hexObjects = setupHexes(Hex.findWithin(boardSize));
 let playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
 let selectedColour = ["white","red", "blue", "orange"]
 let playerTurn = 0;
@@ -113,11 +123,6 @@ function getHexFromXY(xyScaled){
 const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]
 
 
-const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),
-               new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
-
-const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
-const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
 function hex_round(h){
   let qi = Math.round(h.q);
@@ -297,6 +302,12 @@ function getTerrainCost(a, b){
   return terainCost[hexObjects[a.id].terain + hexObjects[b.id].terain]
 }
 
+ /// DRAW SCREEN
+
+const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),
+               new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
+const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
+const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
 
 function drawScreen(){
