@@ -17,7 +17,11 @@ class Vec {
 class Hex{
   constructor(p=0,q=0,r=0){ this.p=p; this.q=q; this.r=r; }
 
-  add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)}
+  add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)};
+  compare(b){return this.p==b.p && this.q==b.q && this.r==b.r};
+  distance(b){return (Math.abs(this.p - b.p) + Math.abs(this.q - b.q) + Math.abs(this.r - b.r)) / 2};
+  get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2};
+  get id () {return  `${this.p},${this.q}`}
 
   static getArray(input, Hexes){
     let [pp, qq, rr, ...rest] = input;
@@ -25,12 +29,6 @@ class Hex{
     else {  return Hex.getArray(rest,Hexes.concat(new Hex(pp,qq,rr))) }
   }
 }
-
-
-//
-// function addVec(a, b){ return a.add(b)}//new Vec(a.x + b.x, a.y + b.y)   }
-// function scaleVec(a, m){ return a.scale(m)}
-// function dotProd(a, b){ return  a.dot(b);   }
 
 let screenSize = 800;
 let screenOffset = new Vec(-screenSize/2,-screenSize/2);
@@ -62,7 +60,7 @@ function findHexWithin(n){
   let list = []
   for(let i = -n; i<=n; i++){
     for(let j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
-      list.push(axialToHex(i, j));
+      list.push(new Hex(i, j, -i-j));
     }
   }
   return list;
@@ -87,17 +85,6 @@ function setupHexes(hexArray){
 //function Vec(x, y){     return {x:x, y:y};   }
 
 
-function hexID(a){return ""+ a.p + "," + a.q}
-
-//function Hex(p,q,r){ return {p:p, q:q, r:r};   }
-function addHex(a, b){ return new Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
-function compareHexes(a, b){ return a.p==b.p && a.q==b.q && a.r==b.r}
-function Axial(p, q){ return {p:p, q:q}   }
-function hexToAxial(p, q, r){ return Axial(p, q)}
-function axialToHex(p, q){ return new Hex(p, q, -p-q)  }
-
-
-function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
 
 
 function getRealXYfromScreenXY(a){
@@ -121,14 +108,10 @@ function getHexFromXY(xyScaled){
   return new Hex(xy.dot(p), xy.dot(q),xy.dot(r))
 }
 
-const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
-const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
 
 //const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
 const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]
 
-const hexTopAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:0}, {p:0, q:0, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
-const hexBotAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:0}, {p:0, q:0, r:0}]
 
 const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),
                new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
@@ -193,7 +176,7 @@ function menuClick(event){
 console.log("click" + selected.state);
 if(selected.state == 3){
   if(event.offsetY < 100){
-    hexObjects[hexID(selected.hex)].station = {type: "base", owner: playerTurn}
+    hexObjects[selected.hex.id].station = {type: "base", owner: playerTurn}
     selected = {hex:null, state:0}
     possibleMoves = []; possibleAttacks = [];
   }
@@ -211,7 +194,7 @@ function doo(event){
 function onHexClicked(clickHex){
 if(selected.state ==3){
 
-    if(hexDistance(clickHex, new Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+    if(clickHex.mag <= boardSize){selected = {hex:clickHex, state:1}}
     else{
       selected = {hex:null, state:0}
       possibleMoves = []; possibleAttacks = [];
@@ -220,19 +203,19 @@ if(selected.state ==3){
 }
 
 else if (selected.state == 2){
-  if (selected.hex && compareHexes(selected.hex , clickHex)){
+  if (selected.hex && selected.hex.compare(clickHex)){
     selected.state =3;
     possibleMoves = []; possibleAttacks = [];
     makeMenu();
   }
-  else if(possibleMoves.length > 0 && possibleMoves.find( e =>  compareHexes(e, clickHex))) {
+  else if(possibleMoves.length > 0 && possibleMoves.find( e =>  e.compare(clickHex))) {
     currentShip.location = clickHex;
     currentShip = null;
     selected = {hex:null, state:0} ;
     possibleMoves = []; possibleAttacks = []; //attacks if have some
   }
-  else if(possibleAttacks.find(e =>  compareHexes(e, clickHex))) {
-    let target = shipArray.find(e => compareHexes(e.location,clickHex));
+  else if(possibleAttacks.find(e =>  e.compare(clickHex))) {
+    let target = shipArray.find(e => e.location.compare(clickHex));
     if(target){
       applyDamage(2, target);
       if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
@@ -242,15 +225,15 @@ else if (selected.state == 2){
     selected = {hex:null, state:0} ;
     possibleMoves = []; possibleAttacks = [];
   }
-  else if(hexDistance(clickHex, new Hex(0,0,0))<6){
+  else if(clickHex.mag <=  boardSize){
     selected = {hex:clickHex, state:1};
     possibleMoves = []; possibleAttacks = [];
   };
 }
 
 else if (selected.state == 1){
-  if (selected.hex && compareHexes(selected.hex , clickHex)){
-    currentShip = shipArray.find(e => compareHexes(e.location,clickHex));
+  if (selected.hex && selected.hex.compare(clickHex)){
+    currentShip = shipArray.find(e => e.location.compare(clickHex));
     if(currentShip){
       setPossibleMoves();
       selected.state = 2
@@ -265,7 +248,7 @@ else if (selected.state == 1){
 }
 
 else if (selected.state == 0){
-  if(hexDistance(clickHex, new Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+  if(clickHex.mag <=boardSize){selected = {hex:clickHex, state:1}}
 }
 }
 
@@ -276,10 +259,10 @@ function setPossibleMoves(){
   possibleMoves = [];
   for(let local in candiateMoves){
     let hex = candiateMoves[local]
-    if(hexDistance(hex, new Hex(0,0,0)) <= boardSize && !shipArray.find(e => compareHexes(e.location,hex))){
+    if(hex.mag <=  boardSize && !shipArray.find(e => e.location.compare(hex))){
       possibleMoves.push(hex);
     }
-    if(shipArray.find(e => compareHexes(e.location,hex))) {
+    if(shipArray.find(e => e.location.compare(hex))) {
       possibleAttacks.push(hex);
     }
   }
@@ -287,18 +270,18 @@ function setPossibleMoves(){
 
 function findPossibleMoves(center, moveLeft = 5){
   let frontier = [{loc:center, cost:0}];
-  let visited = {[hexID(center)]: {loc:center, cost:true, from:null}}
+  let visited = {[center.id]: {loc:center, cost:true, from:null}}
   let itts = 0
   while (frontier.length > 0 && itts < 1000){
     let current = frontier.shift();
     itts ++;
     for (let next in hexNeighbours){
-      let hex = addHex(hexNeighbours[next] , current.loc)
-      if (hexDistance(hex, new Hex(0,0,0)) <= boardSize ){
+      let hex = hexNeighbours[next].add(current.loc)
+      if (hex.mag <= boardSize ){
         let cost = current.cost + getTerrainCost( current.loc, hex);
-        if(!(visited[hexID(hex)] && cost >= visited[hexID(hex)].cost) && cost < moveLeft){ // TODO WTF
+        if(!(visited[hex.id] && cost >= visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
           frontier.push({loc:hex, cost:cost});
-          visited[hexID(hex)] = {loc:hex, cost:current.cost + 1, from:current.loc};
+          visited[hex.id] = {loc:hex, cost:current.cost + 1, from:current.loc};
         }
       }
     }
@@ -311,12 +294,7 @@ function findPossibleMoves(center, moveLeft = 5){
 }
 
 function getTerrainCost(a, b){
-  console.log(hexID(a));
-  console.log(hexID(b));
-    console.log(hexObjects[hexID(a)]);
-      console.log( hexObjects[hexID(b)]);
-      console.log("\n");
-  return terainCost[hexObjects[hexID(a)].terain + hexObjects[hexID(b)].terain]
+  return terainCost[hexObjects[a.id].terain + hexObjects[b.id].terain]
 }
 
 
