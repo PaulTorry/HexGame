@@ -1,46 +1,5 @@
 "use strict"
 
-class Vec{
-  constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
-
-  add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
-  scale(m) { return new Vec(this.x * m, this.y * m) }
-  dot(b){    return this.x * b.x + this.y * b.y; }
-
-  static getArray(input, Vecs){
-   let [xx, yy, ...rest] = input;
-   if (xx == null || yy == null){return Vecs}
-   else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
- }
-}
-
-class Hex{
-  constructor(p=0,q=0,r=0){ this.p=p; this.q=q; this.r=r; }
-
-  add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)};
-  compare(b){return this.p==b.p && this.q==b.q && this.r==b.r};
-  distance(b){return (Math.abs(this.p - b.p) + Math.abs(this.q - b.q) + Math.abs(this.r - b.r)) / 2};
-  get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2};
-  get id () {return  `${this.p},${this.q}`}
-
-  static getArray(input, Hexes){
-    let [pp, qq, rr, ...rest] = input;
-    if (pp == null || qq == null || rr == null){return Hexes}
-    else {  return Hex.getArray(rest,Hexes.concat(new Hex(pp,qq,rr))) }
-  }
-
-  static findWithin(n){
-    let list = []
-    for(let i = -n; i<=n; i++){
-      for(let j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
-        list.push(new Hex(i, j, -i-j));
-      }
-    }
-    return list;
-  }
-
-}
-
 let screenSize = 800;
 let screenOffset = new Vec(-screenSize/2,-screenSize/2);
 let mouseDownLocation = new Vec(0,0);
@@ -57,8 +16,6 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
-
-
 let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
 
 let shipArray = [
@@ -66,24 +23,13 @@ let shipArray = [
   {type:"scout", hull:"1", shield:"4", owner:"0", location: new Hex(0,1,-1), prevLocation: new Hex(1,0,-1)},
 ];
 
-function findHexWithin(n){
-  let list = []
-  for(let i = -n; i<=n; i++){
-    for(let j = Math.max(-n, -n-i); j <=Math.min(n, n-i); j++){
-      list.push(new Hex(i, j, -i-j));
-    }
-  }
-  return list;
-}
 
-function randomInt(num) {return Math.floor(Math.random() * num);}
 
 function setupHexes(hexArray){
   let hexesObj = {};
   for(let i=0; i<hexArray.length; i++){
     let buildingHex = {hex: hexArray[i], terain:"space", station:null};
     if(Math.random()<0.3){buildingHex.terain = "nebula"};
-    //  if(Math.random()<0.3){buildingHex.ship = {type:"scout", owner:randomInt(2)}};
     if(Math.random()<0.1){buildingHex.station = {type:"base", owner:randomInt(2)}};
     hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
   }
@@ -92,16 +38,8 @@ function setupHexes(hexArray){
 
 
 
-//function Vec(x, y){     return {x:x, y:y};   }
 
-
-
-
-function getRealXYfromScreenXY(a){
-
-return a.scale(1/scale).add(screenOffset)
-}
-
+function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
 function getXYfromHex(hexCoord){
   const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
@@ -120,7 +58,6 @@ function getHexFromXY(xyScaled){
 
 
 //const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
-const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]
 
 
 
@@ -280,8 +217,8 @@ function findPossibleMoves(center, moveLeft = 5){
   while (frontier.length > 0 && itts < 1000){
     let current = frontier.shift();
     itts ++;
-    for (let next in hexNeighbours){
-      let hex = hexNeighbours[next].add(current.loc)
+    for (let next in Hex.neighbours()){
+      let hex = Hex.neighbours()[next].add(current.loc)
       if (hex.mag <= boardSize ){
         let cost = current.cost + getTerrainCost( current.loc, hex);
         if(!(visited[hex.id] && cost >= visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
