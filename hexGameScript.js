@@ -101,7 +101,6 @@ function setupHexes(hexArray){
 
 
 
-function Axial(p, q){ return {p:p, q:q}   }
 
 
 function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
@@ -130,6 +129,7 @@ function getHexFromXY(xyScaled){
 const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,1,0)]
 //[{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
 
+const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),
                new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
