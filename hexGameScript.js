@@ -6,9 +6,45 @@ class Vec {
   add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
   scale(m) { return new Vec(this.x * m, this.y * m) }
   dot(b){    return this.x * b.x + this.y * b.y; }
+
+  static getArray(input, Vecs){
+    let [xx, yy, ...rest] = input;
+    if (xx == null || yy == null){return Vecs}
+    else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
+  }
 }
+
+//console.log(Vec.getArray([2,3,4,5],[]));
+
+function hexID(a){return ""+ a.p + "," + a.q}
+
+class Hex{
+  constructor(p=0,q=0,r=0){ this.p=p; this.q=q; this.r=r; }
+
+  add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)}
+
+  static getArray(input, Hexes){
+    let [pp, qq, rr, ...rest] = input;
+    if (pp == null || qq == null || rr == null){return Hexes}
+    else {  return Hex.getArray(rest,Hexes.concat(new Hex(pp,qq,rr))) }
+  }
+
+}
+
+console.log(Hex.getArray([2,3,4,5,6,7],[]));
+
+function addHex (a, b){  return new Hex(a.p+b.p, a.q+b.q, a.r+b.r);}
+// function (a, b){ return new Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
+function compareHexes(a, b){ return a.p==b.p && a.q==b.q && a.r==b.r}
+function Axial(p, q){ return {p:p, q:q}   }
+function hexToAxial(p, q, r){ return Axial(p, q)}
+function axialToHex(p, q){ return new Hex(p, q, -p-q)  }
+
+
+function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2      }
+
 //
-// function addVec(a, b){ return a.add(b)}//new Vec(a.x + b.x, a.y + b.y)   }
+
 // function scaleVec(a, m){ return a.scale(m)}
 // function dotProd(a, b){ return  a.dot(b);   }
 
@@ -34,8 +70,8 @@ let menu = [];
 let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
 
 let shipArray = [
-  {type:"scout", hull:"2", shield:"3", owner:"1", location:Hex(0,0,0), prevLocation:Hex(1,0,-1)},
-  {type:"scout", hull:"1", shield:"4", owner:"0", location:Hex(0,1,-1), prevLocation:Hex(1,0,-1)},
+  {type:"scout", hull:"2", shield:"3", owner:"1", location: new Hex(0,0,0), prevLocation: new Hex(1,0,-1)},
+  {type:"scout", hull:"1", shield:"4", owner:"0", location: new Hex(0,1,-1), prevLocation: new Hex(1,0,-1)},
 ];
 
 function findHexWithin(n){
@@ -64,17 +100,8 @@ function setupHexes(hexArray){
 
 
 
-//function Vec(x, y){     return {x:x, y:y};   }
 
-
-function hexID(a){return ""+ a.p + "," + a.q}
-
-function Hex(p,q,r){ return {p:p, q:q, r:r};   }
-function addHex(a, b){ return Hex(a.p+b.p, a.q+b.q, a.r+b.r); }
-function compareHexes(a, b){ return a.p==b.p && a.q==b.q && a.r==b.r}
 function Axial(p, q){ return {p:p, q:q}   }
-function hexToAxial(p, q, r){ return Axial(p, q)}
-function axialToHex(p, q){ return Hex(p, q, -p-q)  }
 
 
 function hexDistance(a, b){  return (Math.abs(a.p - b.p) + Math.abs(a.q - b.q) + Math.abs(a.r - b.r)) / 2        }
@@ -85,8 +112,8 @@ function getRealXYfromScreenXY(a){
 return a.scale(1/scale).add(screenOffset)
 }
 
-
 function getXYfromHex(hexCoord){
+  const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
   let hexCentre = hexVec.p.scale(hexCoord.p).add(hexVec.q.scale(hexCoord.q))
   hexCentre = hexCentre.add(hexVec.r.scale(hexCoord.r))
   hexCentre = hexCentre.scale(hexSize)
@@ -94,23 +121,16 @@ function getXYfromHex(hexCoord){
 }
 
 function getHexFromXY(xyScaled){
+  const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
   let {p, q, r} = invHexVec;
   let xy = xyScaled.scale(1/hexSize);
-  return Hex(xy.dot(p), xy.dot(q),xy.dot(r))
+  return new Hex(xy.dot(p), xy.dot(q),xy.dot(r))
 }
 
-const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
-const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
+const hexNeighbours = [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,1,0)]
+//[{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
 
-const hexAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
-const hexNeighbours = [{p:1, q:0, r:-1}, {p:0, q:-1, r:1}, {p:-1, q:0, r:1}, {p:-1, q:1, r:0},  {p:0, q:1, r:-1}, {p:1, q:-1, r:0}]
-
-const hexTopAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:0}, {p:0, q:0, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:1}, {p:0, q:-1, r:0}]
-const hexBotAxisList =   [{p:1, q:0, r:0}, {p:0, q:0, r:-1}, {p:0, q:1, r:0}, {p:-1, q:0, r:0},  {p:0, q:0, r:0}, {p:0, q:0, r:0}]
-
-const hexVert = hexAxisList.map((x) => getXYfromHex(x).scale(1/hexSize));
-const hexTopVert = hexTopAxisList.map((x) => getXYfromHex(x).scale(1/hexSize));
-const hexBotVert = hexBotAxisList.map((x) => getXYfromHex(x).scale(1/hexSize));
+               new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
@@ -124,7 +144,7 @@ function hex_round(h){
   if (q_diff > r_diff && q_diff > p_diff)    {           qi = -ri - pi;    }
   else  if (r_diff > p_diff)                 {           ri = -qi - pi;        }
   else                                    {            pi = -qi - ri;        }
-  return Hex(pi, qi, ri);
+  return new Hex(pi, qi, ri);
 }
 
 function applyDamage(dammage, ship){
@@ -189,7 +209,7 @@ function doo(event){
 function onHexClicked(clickHex){
 if(selected.state ==3){
 
-    if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+    if(hexDistance(clickHex,new Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
     else{
       selected = {hex:null, state:0}
       possibleMoves = []; possibleAttacks = [];
@@ -220,7 +240,7 @@ else if (selected.state == 2){
     selected = {hex:null, state:0} ;
     possibleMoves = []; possibleAttacks = [];
   }
-  else if(hexDistance(clickHex, Hex(0,0,0))<6){
+  else if(hexDistance(clickHex, new Hex(0,0,0))<6){
     selected = {hex:clickHex, state:1};
     possibleMoves = []; possibleAttacks = [];
   };
@@ -243,7 +263,7 @@ else if (selected.state == 1){
 }
 
 else if (selected.state == 0){
-  if(hexDistance(clickHex, Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
+  if(hexDistance(clickHex, new Hex(0,0,0))<=boardSize){selected = {hex:clickHex, state:1}}
 }
 }
 
@@ -254,7 +274,7 @@ function setPossibleMoves(){
   possibleMoves = [];
   for(let local in candiateMoves){
     let hex = candiateMoves[local]
-    if(hexDistance(hex, Hex(0,0,0)) <= boardSize && !shipArray.find(e => compareHexes(e.location,hex))){
+    if(hexDistance(hex,new Hex(0,0,0)) <= boardSize && !shipArray.find(e => compareHexes(e.location,hex))){
       possibleMoves.push(hex);
     }
     if(shipArray.find(e => compareHexes(e.location,hex))) {
@@ -271,8 +291,8 @@ function findPossibleMoves(center, moveLeft = 5){
     let current = frontier.shift();
     itts ++;
     for (let next in hexNeighbours){
-      let hex = addHex(hexNeighbours[next] , current.loc)
-      if (hexDistance(hex, Hex(0,0,0)) <= boardSize ){
+      let hex = addHex(hexNeighbours[next],current.loc)
+      if (hexDistance(hex, new Hex(0,0,0)) <= boardSize ){
         let cost = current.cost + getTerrainCost( current.loc, hex);
         if(!(visited[hexID(hex)] && cost >= visited[hexID(hex)].cost) && cost < moveLeft){ // TODO WTF
           frontier.push({loc:hex, cost:cost});
