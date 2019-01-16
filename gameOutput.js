@@ -8,6 +8,13 @@ const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
 
+function myCanvas() {
+  var c = document.getElementById("myCanvas");
+  var ctx = c.getContext("2d");
+
+  //ctx.drawImage(  ,10,10);
+}
+
 function drawScreen(){
   let line = [];
 
