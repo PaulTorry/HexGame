@@ -5,12 +5,11 @@ function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexS
 const hexVert = [new Vec(1,0),    new Vec((1/2), Math.sqrt(3)/2) , new Vec((-1/2), Math.sqrt(3)/2),  new Vec(-1,0) ,     new Vec((-1/2), -Math.sqrt(3)/2),  new Vec((1/2), -Math.sqrt(3)/2)  ]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
-
+//const picNames = {"nebula":"nebula.svg", "planet":"planet.svg", "asteroids":"asteroids.svg", "gas giant.svg"}
 
 function drawScreen() {
-  var c = document.getElementById("myCanvas").getContext("2d");
+  var c = document.getElementById("board").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);                            // FIX THIS @TODO
-  //c.translate(...[400,400]);
   c.fillStyle = '#ff0000';
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
@@ -19,24 +18,22 @@ function drawScreen() {
     if(hexObjects.hasOwnProperty(ho)){
       drawPoly(c, hexVert, getXYfromHex(hexObjects[ho].hex), hexSize, 1, "#25202D", "#120F22"  );
 
-      if( hexObjects[ho].terain == "nebula"){
-        drawPoly(c, hexVert, getXYfromHex(hexObjects[ho].hex), hexSize, 2 , "#25202D", "grey");
+      if(hexObjects[ho].terain !== "space"){
+        // drawPoly(c, hexVert, getXYfromHex(hexObjects[ho].hex), hexSize, 2 , "#25202D", "grey");
+        let image = document.getElementById(hexObjects[ho].terain + "Pic");
+        let {x,y} = getXYfromHex(hexObjects[ho].hex)
+        c.drawImage(image, x - 50, y - 50, 100, 100);
       }
-
-      if( hexObjects[ho].station){
-        drawPoly(c, squareVert, getXYfromHex(hexObjects[ho].hex), 10, 2 , playerColours[hexObjects[ho].station.owner], "white");
-      }
+       if(hexObjects[ho].station){        drawPoly(c, squareVert, getXYfromHex(hexObjects[ho].hex), 10, 2 , playerColours[hexObjects[ho].station.owner], "white");      }
     }
   }
 
   for(let sh in shipArray){
     drawPoly(c, triangleVert, getXYfromHex(shipArray[sh].location), 30,  2 , playerColours[shipArray[sh].owner], playerColours[shipArray[sh].owner]);
-    //  line.push(drawText(`${shipArray[sh].shield},${shipArray[sh].hull}`, getXYfromHex(shipArray[sh].location) ,new Vec(-15,0)));
+    drawText(c, `${shipArray[sh].shield}|${shipArray[sh].hull}`, getXYfromHex(shipArray[sh].location).add(new Vec(-20,0)) )
   }
 
   if(selected.hex){
-    console.log("selected.hex" + selected.state);
-
     for (let p in possibleMoves){
       drawPoly(c, hexVert, getXYfromHex(possibleMoves[p]), hexSize -5, 3 , "green");
     }
@@ -46,7 +43,6 @@ function drawScreen() {
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
 
-//  c.translate(...[-400,-400]);
 }
 
 function drawMenu(){
@@ -67,4 +63,14 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   c.closePath();
   c.stroke();
   if(fColor){c.fill();}
+}
+
+function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "Georgia"){
+  let {x,y} = center//.scale(scale)
+  c.font = `${size}px ${font}`;
+  c.fillStyle = color;
+  c.fillText(text, x, y);
+
+  c.stroke();
+  //if(color){c.fill();}
 }
