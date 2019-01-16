@@ -9,7 +9,8 @@ const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
 function drawScreen() {
   var c = document.getElementById("myCanvas").getContext("2d");
-  c.translate(...[400,400]);
+  c.clearRect(-99999,-99999,199999,199999);                            // FIX THIS @TODO
+  //c.translate(...[400,400]);
   c.fillStyle = '#ff0000';
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
@@ -45,8 +46,7 @@ function drawScreen() {
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
 
-  //c.scale(2, 2)
-  c.translate(...[-400,-400]);
+//  c.translate(...[-400,-400]);
 }
 
 function drawMenu(){

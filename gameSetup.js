@@ -1,6 +1,6 @@
 "use strict"
 const screenSize = 800;
-let screenOffset = new Vec(-screenSize/2,-screenSize/2);
+let screenOffset = new Vec(0,0);
 let mouseDownLocation = new Vec(0,0);
 let scale = 1;
 let hexSize = 40
