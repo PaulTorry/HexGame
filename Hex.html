@@ -22,8 +22,18 @@
   <svg id="menu" width="800" height="100"
    style="position: absolute; border-style: solid; left: 000px;">  </svg>
 
+   <canvas id="myCanvas" width="250" height="300" style="border:1px solid #d3d3d3;">
+
 </body>
 <script>
+
+function myCanvas() {
+  var c = document.getElementById("myCanvas");
+  var ctx = c.getContext("2d");
+
+  //ctx.drawImage(  ,10,10);
+}
+
 document.body.querySelector("#board").addEventListener("click", doo) ;
 document.body.querySelector("#board").addEventListener("mousedown", mousedown);
 document.body.querySelector("#board").addEventListener("wheel", mouseWheel);
