@@ -1,62 +1,61 @@
 function onHexClicked(clickHex){
-if(selected.state ==3){
+  if(selected.state ==3){
 
     if(clickHex.mag <= boardSize){selected = {hex:clickHex, state:1}}
     else{
       selected = {hex:null, state:0}
       possibleMoves = []; possibleAttacks = [];
-
-  }
-}
-
-else if (selected.state == 2){
-  if (selected.hex && selected.hex.compare(clickHex)){
-    selected.state =3;
-    possibleMoves = []; possibleAttacks = [];
-    makeMenu();
-  }
-  else if(possibleMoves.length > 0 && possibleMoves.find( e =>  e.compare(clickHex))) {
-    currentShip.location = clickHex;
-    currentShip = null;
-    selected = {hex:null, state:0} ;
-    possibleMoves = []; possibleAttacks = []; //attacks if have some
-  }
-  else if(possibleAttacks.find(e =>  e.compare(clickHex))) {
-    let target = shipArray.find(e => e.location.compare(clickHex));
-    if(target){
-      applyDamage(2, target);
-      if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
-    }else{console.log("error in attacks");}
-
-    currentShip = null;
-    selected = {hex:null, state:0} ;
-    possibleMoves = []; possibleAttacks = [];
-  }
-  else if(clickHex.mag <=  boardSize){
-    selected = {hex:clickHex, state:1};
-    possibleMoves = []; possibleAttacks = [];
-  };
-}
-
-else if (selected.state == 1){
-  if (selected.hex && selected.hex.compare(clickHex)){
-    currentShip = shipArray.find(e => e.location.compare(clickHex));
-    if(currentShip){
-      setPossibleMoves();
-      selected.state = 2
     }
-    else{
+  }
+
+  else if (selected.state == 2){
+    if (selected.hex && selected.hex.compare(clickHex)){
       selected.state =3;
       possibleMoves = []; possibleAttacks = [];
       makeMenu();
     }
-  }
-  else{selected = {hex:null, state:0}}
-}
+    else if(possibleMoves.length > 0 && possibleMoves.find( e =>  e.compare(clickHex))) {
+      currentShip.location = clickHex;
+      currentShip = null;
+      selected = {hex:null, state:0} ;
+      possibleMoves = []; possibleAttacks = []; //attacks if have some
+    }
+    else if(possibleAttacks.find(e =>  e.compare(clickHex))) {
+      let target = shipArray.find(e => e.location.compare(clickHex));
+      if(target){
+        applyDamage(2, target);
+        if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
+      }else{console.log("error in attacks");}
 
-else if (selected.state == 0){
-  if(clickHex.mag <=boardSize){selected = {hex:clickHex, state:1}}
-}
+      currentShip = null;
+      selected = {hex:null, state:0} ;
+      possibleMoves = []; possibleAttacks = [];
+    }
+    else if(clickHex.mag <=  boardSize){
+      selected = {hex:clickHex, state:1};
+      possibleMoves = []; possibleAttacks = [];
+    };
+  }
+
+  else if (selected.state == 1){
+    if (selected.hex && selected.hex.compare(clickHex)){
+      currentShip = shipArray.find(e => e.location.compare(clickHex));
+      if(currentShip){
+        setPossibleMoves();
+        selected.state = 2
+      }
+      else{
+        selected.state =3;
+        possibleMoves = []; possibleAttacks = [];
+        makeMenu();
+      }
+    }
+    else{selected = {hex:null, state:0}}
+  }
+
+  else if (selected.state == 0){
+    if(clickHex.mag <=boardSize){selected = {hex:clickHex, state:1}}
+  }
 }
 
 function makeMenu(){menu = ["hi"]}

@@ -7,10 +7,10 @@ class Vec{
   dot(b){    return this.x * b.x + this.y * b.y; }
 
   static getArray(input, Vecs){
-   let [xx, yy, ...rest] = input;
-   if (xx == null || yy == null){return Vecs}
-   else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
- }
+    let [xx, yy, ...rest] = input;
+    if (xx == null || yy == null){return Vecs}
+    else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
+  }
 }
 
 class Hex{
@@ -43,7 +43,7 @@ class Hex{
   static getXYfromUnitHex(hexCoord){
     const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
     return hexVec.p.scale(hexCoord.p).add(hexVec.q.scale(hexCoord.q))
-              .add(hexVec.r.scale(hexCoord.r))
+    .add(hexVec.r.scale(hexCoord.r))
   }
 
   static getUnitHexFromXY(xy){
