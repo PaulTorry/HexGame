@@ -16,6 +16,16 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
+let terainCostMap = {};
+
+let terainCostNew = {
+  "space": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
+  "asteroids": {"techNeeded": null, "moveOff":2, "moveOn":2, "Nav":0.5},
+  "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":2, "moveOn":1, "Nav":0.5},
+  "planet": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
+  "nebula": {"techNeeded": null, "moveOff":3, "moveOn":3, "Nav":0.5}
+}
+
 let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
 
 let shipArray = [
@@ -31,7 +41,7 @@ function setupHexes(hexArray){
     if(Math.random()<0.02){buildingHex.terain = "planet"};
     if(Math.random()<0.2){buildingHex.terain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terain = "gasGiant"};
-    if(Math.random()<0.05){buildingHex.station = {type:"base", owner:randomInt(2)}};
+    if(Math.random()<0.05){buildingHex.station = {type:"Nav", owner:randomInt(2)}};
     hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
   }
   return hexesObj;

@@ -52,11 +52,7 @@ function menuClick(event){
   drawScreen();
 }
 
-function buildBase(){
-  hexObjects[selected.hex.id].station = {type: "base", owner: playerTurn}
-  selected = {hex:null, state:0}
-  possibleMoves = []; possibleAttacks = [];
-}
+
 
 function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
