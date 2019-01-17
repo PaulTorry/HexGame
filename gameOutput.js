@@ -44,6 +44,8 @@ function drawScreen() {
     }
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
+//debug move   // for(let h in terainCostMap){ drawText(c, terainCostMap[h].moveOn + "," + terainCostMap[h].moveOff , getXYfromHex(terainCostMap[h].hex).add(new Vec(-20,20)) ); }
+
 drawMenu();
 }
 
@@ -79,7 +81,5 @@ function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "
   c.font = `${size}px ${font}`;
   c.fillStyle = color;
   c.fillText(text, x, y);
-
   c.stroke();
-  //if(color){c.fill();}
 }

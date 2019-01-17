@@ -1,3 +1,5 @@
+"use strict"
+
 function onHexClicked(clickHex){
   if(selected.state ==3){
 
@@ -54,11 +56,7 @@ function onHexClicked(clickHex){
         selected = {hex:clickHex, state:1}
       }
       if(currentShip && currentShip.owner == playerTurn && (!currentShip.moved || !currentShip.attacked)){
-        if (!currentShip.moved) setPossibleMoves();
-
-        makeTerainCostMap();          //
-        console.log(terainCostMap);   //
-
+        if (!currentShip.moved) {setPossibleMoves(currentShip.maxMove);}
         setPossibleAttacks();
         selected.state = 2
       }
@@ -82,8 +80,8 @@ function onMenuItemClicked(item){
 
 function makeMenu(){menu = ["Nav"]}
 
-function setPossibleMoves(){
-  let candiateMoves = findPossibleMoves(selected.hex);
+function setPossibleMoves(moveLeft = 5){
+  let candiateMoves = findPossibleMoves(selected.hex, moveLeft);
   possibleMoves = [];
   for(let local in candiateMoves){
     let hex = candiateMoves[local]
@@ -105,7 +103,6 @@ function setPossibleAttacks(){
   }
 }
 
-
 function findPossibleMoves(center, moveLeft = 5){
   makeTerainCostMap();
   let frontier = [{loc:center, cost:0}];
@@ -117,24 +114,23 @@ function findPossibleMoves(center, moveLeft = 5){
     for (let next in Hex.neighbours()){
       let hex = Hex.neighbours()[next].add(current.loc)
       if (hex.mag <= boardSize ){
-        let cost = current.cost + getTerrainCost( current.loc, hex);
-        console.log("cost" + cost);
+        let cost = current.cost + terainCostMap[current.loc.id].moveOff + terainCostMap[hex.id].moveOn;
         if(!(visited[hex.id] && cost < visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
           frontier.push({loc:hex, cost:cost});
           visited[hex.id] = {loc:hex, cost:current.cost + 1, from:current.loc};
         }
       }
     }
-
   }
+  // Always to nearest neightbours
   for (let next in Hex.neighbours()){
     let hex = Hex.neighbours()[next].add(center)
     if (hex.mag <= boardSize ){
-      if (!visited[hex.id])
+      if (!visited[hex.id] && terainCostMap[hex.id].moveOn < 9)
       visited[hex.id] = {loc:hex, cost:99, from:center.loc};
     }
   }
-
+  // Convery to array
   let visitedArray = [];
   for (let v in visited){
     if (visited.hasOwnProperty(v)){visitedArray.push(visited[v].loc)}
@@ -146,21 +142,23 @@ function makeTerainCostMap(){
   terainCostMap = {};
   for(let ho in hexObjects){
     if(hexObjects.hasOwnProperty(ho)){
-      hex = hexObjects[ho];
-  //    console.log(hex);
-      // console.log(hex.terain);
-      // console.log(terainCostNew[hex.terain]);
-      // console.log(terainCostNew[hex.terain].moveOff);
-      terainCostMap[ho]={"moveOff": terainCostNew[hex.terain].moveOff, "moveOn":terainCostNew[hex.terain].moveOn};
+      let hex = hexObjects[ho];
+      let moveOff = terainCostNew[hex.terain].moveOff;
+      let moveOn = terainCostNew[hex.terain].moveOn;
+      if(hex.station){moveOff = 0.5, moveOn = 0.5}
+
+      for(let local in Hex.neighbours()){
+        let hex2 = Hex.neighbours()[local].add(hex.hex);
+        let ship = shipArray.find(e => e.location.compare(hex2))
+        if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
+      }
+
+      terainCostMap[ho]={hex:hex.hex, "moveOff": moveOff, "moveOn": moveOn};
     }
   }
 }
 
-function getTerrainCost(a, b){
-  console.log("cost func" + (terainCostMap[a.id].moveOff + terainCostMap[a.id].moveOn));
-  return terainCostMap[a.id].moveOff + terainCostMap[a.id].moveOn
-//  return terainCost[hexObjects[a.id].terain + hexObjects[b.id].terain]
-}
+//function getTerrainCost(a, b){  return terainCostMap[a.id].moveOff + terainCostMap[b.id].moveOn}
 
 function buildBase(){
   hexObjects[selected.hex.id].station = {type: "base", owner: playerTurn}

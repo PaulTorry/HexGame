@@ -21,7 +21,7 @@ let terainCostMap = {};
 let terainCostNew = {
   "space": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
   "asteroids": {"techNeeded": null, "moveOff":2, "moveOn":2, "Nav":0.5},
-  "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":2, "moveOn":1, "Nav":0.5},
+  "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":2, "moveOn":12, "Nav":0.5},
   "planet": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
   "nebula": {"techNeeded": null, "moveOff":3, "moveOn":3, "Nav":0.5}
 }
@@ -29,8 +29,8 @@ let terainCostNew = {
 let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
 
 let shipArray = [
-  {type:"scout", hull:"2", shield:"3", owner:"1", maxMove: 1, moved:false, attacked:false, location: new Hex(0,0,0)},
-  {type:"scout", hull:"1", shield:"4", owner:"0", maxMove: 1, moved:false, attacked:false, location: new Hex(0,1,-1)},
+  {type:"scout", hull:"2", shield:"3", owner:"1", maxMove: 4, moved:false, attacked:false, location: new Hex(0,0,0)},
+  {type:"scout", hull:"1", shield:"4", owner:"0", maxMove: 8, moved:false, attacked:false, location: new Hex(0,1,-1)},
 ];
 
 function setupHexes(hexArray){
