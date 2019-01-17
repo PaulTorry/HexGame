@@ -19,8 +19,8 @@ let menu = [];
 let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
 
 let shipArray = [
-  {type:"scout", hull:"2", shield:"3", owner:"1", location: new Hex(0,0,0), prevLocation: new Hex(1,0,-1)},
-  {type:"scout", hull:"1", shield:"4", owner:"0", location: new Hex(0,1,-1), prevLocation: new Hex(1,0,-1)},
+  {type:"scout", hull:"2", shield:"3", owner:"1", maxMove: 1, moved:false, attacked:false, location: new Hex(0,0,0)},
+  {type:"scout", hull:"1", shield:"4", owner:"0", maxMove: 1, moved:false, attacked:false, location: new Hex(0,1,-1)},
 ];
 
 function setupHexes(hexArray){

@@ -24,12 +24,14 @@ function drawScreen() {
         let {x,y} = getXYfromHex(hexObjects[ho].hex)
         c.drawImage(image, x - 50, y - 50, 100, 100);
       }
-       if(hexObjects[ho].station){        drawPoly(c, squareVert, getXYfromHex(hexObjects[ho].hex), 10, 2 , playerColours[hexObjects[ho].station.owner], "white");      }
+       if(hexObjects[ho].station){ drawPoly(c, squareVert, getXYfromHex(hexObjects[ho].hex), 10, 2 , playerColours[hexObjects[ho].station.owner] );      }
     }
   }
 
   for(let sh in shipArray){
-    drawPoly(c, triangleVert, getXYfromHex(shipArray[sh].location), 30,  2 , playerColours[shipArray[sh].owner], playerColours[shipArray[sh].owner]);
+    let borderColour = "black";
+    if (shipArray[sh].owner == playerTurn && (!shipArray[sh].moved || !shipArray[sh].attacked)) {borderColour = "white"}
+    drawPoly(c, triangleVert, getXYfromHex(shipArray[sh].location), 30,  2 , borderColour, playerColours[shipArray[sh].owner]);
     drawText(c, `${shipArray[sh].shield}|${shipArray[sh].hull}`, getXYfromHex(shipArray[sh].location).add(new Vec(-20,0)) )
   }
 
@@ -42,17 +44,24 @@ function drawScreen() {
     }
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
-
+drawMenu();
 }
 
 function drawMenu(){
+  var c = document.getElementById("menu").getContext("2d");
+  c.strokeStyle = "white"
+  for(let i=0; i<menu.length; i++){c.strokeRect (10+40*i, 10, 40, 40)}
+
+ c.strokeStyle = playerColours[playerTurn];
+  c.strokeRect (10, 50, 780, 40);
+
   if (selected.state == 3){    }
 }
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
   if(width){c.lineWidth = width};
-  if(width){c.strokeStyle = sColor};
-  if(width){c.fillStyle = fColor};
+  if(sColor){c.strokeStyle = sColor};
+  if(fColor){c.fillStyle = fColor};
 
   c.moveTo(pointVec[0].x, pointVec[0].y);
   c.beginPath();

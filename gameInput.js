@@ -41,16 +41,22 @@ function drag(event){
 
 function menuClick(event){
   console.log("click" + selected.state);
-  if(selected.state == 3){
-    if(event.offsetY < 100){
-      hexObjects[selected.hex.id].station = {type: "base", owner: playerTurn}
-      selected = {hex:null, state:0}
-      possibleMoves = []; possibleAttacks = [];
+
+  if(event.offsetY > 50){nextTurn()};
+  if(event.offsetY < 50 && event.offsetY > 10){
+    let num = Math.round((event.offsetX+10)/40);
+    if (num && menu[num -1]){
+      onMenuItemClicked(menu[num -1]);
     }
   }
   drawScreen();
 }
 
+function buildBase(){
+  hexObjects[selected.hex.id].station = {type: "base", owner: playerTurn}
+  selected = {hex:null, state:0}
+  possibleMoves = []; possibleAttacks = [];
+}
 
 function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
