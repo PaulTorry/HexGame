@@ -9,6 +9,7 @@ let hexObjects = setupHexes(Hex.findWithin(boardSize));
 const playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
 const selectedColour = ["white","red", "blue", "orange"]
 const numPlayers = 2;
+let playerData = [{"money":5, "tech":{"gasGiantMove":true}},{"money":5, "tech":{"gasGiantMove":false}}];
 let playerTurn = 0;
 let currentShip = null;
 let selected = {hex: null,    state:0};
@@ -21,7 +22,7 @@ let terainCostMap = {};
 let terainCostNew = {
   "space": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
   "asteroids": {"techNeeded": null, "moveOff":2, "moveOn":2, "Nav":0.5},
-  "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":2, "moveOn":12, "Nav":0.5},
+  "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":2, "moveOn":2, "Nav":0.5},
   "planet": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
   "nebula": {"techNeeded": null, "moveOff":3, "moveOn":3, "Nav":0.5}
 }

@@ -153,6 +153,11 @@ function makeTerainCostMap(){
         if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
       }
 
+      let tech = terainCostNew[hex.terain].techNeeded;
+      if(tech && !playerData[playerTurn].tech[tech]){
+        moveOff += 77; moveOn += 77;
+      }
+
       terainCostMap[ho]={hex:hex.hex, "moveOff": moveOff, "moveOn": moveOn};
     }
   }

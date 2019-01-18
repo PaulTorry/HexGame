@@ -20,7 +20,6 @@ function translateContext(dif){
   var c = document.getElementById("board").getContext("2d");
   screenOffset = screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
-  //  screenOffset = screenOffset.scale(1/1.1);
 }
 
 function mouseWheel(event){
@@ -56,11 +55,8 @@ function menuClick(event){
 
 function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
-function doo(event){
+function boardClick(event){
   let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).scale(1/hexSize))
   onHexClicked(clickHex);
   drawScreen();
-  //drawMenu();
-
-
 }
