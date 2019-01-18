@@ -112,6 +112,8 @@ function findPossibleMoves(center, moveLeft = 5){
     for (let neighbour of Hex.neighbours()){
       let hex = neighbour.add(current.loc)
       if (hex.mag <= boardSize ){
+        console.log(`current.loc.id  ${current.loc.id}  hex.id  ${hex.id} `);
+        console.log( terainCostMap);
         let cost = current.cost + terainCostMap[current.loc.id].moveOff + terainCostMap[hex.id].moveOn;
         if(!(visited[hex.id] && cost < visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
           frontier.push({loc:hex, cost:cost});
@@ -133,9 +135,8 @@ function findPossibleMoves(center, moveLeft = 5){
 
 function makeTerainCostMap(){
   terainCostMap = {};
-  for(let ho in hexObjects){
-    if(hexObjects.hasOwnProperty(ho)){
-      let hex = hexObjects[ho];
+  for(let hex of Object.values(hexObjects)){
+
       let moveOff = terainCostNew[hex.terain].moveOff;
       let moveOn = terainCostNew[hex.terain].moveOn;
       if(hex.station){moveOff = 0.5, moveOn = 0.5}
@@ -151,8 +152,7 @@ function makeTerainCostMap(){
         moveOff += 77; moveOn += 77;
       }
 
-      terainCostMap[ho]={hex:hex.hex, "moveOff": moveOff, "moveOn": moveOn};
-    }
+      terainCostMap[hex.hex.id]={hex:hex.hex, "moveOff": moveOff, "moveOn": moveOn};
   }
 }
 

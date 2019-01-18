@@ -43,7 +43,7 @@ function setupHexes(hexArray){
     if(Math.random()<0.2){buildingHex.terain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terain = "gasGiant"};
     if(Math.random()<0.05){buildingHex.station = {type:"Nav", owner:randomInt(2)}};
-    hexesObj[""+ hex.p + "," + hex.q] = buildingHex;
+    hexesObj[hex.id] = buildingHex;
   }
   return hexesObj;
 }

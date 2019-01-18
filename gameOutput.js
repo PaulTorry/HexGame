@@ -14,33 +14,33 @@ function drawScreen() {
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
 
-  for(let ho in hexObjects){
-    if(hexObjects.hasOwnProperty(ho)){
-      drawPoly(c, hexVert, getXYfromHex(hexObjects[ho].hex), hexSize, 1, "#25202D", "#120F22"  );
+  for(let hex of Object.values(hexObjects)){
+    drawPoly(c, hexVert, getXYfromHex(hex.hex), hexSize, 1, "#25202D", "#120F22"  );
 
-      if(hexObjects[ho].terain !== "space"){
-        // drawPoly(c, hexVert, getXYfromHex(hexObjects[ho].hex), hexSize, 2 , "#25202D", "grey");
-        let image = document.getElementById(hexObjects[ho].terain + "Pic");
-        let {x,y} = getXYfromHex(hexObjects[ho].hex)
-        c.drawImage(image, x - 50, y - 50, 100, 100);
-      }
-       if(hexObjects[ho].station){ drawPoly(c, squareVert, getXYfromHex(hexObjects[ho].hex), 10, 2 , playerColours[hexObjects[ho].station.owner] );      }
+    if(hex.terain !== "space"){
+      // drawPoly(c, hexVert, getXYfromHex(hex.hex), hexSize, 2 , "#25202D", "grey");
+      let image = document.getElementById(hex.terain + "Pic");
+      let {x,y} = getXYfromHex(hex.hex)
+      c.drawImage(image, x - 50, y - 50, 100, 100);
+    }
+    if(hex.station){
+      drawPoly(c, squareVert, getXYfromHex(hex.hex), 10, 2 , playerColours[hex.station.owner] );
     }
   }
 
-  for(let sh in shipArray){
+  for(let ship of shipArray){
     let borderColour = "black";
-    if (shipArray[sh].owner == playerTurn && (!shipArray[sh].moved || !shipArray[sh].attacked)) {borderColour = "white"}
-    drawPoly(c, triangleVert, getXYfromHex(shipArray[sh].location), 30,  2 , borderColour, playerColours[shipArray[sh].owner]);
-    drawText(c, `${shipArray[sh].shield}|${shipArray[sh].hull}`, getXYfromHex(shipArray[sh].location).add(new Vec(-20,0)) )
+    if (ship.owner == playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
+    drawPoly(c, triangleVert, getXYfromHex(ship.location), 30,  2 , borderColour, playerColours[ship.owner]);
+    drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)) )
   }
 
   if(selected.hex){
-    for (let p in possibleMoves){
-      drawPoly(c, hexVert, getXYfromHex(possibleMoves[p]), hexSize -5, 3 , "green");
+    for (let move of possibleMoves){
+      drawPoly(c, hexVert, getXYfromHex(move), hexSize -5, 3 , "green");
     }
-    for (let p in possibleAttacks){
-      drawPoly(c, hexVert, getXYfromHex(possibleAttacks[p]), hexSize -5, 3 , "purple");
+    for (let attack of possibleAttacks){
+      drawPoly(c, hexVert, getXYfromHex(attack), hexSize -5, 3 , "purple");
     }
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
@@ -67,8 +67,8 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
 
   c.moveTo(pointVec[0].x, pointVec[0].y);
   c.beginPath();
-  for (let points in pointVec){
-    let {x,y} = pointVec[points].scale(scale).add(center);
+  for (let point of pointVec){
+    let {x,y} = point.scale(scale).add(center);
     c.lineTo(x, y)
   }
   c.closePath();
