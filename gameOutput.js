@@ -7,6 +7,8 @@ const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 //const picNames = {"nebula":"nebula.svg", "planet":"planet.svg", "asteroids":"asteroids.svg", "gas giant.svg"}
 
+const baseShapes = {"base":triangleVert, "inhabitedPlanet":hexVert, "Nav":squareVert}
+
 function drawScreen() {
   var c = document.getElementById("board").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);                            // FIX THIS @TODO
@@ -23,7 +25,7 @@ function drawScreen() {
       c.drawImage(image, x - 50, y - 50, 100, 100);
     }
     if(tile.station){
-      drawPoly(c, squareVert, getXYfromHex(tile.hex), 10, 2 , playerColours[tile.station.owner] );
+      drawPoly(c, baseShapes[tile.station.type], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.station.owner] );
     }
   }
 
@@ -50,6 +52,7 @@ function drawScreen() {
 
 function drawMenu(){
   var c = document.getElementById("menu").getContext("2d");
+    c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white"
   for(let i=0; i<menu.length; i++){c.strokeRect (10+40*i, 10, 40, 40)}
 
