@@ -5,7 +5,7 @@ let mouseDownLocation = new Vec(0,0);
 let scale = 1;
 let hexSize = 40
 const boardSize = 6
-let hexObjects = setupHexes(Hex.findWithin(boardSize));
+let tiles = setupTiles(Hex.findWithin(boardSize));
 const playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
 const selectedColour = ["white","red", "blue", "orange"]
 const numPlayers = 2;
@@ -34,7 +34,7 @@ let shipArray = [
   {type:"scout", hull:"1", shield:"4", owner:"0", maxMove: 8, moved:false, attacked:false, location: new Hex(0,1,-1)},
 ];
 
-function setupHexes(hexArray){
+function setupTiles(hexArray){
   let hexesObj = {};
   for(let hex of hexArray){
     let buildingHex = {hex: hex, terain:"space", station:null};

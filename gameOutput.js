@@ -14,17 +14,17 @@ function drawScreen() {
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
 
-  for(let hex of Object.values(hexObjects)){
-    drawPoly(c, hexVert, getXYfromHex(hex.hex), hexSize, 1, "#25202D", "#120F22"  );
+  for(let tile of Object.values(tiles)){
+    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1, "#25202D", "#120F22"  );
 
-    if(hex.terain !== "space"){
-      // drawPoly(c, hexVert, getXYfromHex(hex.hex), hexSize, 2 , "#25202D", "grey");
-      let image = document.getElementById(hex.terain + "Pic");
-      let {x,y} = getXYfromHex(hex.hex)
+    if(tile.terain !== "space"){
+      // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
+      let image = document.getElementById(tile.terain + "Pic");
+      let {x,y} = getXYfromHex(tile.hex)
       c.drawImage(image, x - 50, y - 50, 100, 100);
     }
-    if(hex.station){
-      drawPoly(c, squareVert, getXYfromHex(hex.hex), 10, 2 , playerColours[hex.station.owner] );
+    if(tile.station){
+      drawPoly(c, squareVert, getXYfromHex(tile.hex), 10, 2 , playerColours[tile.station.owner] );
     }
   }
 
