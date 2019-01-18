@@ -5,7 +5,7 @@ let mouseDownLocation = new Vec(0,0);
 let scale = 1;
 let hexSize = 40
 const boardSize = 6
-let tiles = setupTiles(Hex.findWithin(boardSize));
+
 const playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
 const selectedColour = ["white","red", "blue", "orange"]
 const numPlayers = 2;
@@ -30,6 +30,13 @@ let shipArray = [
   {type:"scout", hull:"1", shield:"4", owner:"0", maxMove: 8, moved:false, attacked:false, location: new Hex(0,1,-1)},
 ];
 
+let baseArray = [
+  {type:"planet", owner:"1", location: new Hex(0,3,-3), territory:new Hex(0,3,-3).neighbours},
+  {type:"planet", owner:"0", location: new Hex(0,-3,3), territory:new Hex(0,-3,3).neighbours}
+]
+
+let tiles = setupTiles(Hex.findWithin(boardSize));
+
 function setupTiles(hexArray){
   let hexesObj = new Map();
   for(let hex of hexArray){
@@ -39,8 +46,12 @@ function setupTiles(hexArray){
     if(Math.random()<0.2){buildingHex.terain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terain = "gasGiant"};
     if(Math.random()<0.05){buildingHex.station = {type:"Nav", owner:randomInt(2)}};
+
+    for(let base of baseArray){
+      if(hex.compare(base.location)){buildingHex.terain = "planet"}
+    }
     hexesObj.set(hex.id, buildingHex);
   }
-  console.log(hexesObj)
+  // console.log(hexesObj)
   return hexesObj;
 }

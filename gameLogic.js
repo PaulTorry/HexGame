@@ -68,7 +68,7 @@ function onHexClicked(clickHex){
     }
     else{selected = {hex:null, state:0}}
   }
-  
+
   else if (selected.state == 0){
     if(clickHex.mag <=boardSize){selected = {hex:clickHex, state:1}}
   }
@@ -87,10 +87,8 @@ function setPossibleMoves(moveLeft = 5){
 }
 
 function setPossibleAttacks(){
-  let candiateMoves = Hex.neighbours();// findPossibleMoves(selected.hex);
   possibleAttacks = [];
-  for(let local in candiateMoves){
-    let hex = candiateMoves[local].add(selected.hex);
+  for(let hex of selected.hex.neighbours){
     let ship = shipArray.find(e => e.location.compare(hex))
     if(ship && ship.owner !== playerTurn) {
       possibleAttacks.push(hex);
@@ -106,8 +104,7 @@ function findPossibleMoves(center, moveLeft = 5){
   while (frontier.length > 0 && itts < 1000){
     let current = frontier.shift();
     itts ++;
-    for (let neighbour of Hex.neighbours()){
-      let hex = neighbour.add(current.loc)
+    for (let hex of current.loc.neighbours){
       if (hex.mag <= boardSize ){
         // console.log(`current.loc.id  ${current.loc.id}  hex.id  ${hex.id} `);
         let cost = current.cost + terainCostMap[current.loc.id].moveOff + terainCostMap[hex.id].moveOn;
@@ -119,8 +116,7 @@ function findPossibleMoves(center, moveLeft = 5){
     }
   }
   // Always to nearest neightbours
-  for (let neighbour of Hex.neighbours()){
-    let hex = neighbour.add(center)
+  for (let hex of center.neighbours){
     if (hex.mag <= boardSize && !visited[hex.id] && terainCostMap[hex.id].moveOn < 9){
       visited[hex.id] = {loc:hex, cost:99, from:center.loc};
     }
@@ -137,8 +133,8 @@ function makeTerainCostMap(){
     let moveOn = terainCostNew[tile.terain].moveOn;
     if(tile.station){moveOff = 0.5, moveOn = 0.5}
 
-    for(let local of Hex.neighbours()){
-      let hex2 = local.add(tile.hex);
+    for(let hex2 of tile.hex.neighbours){
+    //  let hex2 = local.add(tile.hex);
       let ship = shipArray.find(e => e.location.compare(hex2))
       if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
     }

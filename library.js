@@ -22,6 +22,8 @@ class Hex{
   get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2};
   get id () {return  `${this.p},${this.q}`}
 
+  get neighbours() {return Hex.neighbours().map(n => n.add(this))}
+
   static getArray(input, Hexes){
     let [pp, qq, rr, ...rest] = input;
     if (pp == null || qq == null || rr == null){return Hexes}
