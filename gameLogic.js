@@ -81,15 +81,13 @@ function onMenuItemClicked(item){
 function makeMenu(){menu = ["Nav"]}
 
 function setPossibleMoves(moveLeft = 5){
-  let candiateMoves = findPossibleMoves(selected.hex, moveLeft);
-  possibleMoves = [];
-  for(let local in candiateMoves){
-    let hex = candiateMoves[local]
-    if(hex.mag <=  boardSize && !shipArray.find(e => e.location.compare(hex))){
-      possibleMoves.push(hex);
-    }
-  }
+    possibleMoves =  findPossibleMoves(selected.hex, moveLeft).filter(hex => {
+  return  (hex.mag <= boardSize) && !shipArray.find(e => e.location.compare(hex))
+  });
 }
+
+
+
 
 function setPossibleAttacks(){
   let candiateMoves = Hex.neighbours();// findPossibleMoves(selected.hex);
@@ -111,8 +109,8 @@ function findPossibleMoves(center, moveLeft = 5){
   while (frontier.length > 0 && itts < 1000){
     let current = frontier.shift();
     itts ++;
-    for (let next in Hex.neighbours()){
-      let hex = Hex.neighbours()[next].add(current.loc)
+    for (let neighbour of Hex.neighbours()){
+      let hex = neighbour.add(current.loc)
       if (hex.mag <= boardSize ){
         let cost = current.cost + terainCostMap[current.loc.id].moveOff + terainCostMap[hex.id].moveOn;
         if(!(visited[hex.id] && cost < visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
@@ -123,19 +121,14 @@ function findPossibleMoves(center, moveLeft = 5){
     }
   }
   // Always to nearest neightbours
-  for (let next in Hex.neighbours()){
-    let hex = Hex.neighbours()[next].add(center)
-    if (hex.mag <= boardSize ){
-      if (!visited[hex.id] && terainCostMap[hex.id].moveOn < 9)
+  for (let neighbour of Hex.neighbours()){
+    let hex = neighbour.add(center)
+    if (hex.mag <= boardSize && !visited[hex.id] && terainCostMap[hex.id].moveOn < 9){
       visited[hex.id] = {loc:hex, cost:99, from:center.loc};
     }
   }
-  // Convery to array
-  let visitedArray = [];
-  for (let v in visited){
-    if (visited.hasOwnProperty(v)){visitedArray.push(visited[v].loc)}
-  }
-  return visitedArray
+
+  return Object.values(visited).map(v => v.loc)
 }
 
 function makeTerainCostMap(){
@@ -147,8 +140,8 @@ function makeTerainCostMap(){
       let moveOn = terainCostNew[hex.terain].moveOn;
       if(hex.station){moveOff = 0.5, moveOn = 0.5}
 
-      for(let local in Hex.neighbours()){
-        let hex2 = Hex.neighbours()[local].add(hex.hex);
+      for(let local of Hex.neighbours()){
+        let hex2 = local.add(hex.hex);
         let ship = shipArray.find(e => e.location.compare(hex2))
         if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
       }

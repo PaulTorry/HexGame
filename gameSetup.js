@@ -36,14 +36,14 @@ let shipArray = [
 
 function setupHexes(hexArray){
   let hexesObj = {};
-  for(let i=0; i<hexArray.length; i++){
-    let buildingHex = {hex: hexArray[i], terain:"space", station:null};
+  for(let hex of hexArray){
+    let buildingHex = {hex: hex, terain:"space", station:null};
     if(Math.random()<0.3){buildingHex.terain = "nebula"};
     if(Math.random()<0.02){buildingHex.terain = "planet"};
     if(Math.random()<0.2){buildingHex.terain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terain = "gasGiant"};
     if(Math.random()<0.05){buildingHex.station = {type:"Nav", owner:randomInt(2)}};
-    hexesObj[""+ hexArray[i].p + "," + hexArray[i].q] = buildingHex;
+    hexesObj[""+ hex.p + "," + hex.q] = buildingHex;
   }
   return hexesObj;
 }
