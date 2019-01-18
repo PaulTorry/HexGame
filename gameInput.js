@@ -13,7 +13,7 @@ function scaleContext(s){
   var c = document.getElementById("board").getContext("2d");
   scale *= s;
   c.scale(s,s)
-    screenOffset = screenOffset.scale(1/s);
+  screenOffset = screenOffset.scale(1/s);
 }
 
 function translateContext(dif){
@@ -50,8 +50,6 @@ function menuClick(event){
   }
   drawScreen();
 }
-
-
 
 function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 

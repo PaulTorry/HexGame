@@ -14,9 +14,8 @@ function drawScreen() {
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
 
-  for(let tile of Object.values(tiles)){
+  for(let [ , tile] of tiles){
     drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1, "#25202D", "#120F22"  );
-
     if(tile.terain !== "space"){
       // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
       let image = document.getElementById(tile.terain + "Pic");
@@ -44,9 +43,9 @@ function drawScreen() {
     }
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
-//debug move   // for(let h in terainCostMap){ drawText(c, terainCostMap[h].moveOn + "," + terainCostMap[h].moveOff , getXYfromHex(terainCostMap[h].hex).add(new Vec(-20,20)) ); }
+  //debug move   // for(let h in terainCostMap){ drawText(c, terainCostMap[h].moveOn + "," + terainCostMap[h].moveOff , getXYfromHex(terainCostMap[h].hex).add(new Vec(-20,20)) ); }
 
-drawMenu();
+  drawMenu();
 }
 
 function drawMenu(){
@@ -54,7 +53,7 @@ function drawMenu(){
   c.strokeStyle = "white"
   for(let i=0; i<menu.length; i++){c.strokeRect (10+40*i, 10, 40, 40)}
 
- c.strokeStyle = playerColours[playerTurn];
+  c.strokeStyle = playerColours[playerTurn];
   c.strokeRect (10, 50, 780, 40);
 
   if (selected.state == 3){    }

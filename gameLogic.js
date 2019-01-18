@@ -68,26 +68,23 @@ function onHexClicked(clickHex){
     }
     else{selected = {hex:null, state:0}}
   }
-
+  
   else if (selected.state == 0){
     if(clickHex.mag <=boardSize){selected = {hex:clickHex, state:1}}
   }
 }
 
 function onMenuItemClicked(item){
-      if(item = "Nav" && selected.state == 3){buildBase()}
+  if(item = "Nav" && selected.state == 3){buildBase()}
 }
 
 function makeMenu(){menu = ["Nav"]}
 
 function setPossibleMoves(moveLeft = 5){
-    possibleMoves =  findPossibleMoves(selected.hex, moveLeft).filter(hex => {
-  return  (hex.mag <= boardSize) && !shipArray.find(e => e.location.compare(hex))
+  possibleMoves =  findPossibleMoves(selected.hex, moveLeft).filter(hex => {
+    return  (hex.mag <= boardSize) && !shipArray.find(e => e.location.compare(hex))
   });
 }
-
-
-
 
 function setPossibleAttacks(){
   let candiateMoves = Hex.neighbours();// findPossibleMoves(selected.hex);
@@ -102,7 +99,7 @@ function setPossibleAttacks(){
 }
 
 function findPossibleMoves(center, moveLeft = 5){
-  makeTerainCostMap();
+  let terainCostMap = makeTerainCostMap();
   let frontier = [{loc:center, cost:0}];
   let visited = {[center.id]: {loc:center, cost:0, from:null}}
   let itts = 0
@@ -112,8 +109,7 @@ function findPossibleMoves(center, moveLeft = 5){
     for (let neighbour of Hex.neighbours()){
       let hex = neighbour.add(current.loc)
       if (hex.mag <= boardSize ){
-        console.log(`current.loc.id  ${current.loc.id}  hex.id  ${hex.id} `);
-        console.log( terainCostMap);
+        // console.log(`current.loc.id  ${current.loc.id}  hex.id  ${hex.id} `);
         let cost = current.cost + terainCostMap[current.loc.id].moveOff + terainCostMap[hex.id].moveOn;
         if(!(visited[hex.id] && cost < visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
           frontier.push({loc:hex, cost:cost});
@@ -134,32 +130,33 @@ function findPossibleMoves(center, moveLeft = 5){
 }
 
 function makeTerainCostMap(){
-  terainCostMap = {};
-  for(let tile of Object.values(tiles)){
+  let terainCostMap = {};
+  for(let [ ,tile] of tiles){
 
-      let moveOff = terainCostNew[tile.terain].moveOff;
-      let moveOn = terainCostNew[tile.terain].moveOn;
-      if(tile.station){moveOff = 0.5, moveOn = 0.5}
+    let moveOff = terainCostNew[tile.terain].moveOff;
+    let moveOn = terainCostNew[tile.terain].moveOn;
+    if(tile.station){moveOff = 0.5, moveOn = 0.5}
 
-      for(let local of Hex.neighbours()){
-        let hex2 = local.add(tile.hex);
-        let ship = shipArray.find(e => e.location.compare(hex2))
-        if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
-      }
+    for(let local of Hex.neighbours()){
+      let hex2 = local.add(tile.hex);
+      let ship = shipArray.find(e => e.location.compare(hex2))
+      if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
+    }
 
-      let tech = terainCostNew[tile.terain].techNeeded;
-      if(tech && !playerData[playerTurn].tech[tech]){
-        moveOff += 77; moveOn += 77;
-      }
+    let tech = terainCostNew[tile.terain].techNeeded;
+    if(tech && !playerData[playerTurn].tech[tech]){
+      moveOff += 77; moveOn += 77;
+    }
 
-      terainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
+    terainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
   }
+  return terainCostMap;
 }
 
 //function getTerrainCost(a, b){  return terainCostMap[a.id].moveOff + terainCostMap[b.id].moveOn}
 
 function buildBase(){
-  tiles[selected.hex.id].station = {type: "base", owner: playerTurn}
+  tiles.get(selected.hex.id).station = {type: "base", owner: playerTurn}
   selected = {hex:null, state:0}
   possibleMoves = []; possibleAttacks = [];
 }

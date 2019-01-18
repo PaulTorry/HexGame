@@ -17,8 +17,6 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
-let terainCostMap = {};
-
 let terainCostNew = {
   "space": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
   "asteroids": {"techNeeded": null, "moveOff":2, "moveOn":2, "Nav":0.5},
@@ -27,15 +25,13 @@ let terainCostNew = {
   "nebula": {"techNeeded": null, "moveOff":3, "moveOn":3, "Nav":0.5}
 }
 
-let terainCost = {"spacenebula" : 2, "nebulaspace" : 2, "spacespace" : 1, "nebulanebula" : 3 }
-
 let shipArray = [
   {type:"scout", hull:"2", shield:"3", owner:"1", maxMove: 4, moved:false, attacked:false, location: new Hex(0,0,0)},
   {type:"scout", hull:"1", shield:"4", owner:"0", maxMove: 8, moved:false, attacked:false, location: new Hex(0,1,-1)},
 ];
 
 function setupTiles(hexArray){
-  let hexesObj = {};
+  let hexesObj = new Map();
   for(let hex of hexArray){
     let buildingHex = {hex: hex, terain:"space", station:null};
     if(Math.random()<0.3){buildingHex.terain = "nebula"};
@@ -43,7 +39,8 @@ function setupTiles(hexArray){
     if(Math.random()<0.2){buildingHex.terain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terain = "gasGiant"};
     if(Math.random()<0.05){buildingHex.station = {type:"Nav", owner:randomInt(2)}};
-    hexesObj[hex.id] = buildingHex;
+    hexesObj.set(hex.id, buildingHex);
   }
+  console.log(hexesObj)
   return hexesObj;
 }
