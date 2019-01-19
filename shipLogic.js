@@ -1,9 +1,19 @@
 "use strict"
 
+function getShipOnHex(hex){
+  return shipArray.find(e => e.location.compare(hex));
+}
+
+function shipState(hex){
+  if (getShipOnHex(hex) === undefined){ return 1}
+  else if (getShipOnHex(hex).owner == playerTurn){ return 2}
+  else return 0;
+}
+
 function findPossibleAttacks(center){
   let possibleAttacksInt = [];
   for(let hex of center.neighbours){
-    let ship = shipArray.find(e => e.location.compare(hex))
+    let ship = getShipOnHex(hex);
     if(ship && ship.owner !== playerTurn) {
       possibleAttacksInt.push(hex);
     }
@@ -38,7 +48,7 @@ function findPossibleMoves(center, moveLeft = 5){
   }
  // Filter for ships and return as array neightbours
   return Object.values(visited).map(v => v.loc).filter(hex => {
-    return  (hex.mag <= boardSize) && !shipArray.find(e => e.location.compare(hex))
+    return  (hex.mag <= boardSize) && !getShipOnHex(hex)
   });
 }
 
@@ -52,7 +62,7 @@ function makeTerrainCostMap(){
 
     for(let hex2 of tile.hex.neighbours){
     //  let hex2 = local.add(tile.hex);
-      let ship = shipArray.find(e => e.location.compare(hex2))
+      let ship = getShipOnHex(hex2)
       if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
     }
 

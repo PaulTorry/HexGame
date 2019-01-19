@@ -70,5 +70,4 @@ class Hex{
 
 }
 
-
 function randomInt(num) {return Math.floor(Math.random() * num);}

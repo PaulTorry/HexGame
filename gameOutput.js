@@ -7,7 +7,7 @@ const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const triangleVert2 = [new Vec(1,0), new Vec(0,1), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
-const baseShapes = {"base":triangleVert, "ship":triangleVert2, "inhabitedPlanet":hexVert, "Nav":squareVert}
+const baseShapes = {"asteroidMining":triangleVert, "scoutShip":triangleVert2, "inhabitedPlanet":hexVert, "navBeacon":squareVert}
 
 function drawScreen() {
   var c = document.getElementById("board").getContext("2d");
@@ -32,6 +32,7 @@ function drawScreen() {
   for(let [ , tile] of tiles){
     let planet = whichPlanetsTerritory(tile.hex);
     if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  playerColours[planet.owner]  );
+   if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)) )
   }
 
   for(let ship of shipArray){
@@ -55,16 +56,20 @@ function drawScreen() {
 }
 
 function drawMenu(){
+  console.log("deaw menu");
   var c = document.getElementById("menu").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white"
-  for(let i=0; i<menu.length; i++){
-    c.strokeRect (10+40*i, 10, 40, 40)
-    drawPoly(c, baseShapes[menu[i]], new Vec(30+40*i, 30), 10, 4 , playerColours[playerTurn] );
+  if(menu.length > 0){
+    for(let i=0; i<menu.length; i++){
+      c.strokeRect (10+40*i, 10, 40, 40);
+      drawPoly(c, baseShapes[menu[i]], new Vec(30+40*i, 30), 10, 4 , playerColours[playerTurn] );
+    }
   }
-
   c.strokeStyle = playerColours[playerTurn];
   c.strokeRect (10, 50, 780, 40);
+  c.stroke();
+  drawText(c, `Player:  ${playerTurn}   Money:  ${playerData[playerTurn].money}`, new Vec(10,70), 28, "white" )
 }
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
@@ -81,6 +86,7 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   c.closePath();
   c.stroke();
   if(fColor){c.fill();}
+  c.beginPath();c.closePath();   // Hack to stop drawing after clear
 }
 
 function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "Georgia"){
@@ -88,5 +94,5 @@ function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "
   c.font = `${size}px ${font}`;
   c.fillStyle = color;
   c.fillText(text, x, y);
-  c.stroke();
+//  c.stroke();
 }

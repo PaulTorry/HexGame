@@ -1,6 +1,8 @@
 "use strict"
 
 function onHexClicked(clickHex){
+  menu = [];
+
   if(selected.state ==3){
 
     if(clickHex.mag <= boardSize){selected = {hex:clickHex, state:1}}
@@ -30,9 +32,10 @@ function onHexClicked(clickHex){
         selected = {hex:null, state:0} ;
         possibleMoves = []; possibleAttacks = []; //attacks if have some
       }
+      menu = [];
     }
     else if(possibleAttacks.find(e =>  e.compare(clickHex))) {
-      let target = shipArray.find(e => e.location.compare(clickHex));
+      let target = getShipOnHex(clickHex);
       if(target){
         applyDamage(2, target);
         currentShip.moved = true; currentShip.attacked = true;
@@ -41,17 +44,17 @@ function onHexClicked(clickHex){
 
       currentShip = null;
       selected = {hex:null, state:0} ;
-      possibleMoves = []; possibleAttacks = [];
+      possibleMoves = []; possibleAttacks = []; menu = [];
     }
     else if(clickHex.mag <=  boardSize){
       selected = {hex:clickHex, state:1};
-      possibleMoves = []; possibleAttacks = [];
+      possibleMoves = []; possibleAttacks = []; menu = [];
     };
   }
 
   else if (selected.state == 1){
     if (selected.hex && selected.hex.compare(clickHex)){
-      currentShip = shipArray.find(e => e.location.compare(clickHex));
+      currentShip = getShipOnHex(clickHex);
       if(currentShip && currentShip.owner != playerTurn){
         selected = {hex:clickHex, state:1}
       }
@@ -75,14 +78,21 @@ function onHexClicked(clickHex){
 }
 
 function whichPlanetsTerritory(hex){
-    return baseArray.find(b => b.territory.find(t => t.compare(hex)));
+  return baseArray.find(b => b.location.compare(hex) || b.territory.find(t => t.compare(hex)));
+}
+
+function territoryState(hex){
+  if (whichPlanetsTerritory(hex) === undefined){ return 1}
+  else if (whichPlanetsTerritory(hex).owner == playerTurn){ return 2}
+  else return 0;
 }
 
 function onMenuItemClicked(item){
 
   if (selected.state == 3){
-    if(item == "Nav"){
-      tiles.get(selected.hex.id).station = {type: item, owner: playerTurn}
+    if(item == "navBeacon"){
+   playerData[playerTurn].money -= thingList.find(t => t.thing == "navBeacon").price;
+      tiles.get(selected.hex.id).station = {type: "navBeacon", owner: playerTurn}
     }
 
   }
