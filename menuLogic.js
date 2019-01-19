@@ -15,7 +15,12 @@ function makeMenu(hex){
       return false;
     }
 
-    if(pos.inhabitedPlanet && !(tiles.get(hex.id).station && tiles.get(hex.id).station.type == "inhabitedPlanet")) return false;
+  //  if(pos.inhabitedPlanet && !(tiles.get(hex.id).station && tiles.get(hex.id).station.type == "inhabitedPlanet")) return false;
+
+    if(pos.inhabitedPlanet){
+        let base = baseArray.find(b => b.location.compare(hex));
+        if (!base)return false;
+    }
 
     if(pos.noShip && getShipOnHex(hex)) return false;
 

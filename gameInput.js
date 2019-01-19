@@ -39,8 +39,6 @@ function drag(event){
 }
 
 function menuClick(event){
-  console.log("click" + selected.state);
-
   if(event.offsetY > 50){nextTurn()};
   if(event.offsetY < 50 && event.offsetY > 10){
     let num = Math.round((event.offsetX+10)/40);

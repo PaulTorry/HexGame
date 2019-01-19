@@ -88,12 +88,37 @@ function territoryState(hex){
 }
 
 function onMenuItemClicked(item){
-
+  let tile = tiles.get(selected.hex.id)
   if (selected.state == 3){
-    if(item == "navBeacon"){
-   playerData[playerTurn].money -= thingList.find(t => t.thing == "navBeacon").price;
-      tiles.get(selected.hex.id).station = {type: "navBeacon", owner: playerTurn}
+    playerData[playerTurn].money -= thingList.find(t => t.thing == item).price;
+    if(item == "asteroidMining"){
+      tile.station = {type: "asteroidMining", owner: playerTurn}
     }
+
+
+    if(item == "inhabitedPlanet"){
+      let existingBase = baseArray.find(b => b.location.compare(tile.hex));
+      if (existingBase){
+        existingBase.owner = playerTurn;
+      }
+      else {baseArray.push(
+        {type:"planet", owner:playerTurn, location: tile.hex,
+        territory:tile.hex.neighbours.filter(t => territoryState(t) == 1)}
+      )}
+    }
+
+
+    if(item == "scoutShip"){
+      shipArray.push(
+        {type:"scoutShip", hull:"1", shield:"4", owner:playerTurn, maxMove: 8,
+         moved:false, attacked:false, location:tile.hex},
+      )
+
+    }
+    if(item == "navBeacon"){
+      tile.navBeacon = {owner: playerTurn}
+    }
+
 
   }
   selected = {hex:null, state:0}
@@ -113,6 +138,7 @@ function applyDamage(dammage, ship){
 }
 
 function nextTurn(){
+  playerData[playerTurn].money += collectMoney();
   playerTurn = (playerTurn + 1) % numPlayers;
   for (let ship in shipArray){
     if (shipArray[ship].owner == playerTurn){
@@ -122,4 +148,11 @@ function nextTurn(){
   }
   possibleMoves = []; possibleAttacks = []; menu=[]
   selected = {hex:null, state:0}
+}
+
+function collectMoney(){
+  let bases = baseArray.filter(b => b.owner == playerTurn);
+  let asteroidBases = Array.from(tiles).filter(([id, val]) => val.station && val.station.owner == playerTurn)
+
+  return bases.length + asteroidBases.length;
 }

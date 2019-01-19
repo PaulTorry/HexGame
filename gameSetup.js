@@ -3,7 +3,7 @@
 const thingList = [
   {thing:"navBeacon", price:2, terrain:["space", "asteroids", "nebula"],  territoryState:1},
   {thing:"asteroidMining", price:2, terrain:["asteroids"], territoryState:2 },
-  {thing:"inhabitedPlanet", price:0, terrain:["planet"], territoryState:1, shipState:2},
+  {thing:"inhabitedPlanet", price:0, terrain:["planet"], shipState:2},
   {thing:"scoutShip", price:2, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true}
 ]
 
@@ -37,13 +37,13 @@ let playerData = [{"money":5, "tech":{"gasGiantMove":true}},{"money":5, "tech":{
 let playerTurn = 0;
 
 let shipArray = [
-  {type:"scoutShip", hull:"2", shield:"3", owner:"1", maxMove: 4, moved:false, attacked:false, location: new Hex(0,-1,1)},
-  {type:"scoutShip", hull:"1", shield:"4", owner:"0", maxMove: 8, moved:false, attacked:false, location: new Hex(0,1,-1)},
+  {type:"scoutShip", hull:"2", shield:"3", owner:"1", maxMove: 5, moved:false, attacked:false, location: new Hex(0,-3,3)},
+  {type:"scoutShip", hull:"2", shield:"3", owner:"0", maxMove: 5, moved:false, attacked:false, location: new Hex(0,3,-3)},
 ];
 
 let baseArray = [
-  {type:"planet", owner:"0", location: new Hex(0,3,-3), territory:new Hex(0,3,-3).neighbours},
-  {type:"planet", owner:"1", location: new Hex(0,-3,3), territory:new Hex(0,-3,3).neighbours}
+  {type:"planet", owner:0, location: new Hex(0,3,-3), territory:new Hex(0,3,-3).neighbours},
+  {type:"planet", owner:1, location: new Hex(0,-3,3), territory:new Hex(0,-3,3).neighbours}
 ]
 
 let tiles = setupTiles(Hex.findWithin(boardSize));
@@ -53,15 +53,15 @@ function setupTiles(hexArray){
   for(let hex of hexArray){
     let buildingHex = {hex: hex, terrain:"space", station:null};
     if(Math.random()<0.3){buildingHex.terrain = "nebula"};
-    if(Math.random()<0.02){buildingHex.terrain = "planet"};
-    if(Math.random()<0.2){buildingHex.terrain = "asteroids"};
+    if(Math.random()<0.1){buildingHex.terrain = "planet"};
+    if(Math.random()<0.35){buildingHex.terrain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terrain = "gasGiant"};
-    if(Math.random()<0.05){buildingHex.station = {type:"navBeacon", owner:randomInt(2)}};
+  //  if(Math.random()<0.05){buildingHex.navBeacon = {owner:0}};
 
     for(let base of baseArray){
       if(hex.compare(base.location)){
         buildingHex.terrain = "planet";
-        buildingHex.station = {type:"inhabitedPlanet", owner:base.owner}
+    //    buildingHex.station = {type:"inhabitedPlanet", owner:base.owner}
       }
     }
     hexesObj.set(hex.id, buildingHex);

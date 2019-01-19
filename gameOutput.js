@@ -27,6 +27,14 @@ function drawScreen() {
     if(tile.station){
       drawPoly(c, baseShapes[tile.station.type], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.station.owner] );
     }
+    if(tile.navBeacon){
+      drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.navBeacon.owner] );
+    }
+    let base = baseArray.find(b => b.location.compare(tile.hex));
+    if(base){
+      drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , playerColours[base.owner] );
+
+    }
 
   }
   for(let [ , tile] of tiles){
@@ -56,10 +64,9 @@ function drawScreen() {
 }
 
 function drawMenu(){
-  console.log("deaw menu");
   var c = document.getElementById("menu").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);
-  c.strokeStyle = "white"
+  c.strokeStyle = "white";
   if(menu.length > 0){
     for(let i=0; i<menu.length; i++){
       c.strokeRect (10+40*i, 10, 40, 40);

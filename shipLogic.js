@@ -58,7 +58,7 @@ function makeTerrainCostMap(){
 
     let moveOff = terrainCostNew[tile.terrain].moveOff;
     let moveOn = terrainCostNew[tile.terrain].moveOn;
-    if(tile.station){moveOff = 0.5, moveOn = 0.5}
+    if(tile.navBeacon){moveOff = 0.5, moveOn = 0.5}
 
     for(let hex2 of tile.hex.neighbours){
     //  let hex2 = local.add(tile.hex);
