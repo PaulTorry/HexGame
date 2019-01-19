@@ -17,7 +17,7 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
-let terainCostNew = {
+let terrainCostNew = {
   "space": {"techNeeded": null, "moveOff":1, "moveOn":1, "Nav":0.5},
   "asteroids": {"techNeeded": null, "moveOff":2, "moveOn":2, "Nav":0.5},
   "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":2, "moveOn":2, "Nav":0.5},
@@ -40,16 +40,16 @@ let tiles = setupTiles(Hex.findWithin(boardSize));
 function setupTiles(hexArray){
   let hexesObj = new Map();
   for(let hex of hexArray){
-    let buildingHex = {hex: hex, terain:"space", station:null};
-    if(Math.random()<0.3){buildingHex.terain = "nebula"};
-    if(Math.random()<0.02){buildingHex.terain = "planet"};
-    if(Math.random()<0.2){buildingHex.terain = "asteroids"};
-    if(Math.random()<0.05){buildingHex.terain = "gasGiant"};
+    let buildingHex = {hex: hex, terrain:"space", station:null};
+    if(Math.random()<0.3){buildingHex.terrain = "nebula"};
+    if(Math.random()<0.02){buildingHex.terrain = "planet"};
+    if(Math.random()<0.2){buildingHex.terrain = "asteroids"};
+    if(Math.random()<0.05){buildingHex.terrain = "gasGiant"};
     if(Math.random()<0.05){buildingHex.station = {type:"Nav", owner:randomInt(2)}};
 
     for(let base of baseArray){
       if(hex.compare(base.location)){
-        buildingHex.terain = "planet";
+        buildingHex.terrain = "planet";
         buildingHex.station = {type:"inhabitedPlanet", owner:base.owner}
       }
     }

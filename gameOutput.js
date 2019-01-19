@@ -17,16 +17,21 @@ function drawScreen() {
   c.lineWidth = 5
 
   for(let [ , tile] of tiles){
-    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1, "#25202D", "#120F22"  );
-    if(tile.terain !== "space"){
+    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  "#25202D", "#120F22"  );
+    if(tile.terrain !== "space"){
       // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
-      let image = document.getElementById(tile.terain + "Pic");
+      let image = document.getElementById(tile.terrain + "Pic");
       let {x,y} = getXYfromHex(tile.hex)
       c.drawImage(image, x - 50, y - 50, 100, 100);
     }
     if(tile.station){
       drawPoly(c, baseShapes[tile.station.type], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.station.owner] );
     }
+
+  }
+  for(let [ , tile] of tiles){
+    let planet = whichPlanetsTerritory(tile.hex);
+    if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  playerColours[planet.owner]  );
   }
 
   for(let ship of shipArray){
@@ -45,16 +50,21 @@ function drawScreen() {
     }
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
-  //debug move   // for(let h in terainCostMap){ drawText(c, terainCostMap[h].moveOn + "," + terainCostMap[h].moveOff , getXYfromHex(terainCostMap[h].hex).add(new Vec(-20,20)) ); }
+
+  //debug move   // for(let h in terrainCostMap){ drawText(c, terrainCostMap[h].moveOn + "," + terrainCostMap[h].moveOff , getXYfromHex(terrainCostMap[h].hex).add(new Vec(-20,20)) ); }
 
   drawMenu();
 }
 
 function drawMenu(){
   var c = document.getElementById("menu").getContext("2d");
-    c.clearRect(-99999,-99999,199999,199999);
+  c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white"
-  for(let i=0; i<menu.length; i++){c.strokeRect (10+40*i, 10, 40, 40)}
+  for(let i=0; i<menu.length; i++){
+    c.strokeRect (10+40*i, 10, 40, 40)
+    drawPoly(c, baseShapes[menu[i]], new Vec(30+40*i, 30) , 10, 4 , playerColours[playerTurn] );
+
+  }
 
   c.strokeStyle = playerColours[playerTurn];
   c.strokeRect (10, 50, 780, 40);

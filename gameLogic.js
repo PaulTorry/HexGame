@@ -14,7 +14,7 @@ function onHexClicked(clickHex){
     if (selected.hex && selected.hex.compare(clickHex)){
       selected.state =3;
       possibleMoves = []; possibleAttacks = [];
-      menu = makeMenu();
+      menu = makeMenu(selected.hex);
     }
     else if(possibleMoves.length > 0 && possibleMoves.find( e =>  e.compare(clickHex))) {
       currentShip.location = clickHex;
@@ -63,7 +63,7 @@ function onHexClicked(clickHex){
       else{
         selected.state =3;
         possibleMoves = []; possibleAttacks = [];
-        menu = makeMenu();
+        menu = makeMenu(selected.hex);
       }
     }
     else{selected = {hex:null, state:0}}
@@ -74,19 +74,31 @@ function onHexClicked(clickHex){
   }
 }
 
-function onMenuItemClicked(item){
-  if(item = "Nav" && selected.state == 3){buildBase()}
+function whichPlanetsTerritory(hex){
+    return baseArray.find(b => b.territory.find(t => t.compare(hex)));
 }
 
 
+function onMenuItemClicked(item){
+  console.log("item  " + item);
+  let owningCity = whichPlanetsTerritory(selected.hex);
+    console.log("owningCity  " + owningCity);
+        console.log( owningCity);
+  let owned =  owningCity !== undefined;
+    console.log("owned  " + owned);
+  if (selected.state == 3){
+    if(item == "Nav" && !(owned && owningCity.owner != playerTurn)){
+      tiles.get(selected.hex.id).station = {type: item, owner: playerTurn}
+    }
 
 
-function buildBase(){
-  tiles.get(selected.hex.id).station = {type: "base", owner: playerTurn}
+  }
   selected = {hex:null, state:0}
   possibleMoves = []; possibleAttacks = []; menu = [];
   drawMenu();
 }
+
+
 
 function applyDamage(dammage, ship){
   let {type, hull, shield} = ship

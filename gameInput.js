@@ -49,6 +49,7 @@ function menuClick(event){
     }
   }
   drawScreen();
+  drawMenu();
 }
 
 function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
