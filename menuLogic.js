@@ -1,32 +1,32 @@
 "use strict"
 
+const thingList = [
+  {thing:"Nav", cost:2, terrain:["space", "asteroids", "nebula"]},
+  {thing:"base", cost:2, terrain:["asteroids"] },
+  {thing:"inhabitedPlanet", cost:0, terrain:["planet"] , ship:true},
+  {thing:"ship", cost:2, terrain:[], base :true}
+]
+
 function makeMenu(hex){
-  // console.log(hex);
-  // console.log(tiles.get(hex.id));
-  // console.log(tiles.get(hex.id).terrain );
-  
-  let owningCity = whichPlanetsTerritory(selected.hex);
+  let owningCity = whichPlanetsTerritory(hex);
   let owned =  owningCity !== undefined;
 
-  let menuItems = []
+  return thingList.filter(pos => {
 
-  if (tiles.get(hex.id).terrain == "space"){
-    if( !owned || owningCity.owner == playerTurn){
-      menuItems.push("Nav");
-    }
-  }
+    if(pos.cost >= playerData[playerTurn].money) return false;
 
-  if (tiles.get(hex.id).terrain == "planet"){
-    menuItems.push("inhabitedPlanet");
-  }
+    if(pos.terrain.length != 0 && !pos.terrain.find(e => e == tiles.get(hex.id).terrain)) return false;
 
-  if (tiles.get(hex.id).terrain == "asteroids"){
-    if( !(owned && owningCity.owner != playerTurn)){
-      menuItems.push("Nav");
+    if(pos.ship){
+      let ship = shipArray.find(s => s.location.compare(hex))
+      if(!ship || ship.owner != playerTurn) return false;
     }
-    if( owned && owningCity.owner == playerTurn){
-      menuItems.push("base");
+
+    if(pos.base && !baseArray.filter(b => {return b.location.compare(hex) && b.owner == playerTurn})[0]) {
+      return false;
     }
-  }
-  return menuItems;
+
+    return true
+
+  }).map(pos => pos.thing);
 }

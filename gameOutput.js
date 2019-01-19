@@ -4,9 +4,10 @@ function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexS
 
 const hexVert = [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2), new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
+const triangleVert2 = [new Vec(1,0), new Vec(0,1), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
-const baseShapes = {"base":triangleVert, "inhabitedPlanet":hexVert, "Nav":squareVert}
+const baseShapes = {"base":triangleVert, "ship":triangleVert2, "inhabitedPlanet":hexVert, "Nav":squareVert}
 
 function drawScreen() {
   var c = document.getElementById("board").getContext("2d");
@@ -59,7 +60,7 @@ function drawMenu(){
   c.strokeStyle = "white"
   for(let i=0; i<menu.length; i++){
     c.strokeRect (10+40*i, 10, 40, 40)
-    drawPoly(c, baseShapes[menu[i]], new Vec(30+40*i, 30) , 10, 4 , playerColours[playerTurn] );
+    drawPoly(c, baseShapes[menu[i]], new Vec(30+40*i, 30), 10, 4 , playerColours[playerTurn] );
   }
 
   c.strokeStyle = playerColours[playerTurn];
