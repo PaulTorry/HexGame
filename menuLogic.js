@@ -1,14 +1,12 @@
 "use strict"
 
-
-
 function makeMenu(hex){
   // console.log(hex);
   // console.log(tiles.get(hex.id));
   // console.log(tiles.get(hex.id).terrain );
-
+  
   let owningCity = whichPlanetsTerritory(selected.hex);
-    let owned =  owningCity !== undefined;
+  let owned =  owningCity !== undefined;
 
   let menuItems = []
 

@@ -5,7 +5,6 @@ function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexS
 const hexVert = [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2), new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
-//const picNames = {"nebula":"nebula.svg", "planet":"planet.svg", "asteroids":"asteroids.svg", "gas giant.svg"}
 
 const baseShapes = {"base":triangleVert, "inhabitedPlanet":hexVert, "Nav":squareVert}
 
@@ -51,8 +50,6 @@ function drawScreen() {
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
 
-  //debug move   // for(let h in terrainCostMap){ drawText(c, terrainCostMap[h].moveOn + "," + terrainCostMap[h].moveOff , getXYfromHex(terrainCostMap[h].hex).add(new Vec(-20,20)) ); }
-
   drawMenu();
 }
 
@@ -63,13 +60,10 @@ function drawMenu(){
   for(let i=0; i<menu.length; i++){
     c.strokeRect (10+40*i, 10, 40, 40)
     drawPoly(c, baseShapes[menu[i]], new Vec(30+40*i, 30) , 10, 4 , playerColours[playerTurn] );
-
   }
 
   c.strokeStyle = playerColours[playerTurn];
   c.strokeRect (10, 50, 780, 40);
-
-  if (selected.state == 3){    }
 }
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){

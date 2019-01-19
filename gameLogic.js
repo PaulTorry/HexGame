@@ -78,26 +78,18 @@ function whichPlanetsTerritory(hex){
     return baseArray.find(b => b.territory.find(t => t.compare(hex)));
 }
 
-
 function onMenuItemClicked(item){
-  console.log("item  " + item);
-  let owningCity = whichPlanetsTerritory(selected.hex);
-    console.log("owningCity  " + owningCity);
-        console.log( owningCity);
-  let owned =  owningCity !== undefined;
-    console.log("owned  " + owned);
+
   if (selected.state == 3){
-    if(item == "Nav" && !(owned && owningCity.owner != playerTurn)){
+    if(item == "Nav"){
       tiles.get(selected.hex.id).station = {type: item, owner: playerTurn}
     }
-
 
   }
   selected = {hex:null, state:0}
   possibleMoves = []; possibleAttacks = []; menu = [];
   drawMenu();
 }
-
 
 
 function applyDamage(dammage, ship){
