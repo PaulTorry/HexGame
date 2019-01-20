@@ -5,7 +5,7 @@ function makeMenu(hex){
 
   return thingList.filter(pos => {
 
-    if(pos.price >= playerData[playerTurn].money) return false;
+    if(pos.price > playerData[playerTurn].money) return false;
 
     if(pos.terrain.length != 0 && !pos.terrain.find(e => e == tiles.get(hex.id).terrain)) return false;
 

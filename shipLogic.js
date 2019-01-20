@@ -1,5 +1,13 @@
 "use strict"
 
+function buildShip(type, owner, location, moved=true, attacked=true){
+  let base = shipHulls[type];
+  return ({type:base.type, hull:base.hull, shield:base.shield,
+    attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
+    moved:moved, attacked:attacked, location:location, owner:owner
+  })
+}
+
 function getShipOnHex(hex){
   return shipArray.find(e => e.location.compare(hex));
 }
@@ -46,7 +54,7 @@ function findPossibleMoves(center, moveLeft = 5){
       visited[hex.id] = {loc:hex, cost:99, from:center.loc};
     }
   }
- // Filter for ships and return as array neightbours
+  // Filter for ships and return as array neightbours
   return Object.values(visited).map(v => v.loc).filter(hex => {
     return  (hex.mag <= boardSize) && !getShipOnHex(hex)
   });
@@ -58,10 +66,10 @@ function makeTerrainCostMap(){
 
     let moveOff = terrainCostNew[tile.terrain].moveOff;
     let moveOn = terrainCostNew[tile.terrain].moveOn;
-    if(tile.navBeacon){moveOff = 0.5, moveOn = 0.5}
+    if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
 
     for(let hex2 of tile.hex.neighbours){
-    //  let hex2 = local.add(tile.hex);
+      //  let hex2 = local.add(tile.hex);
       let ship = getShipOnHex(hex2)
       if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
     }

@@ -107,14 +107,11 @@ function onMenuItemClicked(item){
       )}
     }
 
+    if(item == "scoutShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    if(item == "assaultShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    if(item == "basicShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    
 
-    if(item == "scoutShip"){
-      shipArray.push(
-        {type:"scoutShip", hull:"1", shield:"4", owner:playerTurn, maxMove: 8,
-         moved:false, attacked:false, location:tile.hex},
-      )
-
-    }
     if(item == "navBeacon"){
       tile.navBeacon = {owner: playerTurn}
     }

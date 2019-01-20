@@ -4,10 +4,14 @@ function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexS
 
 const hexVert = [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2), new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
-const triangleVert2 = [new Vec(1,0), new Vec(0,1), new Vec(0,-1)];
+const triangleVert2 = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
+const triangleVert3 = [new Vec(1,0), new Vec(0,0.3), new Vec(0,-0.3)];
+const triangleVert4 = [new Vec(2,0), new Vec(0,1), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
-const baseShapes = {"asteroidMining":triangleVert, "scoutShip":triangleVert2, "inhabitedPlanet":hexVert, "navBeacon":squareVert}
+const baseShapes = {"asteroidMining":triangleVert, "scoutShip":triangleVert3, "inhabitedPlanet":hexVert,
+"navBeacon":squareVert, "basicShip":triangleVert2, "assaultShip":triangleVert4
+}
 
 function drawScreen() {
   var c = document.getElementById("board").getContext("2d");
@@ -40,13 +44,13 @@ function drawScreen() {
   for(let [ , tile] of tiles){
     let planet = whichPlanetsTerritory(tile.hex);
     if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  playerColours[planet.owner]  );
-   if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)) )
+    if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)) )
   }
 
   for(let ship of shipArray){
     let borderColour = "black";
     if (ship.owner == playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
-    drawPoly(c, triangleVert, getXYfromHex(ship.location), 30,  2 , borderColour, playerColours[ship.owner]);
+    drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, playerColours[ship.owner]);
     drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)) )
   }
 
@@ -101,5 +105,5 @@ function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "
   c.font = `${size}px ${font}`;
   c.fillStyle = color;
   c.fillText(text, x, y);
-//  c.stroke();
+  //  c.stroke();
 }
