@@ -9,6 +9,14 @@ function mousedown(event){
   });
 }
 
+function touchstart(event){
+  mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
+  document.body.querySelector("#board").addEventListener("touchmove", mousedrag);
+  document.body.querySelector("#board").addEventListener("touchend", e => {
+    document.body.querySelector("#board").removeEventListener("mousemove", mousedrag);
+  });
+}
+
 function scaleContext(s){
   var c = document.getElementById("board").getContext("2d");
   scale *= s;
@@ -30,6 +38,13 @@ function mouseWheel(event){
 }
 
 function drag(event){
+
+  currentShip = null;         // TEMPORARY HACK
+  selected = {hex:null, state:0} ;
+  possibleMoves = []; possibleAttacks = []; menu = [];
+
+  event.preventDefault();
+  event.stopPropagation();
   var c = document.getElementById("board").getContext("2d");
   let dif = mouseDownLocation.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale));
   screenOffset = screenOffset.add(dif)
@@ -38,7 +53,25 @@ function drag(event){
   drawScreen();
 }
 
+function mousedrag(event){
+
+  currentShip = null;         // TEMPORARY HACK
+  selected = {hex:null, state:0} ;
+  possibleMoves = []; possibleAttacks = []; menu = [];
+
+  event.preventDefault();
+  event.stopPropagation();
+  var c = document.getElementById("board").getContext("2d");
+  let {offsetX,offsetY} = event[0];
+  let dif = mouseDownLocation.scale(-1).add(new Vec(offsetX, offsetY)).scale(-1/(scale));
+  screenOffset = screenOffset.add(dif)
+  c.translate(-dif.x,-dif.y)
+  mouseDownLocation =  new Vec( event.offsetX, event.offsetY) ;
+  drawScreen();
+}
+
 function menuClick(event){
+  event.preventDefault();
   if(event.offsetY > 50){nextTurn()};
   if(event.offsetY < 50 && event.offsetY > 10){
     let num = Math.round((event.offsetX+10)/40);

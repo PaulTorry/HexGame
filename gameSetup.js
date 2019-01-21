@@ -6,25 +6,34 @@
 //   assaultShip:{type:"assaultShip", hull:4, shield:3, maxMove: 2, attack: 5, retaliate:3},
 // }
 const shipHulls = {
-scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
- basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2},
+  scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
+  basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2},
   assaultShip:{type:'assaultShip',  hull:4, shield:3, maxMove:2, attack:5, retaliate:3},
-   mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5},
- missileShip:{type:'missileShip',  hull:2, shield:2, maxMove:3, attack:3, retaliate:2, range:3}
+  mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5},
+  missileShip:{type:'missileShip',  hull:2, shield:2, maxMove:3, attack:3, retaliate:2, range:3}
 }
 
+// const thingList = [
+//   {thing:"navBeacon", price:2, terrain:["space", "asteroids", "nebula"],  territoryState:1},
+//   {thing:"asteroidMining", price:2, terrain:["asteroids"], territoryState:2 },
+//   {thing:"inhabitedPlanet", price:0, terrain:["planet"], shipState:2},
+//   {thing:"scoutShip", price:3, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
+//   {thing:"basicShip", price:2, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
+//   {thing:"assaultShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
+//   {thing:"mineShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
+//   {thing:"missileShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true}
+// ]
+
 const thingList = [
-  {thing:"navBeacon", price:2, terrain:["space", "asteroids", "nebula"],  territoryState:1},
-  {thing:"asteroidMining", price:2, terrain:["asteroids"], territoryState:2 },
-  {thing:"inhabitedPlanet", price:0, terrain:["planet"], shipState:2},
-  {thing:"scoutShip", price:3, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-  {thing:"basicShip", price:2, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-  {thing:"assaultShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-  {thing:"mineShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-  {thing:"missileShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true}
-
-
+  {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy',   terrain: ['space', 'asteroids', 'nebula', ] } ,
+  {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['asteroids', ] } ,
+  {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
+  {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+  {thing: 'basicShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+  {thing: 'assaultShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+  {thing: 'mineShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] }
 ]
+
 
 const terrainCostNew = {
   "space": {"techNeeded": null, "moveOff":0.5, "moveOn":0.5, "navBeacon":0.25},
@@ -53,17 +62,18 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
-let numPlayers = 2;
-let playerData = [{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":{"gasGiantMove":false}}];
+let numPlayers = 3;
+let playerData = [{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":{"gasGiantMove":false}}];
 let playerTurn = 0;
 
 let shipArray = [
-//{"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,0,0),"owner":0}
+  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,0,0),"owner":0}
 ];
 
 let baseArray = [
   {type:"planet", owner:0, location: new Hex(0,3,-3), territory:new Hex(0,3,-3).secondNeighboursInclusive},
-  {type:"planet", owner:1, location: new Hex(0,-3,3), territory:new Hex(0,-3,3).secondNeighboursInclusive}
+  {type:"planet", owner:1, location: new Hex(3,-3,0), territory:new Hex(3,-3,0).secondNeighboursInclusive},
+  {type:"planet", owner:2, location: new Hex(-3,0,3), territory:new Hex(-3,0,3).secondNeighboursInclusive}
 ]
 
 let tiles = setupTiles(Hex.findWithin(boardSize));
@@ -76,12 +86,12 @@ function setupTiles(hexArray){
     if(Math.random()<0.1){buildingHex.terrain = "planet"};
     if(Math.random()<0.35){buildingHex.terrain = "asteroids"};
     if(Math.random()<0.05){buildingHex.terrain = "gasGiant"};
-  //  if(Math.random()<0.05){buildingHex.navBeacon = {owner:0}};
+    //  if(Math.random()<0.05){buildingHex.navBeacon = {owner:0}};
 
     for(let base of baseArray){
       if(hex.compare(base.location)){
         buildingHex.terrain = "planet";
-    //    buildingHex.station = {type:"inhabitedPlanet", owner:base.owner}
+        //    buildingHex.station = {type:"inhabitedPlanet", owner:base.owner}
       }
     }
     hexesObj.set(hex.id, buildingHex);

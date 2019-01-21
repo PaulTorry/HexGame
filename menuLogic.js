@@ -22,9 +22,11 @@ function makeMenu(hex){
         if (!base)return false;
     }
 
-    if(pos.noShip && getShipOnHex(hex)) return false;
+    if(pos.shipState == "noShip" && getShipOnHex(hex)) return false;
 
-    if(pos.shipState &&  pos.shipState > shipState(hex)) return false;
+    if(pos.shipState == "ownPresent" &&   shipState(hex) < 2) return false;
+
+    if(pos.shipState == "noEnemy" &&  getShipOnHex(hex) && shipState(hex) < 1) return false;
 
     return true
 
