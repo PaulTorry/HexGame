@@ -11,9 +11,9 @@ function mousedown(event){
 
 function touchstart(event){
   mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
-  document.body.querySelector("#board").addEventListener("touchmove", mousedrag);
+  document.body.querySelector("#board").addEventListener("touchmove", touchdrag);
   document.body.querySelector("#board").addEventListener("touchend", e => {
-    document.body.querySelector("#board").removeEventListener("mousemove", mousedrag);
+    document.body.querySelector("#board").removeEventListener("touchstart", touchstart);
   });
 }
 
@@ -38,9 +38,7 @@ function mouseWheel(event){
 }
 
 function drag(event){
-
-  currentShip = null;         // TEMPORARY HACK
-  selected = {hex:null, state:0} ;
+  currentShip = null; selected = {hex:null, state:0} ;
   possibleMoves = []; possibleAttacks = []; menu = [];
 
   event.preventDefault();
@@ -53,10 +51,8 @@ function drag(event){
   drawScreen();
 }
 
-function mousedrag(event){
-
-  currentShip = null;         // TEMPORARY HACK
-  selected = {hex:null, state:0} ;
+function touchdrag(event){
+  currentShip = null; selected = {hex:null, state:0} ;
   possibleMoves = []; possibleAttacks = []; menu = [];
 
   event.preventDefault();
