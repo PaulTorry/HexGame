@@ -22,7 +22,7 @@ function onHexClicked(clickHex){
       currentShip.location = clickHex;
       currentShip.moved = true;
       selected.hex = clickHex;
-      possibleAttacks = findPossibleAttacks(selected.hex);
+      possibleAttacks = findPossibleAttacks(selected.hex, currentShip.range);
       if (possibleAttacks.length > 0){
         possibleMoves = [];
       }
@@ -37,7 +37,7 @@ function onHexClicked(clickHex){
     else if(possibleAttacks.find(e =>  e.compare(clickHex))) {
       let target = getShipOnHex(clickHex);
       if(target){
-        applyDamage(2, target);
+        applyDamage(currentShip, target);
         currentShip.moved = true; currentShip.attacked = true;
         if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
       }else{console.log("error in attacks");}
@@ -60,7 +60,8 @@ function onHexClicked(clickHex){
       }
       if(currentShip && currentShip.owner == playerTurn && (!currentShip.moved || !currentShip.attacked)){
         if (!currentShip.moved) {possibleMoves = findPossibleMoves(selected.hex, currentShip.maxMove);}
-        possibleAttacks = findPossibleAttacks(selected.hex);
+        console.log ("currentShip.range" + currentShip.range)
+        possibleAttacks = findPossibleAttacks(selected.hex, currentShip.range);
         selected.state = 2
       }
       else{
@@ -95,7 +96,6 @@ function onMenuItemClicked(item){
       tile.station = {type: "asteroidMining", owner: playerTurn}
     }
 
-
     if(item == "inhabitedPlanet"){
       let existingBase = baseArray.find(b => b.location.compare(tile.hex));
       if (existingBase){
@@ -107,15 +107,15 @@ function onMenuItemClicked(item){
       )}
     }
 
-    if(item == "scoutShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
-    if(item == "assaultShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
-    if(item == "basicShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
-    
-
     if(item == "navBeacon"){
       tile.navBeacon = {owner: playerTurn}
     }
 
+    if(item == "scoutShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    if(item == "assaultShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    if(item == "basicShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    if(item == "mineShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
+    if(item == "missileShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))};
 
   }
   selected = {hex:null, state:0}
@@ -124,14 +124,27 @@ function onMenuItemClicked(item){
 }
 
 
-function applyDamage(dammage, ship){
-  let {type, hull, shield} = ship
-  for(let dam = dammage; dam > 0 && hull > 0; dam--){
-    if (shield > 0){shield--} else{hull--};
+function applyDamage(attacker, ship, attacking = true){
+  let {type, hull, shield} = ship;
+  let dammage = getWeaponPower(attacker, attacking)
+
+  if (shield >= dammage){
+    ship.shield -= dammage;
+    if(attacking) applyDamage(ship, attacker, false);
   }
-  ship.hull = hull;
-  ship.shield = shield;
-  if (hull < 1){shipArray = shipArray.filter(e => e !== ship)}
+  else if (shield + hull >= dammage) {
+    ship.hull -= dammage - shield; ship.shield = 0;
+    if(attacking) applyDamage(ship, attacker, false);
+  }
+  else {shipArray = shipArray.filter(e => e !== ship)}
+}
+
+
+
+function getWeaponPower(ship, attacking = true){
+  let {type, hull, attack, retaliate} = ship;
+  if(attacking){ return attack * hull / shipHulls[type].hull; }
+  else{ return retaliate * hull / shipHulls[type].hull; }
 }
 
 function nextTurn(){

@@ -1,4 +1,7 @@
 "use strict"
+
+function json(a){return JSON.stringify(a)}
+
 class Vec{
   constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
 
@@ -14,15 +17,29 @@ class Vec{
 }
 
 class Hex{
-  constructor(p=0,q=0,r=0){ this.p=p; this.q=q; this.r=r; }
+  constructor(p=0,q=p,r=-p-q){ this.p=p; this.q=q; this.r=r; }
 
   add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)};
   compare(b){return this.p==b.p && this.q==b.q && this.r==b.r};
   distance(b){return (Math.abs(this.p - b.p) + Math.abs(this.q - b.q) + Math.abs(this.r - b.r)) / 2};
+
+  within(n){
+    if (n==0){return this}
+    else if (n==1){return this.neighbours}
+    else if (n==2){return this.secondNeighboursInclusive}
+    else if (n==3){return this.thirdNeighboursInclusive}
+    else{Hex.findWithin(n).map(n => n.add(this))}
+  }
+
   get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2};
   get id () {return  `${this.p},${this.q}`}
 
   get neighbours() {return Hex.neighbours().map(n => n.add(this))}
+  get secondNeighbours() {return Hex.secondNeighbours().map(n => n.add(this))}
+  get thirdNeighbours() {return Hex.thirdNeighbours().map(n => n.add(this))}
+
+  get secondNeighboursInclusive() {return this.neighbours.concat(this.secondNeighbours)}
+  get thirdNeighboursInclusive() {return this.secondNeighboursInclusive.concat(this.thirdNeighbours)}
 
   static getArray(input, Hexes){
     let [pp, qq, rr, ...rest] = input;
@@ -40,7 +57,22 @@ class Hex{
     return list;
   }
 
-  static neighbours() {return [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]}
+  static neighbours() {return [new Hex(1,0), new Hex(0,-1), new Hex(-1,0), new Hex(-1,1), new Hex(0,1), new Hex(1,-1)]}
+
+  //  static neighbours() {return [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]}
+
+  static secondNeighbours () { return [
+    new Hex(2,0), new Hex(2,-2), new Hex(2,-1), new Hex(-2,0), new Hex(-2,2), new Hex(-2,1),
+    new Hex(1,-2), new Hex(1,1), new Hex(-1,2), new Hex(-1,-1), new Hex(0,2), new Hex(0,-2)
+  ]}
+
+  static thirdNeighbours () { return [
+    new Hex(3,-3), new Hex(3,-2), new Hex(3,-1), new Hex(3,0),
+    new Hex(-3,3), new Hex(-3,2), new Hex(-3,1), new Hex(-3,0),
+    new Hex(2,1), new Hex(-2,-1), new Hex(-2,3), new Hex(2,-3),
+    new Hex(1,-3), new Hex(1,2), new Hex(-1,3), new Hex(-1,-2),
+    new Hex(0,3), new Hex(0,-3)
+  ]}
 
   static getXYfromUnitHex(hexCoord){
     const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }

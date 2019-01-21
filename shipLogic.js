@@ -4,9 +4,11 @@ function buildShip(type, owner, location, moved=true, attacked=true){
   let base = shipHulls[type];
   return ({type:base.type, hull:base.hull, shield:base.shield,
     attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
-    moved:moved, attacked:attacked, location:location, owner:owner
+    range: base.range, moved:moved, attacked:attacked, location:location, owner:owner
   })
 }
+
+//console.log( JSON.stringify(buildShip("scoutShip",0,new Hex(0,0))));
 
 function getShipOnHex(hex){
   return shipArray.find(e => e.location.compare(hex));
@@ -18,9 +20,9 @@ function shipState(hex){
   else return 0;
 }
 
-function findPossibleAttacks(center){
+function findPossibleAttacks(center, range = 1){
   let possibleAttacksInt = [];
-  for(let hex of center.neighbours){
+  for(let hex of center.within(range)){
     let ship = getShipOnHex(hex);
     if(ship && ship.owner !== playerTurn) {
       possibleAttacksInt.push(hex);
@@ -29,35 +31,77 @@ function findPossibleAttacks(center){
   return possibleAttacksInt;
 }
 
-function findPossibleMoves(center, moveLeft = 5){
-  let terrainCostMap = makeTerrainCostMap();
-  let frontier = [{loc:center, cost:0}];
-  let visited = {[center.id]: {loc:center, cost:0, from:null}}
-  let itts = 0
-  while (frontier.length > 0 && itts < 1000){
-    let current = frontier.shift();
-    itts ++;
-    for (let hex of current.loc.neighbours){
-      if (hex.mag <= boardSize ){
-        // console.log(`current.loc.id  ${current.loc.id}  hex.id  ${hex.id} `);
-        let cost = current.cost + terrainCostMap[current.loc.id].moveOff + terrainCostMap[hex.id].moveOn;
-        if(!(visited[hex.id] && cost < visited[hex.id].cost) && cost < moveLeft){ // TODO WTF
-          frontier.push({loc:hex, cost:cost});
-          visited[hex.id] = {loc:hex, cost:current.cost + 1, from:current.loc};
-        }
-      }
-    }
+
+
+function findPossibleMovesFunctional(frontier, visited, terrainFunc){
+
+  if (!frontier.length) return visited;
+  let [current, ...newfrontier] = frontier;
+  visited[current.loc.id] = current;
+
+  newfrontier = current.loc.neighbours
+  .filter(n => n.mag <= boardSize)
+  .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:current.loc}})
+  .filter(({loc:hex, cost, from} ) => {
+    return hex.mag <= boardSize && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0
+  })
+  .concat(newfrontier)
+  .sort((a,b) => a.cost - b.cost)
+
+  return findPossibleMovesFunctional(newfrontier, visited, terrainFunc)
+}
+
+
+function findPossibleMoves(center, moveLeft = 2){
+  let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
+   center.neighbours.filter(n => n.mag <= boardSize)
+    .map(n => {return{loc:n, cost:0, from:center}})
+    .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
+  ,getTerrainMapFunction(makeTerrainCostMap())
+);
+return Object.values(temp).map(v => v.loc).filter(hex => {
+  return  (hex.mag <= boardSize) && !getShipOnHex(hex)
+});
+}
+
+
+// function findPossibleMovesItterative(center, moveLeft = 2){
+//   let terrainFunction = getTerrainMapFunction(makeTerrainCostMap());
+//   console.log(terrainFunction);
+//   let frontier = [{loc:center, cost:moveLeft, from:center}];
+//   let visited = new Object();
+//
+//   while (frontier.length > 0 ){
+//     let current = frontier.shift();
+//     for (let hex of current.loc.neighbours){
+//       if (hex.mag <= boardSize ){
+//         let cost = current.cost - terrainFunction(current.loc.id, hex.id)
+//         if(!(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0){ // TODO WTF
+//           frontier.push({loc:hex, cost:cost, from:current.loc});
+//           if (playerTurn) frontier.sort((a,b) => a.cost - b.cost)
+//         }
+//       }
+//     }
+//     //      console.log(frontier.length + "  " + Object.values(visited).length + "    " + JSON.stringify(visited));
+//     visited[current.loc.id] = current
+//   }
+//   //  console.log(JSON.stringify(visited));
+//   // Always to nearest neightbours
+//   for (let hex of center.neighbours){
+//     if (hex.mag <= boardSize && !visited[hex.id] && terrainCostMap[hex.id].moveOn < 9){
+//       visited[hex.id] = {loc:hex, cost:99, from:center.loc};
+//     }
+//   }
+//   // Filter for ships and return as array neightbours
+//   return Object.values(visited).map(v => v.loc).filter(hex => {
+//     return  (hex.mag <= boardSize) && !getShipOnHex(hex)
+//   });
+// }
+
+function getTerrainMapFunction(terrainCostMap){
+  return function(off,on){
+    return terrainCostMap[off].moveOff + terrainCostMap[on].moveOn;
   }
-  // Always to nearest neightbours
-  for (let hex of center.neighbours){
-    if (hex.mag <= boardSize && !visited[hex.id] && terrainCostMap[hex.id].moveOn < 9){
-      visited[hex.id] = {loc:hex, cost:99, from:center.loc};
-    }
-  }
-  // Filter for ships and return as array neightbours
-  return Object.values(visited).map(v => v.loc).filter(hex => {
-    return  (hex.mag <= boardSize) && !getShipOnHex(hex)
-  });
 }
 
 function makeTerrainCostMap(){

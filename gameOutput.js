@@ -7,10 +7,13 @@ const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const triangleVert2 = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const triangleVert3 = [new Vec(1,0), new Vec(0,0.3), new Vec(0,-0.3)];
 const triangleVert4 = [new Vec(2,0), new Vec(0,1), new Vec(0,-1)];
+const triangleVert5 = [new Vec(1,0), new Vec(-1,0), new Vec(1,-1)];
+const triangleVert6 = [new Vec(2,0), new Vec(-1,1), new Vec(0,-1)];
 const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
 
 const baseShapes = {"asteroidMining":triangleVert, "scoutShip":triangleVert3, "inhabitedPlanet":hexVert,
-"navBeacon":squareVert, "basicShip":triangleVert2, "assaultShip":triangleVert4
+"navBeacon":squareVert, "basicShip":triangleVert2, "assaultShip":triangleVert4,
+"mineShip":triangleVert5, "missileShip":triangleVert6
 }
 
 function drawScreen() {

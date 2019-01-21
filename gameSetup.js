@@ -1,9 +1,16 @@
 "use strict"
 
+// const shipHulls = {
+//   scoutShip:{type:"scoutShip", hull:1, shield:2, maxMove: 4, attack: 2, retaliate:1},
+//   basicShip:{type:"basicShip", hull:2, shield:3, maxMove: 2, attack: 2, retaliate:2},
+//   assaultShip:{type:"assaultShip", hull:4, shield:3, maxMove: 2, attack: 5, retaliate:3},
+// }
 const shipHulls = {
-  scoutShip:{type:"scoutShip", hull:1, shield:2, maxMove: 4, attack: 2, retaliate:1},
-  basicShip:{type:"basicShip", hull:2, shield:3, maxMove: 2, attack: 2, retaliate:2},
-  assaultShip:{type:"assaultShip", hull:4, shield:3, maxMove: 2, attack: 5, retaliate:3},
+scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
+ basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2},
+  assaultShip:{type:'assaultShip',  hull:4, shield:3, maxMove:2, attack:5, retaliate:3},
+   mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5},
+ missileShip:{type:'missileShip',  hull:2, shield:2, maxMove:3, attack:3, retaliate:2, range:3}
 }
 
 const thingList = [
@@ -12,7 +19,11 @@ const thingList = [
   {thing:"inhabitedPlanet", price:0, terrain:["planet"], shipState:2},
   {thing:"scoutShip", price:3, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
   {thing:"basicShip", price:2, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-  {thing:"assaultShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true}
+  {thing:"assaultShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
+  {thing:"mineShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
+  {thing:"missileShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true}
+
+
 ]
 
 const terrainCostNew = {
@@ -22,6 +33,8 @@ const terrainCostNew = {
   "planet": {"techNeeded": null, "moveOff":0.5, "moveOn":0.5, "navBeacon":0.25},
   "nebula": {"techNeeded": null, "moveOff":1.5, "moveOn":1.5, "navBeacon":0.25}
 }
+
+const navBeaconCost = 0.25;
 
 const playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
 const selectedColour = ["white","red", "blue", "orange"];
@@ -44,11 +57,13 @@ let numPlayers = 2;
 let playerData = [{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":{"gasGiantMove":false}}];
 let playerTurn = 0;
 
-let shipArray = [];
+let shipArray = [
+//{"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,0,0),"owner":0}
+];
 
 let baseArray = [
-  {type:"planet", owner:0, location: new Hex(0,3,-3), territory:new Hex(0,3,-3).neighbours},
-  {type:"planet", owner:1, location: new Hex(0,-3,3), territory:new Hex(0,-3,3).neighbours}
+  {type:"planet", owner:0, location: new Hex(0,3,-3), territory:new Hex(0,3,-3).secondNeighboursInclusive},
+  {type:"planet", owner:1, location: new Hex(0,-3,3), territory:new Hex(0,-3,3).secondNeighboursInclusive}
 ]
 
 let tiles = setupTiles(Hex.findWithin(boardSize));
