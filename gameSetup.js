@@ -1,10 +1,5 @@
 "use strict"
 
-// const shipHulls = {
-//   scoutShip:{type:"scoutShip", hull:1, shield:2, maxMove: 4, attack: 2, retaliate:1},
-//   basicShip:{type:"basicShip", hull:2, shield:3, maxMove: 2, attack: 2, retaliate:2},
-//   assaultShip:{type:"assaultShip", hull:4, shield:3, maxMove: 2, attack: 5, retaliate:3},
-// }
 const shipHulls = {
   scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
   basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2},
@@ -13,17 +8,6 @@ const shipHulls = {
   missileShip:{type:'missileShip',  hull:2, shield:2, maxMove:3, attack:3, retaliate:2, range:3}
 }
 
-// const thingList = [
-//   {thing:"navBeacon", price:2, terrain:["space", "asteroids", "nebula"],  territoryState:1},
-//   {thing:"asteroidMining", price:2, terrain:["asteroids"], territoryState:2 },
-//   {thing:"inhabitedPlanet", price:0, terrain:["planet"], shipState:2},
-//   {thing:"scoutShip", price:3, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-//   {thing:"basicShip", price:2, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-//   {thing:"assaultShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-//   {thing:"mineShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true},
-//   {thing:"missileShip", price:5, terrain:[], territoryState:2, inhabitedPlanet:true, noShip:true}
-// ]
-
 const thingList = [
   {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy',   terrain: ['space', 'asteroids', 'nebula', ] } ,
   {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['asteroids', ] } ,
@@ -31,9 +15,9 @@ const thingList = [
   {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
   {thing: 'basicShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
   {thing: 'assaultShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-  {thing: 'mineShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] }
+  {thing: 'mineShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] },
+  {thing: 'missileShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] }
 ]
-
 
 const terrainCostNew = {
   "space": {"techNeeded": null, "moveOff":0.5, "moveOn":0.5, "navBeacon":0.25},
@@ -45,13 +29,14 @@ const terrainCostNew = {
 
 const navBeaconCost = 0.25;
 
-const playerColours = ["green", "red", "blue", "orange", "purple", "brown"];
+const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
 const selectedColour = ["white","red", "blue", "orange"];
 
 let debug = false;
 const screenSize = 800;
 let screenOffset = new Vec(0,0);
 let mouseDownLocation = new Vec(0,0);
+let fingerDistance = null;
 let scale = 1;
 let hexSize = 40
 const boardSize = 6

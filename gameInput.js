@@ -1,21 +1,6 @@
 "use strict"
 
-
-function mousedown(event){
-  mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
-  document.body.querySelector("#board").addEventListener("mousemove", drag);
-  document.body.querySelector("#board").addEventListener("mouseup", e => {
-    document.body.querySelector("#board").removeEventListener("mousemove", drag);
-  });
-}
-
-function touchstart(event){
-  mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
-  document.body.querySelector("#board").addEventListener("touchmove", touchdrag);
-  document.body.querySelector("#board").addEventListener("touchend", e => {
-    document.body.querySelector("#board").removeEventListener("touchstart", touchstart);
-  });
-}
+function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
 function scaleContext(s){
   var c = document.getElementById("board").getContext("2d");
@@ -29,6 +14,21 @@ function translateContext(dif){
   screenOffset = screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
 }
+
+
+function mousedown(event){
+  mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
+//  console.log("mousedown");
+  document.body.querySelector("#board").addEventListener("mousemove", drag);
+  document.body.querySelector("#board").addEventListener("mouseup", removeMousemove);
+}
+
+function removeMousemove(event){
+//  console.log("removeMousemove");
+  document.body.querySelector("#board").removeEventListener("mousemove", drag);
+  document.body.querySelector("#board").removeEventListener("mouseup", removeMousemove);
+}
+
 
 function mouseWheel(event){
   event.preventDefault();
@@ -45,26 +45,11 @@ function drag(event){
   event.stopPropagation();
   var c = document.getElementById("board").getContext("2d");
   let dif = mouseDownLocation.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale));
-  screenOffset = screenOffset.add(dif)
-  c.translate(-dif.x,-dif.y)
+  translateContext(dif)
   mouseDownLocation =  new Vec( event.offsetX, event.offsetY) ;
   drawScreen();
 }
 
-function touchdrag(event){
-  currentShip = null; selected = {hex:null, state:0} ;
-  possibleMoves = []; possibleAttacks = []; menu = [];
-
-  event.preventDefault();
-  event.stopPropagation();
-  var c = document.getElementById("board").getContext("2d");
-  let {offsetX,offsetY} = event[0];
-  let dif = mouseDownLocation.scale(-1).add(new Vec(offsetX, offsetY)).scale(-1/(scale));
-  screenOffset = screenOffset.add(dif)
-  c.translate(-dif.x,-dif.y)
-  mouseDownLocation =  new Vec( event.offsetX, event.offsetY) ;
-  drawScreen();
-}
 
 function menuClick(event){
   event.preventDefault();
@@ -79,10 +64,50 @@ function menuClick(event){
   drawMenu();
 }
 
-function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
 
 function boardClick(event){
   let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).scale(1/hexSize))
   onHexClicked(clickHex);
+  drawScreen();
+}
+
+
+function touchstart(event){
+    let {pageX,pageY} = event.touches[0];
+  mouseDownLocation = new Vec( pageX, pageY) ;
+//console.log("touchstart");
+  document.body.querySelector("#board").addEventListener("touchmove", touchdrag);
+  document.body.querySelector("#board").addEventListener("touchend", removeTouchmove);
+}
+
+function removeTouchmove(event){
+//  console.log("removeTouchmove");
+  fingerDistance = null;
+  document.body.querySelector("#board").removeEventListener("touchmove", touchdrag);
+  document.body.querySelector("#board").removeEventListener("touchend", removeTouchmove);
+}
+
+function touchdrag(event){
+  currentShip = null; selected = {hex:null, state:0} ;
+  possibleMoves = []; possibleAttacks = []; menu = [];
+
+  event.preventDefault();
+  event.stopPropagation();
+  var c = document.getElementById("board").getContext("2d");
+  let {pageX,pageY} = event.touches[0];
+  if(event.touches[1]){
+    let {pageX:x2,pageY:y2} = event.touches[1];
+  //  console.log(pageX , x2 , pageY , y2)
+    let fingerDistanceNew = Math.sqrt( (pageX - x2)*(pageX - x2) + (pageY - y2)*(pageY - y2))
+  //  console.log(fingerDistanceNew + "fingerDistanceNew");
+    if (fingerDistance){
+      scaleContext(fingerDistanceNew/fingerDistance)
+    }
+    fingerDistance = fingerDistanceNew
+  }
+  else fingerDistance = null;
+  let dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1/(scale));
+  translateContext(dif)
+  mouseDownLocation =  new Vec( pageX, pageY) ;
   drawScreen();
 }

@@ -6,8 +6,10 @@ class Vec{
   constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
 
   add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
+  subtract(b){return new Vec (this.x - b.x, this.y - b.y)  }
   scale(m) { return new Vec(this.x * m, this.y * m) }
   dot(b){    return this.x * b.x + this.y * b.y; }
+  invert(){  return this.scale(-1)}
 
   static getArray(input, Vecs){
     let [xx, yy, ...rest] = input;
