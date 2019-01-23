@@ -2,9 +2,9 @@
 
 const shipHulls = {
   scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
-  basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2},
-  assaultShip:{type:'assaultShip',  hull:4, shield:3, maxMove:2, attack:5, retaliate:3},
-  mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5},
+  basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2, range:1},
+  assaultShip:{type:'assaultShip',  hull:4, shield:3, maxMove:2, attack:5, retaliate:3, range:1},
+  mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5, range:1},
   missileShip:{type:'missileShip',  hull:2, shield:2, maxMove:3, attack:3, retaliate:2, range:3}
 }
 
@@ -52,7 +52,7 @@ let playerData = [{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":
 let playerTurn = 0;
 
 let shipArray = [
-  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,0,0),"owner":0}
+  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,0,0),"owner":0, range:1}
 ];
 
 let baseArray = [

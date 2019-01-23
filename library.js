@@ -10,6 +10,7 @@ class Vec{
   scale(m) { return new Vec(this.x * m, this.y * m) }
   dot(b){    return this.x * b.x + this.y * b.y; }
   invert(){  return this.scale(-1)}
+  //get mag () {return Math.sqrt( (this.x*this.x) + (this.y*this.y))}
 
   static getArray(input, Vecs){
     let [xx, yy, ...rest] = input;
@@ -22,6 +23,7 @@ class Hex{
   constructor(p=0,q=p,r=-p-q){ this.p=p; this.q=q; this.r=r; }
 
   add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)};
+  subtract(b){return new Hex(this.p-b.p, this.q-b.q, this.r-b.r)};
   compare(b){return this.p==b.p && this.q==b.q && this.r==b.r};
   distance(b){return (Math.abs(this.p - b.p) + Math.abs(this.q - b.q) + Math.abs(this.r - b.r)) / 2};
 

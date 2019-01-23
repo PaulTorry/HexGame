@@ -39,7 +39,7 @@ function onHexClicked(clickHex){
       if(target){
         applyDamage(currentShip, target);
         currentShip.moved = true; currentShip.attacked = true;
-        if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
+      //  if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
       }else{console.log("error in attacks");}
 
       currentShip = null;
@@ -100,6 +100,10 @@ function onMenuItemClicked(item){
       let existingBase = baseArray.find(b => b.location.compare(tile.hex));
       if (existingBase){
         existingBase.owner = playerTurn;
+        existingBase.territory.forEach(t => {
+          console.log(t);
+          if(tiles.get(t.id).station){tiles.get(t.id).station = {type: "asteroidMining", owner: playerTurn}}
+        })
       }
       else {baseArray.push(
         {type:"planet", owner:playerTurn, location: tile.hex,
@@ -126,17 +130,22 @@ function onMenuItemClicked(item){
 
 function applyDamage(attacker, ship, attacking = true){
   let {type, hull, shield} = ship;
-  let dammage = getWeaponPower(attacker, attacking)
+  let dammage = getWeaponPower(attacker, attacking);
+  let range = attacker.location.distance(ship.location);
+  if ( attacker.range < range ){ dammage = 0}
 
   if (shield >= dammage){
     ship.shield -= dammage;
     if(attacking) applyDamage(ship, attacker, false);
   }
-  else if (shield + hull >= dammage) {
+  else if (shield + hull > dammage) {
     ship.hull -= dammage - shield; ship.shield = 0;
     if(attacking) applyDamage(ship, attacker, false);
   }
-  else {shipArray = shipArray.filter(e => e !== ship)}
+  else {
+    if (range == 1 && attacking){attacker.location = ship.location}
+    shipArray = shipArray.filter(e => e !== ship)
+  }
 }
 
 
