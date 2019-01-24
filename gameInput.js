@@ -9,8 +9,8 @@ function scaleContext(s){
   screenOffset = screenOffset.scale(1/s);
 }
 
-function translateContext(dif){
-  var c = document.getElementById("board").getContext("2d");
+function translateContext(dif, ctx = "board"){
+  var c = document.getElementById(ctx).getContext("2d");
   screenOffset = screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
 }
@@ -19,14 +19,14 @@ function translateContext(dif){
 function mousedown(event){
   mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
 //  console.log("mousedown");
-  document.body.querySelector("#board").addEventListener("mousemove", drag);
-  document.body.querySelector("#board").addEventListener("mouseup", removeMousemove);
+  document.getElementById("board").addEventListener("mousemove", drag);
+  document.getElementById("board").addEventListener("mouseup", removeMousemove);
 }
 
 function removeMousemove(event){
 //  console.log("removeMousemove");
-  document.body.querySelector("#board").removeEventListener("mousemove", drag);
-  document.body.querySelector("#board").removeEventListener("mouseup", removeMousemove);
+  document.getElementById("board").removeEventListener("mousemove", drag);
+  document.getElementById("board").removeEventListener("mouseup", removeMousemove);
 }
 
 
@@ -53,20 +53,34 @@ function drag(event){
 
 function menuClick(event){
   event.preventDefault();
-  if(event.offsetY > 50){nextTurn()};
-  if(event.offsetY < 50 && event.offsetY > 10){
+  if(event.offsetY > 50 && event.offsetY < 100){nextTurn()}
+  else if (event.offsetY < 50 && event.offsetX > 600) {
+  //  console.log(openTechTree);
+    openTechTree = !openTechTree;
+    document.getElementById("menu").height = 100 + 300 * openTechTree;
+  }
+  else if(event.offsetY < 50 && event.offsetY > 10){
     let num = Math.round((event.offsetX+10)/40);
     if (num && menu[num -1]){
       onMenuItemClicked(menu[num -1]);
     }
   }
+  else{
+//    console.log(new Vec(event.offsetX,  event.offsetY));
+//    console.log((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50));
+    let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50))
+  //  console.log(clickHex);
+
+      onTechHexClicked(clickHex);
+    }
   drawScreen();
   drawMenu();
 }
 
 
 function boardClick(event){
-  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).scale(1/hexSize))
+  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).
+    scale(1/hexSize))
   onHexClicked(clickHex);
   drawScreen();
 }
@@ -76,15 +90,15 @@ function touchstart(event){
     let {pageX,pageY} = event.touches[0];
   mouseDownLocation = new Vec( pageX, pageY) ;
 //console.log("touchstart");
-  document.body.querySelector("#board").addEventListener("touchmove", touchdrag);
-  document.body.querySelector("#board").addEventListener("touchend", removeTouchmove);
+  document.getElementById("board").addEventListener("touchmove", touchdrag);
+  document.getElementById("board").addEventListener("touchend", removeTouchmove);
 }
 
 function removeTouchmove(event){
 //  console.log("removeTouchmove");
   fingerDistance = null;
-  document.body.querySelector("#board").removeEventListener("touchmove", touchdrag);
-  document.body.querySelector("#board").removeEventListener("touchend", removeTouchmove);
+  document.getElementById("board").removeEventListener("touchmove", touchdrag);
+  document.getElementById("board").removeEventListener("touchend", removeTouchmove);
 }
 
 function touchdrag(event){

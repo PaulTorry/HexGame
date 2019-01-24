@@ -2,7 +2,7 @@
 
 
 function makeMenu(hex){
-
+console.log("makemenu");
   return thingList.filter(pos => {
 
     if(pos.price > playerData[playerTurn].money) return false;
@@ -27,6 +27,11 @@ function makeMenu(hex){
     if(pos.shipState == "ownPresent" &&   shipState(hex) < 2) return false;
 
     if(pos.shipState == "noEnemy" &&  getShipOnHex(hex) && shipState(hex) < 1) return false;
+
+    if(pos.tech && pos.tech.length > 0){
+      for (let t of pos.tech){ if(!playerData[playerTurn].tech[t]) return false; }
+    }
+
 
     return true
 

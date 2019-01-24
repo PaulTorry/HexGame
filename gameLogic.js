@@ -127,6 +127,21 @@ function onMenuItemClicked(item){
   drawMenu();
 }
 
+function onTechHexClicked (hex){
+  let tech = techs.find(t => t.location.compare(hex));
+  let player = playerData[playerTurn];
+  console.log(tech);
+  console.log(player);
+  console.log(tech.tech);
+  console.log(player.tech);
+
+  if(!player.tech[tech.tech] && player.money >= tech.cost){
+    console.log("doing");
+    player.tech[tech.tech] = true;
+    player.money -= tech.cost;
+  }
+}
+
 
 function applyDamage(attacker, ship, attacking = true){
   let {type, hull, shield} = ship;

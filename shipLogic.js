@@ -53,15 +53,47 @@ function findPossibleMovesFunctional(frontier, visited, terrainFunc){
 
 
 function findPossibleMoves(center, moveLeft = 2){
+  let terrainFunc = getTerrainMapFunction(makeTerrainCostMap());
   let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
-   center.neighbours.filter(n => n.mag <= boardSize)
-    .map(n => {return{loc:n, cost:0, from:center}})
-    .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
-  ,getTerrainMapFunction(makeTerrainCostMap())
+    center.neighbours
+      .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 10)
+      .map(n => {return{loc:n, cost:0, from:center}})
+      .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
+    ,terrainFunc
 );
 return Object.values(temp).map(v => v.loc).filter(hex => {
   return  (hex.mag <= boardSize) && !getShipOnHex(hex)
 });
+}
+
+
+function getTerrainMapFunction(terrainCostMap){
+  return function(off,on){
+    return terrainCostMap[off].moveOff + terrainCostMap[on].moveOn;
+  }
+}
+
+function makeTerrainCostMap(){
+  let terrainCostMap = {};
+  for(let [ ,tile] of tiles){
+
+    let moveOff = terrainCostNew[tile.terrain].moveOff;
+    let moveOn = terrainCostNew[tile.terrain].moveOn;
+    if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
+
+    for(let hex2 of tile.hex.neighbours){
+      let ship = getShipOnHex(hex2)
+      if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
+    }
+
+    let techNeeded = terrainCostNew[tile.terrain].techNeeded;
+    if(techNeeded && !playerData[playerTurn].tech[techNeeded]){
+      moveOff += 77; moveOn += 77;
+    }
+
+    terrainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
+  }
+  return terrainCostMap;
 }
 
 
@@ -97,33 +129,3 @@ return Object.values(temp).map(v => v.loc).filter(hex => {
 //     return  (hex.mag <= boardSize) && !getShipOnHex(hex)
 //   });
 // }
-
-function getTerrainMapFunction(terrainCostMap){
-  return function(off,on){
-    return terrainCostMap[off].moveOff + terrainCostMap[on].moveOn;
-  }
-}
-
-function makeTerrainCostMap(){
-  let terrainCostMap = {};
-  for(let [ ,tile] of tiles){
-
-    let moveOff = terrainCostNew[tile.terrain].moveOff;
-    let moveOn = terrainCostNew[tile.terrain].moveOn;
-    if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
-
-    for(let hex2 of tile.hex.neighbours){
-      //  let hex2 = local.add(tile.hex);
-      let ship = getShipOnHex(hex2)
-      if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
-    }
-
-    let tech = terrainCostNew[tile.terrain].techNeeded;
-    if(tech && !playerData[playerTurn].tech[tech]){
-      moveOff += 77; moveOn += 77;
-    }
-
-    terrainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
-  }
-  return terrainCostMap;
-}

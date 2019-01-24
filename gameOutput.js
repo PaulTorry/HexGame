@@ -1,5 +1,7 @@
 "use strict"
 
+//  document.getElementById("menu").height = 500;
+
 function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexSize)}
 
 const hexVert = [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2), new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)]
@@ -47,14 +49,15 @@ function drawScreen() {
   for(let [ , tile] of tiles){
     let planet = whichPlanetsTerritory(tile.hex);
     if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  playerColours[planet.owner]  );
-    if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)) )
+    if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)),10 )
+    if(debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-20,+30)),14, "grey" )
   }
 
   for(let ship of shipArray){
     let borderColour = "black";
     if (ship.owner == playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
     drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, playerColours[ship.owner]);
-    drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)) )
+    drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)), 14, "white")
   }
 
   if(selected.hex){
@@ -71,6 +74,7 @@ function drawScreen() {
 }
 
 function drawMenu(){
+
   var c = document.getElementById("menu").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
@@ -82,8 +86,25 @@ function drawMenu(){
   }
   c.strokeStyle = playerColours[playerTurn];
   c.strokeRect (10, 50, 780, 40);
+  c.strokeRect (600, 10, 190, 40);
+  c.stroke();
   c.stroke();
   drawText(c, `Player:  ${playerTurn}   Money:  ${playerData[playerTurn].money}`, new Vec(10,70), 28, "white" )
+  drawText(c, `Tech Tree`, new Vec(600,30), 20, "white" )
+
+  if (openTechTree){
+    techs.forEach((t)=>{
+      let center = getXYfromHex(t.location).add(techTreeOffset);
+      let colour = "red";
+      if (playerData[playerTurn].tech[t.tech]) {colour = "yellow"}
+      drawPoly(c, hexVert, center, hexSize, 1,  "white", "#120F22"  );
+      drawText(c, `${t.tech}`, center.add(new Vec(-30,0)) , 14, colour )
+      drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
+  //    console.log(getXYfromHex(t.location));
+    })
+
+
+  }
 }
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){

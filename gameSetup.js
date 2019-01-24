@@ -1,5 +1,15 @@
 "use strict"
 
+const techs = [
+{tech:'gasGiantMove', location:new Hex(0,1), cost:2, prereq:['asteroidMining',]},
+{tech:'navBeacons', location:new Hex(-1,0), cost:2, },
+{tech:'missiles', location:new Hex(0,-1), cost:2, },
+{tech:'heavyWeapons', location:new Hex(1,-1), cost:2, },
+{tech:'mines', location:new Hex(1,0), cost:2, },
+{tech:'asteroidMining', location:new Hex(-1,1), cost:2, }
+]
+console.log(techs);
+
 const shipHulls = {
   scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
   basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2, range:1},
@@ -14,7 +24,7 @@ const thingList = [
   {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
   {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
   {thing: 'basicShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-  {thing: 'assaultShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+  {thing: 'assaultShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [], tech:['heavyWeapons'] } ,
   {thing: 'mineShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] },
   {thing: 'missileShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] }
 ]
@@ -32,9 +42,12 @@ const navBeaconCost = 0.25;
 const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
 const selectedColour = ["white","red", "blue", "orange"];
 
-let debug = false;
+
+let debug = true;
+let openTechTree = false;
 const screenSize = 800;
 let screenOffset = new Vec(0,0);
+let techTreeOffset = new Vec(400,250);
 let mouseDownLocation = new Vec(0,0);
 let fingerDistance = null;
 let scale = 1;
@@ -47,8 +60,14 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
-let numPlayers = 3;
-let playerData = [{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":{"gasGiantMove":false}},{"money":5, "tech":{"gasGiantMove":false}}];
+let playerData = [
+  {"money":5, "tech":{"gasGiantMove":true}},
+  {"money":5, "tech":{"gasGiantMove":false}},
+  {"money":5, "tech":{"gasGiantMove":false}}
+];
+
+let numPlayers = playerData.length ;
+
 let playerTurn = 0;
 
 let shipArray = [

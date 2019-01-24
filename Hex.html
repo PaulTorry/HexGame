@@ -6,7 +6,7 @@
   body {background-color: #181818}
   img {display: none}
   </style>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" user-scalable=no/>
   <link rel="stylesheet" href="" type="text/css"/>
   <script src="library.js"></script>
   <script src="gameSetup.js"></script>
@@ -38,6 +38,11 @@ document.body.querySelector("#menu").addEventListener("click", menuClick);
 
 document.body.querySelector("#board").addEventListener("touchstart", touchstart);
 
+window.onload = () => {
+  console.log("Hi");
+   translateContext(new Vec(-400,-400));
+   drawScreen()
+ }
 
 drawScreen();
 </script>
