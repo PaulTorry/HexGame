@@ -52,7 +52,7 @@ let mouseDownLocation = new Vec(0,0);
 let fingerDistance = null;
 let scale = 1;
 let hexSize = 40
-const boardSize = 6
+const boardSize = 10;
 
 let currentShip = null;
 let selected = {hex: null,    state:0};
@@ -60,13 +60,9 @@ let possibleMoves = [];
 let possibleAttacks = [];
 let menu = [];
 
-let playerData = [
-  {"money":5, "tech":{"gasGiantMove":true}},
-  {"money":5, "tech":{"gasGiantMove":false}},
-  {"money":5, "tech":{"gasGiantMove":false}}
-];
 
-let numPlayers = playerData.length ;
+
+
 
 let playerTurn = 0;
 
@@ -103,3 +99,12 @@ function setupTiles(hexArray){
   // console.log(hexesObj)
   return hexesObj;
 }
+
+let playerData = [
+  {"money":5, "tech":{"gasGiantMove":true}, viewMask:makeNewViewMask()},
+  {"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()},
+  {"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
+];
+
+
+let numPlayers = playerData.length ;

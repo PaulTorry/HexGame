@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 49.22 41.25"><defs>
+  <style>.cls-1{fill:#d82435;}.cls-2{fill:url(#linear-gradient);}.cls-3{fill:#9e1321;}.cls-4{fill:url(#linear-gradient-2);}</style><linearGradient id="linear-gradient" x1="13.4" y1="7.31" x2="3.66" y2="17.05" gradientTransform="matrix(0.96, 0.29, -0.29, 0.96, 2.13, -1.39)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#820614"/><stop offset="1" stop-color="#d82435" stop-opacity="0"/></linearGradient><linearGradient id="linear-gradient-2" x1="17.96" y1="22.37" x2="8.22" y2="32.11" xlink:href="#linear-gradient"/></defs>
+  <title>missile ship</title><g id="Layer_2" data-name="Layer 2">
+  <g id="Layer_4" data-name="Layer 4"><g id="missile_ship" data-name="missile ship">
+    <rect class="cls-1" x="11.3" width="17" height="41.25" rx="3.75" ry="3.75"/>
+    <path class="cls-1" d="M26.3,12.71l21.61-5a1.06,1.06,0,0,0,0-2.07L25.92.33A1.07,1.07,0,0,0,24.6,1.41L25,11.72A1.06,1.06,0,0,0,26.3,12.71Z"/>
+    <path class="cls-1" d="M24.59,40,25,29.36a.92.92,0,0,1,1.13-.86L48.5,33.63a.92.92,0,0,1,0,1.79L25.73,41A.92.92,0,0,1,24.59,40Z"/>
+    <rect class="cls-2" y="9.84" width="13.52" height="5.8" rx="1.25" ry="1.25"/>
+    <path class="cls-3" d="M28.54,9.94,40.47,7.2a.58.58,0,0,0,0-1.14L28.33,3.11a.59.59,0,0,0-.73.59l.22,5.69A.59.59,0,0,0,28.54,9.94Z"/>
+    <path class="cls-3" d="M28.54,31.31l11.93,2.74a.58.58,0,0,1,0,1.14l-12.14,3a.6.6,0,0,1-.73-.6l.22-5.69A.59.59,0,0,1,28.54,31.31Z"/>
+    <rect class="cls-4" y="25.58" width="13.52" height="5.8" rx="1.25" ry="1.25"/></g></g></g></svg>

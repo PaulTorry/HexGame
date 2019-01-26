@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 44.03 30.27"><defs>
+  <style>.cls-1{fill:#d82435;}.cls-2{fill:url(#linear-gradient);}</style>
+  <linearGradient id="linear-gradient" x1="264.47" y1="-38.08" x2="254.73" y2="-28.34" gradientTransform="matrix(0.96, 0.29, -0.29, 0.96, -251.32, -28.37)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#820614"/><stop offset="1" stop-color="#d82435" stop-opacity="0"/></linearGradient></defs><title>defensive ship</title><g id="Layer_2" data-name="Layer 2">
+<g id="Layer_4" data-name="Layer 4"><g id="defensive_ship" data-name="defensive ship">
+  <path class="cls-1" d="M21.29,30.27l12.42-.16a4.3,4.3,0,0,0,3.7-2.2l6.07-10.83a4.32,4.32,0,0,0,0-4.3
+    L37.08,2.1A4.31,4.31,0,0,0,33.33,0L20.91.16a4.3,4.3,0,0,0-3.7,2.2L11.14,13.19a4.32,4.32,0,0,0,0,4.3l6.35,10.68
+    A4.31,4.31,0,0,0,21.29,30.27Z"/><rect class="cls-2" y="12.24" width="13.52" height="5.8" rx="1.25" ry="1.25"/></g></g></g></svg>

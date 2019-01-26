@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 62.8 36.33"><defs>
+  <style>.cls-1{fill:#d82435;}.cls-2{fill:url(#linear-gradient);}</style>
+  <linearGradient id="linear-gradient" x1="482.79" y1="-167.24" x2="473.05" y2="-157.5" 
+    gradientTransform="matrix(0.96, 0.29, -0.29, 0.96, -497.71, 34.96)" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#820614"/><stop offset="1" stop-color="#d82435" stop-opacity="0"/></linearGradient>
+  </defs><title>repair ship</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_4" data-name="Layer 4">
+  <g id="repair_ship" data-name="repair ship">
+    <path class="cls-1" d="M11,18.17c0,10,7.06,18.16,21.38,18.16S62.8,28.2,62.8,18.17,47.41,0,33.1,0,11,8.13,11,18.17Z"/>
+    <rect class="cls-2" y="15.27" width="13.52" height="5.8" rx="1.25" ry="1.25"/></g></g></g></svg>

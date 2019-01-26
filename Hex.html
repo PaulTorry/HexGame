@@ -9,12 +9,14 @@
   <meta charset="UTF-8" user-scalable=no/>
   <link rel="stylesheet" href="" type="text/css"/>
   <script src="library.js"></script>
-  <script src="gameSetup.js"></script>
+
   <script src="shipLogic.js"></script>
   <script src="menuLogic.js"></script>
   <script src="gameLogic.js"></script>
   <script src="gameInput.js"></script>
+  <script src="viewLogic.js"></script>
   <script src="gameOutput.js"></script>
+    <script src="gameSetup.js"></script>
 
 </head>
 <body>
@@ -45,6 +47,10 @@ window.onload = () => {
  }
 
 drawScreen();
+
+console.log(getUpdatedViewMask(0));
+
+
 </script>
 
 </html>

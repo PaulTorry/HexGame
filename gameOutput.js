@@ -25,39 +25,48 @@ function drawScreen() {
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
 
-  for(let [ , tile] of tiles){
-    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  "#25202D", "#120F22"  );
-    if(tile.terrain !== "space"){
-      // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
-      let image = document.getElementById(tile.terrain + "Pic");
-      let {x,y} = getXYfromHex(tile.hex)
-      c.drawImage(image, x - 50, y - 50, 100, 100);
-    }
-    if(tile.station){
-      drawPoly(c, baseShapes[tile.station.type], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.station.owner] );
-    }
-    if(tile.navBeacon){
-      drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.navBeacon.owner] );
-    }
-    let base = baseArray.find(b => b.location.compare(tile.hex));
-    if(base){
-      drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , playerColours[base.owner] );
+  let viewMask = getUpdatedViewMask(playerTurn);
 
-    }
 
-  }
-  for(let [ , tile] of tiles){
-    let planet = whichPlanetsTerritory(tile.hex);
-    if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  playerColours[planet.owner]  );
-    if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)),10 )
-    if(debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-20,+30)),14, "grey" )
+
+  for(let [id , tile] of tiles){
+    if(viewMask[id]){
+      drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * viewMask[id] + ")"  );
+      if(tile.terrain !== "space"){
+        // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
+        let image = document.getElementById(tile.terrain + "Pic");
+        let {x,y} = getXYfromHex(tile.hex)
+        c.drawImage(image, x - 50, y - 50, 100, 100);
+      }
+      if(tile.station){
+        drawPoly(c, baseShapes[tile.station.type], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.station.owner] );
+      }
+      if(tile.navBeacon){
+        drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , playerColours[tile.navBeacon.owner] );
+      }
+      let base = baseArray.find(b => b.location.compare(tile.hex));
+      if(base){
+        drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , playerColours[base.owner] );
+      }
+    }
   }
 
-  for(let ship of shipArray){
-    let borderColour = "black";
-    if (ship.owner == playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
-    drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, playerColours[ship.owner]);
-    drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)), 14, "white")
+  for(let [id , tile] of tiles){
+    if(viewMask[id]){
+      let planet = whichPlanetsTerritory(tile.hex);
+      if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  playerColours[planet.owner]  );
+      if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)),10 )
+      if(debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-20,+30)),14, "grey" )
+    }
+  }
+
+    for(let ship of shipArray){
+      if(viewMask[ship.location.id] == 2){
+      let borderColour = "black";
+      if (ship.owner == playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
+      drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, playerColours[ship.owner]);
+      drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)), 14, "white")
+    }
   }
 
   if(selected.hex){
@@ -70,6 +79,7 @@ function drawScreen() {
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
 
+  playerData[playerTurn].viewMask = removeActiveViews(viewMask);
   drawMenu();
 }
 
@@ -100,7 +110,7 @@ function drawMenu(){
       drawPoly(c, hexVert, center, hexSize, 1,  "white", "#120F22"  );
       drawText(c, `${t.tech}`, center.add(new Vec(-30,0)) , 14, colour )
       drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
-  //    console.log(getXYfromHex(t.location));
+      //    console.log(getXYfromHex(t.location));
     })
 
 
