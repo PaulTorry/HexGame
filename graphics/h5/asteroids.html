@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<!-- Created with Ai->Canvas Export Plug-In Version 1.3 (PC/64) -->
+<!-- By Mike Swanson (http://blog.mikeswanson.com/)             -->
+
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <title>asteroids</title>
+  <script>
+
+    function init() {
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      draw(ctx);
+    }
+
+    function draw(ctx) {
+
+      // layer1/asteroids
+      ctx.save();
+      ctx.save();
+      ctx.shadowColor = "rgba(169, 154, 202, 0.75)";
+      ctx.shadowOffsetX = 3.0;
+      ctx.shadowOffsetY = 3.0;
+      ctx.shadowBlur = 10.0;
+
+      // layer1/asteroids/Path
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(35.5, 55.9);
+      ctx.lineTo(46.8, 38.6);
+      ctx.lineTo(59.5, 41.9);
+      ctx.lineTo(59.5, 51.9);
+      ctx.lineTo(68.8, 55.9);
+      ctx.lineTo(68.8, 65.3);
+      ctx.lineTo(62.8, 71.3);
+      ctx.lineTo(41.5, 73.9);
+      ctx.lineTo(35.5, 64.6);
+      ctx.lineTo(35.5, 55.9);
+      ctx.closePath();
+      ctx.fillStyle = "rgb(36, 33, 72)";
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(73.6, 19.4);
+      ctx.lineTo(86.1, 12.2);
+      ctx.lineTo(96.1, 15.8);
+      ctx.lineTo(98.1, 22.8);
+      ctx.lineTo(96.1, 28.8);
+      ctx.lineTo(84.1, 28.8);
+      ctx.lineTo(79.6, 24.8);
+      ctx.lineTo(73.6, 24.3);
+      ctx.lineTo(73.6, 19.4);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(80.6, 40.8);
+      ctx.lineTo(83.6, 56.3);
+      ctx.lineTo(98.1, 56.3);
+      ctx.lineTo(106.6, 50.8);
+      ctx.lineTo(103.1, 40.8);
+      ctx.lineTo(90.1, 34.8);
+      ctx.lineTo(80.6, 40.8);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(44.1, 15.7);
+      ctx.lineTo(46.1, 20.5);
+      ctx.lineTo(52.1, 20.5);
+      ctx.lineTo(57.6, 15.7);
+      ctx.lineTo(52.1, 12.2);
+      ctx.lineTo(44.1, 15.7);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(103.8, 65.3);
+      ctx.lineTo(121.8, 65.3);
+      ctx.lineTo(126.8, 73.3);
+      ctx.lineTo(123.8, 86.8);
+      ctx.lineTo(126.8, 92.3);
+      ctx.lineTo(121.8, 103.8);
+      ctx.lineTo(108.3, 107.8);
+      ctx.lineTo(100.3, 98.8);
+      ctx.lineTo(103.8, 90.3);
+      ctx.lineTo(100.3, 82.3);
+      ctx.lineTo(96.1, 75.3);
+      ctx.lineTo(103.8, 65.3);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(33.1, 77.8);
+      ctx.lineTo(36.8, 84.0);
+      ctx.lineTo(30.6, 90.8);
+      ctx.lineTo(16.6, 88.3);
+      ctx.lineTo(12.1, 77.8);
+      ctx.lineTo(20.1, 72.8);
+      ctx.lineTo(33.1, 77.8);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(73.6, 86.5);
+      ctx.lineTo(87.6, 90.8);
+      ctx.lineTo(93.6, 102.8);
+      ctx.lineTo(96.1, 111.3);
+      ctx.lineTo(93.6, 120.3);
+      ctx.lineTo(80.6, 126.3);
+      ctx.lineTo(68.8, 123.3);
+      ctx.lineTo(68.8, 115.3);
+      ctx.lineTo(73.6, 107.8);
+      ctx.lineTo(68.8, 104.3);
+      ctx.lineTo(54.6, 101.3);
+      ctx.lineTo(54.6, 90.8);
+      ctx.lineTo(60.6, 86.5);
+      ctx.lineTo(73.6, 86.5);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(39.1, 107.8);
+      ctx.lineTo(35.5, 114.3);
+      ctx.lineTo(36.8, 119.8);
+      ctx.lineTo(44.1, 122.8);
+      ctx.lineTo(50.9, 117.8);
+      ctx.lineTo(48.1, 110.8);
+      ctx.lineTo(39.1, 107.8);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(80.6, 77.8);
+      ctx.lineTo(85.9, 81.8);
+      ctx.lineTo(90.1, 77.3);
+      ctx.lineTo(90.1, 69.8);
+      ctx.lineTo(82.6, 72.8);
+      ctx.lineTo(80.6, 77.8);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(27.6, 52.3);
+      ctx.lineTo(20.6, 56.3);
+      ctx.lineTo(18.5, 52.3);
+      ctx.lineTo(20.0, 47.1);
+      ctx.lineTo(24.5, 41.8);
+      ctx.lineTo(27.6, 47.0);
+      ctx.lineTo(27.6, 52.3);
+      ctx.closePath();
+      ctx.fill();
+
+      // layer1/asteroids/Path
+      ctx.beginPath();
+      ctx.moveTo(113.7, 20.5);
+      ctx.lineTo(105.2, 27.7);
+      ctx.lineTo(105.2, 35.7);
+      ctx.lineTo(111.4, 40.4);
+      ctx.lineTo(123.9, 47.2);
+      ctx.lineTo(129.1, 44.2);
+      ctx.lineTo(129.1, 38.6);
+      ctx.lineTo(124.6, 28.8);
+      ctx.lineTo(118.1, 21.9);
+      ctx.lineTo(113.7, 20.5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+      ctx.restore();
+      ctx.restore();
+    }
+  </script>
+ </head>
+ <body onload="init()">
+   <canvas id="canvas" width="148" height="145"></canvas>
+ </body>
+</html>

@@ -39,8 +39,7 @@ const terrainCostNew = {
 
 const navBeaconCost = 0.25;
 
-const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
-const selectedColour = ["white","red", "blue", "orange"];
+
 
 
 let debug = true;

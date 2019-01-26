@@ -6,6 +6,7 @@ class Vec{
   constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
 
   add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
+  addXY(x, y){return new Vec (this.x + x, this.y + y)}
   subtract(b){return new Vec (this.x - b.x, this.y - b.y)  }
   scale(m) { return new Vec(this.x * m, this.y * m) }
   dot(b){    return this.x * b.x + this.y * b.y; }
