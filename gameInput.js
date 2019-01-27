@@ -60,7 +60,7 @@ function menuClick(event){
     document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
   else if(event.offsetY < 50 && event.offsetY > 10){
-    let num = Math.round((event.offsetX+10)/40);
+    let num = Math.round((event.offsetX+10)/60);
     if (num && menu[num -1]){
       onMenuItemClicked(menu[num -1]);
     }
