@@ -9,16 +9,16 @@ function makeNewViewMask(){
 function removeActiveViews(viewMaskP){
   let viewMask = viewMaskP;
   for (let mask of Object.keys(viewMask)){
-    console.log(viewMask[mask]);
+  //  console.log(viewMask[mask]);
     if (viewMask[mask] == 2){viewMask[mask] = 1};
-    console.log(viewMask[mask]);
+  //  console.log(viewMask[mask]);
   }
   return viewMask;
 }
 
 function getUpdatedViewMask(player){
   let mask = playerData[player].viewMask;
-console.log(mask);
+//console.log(mask);
   baseArray.forEach(b => {
     if(b.owner == player){
       mask[b.location.id] = 2;
@@ -37,6 +37,6 @@ console.log(mask);
    }
  })
 
-console.log(mask);
+//console.log(mask);
   return mask;
 }

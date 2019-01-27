@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Hex Lib test</title>
+  <title>Parse</title>
   <script src="parse2dCommands.js"></script>
 
 </head>
@@ -10,14 +10,14 @@
 
 </body>
 <<script type="text/javascript">
-function json(a){return JSON.stringify(a)};
+  function json(a){return JSON.stringify(a)};
   var c = document.getElementById("test").getContext("2d");
 
-//console.log(draw(ctx,JSON.parse(json(raw(ctx)))));
+  //console.log(draw(ctx,JSON.parse(json(raw(ctx)))));
 
- drawFromData(c,laserShip);
-
- //console.log(json(raw()))
+    drawFromData(c,raw());
+  //drawFromData(c,laserShip);
+  console.log(json(raw()))
 
 
   c.translate(0,0)
