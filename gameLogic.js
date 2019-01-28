@@ -173,7 +173,11 @@ function getWeaponPower(ship, attacking = true){
 
 function nextTurn(){
   playerData[playerTurn].money += collectMoney();
+  playerData[playerTurn].viewMask = removeActiveViews(playerData[playerTurn].viewMask);
+
   playerTurn = (playerTurn + 1) % numPlayers;
+  translateContextTo(getXYfromHex(playerData[playerTurn].capital));
+  drawMenu(); drawScreen();
   for (let ship in shipArray){
     if (shipArray[ship].owner == playerTurn){
       shipArray[ship].moved = false;
@@ -182,6 +186,8 @@ function nextTurn(){
   }
   possibleMoves = []; possibleAttacks = []; menu=[]
   selected = {hex:null, state:0}
+  drawMenu(); drawScreen();
+  preturn = true;
 }
 
 function collectMoney(){

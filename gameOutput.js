@@ -33,6 +33,10 @@ function drawScreen() {
   c.lineWidth = 5
 
   let viewMask = getUpdatedViewMask(playerTurn);
+  if (preturn){
+     viewMask = makeNewViewMask();
+     drawText(c, `Click to Start`, getXYfromHex(playerData[playerTurn].capital), 30, "white" )
+   }
 
   for(let [id , tile] of tiles){
     if(viewMask[id]){
@@ -62,7 +66,7 @@ function drawScreen() {
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
     }
-    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  "rgb(37,32,45)",  );
+    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2,  "rgb(37,32,45)",  );
 
   }
 
@@ -70,8 +74,8 @@ function drawScreen() {
     if(viewMask[id]){
       let planet = whichPlanetsTerritory(tile.hex);
       if(planet) drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  getPlayerColour(planet.owner)  );
-      if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-20,-20)),10 )
-      if(debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-20,+30)),14, "grey" )
+      if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-30,-30)),14 )
+      if(debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-40,+40)),14, "grey" )
     }
   }
 
@@ -90,7 +94,7 @@ function drawScreen() {
         drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, getPlayerColour(ship.owner));
       }
 
-      drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)), 14, "white")
+      drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)), 28, "white")
     }
   }
 
@@ -104,8 +108,8 @@ function drawScreen() {
     drawPoly(c, hexVert, getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
   }
 
-  // why cant this go atr top, very odd behavoiur
-  playerData[playerTurn].viewMask = removeActiveViews(viewMask);
+  // why cant this go atr top, very odd behavoiur // to end turn
+  //playerData[playerTurn].viewMask = removeActiveViews(viewMask);
 
   drawMenu();
 }
@@ -175,6 +179,12 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
   let x = xx;
   let y = yy;
 
+  c.save();
+  c.shadowColor = "rgba(0, 0, 0, 0.35)";
+  c.shadowOffsetX = 3.0;
+  c.shadowOffsetY = 3.0;
+  c.shadowBlur = 10.0;
+
   data.forEach(([t, ...v]) => {
     if(t == "sv") c.save();
     else if(t == "of") {x = xx + v[0]; y = yy + v[1];}
@@ -200,7 +210,10 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
       gradient.addColorStop(v[0],mapColours(v[1], player, transparency))
     }
   })
-
+  c.shadowOffsetX = 0;
+  c.shadowOffsetY = 0;
+  c.shadowBlur = 0.0;
+  c.restore()
   c.beginPath();c.closePath(); // Hack to stop drawing after clear
 
   if (c.data) return c.data;

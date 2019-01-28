@@ -56,7 +56,7 @@ function findPossibleMoves(center, moveLeft = 2){
   let terrainFunc = getTerrainMapFunction(makeTerrainCostMap());
   let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
     center.neighbours
-      .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 10)
+      .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 20)
       .map(n => {return{loc:n, cost:0, from:center}})
       .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
     ,terrainFunc
@@ -75,6 +75,7 @@ function getTerrainMapFunction(terrainCostMap){
 
 function makeTerrainCostMap(){
   let terrainCostMap = {};
+  let viewMask = getUpdatedViewMask(playerTurn);
   for(let [ ,tile] of tiles){
 
     let moveOff = terrainCostNew[tile.terrain].moveOff;
@@ -90,6 +91,8 @@ function makeTerrainCostMap(){
     if(techNeeded && !playerData[playerTurn].tech[techNeeded]){
       moveOff += 77; moveOn += 77;
     }
+
+    if(viewMask[tile.hex.id] <2 ){moveOff += 77; moveOn += 77;}
 
     terrainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
   }

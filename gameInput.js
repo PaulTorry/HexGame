@@ -15,6 +15,14 @@ function translateContext(dif, ctx = "board"){
   c.translate(-dif.x,-dif.y)
 }
 
+function translateContextTo(loc, ctx = "board"){
+  console.log(loc);
+  var c = document.getElementById(ctx).getContext("2d");
+  let dif = loc.subtract(screenOffset).subtract(screenCenter);
+  screenOffset = screenOffset.add(dif)
+  c.translate(-dif.x,-dif.y)
+}
+
 
 function mousedown(event){
   mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
@@ -79,6 +87,7 @@ function menuClick(event){
 
 
 function boardClick(event){
+  if(preturn) preturn = false;
   let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).
     scale(1/hexSize))
   onHexClicked(clickHex);

@@ -45,6 +45,7 @@ const navBeaconCost = 0.25;
 let debug = true;
 let openTechTree = false;
 const screenSize = 800;
+let screenCenter = new Vec(screenSize/2,screenSize/2);
 let screenOffset = new Vec(0,0);
 let techTreeOffset = new Vec(400,250);
 let mouseDownLocation = new Vec(0,0);
@@ -64,15 +65,17 @@ let menu = [];
 
 
 let playerTurn = 0;
+let preturn = true;
 
 let shipArray = [
-  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,0,0),"owner":0, range:1}
+  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,3,-3),"owner":0, range:1},
+{"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,-3,3),"owner":1, range:1}
 ];
 
 let baseArray = [
   {type:"planet", owner:0, location: new Hex(0,3,-3), territory:new Hex(0,3,-3).secondNeighboursInclusive},
-  {type:"planet", owner:1, location: new Hex(3,-3,0), territory:new Hex(3,-3,0).secondNeighboursInclusive},
-  {type:"planet", owner:2, location: new Hex(-3,0,3), territory:new Hex(-3,0,3).secondNeighboursInclusive}
+//  {type:"planet", owner:1, location: new Hex(3,-3,0), territory:new Hex(3,-3,0).secondNeighboursInclusive},
+  {type:"planet", owner:1, location: new Hex(0,-3,3), territory:new Hex(0,-3,3).secondNeighboursInclusive}
 ]
 
 let tiles = setupTiles(Hex.findWithin(boardSize));
@@ -100,9 +103,9 @@ function setupTiles(hexArray){
 }
 
 let playerData = [
-  {"money":5, "tech":{"gasGiantMove":true}, viewMask:makeNewViewMask()},
-  {"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()},
-  {"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
+  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()},
+  {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()},
+  //{"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
 ];
 
 
