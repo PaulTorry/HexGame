@@ -35,11 +35,11 @@
       ctx.closePath();
       ctx.save();
       ctx.transform(-0.775, 0.632, 0.632, 0.775, 5041.1, -2573.3);
-      gradient = ctx.createRadialGradient(5522.1, -1135.4, 0.0, 5522.1, -1135.4, 45.1);
-      gradient.addColorStop(0.28, "rgb(26, 60, 87)");
-      gradient.addColorStop(0.58, "rgb(35, 50, 85)");
-      gradient.addColorStop(0.90, "rgb(44, 41, 83)");
-      ctx.fillStyle = gradient;
+      ctx.createRadialGradient(5522.1, -1135.4, 0.0, 5522.1, -1135.4, 45.1);
+      ctx.addColorStop(0.28, "rgb(26, 60, 87)");
+      ctx.addColorStop(0.58, "rgb(35, 50, 85)");
+      ctx.addColorStop(0.90, "rgb(44, 41, 83)");
+      ctx.fillStyle()
       ctx.fill();
 
       // layer1/gas giant/Path
@@ -69,7 +69,7 @@
       ctx.addColorStop(0.89, "rgb(35, 50, 85)");
       ctx.addColorStop(1.00, "rgb(26, 60, 87)");
       ctx.fillStyle();
-            ctx.fill();
+      ctx.fill();
       ctx.strokeStyle( "rgb(18, 14, 34)");
       ctx.stroke();
       ctx.restore();

@@ -50,7 +50,7 @@ let techTreeOffset = new Vec(400,250);
 let mouseDownLocation = new Vec(0,0);
 let fingerDistance = null;
 let scale = 1;
-let hexSize = 40
+let hexSize = 75
 const boardSize = 10;
 
 let currentShip = null;

@@ -23,8 +23,7 @@ function mapColours(string, player, transparency = 1){
 const selectedColour = ["white","red", "blue", "orange"];
 
 
-function getXYfromHex(hexCoord){return Hex.getXYfromUnitHex(hexCoord).scale(hexSize)}
-
+function getXYfromHex(hexCoord, size=hexSize){return Hex.getXYfromUnitHex(hexCoord).scale(size)}
 
 function drawScreen() {
   var c = document.getElementById("board").getContext("2d");
@@ -37,22 +36,30 @@ function drawScreen() {
 
   for(let [id , tile] of tiles){
     if(viewMask[id]){
+      let {x,y} = getXYfromHex(tile.hex)
       drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * viewMask[id] + ")"  );
       if(tile.terrain !== "space"){
+      //  let {x,y} = getXYfromHex(tile.hex)
+        if(terrainCurves[tile.terrain]){
+          drawFromData(c, terrainCurves[tile.terrain], x, y)
+        }
         // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
-        let image = document.getElementById(tile.terrain + "Pic");
-        let {x,y} = getXYfromHex(tile.hex)
-        c.drawImage(image, x - 50, y - 50, 100, 100);
+        else{
+          let image = document.getElementById(tile.terrain + "Pic");
+          c.drawImage(image, x - 70, y - 70, 140, 140);
+        }
       }
       if(tile.station){
-        drawPoly(c, baseShapes[tile.station.type], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
+        if(tile.station.type = "asteroidBase"){drawFromData(c, asteroidBase, x, y, tile.station.owner)  }
+        else drawPoly(c, asteroidBase, getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
       if(tile.navBeacon){
         drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
       }
       let base = baseArray.find(b => b.location.compare(tile.hex));
       if(base){
-        drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
+        if(planetRing){drawFromData(c, planetRing, x, y, base.owner)}
+        else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
     }
     drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 1,  "rgb(37,32,45)",  );
@@ -77,7 +84,7 @@ function drawScreen() {
         let {x,y} = getXYfromHex(ship.location);
         let transparency = 1;
         if (ship.owner == playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
-        drawFromData(c, curves[ship.type], x-20, y-20, ship.owner, transparency)
+        drawFromData(c, curves[ship.type], x, y, ship.owner, transparency)
       }
       else if (baseShapes[ship.type]){
         drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, getPlayerColour(ship.owner));
@@ -113,7 +120,7 @@ function drawMenu(){
       c.strokeRect (10+60*i, 10, 60, 40);
 
       if(curves[menu[i]]){
-        drawFromData(c, curves[menu[i]], 60*i, 10, playerTurn)
+        drawFromData(c, curves[menu[i]], 30+60*i, 40, playerTurn)
       }
 
       else if(baseShapes[menu[i]]){
@@ -131,10 +138,10 @@ function drawMenu(){
 
   if (openTechTree){
     techs.forEach((t)=>{
-      let center = getXYfromHex(t.location).add(techTreeOffset);
+      let center = getXYfromHex(t.location, 50).add(techTreeOffset);
       let colour = "red";
       if (playerData[playerTurn].tech[t.tech]) {colour = "yellow"}
-      drawPoly(c, hexVert, center, hexSize, 1,  "white", "#120F22"  );
+      drawPoly(c, hexVert, center, 50, 1,  "white", "#120F22"  );
       drawText(c, `${t.tech}`, center.add(new Vec(-30,0)) , 14, colour )
       drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
       //    console.log(getXYfromHex(t.location));
@@ -162,21 +169,25 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
 }
 
 
-function drawFromData(c, data, x=0, y=0, player, transparency){
+function drawFromData(c, data, xx=0, yy=0, player, transparency){
   let add = (a, x, y) => a.map((v,i) => i%2 ? v+y  : v+x)
   let gradient;
+  let x = xx;
+  let y = yy;
 
   data.forEach(([t, ...v]) => {
     if(t == "sv") c.save();
+    else if(t == "of") {x = xx + v[0]; y = yy + v[1];}
     else if(t == "bp") c.beginPath();
     else if(t == "mt") c.moveTo(...add(v,x,y));
     else if(t == "lt") c.lineTo(...add(v,x,y));
+    else if(t == "lw") c.lineWidth = v[0];
     else if(t == "cp") c.closePath();
     else if(t == "fs"){
       if (v && v[0] ){ c.fillStyle = mapColours(v[0], player, transparency); }
       else if (gradient) {c.fillStyle = gradient};
     }
-    else if(t == "ss"){ if (v){ c.strokeStyle = v[0];}}
+    else if(t == "ss"){ if (v){ c.strokeStyle = mapColours(v[0], player, transparency);}}
     else if(t == "fl") c.fill();
     else if(t == "ct") c.bezierCurveTo(...add(v,x,y));
     else if(t == "re") c.restore();

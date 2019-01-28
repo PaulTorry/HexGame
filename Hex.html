@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hex Lib test</title>
+  <title>Space heX</title>
   <style>
   body {background-color: #181818}
   img {display: none}
@@ -44,7 +44,8 @@ document.body.querySelector("#board").addEventListener("touchstart", touchstart)
 window.onload = () => {
   console.log("Hi");
    translateContext(new Vec(-400,-400));
-   drawScreen()
+   scaleContext(0.6);
+   drawScreen();
  }
 
 drawScreen();
