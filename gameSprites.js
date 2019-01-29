@@ -4,14 +4,25 @@
 
 /* eslint-disable no-unused-vars */
 
-const hexVert = [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2), new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)]
-const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
-const triangleVert2 = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
-const triangleVert3 = [new Vec(1,0), new Vec(0,0.3), new Vec(0,-0.3)];
-const triangleVert4 = [new Vec(2,0), new Vec(0,1), new Vec(0,-1)];
-const triangleVert5 = [new Vec(1,0), new Vec(-1,0), new Vec(1,-1)];
-const triangleVert6 = [new Vec(2,0), new Vec(-1,1), new Vec(0,-1)];
-const squareVert = [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)];
+
+
+
+const simpleShapes = {
+ hexVert : [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2),
+     new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)],
+ triangleVert : [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)],
+ triangleVert2 : [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)],
+ triangleVert3 : [new Vec(1,0), new Vec(0,0.3), new Vec(0,-0.3)],
+ triangleVert4 : [new Vec(2,0), new Vec(0,1), new Vec(0,-1)],
+ triangleVert5 : [new Vec(1,0), new Vec(-1,0), new Vec(1,-1)],
+ triangleVert6 : [new Vec(2,0), new Vec(-1,1), new Vec(0,-1)],
+ squareVert : [new Vec(1,1), new Vec(-1,1), new Vec(-1,-1), new Vec(1,-1)],
+}
+
+const baseShapes = {"asteroidMining":simpleShapes["triangleVert"],  "inhabitedPlanet":simpleShapes["hexVert"],
+"navBeacon":simpleShapes["squareVert"], "basicShip":simpleShapes["triangleVert2"], "assaultShip":simpleShapes["triangleVert4"],
+"mineShip":simpleShapes["triangleVert5"], "missileShip":simpleShapes["triangleVert6"], "scoutShip":simpleShapes["triangleVert3"],
+}
 
 const asteroidBase = [["of",-55,-50],
   ["sv"],["sv"],["bp"],["mt",32.6,25.9],["lt",27.5,27.3],["lt",25.9,33.4],["lt",30.8,37.4],["lt",36.4,37.4],["lt",36.4,31.6],["lt",32.6,25.9],["cp"],["fs","rgb(130, 6, 20)"],["fl"],["bp"],["mt",97.5,53.9],["lt",93.2,58.4],["lt",95.3,61.2],["lt",98.9,62.9],["lt",104.1,59.8],["lt",101.8,55.1],["lt",97.5,53.9],["cp"],["fl"],["bp"],["mt",91.5,74.4],["lt",87,77.8],["lt",88.4,80.8],["lt",91.5,80.8],["lt",96.1,77.8],["lt",91.5,74.4],["cp"],["fl"],["bp"],["mt",57.1,94.5],["lt",55.4,100.1],["lt",57.1,103.9],["lt",62.4,103.9],["lt",65.5,99.2],["lt",62.4,96.2],["lt",57.1,94.5],["cp"],["fl"],["bp"],["mt",53.8,75.8],["lt",55.4,80.8],["lt",57.1,82.8],["lt",62.4,83.8],["lt",67.1,82.8],["lt",67.1,77.8],["lt",62.4,77.6],["lt",57.1,74.4],["lt",53.8,75.8],["cp"],["fl"],["bp"],["mt",93.2,11.8],["lt",96.1,9.9],["lt",98.9,11.8],["lt",98.7,18.1],["lt",93.2,18.1],["lt",91.6,15.9],["lt",93.2,11.8],["cp"],["fl"],["bp"],["mt",71.9,28.3],["lt",75.4,28.3],["lt",75.4,30.2],["lt",73.6,34.8],["lt",70.1,33.1],["lt",67.6,30.2],["lt",71.9,28.3],["cp"],["fl"],["bp"],["mt",4.8,62.9],["lt",8.1,62.9],["lt",8.1,65.4],["lt",3.5,67.7],["ct",3.5,67.7,-1,65,0.2,65.4],["ct",1.5,65.8,1.5,62.9,1.5,62.9],["lt",4.8,62.9],["cp"],["fl"],["re"],["sv"],["bp"],["mt",31.1,41.3],["lt",28.2,46.4],["lt",29.7,49.3],["lt",32.6,49.3],["lt",36.4,47.8],["lt",36.4,44],["lt",33.9,41.3],["lt",31.1,41.3],["cp"],["fs","rgb(215, 35, 53)"],["fl"],["bp"],["mt",98.7,69.5],["lt",95.3,71.9],["lt",95.3,74.4],["lt",96.1,77.8],["lt",98.9,77.8],["lt",101.5,74.4],["lt",100.2,71.9],["lt",98.7,69.5],["cp"],["fl"],["bp"],["mt",45.2,73.6],["lt",42,74.4],["lt",42,79.1],["lt",43.6,80.8],["lt",48.7,80.8],["lt",50.6,77.6],["lt",45.2,73.6],["cp"],["fl"],["bp"],["mt",71.5,0],["lt",67.6,1.6],["lt",67.6,4.8],["lt",69.6,6],["lt",73,6],["lt",74.2,3],["lt",71.5,0],["cp"],["fl"],["bp"],["mt",24.9,94.5],["lt",22.7,98],["lt",24.9,98],["lt",28.2,96.4],["lt",27.2,94.5],["lt",24.9,94.5],["cp"],["fl"],["re"],["re"]
@@ -75,10 +86,7 @@ const repairShip = [ ["of",0,0],
 ];
 
 
-const baseShapes = {"asteroidMining":triangleVert,  "inhabitedPlanet":hexVert,
-"navBeacon":squareVert, "basicShip":triangleVert2, "assaultShip":triangleVert4,
-"mineShip":triangleVert5, "missileShip":triangleVert6, "scoutShip":triangleVert3,
-}
+
 
 const curves = {
   scoutShip:scoutShip, basicShip:laserShip, missileShip:missileShip,

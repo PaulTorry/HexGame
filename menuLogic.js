@@ -24,11 +24,11 @@ console.log("makemenu");
         if (!base)return false;
     }
 
-    if(pos.shipState == "noShip" && getShipOnHex(hex)) return false;
+    if(pos.shipState === "noShip" && getShipOnHex(hex)) return false;
 
-    if(pos.shipState == "ownPresent" &&   shipState(hex) < 2) return false;
+    if(pos.shipState === "ownPresent" &&   shipState(hex) < 2) return false;
 
-    if(pos.shipState == "noEnemy" &&  getShipOnHex(hex) && shipState(hex) < 1) return false;
+    if(pos.shipState === "noEnemy" &&  getShipOnHex(hex) && shipState(hex) < 1) return false;
 
     if(pos.tech && pos.tech.length > 0){
       for (let t of pos.tech){ if(!playerData[playerTurn].tech[t]) return false; }
@@ -36,13 +36,13 @@ console.log("makemenu");
 
     // Self check
 
-     if(pos.thing == "navBeacon" && tile.navBeacon) return false;
+     if(pos.thing === "navBeacon" && tile.navBeacon) return false;
 
      console.log(pos.thing);
      console.log(tile.station);
      if(tile.station) console.log(tile.station.type);
-     if(pos.thing == "asteroidMining" && tile.station && tile.station.type == "asteroidMining") return false;
-     if(pos.thing == "inhabitedPlanet" &&  !(base && base.owner !== playerTurn)) return false;
+     if(pos.thing === "asteroidMining" && tile.station && tile.station.type === "asteroidMining") return false;
+     if(pos.thing === "inhabitedPlanet" &&  !(base && base.owner !== playerTurn)) return false;
 
     return true
 

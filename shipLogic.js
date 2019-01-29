@@ -1,11 +1,8 @@
 "use strict"
 
 /*global
- Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
- mouseDownLocation:true, drawScreen, currentShip:true, selected:true,
-  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
-  openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
-   playerTurn, getUpdatedViewMask
+ Hex, terrainCostNew, tiles,
+   playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray
  */
 
 /* eslint-disable no-unused-vars */
@@ -32,7 +29,7 @@ function shipState(hex){
 }
 
 function findPossibleAttacks(center, range = 1){
-  let viewMask = getUpdatedViewMask(playerTurn);
+  let viewMask = getUpdatedViewMask(playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask )
   let possibleAttacksInt = [];
   for(let hex of center.within(range)){
     let ship = getShipOnHex(hex);
@@ -44,28 +41,27 @@ function findPossibleAttacks(center, range = 1){
 }
 
 
-
-function findPossibleMovesFunctional(frontier, visited, terrainFunc){
-
-  if (!frontier.length) return visited;
-  let [current, ...newfrontier] = frontier;
-  visited[current.loc.id] = current;
-
-  newfrontier = current.loc.neighbours
-  .filter(n => n.mag <= boardSize)
-  .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:current.loc}})
-  .filter(({loc:hex, cost, from} ) => {
-    return hex.mag <= boardSize && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0
-  })
-  .concat(newfrontier)
-  .sort((a,b) => a.cost - b.cost)
-
-  return findPossibleMovesFunctional(newfrontier, visited, terrainFunc)
-}
-
-
 function findPossibleMoves(center, moveLeft = 2){
   let terrainFunc = getTerrainMapFunction(makeTerrainCostMap());
+
+  function findPossibleMovesFunctional(frontier, visited, terrainFunc){
+
+    if (!frontier.length) return visited;
+    let [current, ...newfrontier] = frontier;
+    visited[current.loc.id] = current;
+
+    newfrontier = current.loc.neighbours
+    .filter(n => n.mag <= boardSize)
+    .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:current.loc}})
+    .filter(({loc:hex, cost, from} ) => {
+      return hex.mag <= boardSize && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0
+    })
+    .concat(newfrontier)
+    .sort((a,b) => a.cost - b.cost)
+
+    return findPossibleMovesFunctional(newfrontier, visited, terrainFunc)
+  }
+
   let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
     center.neighbours
       .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 20)
@@ -85,13 +81,15 @@ function getTerrainMapFunction(terrainCostMap){
   }
 }
 
+
+
 function makeTerrainCostMap(){
   let terrainCostMap = {};
-  let viewMask = getUpdatedViewMask(playerTurn);
+  let viewMask = getUpdatedViewMask(playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask )
   for(let [ ,tile] of tiles){
 
-    let moveOff = terrainCostNew[tile.terrain].moveOff;
-    let moveOn = terrainCostNew[tile.terrain].moveOn;
+    let moveOff = terrainCostNew[tile.terrain].moveCost / 2;
+    let moveOn = terrainCostNew[tile.terrain].moveCost / 2;
     if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
 
     for(let hex2 of tile.hex.neighbours){

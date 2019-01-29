@@ -10,7 +10,7 @@ const techs = [
 {tech:'heavyWeapons', location:new Hex(1,-1), cost:2, },
 {tech:'mines', location:new Hex(1,0), cost:2, },
 {tech:'asteroidMining', location:new Hex(-1,1), cost:2, }
-]
+];
 
 
 const shipHulls = {
@@ -33,11 +33,11 @@ const thingList = [
 ]
 
 const terrainCostNew = {
-  "space": {"techNeeded": null, "moveOff":0.5, "moveOn":0.5, "navBeacon":0.25},
-  "asteroids": {"techNeeded": null, "moveOff":1, "moveOn":1, "navBeacon":0.25},
-  "gasGiant": {"techNeeded": "gasGiantMove", "moveOff":1, "moveOn":1, "navBeacon":0.25},
-  "planet": {"techNeeded": null, "moveOff":0.5, "moveOn":0.5, "navBeacon":0.25},
-  "nebula": {"techNeeded": null, "moveOff":1.5, "moveOn":1.5, "navBeacon":0.25}
+  space: { moveCost:1, },
+  asteroids: { moveCost:3, },
+  gasGiant: { moveCost:1, techNeeded: "gasGiantMove", },
+  planet: { moveCost:1, },
+  nebula: { moveCost:5, }
 }
 
 const navBeaconCost = 0.25;
@@ -46,14 +46,15 @@ const navBeaconCost = 0.25;
 
 
 let debug = true;
+
 let openTechTree = false;
 const screenSize = 800;
 let screenCenter = new Vec(screenSize/2,screenSize/2);
 let screenOffset = new Vec(0,0);
 let techTreeOffset = new Vec(400,250);
-let mouseDownLocation = new Vec(0,0);
-let mouseDownLocationABS = new Vec(0,0);
-let fingerDistance = null;
+
+
+
 let scale = 1;
 let hexSize = 75
 const boardSize = 10;
@@ -105,8 +106,8 @@ function setupTiles(hexArray){
 }
 
 let playerData = [
-  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()},
-  {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()},
+  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
+  {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
   //{"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
 ];
 

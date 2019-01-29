@@ -1,17 +1,23 @@
 "use strict"
 
 /*global
- Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
- mouseDownLocation:true, drawScreen, currentShip:true, selected:true,
-  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
-  openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
-   playerTurn, getUpdatedViewMask
- */
+drawScreen, currentShip:true, selected:true, menu:true
+possibleMoves:true, possibleAttacks:true, nextTurn,
+onMenuItemClicked,
+playerTurn,  boardSize, preturn:true, makeMenu,
+findPossibleAttacks, getShipOnHex, findPossibleMoves, baseArray, tiles,
+playerData, thingList, shipArray:true, buildShip, techs,  playerTurn:true, numPlayers,
+translateContextTo, getXYfromHex, drawMenu, shipHulls, removeActiveViews
+*/
+
+
+
 
 /* eslint-disable no-unused-vars */
 
 
 function onHexClicked(clickHex){
+  preturn = false;
   menu = [];
 
   if(selected.state ===3){
@@ -60,7 +66,7 @@ function onHexClicked(clickHex){
     else if(clickHex.mag <=  boardSize){
       selected = {hex:clickHex, state:1};
       possibleMoves = []; possibleAttacks = []; menu = [];
-    };
+    }
   }
 
   else if (selected.state === 1){
@@ -95,9 +101,11 @@ function whichPlanetsTerritory(hex){
 
 function territoryState(hex){
   if (whichPlanetsTerritory(hex) === undefined){ return 1}
-  else if (whichPlanetsTerritory(hex).owner == playerTurn){ return 2}
+  else if (whichPlanetsTerritory(hex).owner === playerTurn){ return 2}
   else return 0;
 }
+
+
 
 function onMenuItemClicked(item){
   let tile = tiles.get(selected.hex.id)
@@ -141,13 +149,13 @@ function onMenuItemClicked(item){
 function onTechHexClicked (hex){
   let tech = techs.find(t => t.location.compare(hex));
   let player = playerData[playerTurn];
-  console.log(tech);
-  console.log(player);
-  console.log(tech.tech);
-  console.log(player.tech);
+  // console.log(tech);
+  // console.log(player);
+  // console.log(tech.tech);
+  // console.log(player.tech);
 
   if(!player.tech[tech.tech] && player.money >= tech.cost){
-    console.log("doing");
+    // console.log("doing");
     player.tech[tech.tech] = true;
     player.money -= tech.cost;
   }
@@ -182,6 +190,8 @@ function getWeaponPower(ship, attacking = true){
   else{ return retaliate * hull / shipHulls[type].hull; }
 }
 
+
+
 function nextTurn(){
   playerData[playerTurn].money += collectMoney();
   playerData[playerTurn].viewMask = removeActiveViews(playerData[playerTurn].viewMask);
@@ -190,7 +200,7 @@ function nextTurn(){
   translateContextTo(getXYfromHex(playerData[playerTurn].capital));
   drawMenu(); drawScreen();
   for (let ship in shipArray){
-    if (shipArray[ship].owner == playerTurn){
+    if (shipArray[ship].owner === playerTurn){
       shipArray[ship].moved = false;
       shipArray[ship].attacked = false;
     }
@@ -203,7 +213,7 @@ function nextTurn(){
 
 function collectMoney(){
   let bases = baseArray.filter(b => b.owner === playerTurn);
-  let asteroidBases = Array.from(tiles).filter(([id, val]) => val.station && val.station.owner == playerTurn)
+  let asteroidBases = Array.from(tiles).filter(([id, val]) => val.station && val.station.owner === playerTurn)
 
   return bases.length + asteroidBases.length;
 }

@@ -1,11 +1,22 @@
 "use strict";
 
+let mouseDownLocation = new Vec(0,0);
+let mouseDownLocationABS = new Vec(0,0);
+let fingerDistance = null;
+
 /*global
- Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
- mouseDownLocation:true, drawScreen, currentShip:true, selected:true,
-  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
-  openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
-   playerTurn, getUpdatedViewMask
+ Vec, Hex,
+  scale:true, screenOffset:true, screenCenter, hexSize,
+  mouseDownLocationABS:true, mouseDownLocation:true, fingerDistance:true,
+
+  currentShip:true, selected:true,
+  possibleMoves:true, possibleAttacks:true, menu:true,
+
+drawScreen, drawMenu,
+
+   nextTurn,  onMenuItemClicked, techTreeOffset,
+    openTechTree:true,  onTechHexClicked,
+     onHexClicked,
  */
 
 /* eslint-disable no-unused-vars */
@@ -57,7 +68,7 @@ function mouseWheel(event){
 }
 
 function drag(event){
-console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
+//console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
   if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag > 20){
     currentShip = null; selected = {hex:null, state:0} ;
     possibleMoves = []; possibleAttacks = []; menu = [];
@@ -100,9 +111,7 @@ function menuClick(event){
 
 
 function boardClick(event){
-  if(preturn) preturn = false;
-  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).
-  scale(1/hexSize))
+  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)). scale(1/hexSize))
   onHexClicked(clickHex);
   drawScreen();
 }
