@@ -7,7 +7,8 @@
   possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
   openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
   playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray,
-  simpleShapes, hexSize, Map, tiles, makeNewViewMask, preturn,
+  simpleShapes, hexSize, Map, tiles, makeNewViewMask, preturn, techs, baseShapes,
+   curves,debug,territoryState,  whichPlanetsTerritory,
 
  */
 
@@ -58,8 +59,8 @@ function drawScreen() {
       drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * viewMask[id] + ")"  );
       if(tile.terrain !== "space"){
       //  let {x,y} = getXYfromHex(tile.hex)
-        if(terrainCurves[tile.terrain]){
-          drawFromData(c, terrainCurves[tile.terrain], x, y)
+        if(curves[tile.terrain]){
+          drawFromData(c, curves[tile.terrain], x, y)
         }
         // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
         else{
@@ -68,15 +69,15 @@ function drawScreen() {
         }
       }
       if(tile.station){
-        if(tile.station.type === "asteroidMining"){drawFromData(c, asteroidBase, x, y, tile.station.owner)  }
-        else drawPoly(c, asteroidBase, getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
+        if(tile.station.type === "asteroidMining"){drawFromData(c, curves["asteroidMining"], x, y, tile.station.owner)  }
+        else drawPoly(c, baseShapes["asteroidMining"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
       if(tile.navBeacon){
         drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
       }
       let base = baseArray.find(b => b.location.compare(tile.hex));
       if(base){
-        if(planetRing){drawFromData(c, planetRing, x, y, base.owner)}
+        if(curves["planetRing"]){drawFromData(c, curves["planetRing"], x, y, base.owner)}
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
     }

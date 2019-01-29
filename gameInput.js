@@ -37,7 +37,7 @@ function translateContext(dif, ctx = "board") {
 }
 
 function translateContextTo(loc, ctx = "board"){
-  console.log(loc);
+  // console.log(loc);
   var c = document.getElementById(ctx).getContext("2d");
   let dif = loc.subtract(screenOffset).subtract(screenCenter);
   screenOffset = screenOffset.add(dif)
@@ -87,7 +87,6 @@ function menuClick(event){
   event.preventDefault();
   if(event.offsetY > 50 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 50 && event.offsetX > 600) {
-    //  console.log(openTechTree);
     openTechTree = !openTechTree;
     document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
@@ -98,11 +97,7 @@ function menuClick(event){
     }
   }
   else{
-    //    console.log(new Vec(event.offsetX,  event.offsetY));
-    //    console.log((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50));
     let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50))
-    //  console.log(clickHex);
-
     onTechHexClicked(clickHex);
   }
   drawScreen();

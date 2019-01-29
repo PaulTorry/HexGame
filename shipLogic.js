@@ -5,6 +5,7 @@
    playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray
  */
 
+
 /* eslint-disable no-unused-vars */
 
 function buildShip(type, owner, location, moved=true, attacked=true){
