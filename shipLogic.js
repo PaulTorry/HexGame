@@ -1,10 +1,21 @@
 "use strict"
 
+/*global
+ Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
+ mouseDownLocation:true, drawScreen, currentShip:true, selected:true,
+  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
+  openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
+   playerTurn, getUpdatedViewMask
+ */
+
+/* eslint-disable no-unused-vars */
+
 function buildShip(type, owner, location, moved=true, attacked=true){
+  console.log("building");
   let base = shipHulls[type];
   return ({type:base.type, hull:base.hull, shield:base.shield,
     attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
-    range: base.range, moved:moved, attacked:attacked, location:location, owner:owner
+    range: base.range, view:base.view, moved:moved, attacked:attacked, location:location, owner:owner
   })
 }
 
@@ -16,15 +27,16 @@ function getShipOnHex(hex){
 
 function shipState(hex){
   if (getShipOnHex(hex) === undefined){ return 1}
-  else if (getShipOnHex(hex).owner == playerTurn){ return 2}
+  else if (getShipOnHex(hex).owner === playerTurn){ return 2}
   else return 0;
 }
 
 function findPossibleAttacks(center, range = 1){
+  let viewMask = getUpdatedViewMask(playerTurn);
   let possibleAttacksInt = [];
   for(let hex of center.within(range)){
     let ship = getShipOnHex(hex);
-    if(ship && ship.owner !== playerTurn) {
+    if(viewMask[hex.id] === 2 && ship && ship.owner !== playerTurn) {
       possibleAttacksInt.push(hex);
     }
   }
@@ -84,7 +96,7 @@ function makeTerrainCostMap(){
 
     for(let hex2 of tile.hex.neighbours){
       let ship = getShipOnHex(hex2)
-      if(ship && (ship.owner != playerTurn)) {          moveOff = 9;        }
+      if(ship && (ship.owner !== playerTurn)) {          moveOff = 9;        }
     }
 
     let techNeeded = terrainCostNew[tile.terrain].techNeeded;

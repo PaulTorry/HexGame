@@ -1,5 +1,8 @@
 "use strict"
 
+/* global Hex, Vec, Map, makeNewViewMask     */
+/* eslint-disable no-unused-vars */
+
 const techs = [
 {tech:'gasGiantMove', location:new Hex(0,1), cost:2, prereq:['asteroidMining',]},
 {tech:'navBeacons', location:new Hex(-1,0), cost:2, },
@@ -8,10 +11,10 @@ const techs = [
 {tech:'mines', location:new Hex(1,0), cost:2, },
 {tech:'asteroidMining', location:new Hex(-1,1), cost:2, }
 ]
-console.log(techs);
+
 
 const shipHulls = {
-  scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1},
+  scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:4, attack:2, retaliate:1, range:1, view:2},
   basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2, range:1},
   assaultShip:{type:'assaultShip',  hull:4, shield:3, maxMove:2, attack:5, retaliate:3, range:1},
   mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5, range:1},
@@ -49,6 +52,7 @@ let screenCenter = new Vec(screenSize/2,screenSize/2);
 let screenOffset = new Vec(0,0);
 let techTreeOffset = new Vec(400,250);
 let mouseDownLocation = new Vec(0,0);
+let mouseDownLocationABS = new Vec(0,0);
 let fingerDistance = null;
 let scale = 1;
 let hexSize = 75
@@ -61,15 +65,14 @@ let possibleAttacks = [];
 let menu = [];
 
 
-
-
-
 let playerTurn = 0;
 let preturn = true;
 
 let shipArray = [
-  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,3,-3),"owner":0, range:1},
-{"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,-3,3),"owner":1, range:1}
+  {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1, view:2,
+  "maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,3,-3),"owner":0, range:1},
+{"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1, view:2,
+"maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,-3,3),"owner":1, range:1}
 ];
 
 let baseArray = [
@@ -84,10 +87,10 @@ function setupTiles(hexArray){
   let hexesObj = new Map();
   for(let hex of hexArray){
     let buildingHex = {hex: hex, terrain:"space", station:null};
-    if(Math.random()<0.3){buildingHex.terrain = "nebula"};
-    if(Math.random()<0.1){buildingHex.terrain = "planet"};
-    if(Math.random()<0.35){buildingHex.terrain = "asteroids"};
-    if(Math.random()<0.05){buildingHex.terrain = "gasGiant"};
+    if(Math.random()<0.3){buildingHex.terrain = "nebula"}
+    if(Math.random()<0.1){buildingHex.terrain = "planet"}
+    if(Math.random()<0.35){buildingHex.terrain = "asteroids"}
+    if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
     //  if(Math.random()<0.05){buildingHex.navBeacon = {owner:0}};
 
     for(let base of baseArray){
@@ -98,7 +101,6 @@ function setupTiles(hexArray){
     }
     hexesObj.set(hex.id, buildingHex);
   }
-  // console.log(hexesObj)
   return hexesObj;
 }
 

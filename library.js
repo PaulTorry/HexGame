@@ -1,8 +1,10 @@
-"use strict"
+"use strict";
 
-function json(a){return JSON.stringify(a)}
+/* eslint-disable no-unused-vars */
 
-class Vec{
+function json(a) { return JSON.stringify(a); }
+
+class Vec {
   constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
 
   add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
@@ -11,11 +13,11 @@ class Vec{
   scale(m) { return new Vec(this.x * m, this.y * m) }
   dot(b){    return this.x * b.x + this.y * b.y; }
   invert(){  return this.scale(-1)}
-  //get mag () {return Math.sqrt( (this.x*this.x) + (this.y*this.y))}
+  get mag () {return Math.sqrt( (this.x*this.x) + (this.y*this.y))}
 
   static getArray(input, Vecs){
     let [xx, yy, ...rest] = input;
-    if (xx == null || yy == null){return Vecs}
+    if (xx === null || yy === null){return Vecs}
     else {  return Vec.getArray(rest,Vecs.concat(new Vec(xx,yy))) }
   }
 }
@@ -23,20 +25,21 @@ class Vec{
 class Hex{
   constructor(p=0,q=p,r=-p-q){ this.p=p; this.q=q; this.r=r; }
 
-  add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)};
-  subtract(b){return new Hex(this.p-b.p, this.q-b.q, this.r-b.r)};
-  compare(b){return this.p==b.p && this.q==b.q && this.r==b.r};
-  distance(b){return (Math.abs(this.p - b.p) + Math.abs(this.q - b.q) + Math.abs(this.r - b.r)) / 2};
+  add(b){return new Hex(this.p+b.p, this.q+b.q, this.r+b.r)}
+  subtract(b){return new Hex(this.p-b.p, this.q-b.q, this.r-b.r)}
+  compare(b){return this.p===b.p && this.q===b.q && this.r===b.r}
+  distance(b){return (Math.abs(this.p - b.p) + Math.abs(this.q - b.q) + Math.abs(this.r - b.r)) / 2}
 
   within(n){
-    if (n==0){return this}
-    else if (n==1){return this.neighbours}
-    else if (n==2){return this.secondNeighboursInclusive}
-    else if (n==3){return this.thirdNeighboursInclusive}
-    else{Hex.findWithin(n).map(n => n.add(this))}
+    if (n===0){return []}
+    else if (n===1){return this.neighbours}
+    else if (n===2){return this.secondNeighboursInclusive}
+    else if (n===3){return this.thirdNeighboursInclusive}
+    else if (Math.abs(n) === n){Hex.findWithin(n).map(n => n.add(this))}
+    else {return []}
   }
 
-  get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2};
+  get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2}
   get id () {return  `${this.p},${this.q}`}
 
   get neighbours() {return Hex.neighbours().map(n => n.add(this))}
@@ -48,7 +51,7 @@ class Hex{
 
   static getArray(input, Hexes){
     let [pp, qq, rr, ...rest] = input;
-    if (pp == null || qq == null || rr == null){return Hexes}
+    if (pp === null || qq === null || rr === null){return Hexes}
     else {  return Hex.getArray(rest,Hexes.concat(new Hex(pp,qq,rr))) }
   }
 

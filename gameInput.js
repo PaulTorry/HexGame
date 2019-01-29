@@ -1,6 +1,16 @@
-"use strict"
+"use strict";
 
-function getRealXYfromScreenXY(a){return a.scale(1/scale).add(screenOffset)}
+/*global
+ Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
+ mouseDownLocation:true, drawScreen, currentShip:true, selected:true,
+  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
+  openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
+   playerTurn, getUpdatedViewMask
+ */
+
+/* eslint-disable no-unused-vars */
+
+function getRealXYfromScreenXY(a) {return a.scale(1 / scale).add(screenOffset); }
 
 function scaleContext(s){
   var c = document.getElementById("board").getContext("2d");
@@ -9,7 +19,7 @@ function scaleContext(s){
   screenOffset = screenOffset.scale(1/s);
 }
 
-function translateContext(dif, ctx = "board"){
+function translateContext(dif, ctx = "board") {
   var c = document.getElementById(ctx).getContext("2d");
   screenOffset = screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
@@ -25,14 +35,15 @@ function translateContextTo(loc, ctx = "board"){
 
 
 function mousedown(event){
+  mouseDownLocationABS = new Vec( event.offsetX, event.offsetY) ;
   mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
-//  console.log("mousedown");
+  //  console.log("mousedown");
   document.getElementById("board").addEventListener("mousemove", drag);
   document.getElementById("board").addEventListener("mouseup", removeMousemove);
 }
 
 function removeMousemove(event){
-//  console.log("removeMousemove");
+  //  console.log("removeMousemove");
   document.getElementById("board").removeEventListener("mousemove", drag);
   document.getElementById("board").removeEventListener("mouseup", removeMousemove);
 }
@@ -46,9 +57,11 @@ function mouseWheel(event){
 }
 
 function drag(event){
-  currentShip = null; selected = {hex:null, state:0} ;
-  possibleMoves = []; possibleAttacks = []; menu = [];
-
+console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
+  if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag > 20){
+    currentShip = null; selected = {hex:null, state:0} ;
+    possibleMoves = []; possibleAttacks = []; menu = [];
+  }
   event.preventDefault();
   event.stopPropagation();
   var c = document.getElementById("board").getContext("2d");
@@ -63,7 +76,7 @@ function menuClick(event){
   event.preventDefault();
   if(event.offsetY > 50 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 50 && event.offsetX > 600) {
-  //  console.log(openTechTree);
+    //  console.log(openTechTree);
     openTechTree = !openTechTree;
     document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
@@ -74,13 +87,13 @@ function menuClick(event){
     }
   }
   else{
-//    console.log(new Vec(event.offsetX,  event.offsetY));
-//    console.log((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50));
+    //    console.log(new Vec(event.offsetX,  event.offsetY));
+    //    console.log((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50));
     let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50))
-  //  console.log(clickHex);
+    //  console.log(clickHex);
 
-      onTechHexClicked(clickHex);
-    }
+    onTechHexClicked(clickHex);
+  }
   drawScreen();
   drawMenu();
 }
@@ -89,22 +102,22 @@ function menuClick(event){
 function boardClick(event){
   if(preturn) preturn = false;
   let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)).
-    scale(1/hexSize))
+  scale(1/hexSize))
   onHexClicked(clickHex);
   drawScreen();
 }
 
 
 function touchstart(event){
-    let {pageX,pageY} = event.touches[0];
+  let {pageX,pageY} = event.touches[0];
   mouseDownLocation = new Vec( pageX, pageY) ;
-//console.log("touchstart");
+  //console.log("touchstart");
   document.getElementById("board").addEventListener("touchmove", touchdrag);
   document.getElementById("board").addEventListener("touchend", removeTouchmove);
 }
 
 function removeTouchmove(event){
-//  console.log("removeTouchmove");
+  //  console.log("removeTouchmove");
   fingerDistance = null;
   document.getElementById("board").removeEventListener("touchmove", touchdrag);
   document.getElementById("board").removeEventListener("touchend", removeTouchmove);
@@ -120,9 +133,9 @@ function touchdrag(event){
   let {pageX,pageY} = event.touches[0];
   if(event.touches[1]){
     let {pageX:x2,pageY:y2} = event.touches[1];
-  //  console.log(pageX , x2 , pageY , y2)
+    //  console.log(pageX , x2 , pageY , y2)
     let fingerDistanceNew = Math.sqrt( (pageX - x2)*(pageX - x2) + (pageY - y2)*(pageY - y2))
-  //  console.log(fingerDistanceNew + "fingerDistanceNew");
+    //  console.log(fingerDistanceNew + "fingerDistanceNew");
     if (fingerDistance){
       scaleContext(fingerDistanceNew/fingerDistance)
     }

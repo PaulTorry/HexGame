@@ -1,5 +1,16 @@
 "use strict"
 
+/*global
+ Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
+ mouseDownLocation:true, drawScreen, currentShip:true, selected:true,
+  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
+  openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
+   playerTurn, getUpdatedViewMask
+ */
+
+/* eslint-disable no-unused-vars */
+
+
 //  document.getElementById("menu").height = 500;
 function getPlayerColour(player = playerTurn, opacity = 1, dark = false){
   const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
@@ -13,9 +24,9 @@ function getPlayerColour(player = playerTurn, opacity = 1, dark = false){
 }
 
 function mapColours(string, player, transparency = 1){
-  if(string == "rgb(130, 6, 20)")return getPlayerColour(player, transparency , 1)
-  else if (string == "rgb(215, 35, 53)") return getPlayerColour(player, transparency);
-  else if (string == "rgba(215, 35, 53, 0.00)") return getPlayerColour(player, 0);
+  if(string === "rgb(130, 6, 20)")return getPlayerColour(player, transparency , 1)
+  else if (string === "rgb(215, 35, 53)") return getPlayerColour(player, transparency);
+  else if (string === "rgba(215, 35, 53, 0.00)") return getPlayerColour(player, 0);
   else return string;
 }
 
@@ -54,7 +65,7 @@ function drawScreen() {
         }
       }
       if(tile.station){
-        if(tile.station.type = "asteroidBase"){drawFromData(c, asteroidBase, x, y, tile.station.owner)  }
+        if(tile.station.type == "asteroidMining"){drawFromData(c, asteroidBase, x, y, tile.station.owner)  }
         else drawPoly(c, asteroidBase, getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
       if(tile.navBeacon){
@@ -66,7 +77,7 @@ function drawScreen() {
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
     }
-    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2,  "rgb(37,32,45)",  );
+    drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2,  "rgb(37,32,45)");
 
   }
 
@@ -80,14 +91,14 @@ function drawScreen() {
   }
 
   for(let ship of shipArray){
-    if(viewMask[ship.location.id] == 2){
+    if(viewMask[ship.location.id] === 2){
       let borderColour = "black";
-      if (ship.owner == playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
+      if (ship.owner === playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
 
       if (curves[ship.type]){
         let {x,y} = getXYfromHex(ship.location);
         let transparency = 1;
-        if (ship.owner == playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
+        if (ship.owner === playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
         drawFromData(c, curves[ship.type], x, y, ship.owner, transparency)
       }
       else if (baseShapes[ship.type]){
@@ -156,9 +167,9 @@ function drawMenu(){
 }
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
-  if(width){c.lineWidth = width};
-  if(sColor){c.strokeStyle = sColor};
-  if(fColor){c.fillStyle = fColor};
+  if(width){c.lineWidth = width}
+  if(sColor){c.strokeStyle = sColor}
+  if(fColor){c.fillStyle = fColor}
 
   c.moveTo(pointVec[0].x, pointVec[0].y);
   c.beginPath();
@@ -186,27 +197,27 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
   c.shadowBlur = 10.0;
 
   data.forEach(([t, ...v]) => {
-    if(t == "sv") c.save();
-    else if(t == "of") {x = xx + v[0]; y = yy + v[1];}
-    else if(t == "bp") c.beginPath();
-    else if(t == "mt") c.moveTo(...add(v,x,y));
-    else if(t == "lt") c.lineTo(...add(v,x,y));
-    else if(t == "lw") c.lineWidth = v[0];
-    else if(t == "cp") c.closePath();
-    else if(t == "fs"){
+    if(t === "sv") c.save();
+    else if(t === "of") {x = xx + v[0]; y = yy + v[1];}
+    else if(t === "bp") c.beginPath();
+    else if(t === "mt") c.moveTo(...add(v,x,y));
+    else if(t === "lt") c.lineTo(...add(v,x,y));
+    else if(t === "lw") c.lineWidth = v[0];
+    else if(t === "cp") c.closePath();
+    else if(t === "fs"){
       if (v && v[0] ){ c.fillStyle = mapColours(v[0], player, transparency); }
-      else if (gradient) {c.fillStyle = gradient};
+      else if (gradient) {c.fillStyle = gradient}
     }
-    else if(t == "ss"){ if (v){ c.strokeStyle = mapColours(v[0], player, transparency);}}
-    else if(t == "fl") c.fill();
-    else if(t == "ct") c.bezierCurveTo(...add(v,x,y));
-    else if(t == "re") c.restore();
-    else if(t == "st") c.stroke()
-    else if(t == "tr") c.transform(...v)
-    else if(t == "xrg"){gradient = c.createRadialGradient(v[0]+x,v[1]+y,v[2],v[3]+x,v[4]+y,v[5])    }
-    else if(t == "xlg"){gradient = c.createLinearGradient(...add(v,x,y))
+    else if(t === "ss"){ if (v){ c.strokeStyle = mapColours(v[0], player, transparency);}}
+    else if(t === "fl") c.fill();
+    else if(t === "ct") c.bezierCurveTo(...add(v,x,y));
+    else if(t === "re") c.restore();
+    else if(t === "st") c.stroke()
+    else if(t === "tr") c.transform(...v)
+    else if(t === "xrg"){gradient = c.createRadialGradient(v[0]+x,v[1]+y,v[2],v[3]+x,v[4]+y,v[5])    }
+    else if(t === "xlg"){gradient = c.createLinearGradient(...add(v,x,y))
     }
-    else if(t == "xcs"){
+    else if(t === "xcs"){
       gradient.addColorStop(v[0],mapColours(v[1], player, transparency))
     }
   })

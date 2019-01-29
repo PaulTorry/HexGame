@@ -1,5 +1,9 @@
 "use strict"
 
+/*global Vec,  */
+
+/* eslint-disable no-unused-vars */
+
 const hexVert = [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2), new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)]
 const triangleVert = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
 const triangleVert2 = [new Vec(1,0), new Vec(-1,0), new Vec(0,-1)];
