@@ -3,8 +3,7 @@
 /* eslint-disable no-unused-vars */
 /*global
  Vec, Hex, scale:true, screenOffset:true, screenCenter, mouseDownLocationABS:true,
- mouseDownLocation:true, drawScreen, selected:true,
-  possibleMoves:true, possibleAttacks:true, menu:true, nextTurn,
+ mouseDownLocation:true, drawScreen,  nextTurn, sel:true
   openTechTree, onMenuItemClicked, techTreeOffset, terrainCostNew,
   playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray,
   simpleShapes, hexSize, Map, tiles, makeNewViewMask, preturn, techs, baseShapes,
@@ -113,14 +112,14 @@ function drawScreen() {
     }
   }
 
-  if(selected.hex){
-    for (let move of possibleMoves){
+  if(sel.hex){
+    for (let move of sel.moves){
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), hexSize -5, 3 , "green");
     }
-    for (let attack of possibleAttacks){
+    for (let attack of sel.attacks){
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), hexSize -5, 3 , "purple");
     }
-    drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(selected.hex), hexSize -5, 3 , selectedColour[selected.state]);
+    drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(sel.hex), hexSize -5, 3 , selectedColour[sel.state]);
   }
 
   // why cant this go atr top, very odd behavoiur // to end turn
@@ -134,7 +133,8 @@ function drawMenu(){
   var c = document.getElementById("menu").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
-  if(menu.length > 0){
+  if(sel.menu && sel.menu.length > 0){
+    let menu = sel.menu
     for(let i=0; i<menu.length; i++){
       c.strokeRect (10+60*i, 10, 60, 40);
 

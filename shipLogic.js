@@ -1,9 +1,9 @@
 "use strict"
 
 /*global
- Hex, terrainCostNew, tiles,
-   playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray
- */
+Hex, terrainCostNew, tiles,
+playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray
+*/
 
 
 /* eslint-disable no-unused-vars */
@@ -64,11 +64,11 @@ function findPossibleMoves(center, moveLeft = 2){
   }
 
   let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
-    center.neighbours
-      .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 20)
-      .map(n => {return{loc:n, cost:0, from:center}})
-      .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
-    ,terrainFunc
+  center.neighbours
+  .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 20)
+  .map(n => {return{loc:n, cost:0, from:center}})
+  .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
+  ,terrainFunc
 );
 return Object.values(temp).map(v => v.loc).filter(hex => {
   return  (hex.mag <= boardSize) && !getShipOnHex(hex)

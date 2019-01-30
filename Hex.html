@@ -15,20 +15,20 @@
   <script src="gameLogic.js"></script>
   <script src="gameInput.js"></script>
   <script src="viewLogic.js"></script>
-    <script src="gameSprites.js"></script>
+  <script src="gameSprites.js"></script>
   <script src="gameOutput.js"></script>
-    <script src="gameSetup.js"></script>
+  <script src="gameSetup.js"></script>
 
 </head>
 <body>
-<!--
+  <!--
   <img id="nebulaPic" src="graphics/nebula.svg" height="80" width="80"/>
   <img id="planetPic" src="graphics/planet.svg"  height="80" width="80"/>
   <img id="gasGiantPic" src="graphics/gas giant.svg"  height="80" width="80"/>
   <img id="asteroidsPic" src="graphics/asteroids.svg"  height="80" width="80"/>
 -->
-  <canvas id="menu" width="800" height="100" style="border:1px solid #d3d3d3;"></canvas>
-  <canvas id="board" width="800" height="800" style="border:1px solid #d3d3d3;"></canvas>
+<canvas id="menu" width="800" height="100" style="border:1px solid #d3d3d3;"></canvas>
+<canvas id="board" width="800" height="800" style="border:1px solid #d3d3d3;"></canvas>
 
 </body>
 <script>
@@ -43,10 +43,10 @@ document.body.querySelector("#board").addEventListener("touchstart", touchstart)
 
 window.onload = () => {
   console.log("Hi");
-   translateContext(new Vec(-400,-400));
-   scaleContext(0.6);
-   drawScreen();
- }
+  translateContext(new Vec(-400,-400));
+  scaleContext(0.6);
+  drawScreen();
+}
 
 drawScreen();
 

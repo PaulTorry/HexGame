@@ -5,19 +5,18 @@ let mouseDownLocationABS = new Vec(0,0);
 let fingerDistance = null;
 
 /*global
- Vec, Hex,
-  scale:true, screenOffset:true, screenCenter, hexSize,
-  mouseDownLocationABS:true, mouseDownLocation:true, fingerDistance:true,
+Vec, Hex,
+scale:true, screenOffset:true, screenCenter, hexSize, sel:true
+mouseDownLocationABS:true, mouseDownLocation:true, fingerDistance:true,
 
-  currentShip:true, selected:true,
-  possibleMoves:true, possibleAttacks:true, menu:true,
+
 
 drawScreen, drawMenu,
 
-   nextTurn,  onMenuItemClicked, techTreeOffset,
-    openTechTree:true,  onTechHexClicked,
-     onHexClicked,
- */
+nextTurn,  onMenuItemClicked, techTreeOffset,
+openTechTree:true,  onTechHexClicked,
+onHexClicked,
+*/
 
 /* eslint-disable no-unused-vars */
 
@@ -68,10 +67,9 @@ function mouseWheel(event){
 }
 
 function drag(event){
-//console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
+  //console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
   if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag > 20){
-    currentShip = null; selected = {hex:null, state:0} ;
-    possibleMoves = []; possibleAttacks = []; menu = [];
+    sel = {state:0, attacks:[], menu:[], moves:[]}
   }
   event.preventDefault();
   event.stopPropagation();
@@ -92,8 +90,9 @@ function menuClick(event){
   }
   else if(event.offsetY < 50 && event.offsetY > 10){
     let num = Math.round((event.offsetX+10)/60);
-    if (num && menu[num -1]){
-      onMenuItemClicked(menu[num -1]);
+    if (num && sel.menu[num -1]){
+      console.log(sel, sel.menu, sel.menu[num -1]);
+      onMenuItemClicked(sel.menu[num -1]);
     }
   }
   else{
@@ -128,8 +127,8 @@ function removeTouchmove(event){
 }
 
 function touchdrag(event){
-  currentShip = null; selected = {hex:null, state:0} ;
-  possibleMoves = []; possibleAttacks = []; menu = [];
+
+  sel = {state:0, attacks:[], menu:[], moves:[]}
 
   event.preventDefault();
   event.stopPropagation();

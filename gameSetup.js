@@ -43,9 +43,6 @@ const terrainCostNew = {
 
 const navBeaconCost = 0.25;
 
-
-
-
 let debug = true;
 
 let openTechTree = false;
@@ -55,16 +52,12 @@ let screenOffset = new Vec(0,0);
 let techTreeOffset = new Vec(400,250);
 
 
-
 let scale = 1;
 let hexSize = 75
 const boardSize = 10;
 
-let currentShip = null;
-let selected = {hex: null,    state:0};
-let possibleMoves = [];
-let possibleAttacks = [];
-let menu = [];
+
+let sel = {state:0, attacks:[], menu:[], moves:[]}
 
 
 let playerTurn = 0;
@@ -107,7 +100,7 @@ function setupTiles(hexArray){
 }
 
 let playerData = [
-  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
+  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":true, asteroidMining:true}, viewMask:makeNewViewMask(tiles)},
   {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
   //{"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
 ];

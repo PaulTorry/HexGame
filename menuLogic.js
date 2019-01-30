@@ -2,15 +2,15 @@
 
 
 /*global
-   selected:true, playerTurn, playerData, baseArray,
-   tiles, ,territoryState,  , shipState, getShipOnHex, thingList,
+    playerTurn, playerData, baseArray, 
+   tiles, territoryState,  , shipState, getShipOnHex, thingList,
  */
  /* eslint-disable no-unused-vars */
 
 function makeMenu(hex){
 // console.log("makemenu");
   let base = baseArray.find(b => b.location.compare(hex));
-  let tile = tiles.get(selected.hex.id);
+  let tile = tiles.get(hex.id);
   return thingList.filter(pos => {
 
     if(pos.price > playerData[playerTurn].money) return false;

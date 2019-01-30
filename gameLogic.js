@@ -1,10 +1,10 @@
 "use strict"
 
 /*global
-drawScreen, currentShip:true, selected:true, menu:true
-possibleMoves:true, possibleAttacks:true, nextTurn,
+drawScreen, sel:true
+nextTurn,
 onMenuItemClicked,
-playerTurn,  boardSize, preturn:true, makeMenu,
+playerTurn,   preturn:true, makeMenu,
 findPossibleAttacks, getShipOnHex, findPossibleMoves, baseArray, tiles,
 playerData, thingList, shipArray:true, buildShip, techs,  playerTurn:true, numPlayers,
 translateContextTo, getXYfromHex, drawMenu, shipHulls, removeActiveViews, getUpdatedViewMask
@@ -18,85 +18,67 @@ function onHexClicked(clickHex){
   if(preturn){preturn = false; return }
   let viewMask = getUpdatedViewMask(playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask);
 
-  menu = [];
+  let possibleAttacks = [], possibleMoves = [];
+
+  sel.menu = [];
 
   if (viewMask[clickHex.id] === 2){
 
-    if(selected.state ===3){
-
-      if(clickHex.mag <= boardSize){selected = {hex:clickHex, state:1}}
-      else{
-        selected = {hex:null, state:0}
-        possibleMoves = []; possibleAttacks = [];
-      }
+    if(sel.state === 2){
+      if (clickHex.compare(sel.hex)) sel = {state:0,  moves:[], attacks:[], menu: []};
+      else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
     }
 
-    else if (selected.state === 2){
-      if (selected.hex && selected.hex.compare(clickHex)){
-        selected.state =3;
-        possibleMoves = []; possibleAttacks = [];
-        menu = makeMenu(selected.hex);
+    else if (sel.state === 1){
+      if (clickHex.compare(sel.hex)) {
+        sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
       }
-      else if(possibleMoves.length > 0 && possibleMoves.find( e =>  e.compare(clickHex))) {
-        currentShip.location = clickHex;
-        currentShip.moved = true;
-        selected.hex = clickHex;
-        possibleAttacks = findPossibleAttacks(selected.hex, currentShip.range);
-        if (possibleAttacks.length > 0){
-          possibleMoves = [];
-        }
+
+      else if(sel.moves.find( e =>  e.compare(clickHex))) {
+        sel.ship.location = clickHex;
+        sel.ship.moved = true;
+        sel.hex = clickHex;
+        possibleAttacks = findPossibleAttacks(clickHex, sel.ship.range);
+        if (possibleAttacks.length > 0) { sel.moves = []; sel.attacks = possibleAttacks}
         else{
-          currentShip.attacked = true;
-          currentShip = null;
-          selected = {hex:null, state:0} ;
-          possibleMoves = []; possibleAttacks = []; //attacks if have some
+          sel.ship.attacked = true;
+          sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
         }
-        menu = [];
+        sel.menu = [];
       }
-      else if(possibleAttacks.find(e =>  e.compare(clickHex))) {
+
+      else if(sel.attacks.find(e =>  e.compare(clickHex))) {
         let target = getShipOnHex(clickHex);
         if(target){
-          applyDamage(currentShip, target);
-          currentShip.moved = true; currentShip.attacked = true;
-          //  if(!shipArray.find(e => e === target)){currentShip.location = clickHex;}
-        }else{console.log("error in attacks");}
+          applyDamage(sel.ship, target);
+          sel.ship.moved = true; sel.ship.attacked = true;
+        }
+        else{console.log("error in attacks");}
 
-        currentShip = null;
-        selected = {hex:null, state:0} ;
-        possibleMoves = []; possibleAttacks = []; menu = [];
-      }
-      else if(clickHex.mag <=  boardSize){
-        selected = {hex:clickHex, state:1};
-        possibleMoves = []; possibleAttacks = []; menu = [];
+        sel = {state:0, moves:[], attacks:[], menu:[]}
       }
     }
 
-    else if (selected.state === 1){
-      if (selected.hex && selected.hex.compare(clickHex)){
-        currentShip = getShipOnHex(clickHex);
-        if(currentShip && currentShip.owner !== playerTurn){
-          selected = {hex:clickHex, state:1}
-        }
-        if(currentShip && currentShip.owner === playerTurn && (!currentShip.moved || !currentShip.attacked)){
-          if (!currentShip.moved) {possibleMoves = findPossibleMoves(selected.hex, currentShip.maxMove);}
-          console.log ("currentShip.range" + currentShip.range)
-          possibleAttacks = findPossibleAttacks(selected.hex, currentShip.range);
-          selected.state = 2
-        }
-        else{
-          selected.state =3;
-          possibleMoves = []; possibleAttacks = [];
-          menu = makeMenu(selected.hex);
-        }
-      }
-      else{selected = {hex:null, state:0}}
-    }
+    else if (sel.state === 0){
+      let currentShip = getShipOnHex(clickHex);
 
-    else if (selected.state === 0){
-      if(clickHex.mag <=boardSize){selected = {hex:clickHex, state:1}}
+      if(currentShip && currentShip.owner === playerTurn){
+        if (!currentShip.moved)  possibleMoves = findPossibleMoves(clickHex, currentShip.maxMove);
+        if (!currentShip.attacked)  possibleAttacks = findPossibleAttacks(clickHex, currentShip.range);
+
+        if(possibleMoves.length || possibleAttacks.length){
+          sel = {state:1, hex:clickHex, ship:currentShip, moves:possibleMoves, attacks: possibleAttacks}
+        }
+        else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+      }
+      else{
+        sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+      }
     }
-  }
+  } else  sel = {state:0,  moves:[], attacks:[], menu: []};
 }
+
+
 
 function whichPlanetsTerritory(hex){
   return baseArray.find(b => b.location.compare(hex) || b.territory.find(t => t.compare(hex)));
@@ -109,13 +91,11 @@ function territoryState(hex){
 }
 
 
-
-
-
 function onMenuItemClicked(item){
-  let tile = tiles.get(selected.hex.id)
-  if (selected.state === 3){
+  let tile = tiles.get(sel.hex.id)
+  if (sel.state === 2){
     playerData[playerTurn].money -= thingList.find(t => t.thing === item).price;
+
     if(item === "asteroidMining"){
       tile.station = {type: "asteroidMining", owner: playerTurn}
     }
@@ -150,8 +130,7 @@ function onMenuItemClicked(item){
     if(item === "missileShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))}
 
   }
-  selected = {hex:null, state:0}
-  possibleMoves = []; possibleAttacks = []; menu = [];
+  sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu();
 }
 
@@ -160,7 +139,6 @@ function onTechHexClicked (hex){
   let player = playerData[playerTurn];
 
   if(!player.tech[tech.tech] && player.money >= tech.cost){
-    // console.log("doing");
     player.tech[tech.tech] = true;
     player.money -= tech.cost;
   }
@@ -213,8 +191,7 @@ function nextTurn(){
   translateContextTo(getXYfromHex(playerData[playerTurn].capital));
   drawMenu(); drawScreen();
 
-  possibleMoves = []; possibleAttacks = []; menu=[]
-  selected = {hex:null, state:0}
+  sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu(); drawScreen();
   preturn = true;
 }
