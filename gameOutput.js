@@ -194,11 +194,11 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
   let x = xx;
   let y = yy;
 
-  c.save();
-  c.shadowColor = "rgba(0, 0, 0, 0.35)";
-  c.shadowOffsetX = 3.0;
-  c.shadowOffsetY = 3.0;
-  c.shadowBlur = 10.0;
+  //c.save();
+  //c.shadowColor = "rgba(0, 0, 0, 0.35)";
+  //c.shadowOffsetX = 3.0;
+  //c.shadowOffsetY = 3.0;
+  //c.shadowBlur = 10.0;
 
   data.forEach(([t, ...v]) => {
     if(t === "sv") c.save();
