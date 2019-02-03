@@ -25,8 +25,12 @@ function getRealXYfromScreenXY(a) {return a.scale(1 / scale).add(screenOffset); 
 function scaleContext(s){
   var c = document.getElementById("board").getContext("2d");
   scale *= s;
-  c.scale(s,s)
-  screenOffset = screenOffset.scale(1/s);
+  c.scale(s,s);
+  let off = screenOffset.scale(1/s)
+  let dif = screenOffset.subtract(off)
+  
+  screenOffset = off;
+  translateContext(dif);
 }
 
 function translateContext(dif, ctx = "board") {
