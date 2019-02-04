@@ -1,8 +1,9 @@
+
 "use strict"
 
 
 /*global
-    playerTurn, playerData, baseArray, 
+    playerTurn, playerData, baseArray,
    tiles, territoryState,  , shipState, getShipOnHex, thingList,
  */
  /* eslint-disable no-unused-vars */
@@ -12,6 +13,9 @@ function makeMenu(hex){
   let base = baseArray.find(b => b.location.compare(hex));
   let tile = tiles.get(hex.id);
   return thingList.filter(pos => {
+
+// console.log(pos);
+// if(pos.thing === "inhabitedPlanet") console.log(base, tile);
 
     if(pos.price > playerData[playerTurn].money) return false;
 
@@ -31,8 +35,13 @@ function makeMenu(hex){
     }
 
     if(pos.shipState === "noShip" && getShipOnHex(hex)) return false;
+    // if(pos.thing === "inhabitedPlanet") console.log("aft noship", pos.shipState);
 
     if(pos.shipState === "ownPresent" &&   shipState(hex) < 2) return false;
+
+    // if(pos.thing === "inhabitedPlanet") console.log("aft own", pos.shipState);
+
+
 
     if(pos.shipState === "noEnemy" &&  getShipOnHex(hex) && shipState(hex) < 1) return false;
 
@@ -44,14 +53,22 @@ function makeMenu(hex){
 
     // Self check
 
+    // if(pos.thing === "inhabitedPlanet") console.log("aft selfcheck", pos.shipState);
+
+
      if(pos.thing === "navBeacon"){if (tile.navBeacon && tile.navBeacon.owner === playerTurn) return false;}
 
 
      // console.log(pos.thing);
      // console.log(tile.station);
-     if(tile.station) console.log(tile.station.type);
+     // if(tile.station) console.log(tile.station.type);
      if(pos.thing === "asteroidMining" && tile.station && tile.station.type === "asteroidMining") return false;
-     if(pos.thing === "inhabitedPlanet" &&  !(base && base.owner !== playerTurn)) return false;
+     if(pos.thing === "inhabitedPlanet" &&  base && base.owner === playerTurn) return false;
+
+
+     // if(pos.thing === "inhabitedPlanet") console.log("end", pos.shipState);
+
+
 
     return true
 
