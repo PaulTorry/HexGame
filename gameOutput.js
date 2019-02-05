@@ -108,7 +108,7 @@ function drawScreen() {
         drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, getPlayerColour(ship.owner));
       }
 
-      drawText(c, `${ship.shield}|${ship.hull}`, getXYfromHex(ship.location).add(new Vec(-20,0)), 28, "white")
+      drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.location).add(new Vec(-20,0)), 28, "white")
     }
   }
 
