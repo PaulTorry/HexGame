@@ -53,10 +53,12 @@ function onHexClicked(clickHex){
           applyDamage(sel.ship, target);
           sel.ship.moved = true; sel.ship.attacked = true;
         }
-        else{console.log("error in attacks");}
+        else { console.log("error in attacks"); }
 
-        sel = {state:0, moves:[], attacks:[], menu:[]}
+         sel = {state:0, moves:[], attacks:[], menu:[]}
       }
+      else sel = {state:0, moves:[], attacks:[], menu:[]}
+
     }
 
     else if (sel.state === 0){
