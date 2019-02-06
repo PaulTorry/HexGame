@@ -28,7 +28,7 @@ function scaleContext(s){
   c.scale(s,s);
   let off = screenOffset.scale(1/s)
   let dif = screenOffset.subtract(off)
-  
+
   screenOffset = off;
   translateContext(dif);
 }
@@ -90,7 +90,7 @@ function menuClick(event){
   if(event.offsetY > 50 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 50 && event.offsetX > 600) {
     openTechTree = !openTechTree;
-    document.getElementById("menu").height = 100 + 300 * openTechTree;
+    // document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
   else if(event.offsetY < 50 && event.offsetY > 10){
     let num = Math.round((event.offsetX+10)/60);

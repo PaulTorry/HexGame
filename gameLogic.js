@@ -191,6 +191,7 @@ function nextTurn(){
   }
   playerTurn = (playerTurn + 1) % numPlayers;
   translateContextTo(getXYfromHex(playerData[playerTurn].capital));
+  openTechTree = false;
   drawMenu(); drawScreen();
 
   sel = {state:0, attacks:[], menu:[], moves:[]}

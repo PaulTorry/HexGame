@@ -24,7 +24,7 @@ const shipHulls = {
 const thingList = [
   {thing: 'navBeacon',tech:['navBeacons'], price: 2, territoryState: 1,  shipState: 'ownPresent',   terrain: ['space', 'asteroids', 'nebula', ] } ,
   {thing: 'asteroidMining',tech:['asteroidMining'], price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['asteroids', ] } ,
-  {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
+  {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresentUnmoved',   terrain: ['planet', ] } ,
   {thing: 'scoutShip', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
   {thing: 'basicShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
   {thing: 'assaultShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [], tech:['heavyWeapons'] } ,
@@ -83,7 +83,7 @@ function setupTiles(hexArray){
   for(let hex of hexArray){
     let buildingHex = {hex: hex, terrain:"space", station:null};
     if(Math.random()<0.3){buildingHex.terrain = "nebula"}
-    if(Math.random()<0.1){buildingHex.terrain = "planet"}
+    if(Math.random()<0.07){buildingHex.terrain = "planet"}
     if(Math.random()<0.35){buildingHex.terrain = "asteroids"}
     if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
     //  if(Math.random()<0.05){buildingHex.navBeacon = {owner:0}};
@@ -100,7 +100,7 @@ function setupTiles(hexArray){
 }
 
 let playerData = [
-  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":true, asteroidMining:true}, viewMask:makeNewViewMask(tiles)},
+  {"money":5, capital: new Hex(0,3,-3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
   {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
   //{"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
 ];

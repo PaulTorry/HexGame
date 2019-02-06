@@ -1,4 +1,3 @@
-
 "use strict"
 
 
@@ -12,6 +11,7 @@ function makeMenu(hex){
 // console.log("makemenu");
   let base = baseArray.find(b => b.location.compare(hex));
   let tile = tiles.get(hex.id);
+  let  ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
   return thingList.filter(pos => {
 
 // console.log(pos);
@@ -27,17 +27,23 @@ function makeMenu(hex){
       return false;
     }
 
-  //  if(pos.inhabitedPlanet && !(tiles.get(hex.id).station && tiles.get(hex.id).station.type == "inhabitedPlanet")) return false;
+  //  if(pos.inhabitedPlanet x&& !(tiles.get(hex.id).station && tiles.get(hex.id).station.type == "inhabitedPlanet")) return false;
 
     if(pos.inhabitedPlanet){
         // let base = baseArray.find(b => b.location.compare(hex));
         if (!base)return false;
     }
 
-    if(pos.shipState === "noShip" && getShipOnHex(hex)) return false;
+    if(pos.shipState === "noShip" && ship) return false;
     // if(pos.thing === "inhabitedPlanet") console.log("aft noship", pos.shipState);
 
-    if(pos.shipState === "ownPresent" &&   shipState(hex) < 2) return false;
+    if(pos.shipState === "ownPresent" && (!ship || ship.owner !== playerTurn)) return false;
+    if(pos.shipState === "ownPresentUnmoved"  && (!ship || ship.owner !== playerTurn || ship.moved === true)){
+      return false;
+    }
+
+
+
 
     // if(pos.thing === "inhabitedPlanet") console.log("aft own", pos.shipState);
 
