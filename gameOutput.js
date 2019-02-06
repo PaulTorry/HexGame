@@ -137,24 +137,26 @@ document.getElementById("menu").height = 100 + 300 * openTechTree;
   if(sel.menu && sel.menu.length > 0){
     let menu = sel.menu
     for(let i=0; i<menu.length; i++){
-      c.strokeRect (10+60*i, 10, 60, 40);
+      c.strokeRect (110+60*i, 10, 60, 80);
 
       if(curves[menu[i]]){
-        drawFromData(c, curves[menu[i]], 30+60*i, 40, playerTurn)
+        drawFromData(c, curves[menu[i]], 130+60*i, 40, playerTurn)
       }
 
       else if(baseShapes[menu[i]]){
-        drawPoly(c, baseShapes[menu[i]], new Vec(30+60*i, 30), 10, 4 , getPlayerColour(playerTurn) );
+        drawPoly(c, baseShapes[menu[i]], new Vec(130+60*i, 30), 10, 4 , getPlayerColour(playerTurn) );
       } else i
     }
   }
   c.strokeStyle = getPlayerColour(playerTurn);
-  c.strokeRect (10, 50, 780, 40);
-  c.strokeRect (600, 10, 190, 40);
+  c.strokeRect (10, 10, 80, 80);
+  c.strokeRect (710, 10, 80, 80);
   c.stroke();
   c.stroke();
-  drawText(c, `Player:  ${playerTurn}   Money:  ${playerData[playerTurn].money}`, new Vec(10,70), 28, "white" )
-  drawText(c, `Tech Tree`, new Vec(600,30), 20, "white" )
+  drawText(c, `Player: ${playerTurn}`, new Vec(10,30), 15, "white" )
+  if(!preturn) drawText(c, `Money:  ${playerData[playerTurn].money}`, new Vec(10,60), 15, "white" )
+
+  drawText(c, `Tech Tree`, new Vec(720,30), 15, "white" )
 
   if (openTechTree){
     techs.forEach((t)=>{

@@ -87,13 +87,13 @@ function drag(event){
 
 function menuClick(event){
   event.preventDefault();
-  if(event.offsetY > 50 && event.offsetY < 100){nextTurn()}
-  else if (event.offsetY < 50 && event.offsetX > 600) {
+  if(event.offsetX < 90 && event.offsetY < 100){nextTurn()}
+  else if (event.offsetY < 90 && event.offsetX > 710) {
     openTechTree = !openTechTree;
     // document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
-  else if(event.offsetY < 50 && event.offsetY > 10){
-    let num = Math.round((event.offsetX+10)/60);
+  else if(event.offsetY < 90 && event.offsetY > 10){
+    let num = Math.round((event.offsetX-120)/60);
     if (num && sel.menu[num -1]){
       console.log(sel, sel.menu, sel.menu[num -1]);
       onMenuItemClicked(sel.menu[num -1]);
