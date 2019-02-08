@@ -95,6 +95,7 @@ function territoryState(hex){
 
 function onMenuItemClicked(item){
   let tile = tiles.get(sel.hex.id)
+  let ship = getShipOnHex(sel.hex)
   if (sel.state === 2){
     playerData[playerTurn].money -= thingList.find(t => t.thing === item).price;
 
@@ -103,6 +104,7 @@ function onMenuItemClicked(item){
     }
 
     if(item === "inhabitedPlanet"){
+      ship.moved = true;
       let existingBase = baseArray.find(b => b.location.compare(tile.hex));
       if (existingBase){
         existingBase.owner = playerTurn;

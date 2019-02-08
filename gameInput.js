@@ -93,10 +93,13 @@ function menuClick(event){
     // document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
   else if(event.offsetY < 90 && event.offsetY > 10){
-    let num = Math.round((event.offsetX-120)/60);
-    if (num && sel.menu[num -1]){
-      console.log(sel, sel.menu, sel.menu[num -1]);
-      onMenuItemClicked(sel.menu[num -1]);
+    console.log(event.offsetX);
+  console.log((event.offsetX-110), (event.offsetX-110)/60 );
+    let num = Math.ceil((event.offsetX-110)/60);
+    console.log(num);
+    if (num && sel.menu[num-1]){
+      console.log(sel, sel.menu, sel.menu[num-1]);
+      onMenuItemClicked(sel.menu[num-1]);
     }
   }
   else{

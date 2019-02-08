@@ -99,6 +99,14 @@ function setupTiles(hexArray){
   return hexesObj;
 }
 
+function makePlayerArraay(){
+  playerdata = [];
+  for(let i; i<numPlayers; i++){
+  playerdata.push({"money":5, capital: new Hex(0,3,-3), "tech":{}, viewMask:makeNewViewMask(tiles)});
+  }
+  return playerdata
+}
+
 let playerData = [
   {"money":5, capital: new Hex(0,3,-3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
   {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
