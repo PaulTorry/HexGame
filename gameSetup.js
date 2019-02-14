@@ -14,27 +14,28 @@
 
 const boardSize = 10;
 
+ let state = {};
 
 let sel = {state:0, attacks:[], menu:[], moves:[]}
 
 
-let playerTurn = 0;
+state.playerTurn = 0;
 let preturn = true;
 
-let shipArray = [
+state.shipArray = [
   {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1, view:2,
   "maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,3,-3),"owner":0, range:1},
 {"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1, view:2,
 "maxMove":4,"moved":false,"attacked":false,"location":new Hex(0,-3,3),"owner":1, range:1}
 ];
 
-let baseArray = [
+state.baseArray = [
   {type:"planet", owner:0, location: new Hex(0,3,-3), territory:new Hex(0,3,-3).secondNeighboursInclusive},
 //  {type:"planet", owner:1, location: new Hex(3,-3,0), territory:new Hex(3,-3,0).secondNeighboursInclusive},
   {type:"planet", owner:1, location: new Hex(0,-3,3), territory:new Hex(0,-3,3).secondNeighboursInclusive}
 ]
 
-let tiles = setupTiles(Hex.findWithin(boardSize));
+state.tiles = setupTiles(Hex.findWithin(boardSize));
 
 function setupTiles(hexArray){
   let hexesObj = new Map();
@@ -46,7 +47,7 @@ function setupTiles(hexArray){
     if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
     //  if(Math.random()<0.05){buildingHex.navBeacon = {owner:0}};
 
-    for(let base of baseArray){
+    for(let base of state.baseArray){
       if(hex.compare(base.location)){
         buildingHex.terrain = "planet";
         //    buildingHex.station = {type:"inhabitedPlanet", owner:base.owner}
@@ -57,11 +58,11 @@ function setupTiles(hexArray){
   return hexesObj;
 }
 
-let playerData = [
-  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":true, asteroidMining:true}, viewMask:makeNewViewMask(tiles)},
-  {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(tiles)},
+ state.playerData = [
+  {"money":5, capital: new Hex(0,3,-3),"tech":{"gasGiantMove":true, asteroidMining:true}, viewMask:makeNewViewMask(state.tiles)},
+  {"money":5, capital: new Hex(0,-3,3), "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask(state.tiles)},
   //{"money":5, "tech":{"gasGiantMove":false}, viewMask:makeNewViewMask()}
 ];
 
 
-let numPlayers = playerData.length ;
+ state.numPlayers = state.playerData.length ;

@@ -19,7 +19,36 @@ function removeActiveViews(viewMaskP){
   return viewMask;
 }
 
-function getUpdatedViewMask(player, baseArray, shipArray, tiles, mask){
+
+function getUpdatedViewMask(state){
+  //playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask
+
+let mask = state.playerData[state.playerTurn].viewMask
+
+  state.baseArray.forEach(b => {
+    if(b.owner === state.playerTurn){
+      mask[b.location.id] = 2;
+      b.territory.forEach(t => {
+        mask[t.id] = 2;
+      })
+    }
+  })
+
+  state.shipArray.forEach(s => {
+    if(s.owner === state.playerTurn){
+      mask[s.location.id] = 2;
+      s.location.within(s.view).forEach(n => { mask[n.id] = 2; })
+    }
+  })
+
+  for(let [id , tile] of state.tiles){
+    if(tile.navBeacon && tile.navBeacon.owner === state.playerTurn){ mask[tile.hex.id] = 2; }
+  }
+
+  return mask;
+}
+
+function getUpdatedViewMaskold(player, baseArray, shipArray, tiles, mask){
   baseArray.forEach(b => {
     if(b.owner === player){
       mask[b.location.id] = 2;

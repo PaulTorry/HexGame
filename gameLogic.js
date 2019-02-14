@@ -1,22 +1,25 @@
 "use strict"
 
 /*global
-drawScreen, sel:true,screenSettings,
+drawScreen, sel:true, screenSettings,
 nextTurn,
+state,
 onMenuItemClicked,
-playerTurn,   preturn:true, makeMenu,
-findPossibleAttacks, getShipOnHex, findPossibleMoves, baseArray, tiles,
-playerData, thingList, shipArray:true, buildShip, techs,  playerTurn:true, numPlayers,
-translateContextTo, getXYfromHex, drawMenu, shipHulls, removeActiveViews, getUpdatedViewMask
+preturn:true, makeMenu,
+findPossibleAttacks, getShipOnHex, findPossibleMoves,
+buildShip,
+translateContextTo, getXYfromHex, drawMenu, removeActiveViews, getUpdatedViewMask
+data
 */
 
+// techs,
 
 /* eslint-disable no-unused-vars */
 
 
 function onHexClicked(clickHex){
   if(preturn){preturn = false; return }
-  let viewMask = getUpdatedViewMask(playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask);
+  let viewMask = getUpdatedViewMask(state);
 
   let possibleAttacks = [], possibleMoves = [];
 
@@ -64,7 +67,7 @@ function onHexClicked(clickHex){
     else if (sel.state === 0){
       let currentShip = getShipOnHex(clickHex);
 
-      if(currentShip && currentShip.owner === playerTurn){
+      if(currentShip && currentShip.owner === state.playerTurn){
         if (!currentShip.moved)  possibleMoves = findPossibleMoves(clickHex, currentShip.maxMove);
         if (!currentShip.attacked)  possibleAttacks = findPossibleAttacks(clickHex, currentShip.range);
 
@@ -83,55 +86,55 @@ function onHexClicked(clickHex){
 
 
 function whichPlanetsTerritory(hex){
-  return baseArray.find(b => b.location.compare(hex) || b.territory.find(t => t.compare(hex)));
+  return state.baseArray.find(b => b.location.compare(hex) || b.territory.find(t => t.compare(hex)));
 }
 
 function territoryState(hex){
   if (whichPlanetsTerritory(hex) === undefined){ return 1}
-  else if (whichPlanetsTerritory(hex).owner === playerTurn){ return 2}
+  else if (whichPlanetsTerritory(hex).owner === state.playerTurn){ return 2}
   else return 0;
 }
 
 
 function onMenuItemClicked(item){
-  let tile = tiles.get(sel.hex.id)
+  let tile = state.tiles.get(sel.hex.id)
   let ship = getShipOnHex(sel.hex)
   if (sel.state === 2){
-    playerData[playerTurn].money -= thingList.find(t => t.thing === item).price;
+    state.playerData[state.playerTurn].money -= data.thingList.find(t => t.thing === item).price;
 
     if(item === "asteroidMining"){
-      tile.station = {type: "asteroidMining", owner: playerTurn}
+      tile.station = {type: "asteroidMining", owner: state.playerTurn}
     }
 
     if(item === "inhabitedPlanet"){
       ship.moved = true;
-      let existingBase = baseArray.find(b => b.location.compare(tile.hex));
+      let existingBase = state.baseArray.find(b => b.location.compare(tile.hex));
       if (existingBase){
-        existingBase.owner = playerTurn;
+        existingBase.owner = state.playerTurn;
         existingBase.territory.forEach(t => {
           console.log(t);
-          if(tiles.get(t.id).station){tiles.get(t.id).station = {type: "asteroidMining", owner: playerTurn}}
+          if(state.tiles.get(t.id).station){state.tiles.get(t.id).station = {type: "asteroidMining", owner: state.playerTurn}}
         })
       }
-      else {baseArray.push(
-        {type:"planet", owner:playerTurn, location: tile.hex,
+      else {state.baseArray.push(
+        {type:"planet", owner:state.playerTurn, location: tile.hex,
         territory:tile.hex.neighbours.filter(t => territoryState(t) === 1)}
       )}
     }
 
     if(item === "navBeacon"){
-      tile.navBeacon = {owner: playerTurn}
+      tile.navBeacon = {owner: state.playerTurn}
     }
 
     if(item === "destroy"){
       tile.navBeacon = null;
     }
 
-    if(item === "scoutShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))}
-    if(item === "assaultShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))}
-    if(item === "basicShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))}
-    if(item === "mineShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))}
-    if(item === "missileShip"){shipArray.push(buildShip(item, playerTurn, tile.hex))}
+    if(item === "scoutShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
+    if(item === "assaultShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
+    if(item === "basicShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
+    if(item === "mineShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
+    if(item === "missileShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
 
   }
   sel = {state:0, attacks:[], menu:[], moves:[]}
@@ -139,8 +142,8 @@ function onMenuItemClicked(item){
 }
 
 function onTechHexClicked (hex){
-  let tech = techs.find(t => t.location.compare(hex));
-  let player = playerData[playerTurn];
+  let tech = data.techs.find(t => t.location.compare(hex));
+  let player = state.playerData[state.playerTurn];
 
   if(!player.tech[tech.tech] && player.money >= tech.cost){
     player.tech[tech.tech] = true;
@@ -165,7 +168,7 @@ function applyDamage(attacker, ship, attacking = true){
   }
   else {
     if (range === 1 && attacking){attacker.location = ship.location}
-    shipArray = shipArray.filter(e => e !== ship)
+    state.shipArray = state.shipArray.filter(e => e !== ship)
   }
 }
 
@@ -173,26 +176,26 @@ function applyDamage(attacker, ship, attacking = true){
 
 function getWeaponPower(ship, attacking = true){
   let {type, hull, attack, retaliate} = ship;
-  if(attacking){ return attack * hull / shipHulls[type].hull; }
-  else{ return retaliate * hull / shipHulls[type].hull; }
+  if(attacking){ return attack * hull / data.shipHulls[type].hull; }
+  else{ return retaliate * hull / data.shipHulls[type].hull; }
 }
 
 
 
 function nextTurn(){
-  playerData[playerTurn].money += collectMoney();
-  playerData[playerTurn].viewMask = removeActiveViews(playerData[playerTurn].viewMask);
-  for (let ship of shipArray){
-    if (ship.owner === playerTurn){
-      console.log(ship);console.log(shipHulls[ship.type].shield);
-      if (!ship.moved && !ship.attacked) ship.shield =  Math.min(ship.shield +1, shipHulls[ship.type].shield);
+  state.playerData[state.playerTurn].money += collectMoney();
+  state.playerData[state.playerTurn].viewMask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
+  for (let ship of state.shipArray){
+    if (ship.owner === state.playerTurn){
+      console.log(ship);console.log(data.shipHulls[ship.type].shield);
+      if (!ship.moved && !ship.attacked) ship.shield =  Math.min(ship.shield +1, data.shipHulls[ship.type].shield);
       console.log(ship);
       ship.moved = false;
       ship.attacked = false;
     }
   }
-  playerTurn = (playerTurn + 1) % numPlayers;
-  translateContextTo(getXYfromHex(playerData[playerTurn].capital));
+  state.playerTurn = (state.playerTurn + 1) % state.numPlayers;
+  translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
   screenSettings.openTechTree = false;
   drawMenu(); drawScreen();
 
@@ -202,8 +205,8 @@ function nextTurn(){
 }
 
 function collectMoney(){
-  let bases = baseArray.filter(b => b.owner === playerTurn);
-  let asteroidBases = Array.from(tiles).filter(([id, val]) => val.station && val.station.owner === playerTurn)
+  let bases = state.baseArray.filter(b => b.owner === state.playerTurn);
+  let asteroidBases = Array.from(state.tiles).filter(([id, val]) => val.station && val.station.owner === state.playerTurn)
 
   return bases.length + asteroidBases.length;
 }

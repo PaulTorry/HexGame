@@ -1,16 +1,20 @@
 "use strict"
 
 /*global
-Hex, terrainCostNew, tiles,
-playerTurn, getUpdatedViewMask, boardSize, shipHulls, shipArray, playerData, baseArray
-*/
+Hex, getUpdatedViewMask,
+state,
+data,
+boardSize
 
+*/
+// tiles, playerTurn,  shipArray, playerData, baseArray,
+// shipHulls, boardSize
 
 /* eslint-disable no-unused-vars */
 
 function buildShip(type, owner, location, moved=true, attacked=true){
   console.log("building");
-  let base = shipHulls[type];
+  let base = data.shipHulls[type];
   return ({type:base.type, hull:base.hull, shield:base.shield,
     attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
     range: base.range, view:base.view, moved:moved, attacked:attacked, location:location, owner:owner
@@ -20,21 +24,21 @@ function buildShip(type, owner, location, moved=true, attacked=true){
 //console.log( JSON.stringify(buildShip("scoutShip",0,new Hex(0,0))));
 
 function getShipOnHex(hex){
-  return shipArray.find(e => e.location.compare(hex));
+  return state.shipArray.find(e => e.location.compare(hex));
 }
 
 function shipState(hex){
   if (getShipOnHex(hex) === undefined){ return 1}
-  else if (getShipOnHex(hex).owner === playerTurn){ return 2}
+  else if (getShipOnHex(hex).owner === state.playerTurn){ return 2}
   else return 0;
 }
 
 function findPossibleAttacks(center, range = 1){
-  let viewMask = getUpdatedViewMask(playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask )
+  let viewMask = getUpdatedViewMask(state)
   let possibleAttacksInt = [];
   for(let hex of center.within(range)){
     let ship = getShipOnHex(hex);
-    if(viewMask[hex.id] === 2 && ship && ship.owner !== playerTurn) {
+    if(viewMask[hex.id] === 2 && ship && ship.owner !== state.playerTurn) {
       possibleAttacksInt.push(hex);
     }
   }
@@ -86,20 +90,20 @@ function getTerrainMapFunction(terrainCostMap){
 
 function makeTerrainCostMap(){
   let terrainCostMap = {};
-  let viewMask = getUpdatedViewMask(playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask )
-  for(let [ ,tile] of tiles){
+  let viewMask = getUpdatedViewMask(state)
+  for(let [ ,tile] of state.tiles){
 
-    let moveOff = terrainCostNew[tile.terrain].moveCost / 2;
-    let moveOn = terrainCostNew[tile.terrain].moveCost / 2;
+    let moveOff = data.terrainCostNew[tile.terrain].moveCost / 2;
+    let moveOn = data.terrainCostNew[tile.terrain].moveCost / 2;
     if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
 
     for(let hex2 of tile.hex.neighbours){
       let ship = getShipOnHex(hex2)
-      if(ship && (ship.owner !== playerTurn)) {          moveOff = 9;        }
+      if(ship && (ship.owner !== state.playerTurn)) { moveOff = 9; }
     }
 
-    let techNeeded = terrainCostNew[tile.terrain].techNeeded;
-    if(techNeeded && !playerData[playerTurn].tech[techNeeded]){
+    let techNeeded = data.terrainCostNew[tile.terrain].techNeeded;
+    if(techNeeded && !state.playerData[state.playerTurn].tech[techNeeded]){
       moveOff += 77; moveOn += 77;
     }
 
