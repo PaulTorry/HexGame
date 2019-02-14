@@ -1,49 +1,52 @@
 "use strict";
 
+/*global
+Vec, Hex,
+sel:true
+
+drawScreen, drawMenu, screenSettings
+
+nextTurn,  onMenuItemClicked,
+  onTechHexClicked,
+onHexClicked,
+*/
+
 let mouseDownLocation = new Vec(0,0);
 let mouseDownLocationABS = new Vec(0,0);
 let fingerDistance = null;
 
-/*global
-Vec, Hex,
-scale:true, screenOffset:true, screenCenter, hexSize, sel:true
-mouseDownLocationABS:true, mouseDownLocation:true, fingerDistance:true,
 
+//let screenSettings = screenSettings;
 
-
-drawScreen, drawMenu,
-
-nextTurn,  onMenuItemClicked, techTreeOffset,
-openTechTree:true,  onTechHexClicked,
-onHexClicked,
-*/
 
 /* eslint-disable no-unused-vars */
 
-function getRealXYfromScreenXY(a) {return a.scale(1 / scale).add(screenOffset); }
+function getRealXYfromScreenXY(a) {
+  return a.scale(1 / screenSettings.scale).add(screenSettings.screenOffset);
+ }
 
 function scaleContext(s){
   var c = document.getElementById("board").getContext("2d");
-  scale *= s;
+  screenSettings.scale *= s;
   c.scale(s,s);
-  let off = screenOffset.scale(1/s)
-  let dif = screenOffset.subtract(off)
+  let off = screenSettings.screenOffset.scale(1/s)
+  let dif = screenSettings.screenOffset.subtract(off)
 
-  screenOffset = off;
+  screenSettings.screenOffset = off;
   translateContext(dif);
 }
 
 function translateContext(dif, ctx = "board") {
   var c = document.getElementById(ctx).getContext("2d");
-  screenOffset = screenOffset.add(dif)
+  screenSettings.screenOffset = screenSettings.screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
 }
 
 function translateContextTo(loc, ctx = "board"){
   // console.log(loc);
   var c = document.getElementById(ctx).getContext("2d");
-  let dif = loc.subtract(screenOffset).subtract(screenCenter);
-  screenOffset = screenOffset.add(dif)
+  let dif = loc.subtract(screenSettings.screenOffset).subtract(screenSettings.screenCenter);
+  screenSettings.screenOffset = screenSettings.screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
 }
 
@@ -72,13 +75,13 @@ function mouseWheel(event){
 
 function drag(event){
   //console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
-  if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag > 20){
+  if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(screenSettings.scale)).mag > 20){
     sel = {state:0, attacks:[], menu:[], moves:[]}
   }
   event.preventDefault();
   event.stopPropagation();
   var c = document.getElementById("board").getContext("2d");
-  let dif = mouseDownLocation.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale));
+  let dif = mouseDownLocation.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(screenSettings.scale));
   translateContext(dif)
   mouseDownLocation =  new Vec( event.offsetX, event.offsetY) ;
   drawScreen();
@@ -86,10 +89,11 @@ function drag(event){
 
 
 function menuClick(event){
+  
   event.preventDefault();
   if(event.offsetX < 90 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 90 && event.offsetX > 710) {
-    openTechTree = !openTechTree;
+    screenSettings.openTechTree = !screenSettings.openTechTree;
     // document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
   else if(event.offsetY < 90 && event.offsetY > 10){
@@ -103,7 +107,7 @@ function menuClick(event){
     }
   }
   else{
-    let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(techTreeOffset.invert())).scale(1/50))
+    let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/50))
     onTechHexClicked(clickHex);
   }
   drawScreen();
@@ -112,7 +116,7 @@ function menuClick(event){
 
 
 function boardClick(event){
-  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)). scale(1/hexSize))
+  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)). scale(1/screenSettings.hexSize))
   onHexClicked(clickHex);
   drawScreen();
 }
@@ -152,7 +156,7 @@ function touchdrag(event){
     fingerDistance = fingerDistanceNew
   }
   else fingerDistance = null;
-  let dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1/(scale));
+  let dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1/(screenSettings.scale));
   translateContext(dif)
   mouseDownLocation =  new Vec( pageX, pageY) ;
   drawScreen();
