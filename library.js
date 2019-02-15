@@ -49,6 +49,16 @@ class Hex{
   get secondNeighboursInclusive() {return this.neighbours.concat(this.secondNeighbours)}
   get thirdNeighboursInclusive() {return this.secondNeighboursInclusive.concat(this.thirdNeighbours)}
 
+  static getFromPQR(obj){
+    if(obj.p + obj.q + obj.r !== 0)console.log("problem getFromPQR");
+    return new Hex(obj.p, obj.q)
+  }
+
+  static getFromID(id){
+    let coords = id.split(",").map(x=>parseInt(x));
+    return new Hex(...coords)
+  }
+
   static getArray(input, Hexes){
     let [pp, qq, rr, ...rest] = input;
     if (pp === null || qq === null || rr === null){return Hexes}

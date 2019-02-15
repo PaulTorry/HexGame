@@ -35,7 +35,7 @@ function makeMenu(hex){
 
     if(pos.inhabitedPlanet){
         // let base = baseArray.find(b => b.location.compare(hex));
-        if (!base)return false;
+        if (!base) return false;
     }
 
     if(pos.shipState === "noShip" && ship) return false;
