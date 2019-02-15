@@ -38,7 +38,7 @@ function onHexClicked(clickHex){
       }
 
       else if(sel.moves.find( e =>  e.compare(clickHex))) {
-        sel.ship.location = clickHex;
+        sel.ship.hex = clickHex;
         sel.ship.moved = true;
         sel.hex = clickHex;
         possibleAttacks = findPossibleAttacks(clickHex, sel.ship.range);
@@ -86,7 +86,7 @@ function onHexClicked(clickHex){
 
 
 function whichPlanetsTerritory(hex){
-  return state.baseArray.find(b => b.location.compare(hex) || b.territory.find(t => t.compare(hex)));
+  return state.baseArray.find(b => b.hex.compare(hex) || b.territory.find(t => t.compare(hex)));
 }
 
 function territoryState(hex){
@@ -108,7 +108,7 @@ function onMenuItemClicked(item){
 
     if(item === "inhabitedPlanet"){
       ship.moved = true;
-      let existingBase = state.baseArray.find(b => b.location.compare(tile.hex));
+      let existingBase = state.baseArray.find(b => b.hex.compare(tile.hex));
       if (existingBase){
         existingBase.owner = state.playerTurn;
         existingBase.territory.forEach(t => {
@@ -117,7 +117,7 @@ function onMenuItemClicked(item){
         })
       }
       else {state.baseArray.push(
-        {type:"planet", owner:state.playerTurn, location: tile.hex,
+        {type:"planet", owner:state.playerTurn, hex: tile.hex,
         territory:tile.hex.neighbours.filter(t => territoryState(t) === 1)}
       )}
     }
@@ -142,7 +142,7 @@ function onMenuItemClicked(item){
 }
 
 function onTechHexClicked (hex){
-  let tech = data.techs.find(t => t.location.compare(hex));
+  let tech = data.techs.find(t => t.hex.compare(hex));
   let player = state.playerData[state.playerTurn];
 
   if(!player.tech[tech.tech] && player.money >= tech.cost){
@@ -155,7 +155,7 @@ function onTechHexClicked (hex){
 function applyDamage(attacker, ship, attacking = true){
   let {type, hull, shield} = ship;
   let dammage = getWeaponPower(attacker, attacking);
-  let range = attacker.location.distance(ship.location);
+  let range = attacker.hex.distance(ship.hex);
   if ( attacker.range < range ){ dammage = 0}
 
   if (shield >= dammage){
@@ -167,7 +167,7 @@ function applyDamage(attacker, ship, attacking = true){
     if(attacking) applyDamage(ship, attacker, false);
   }
   else {
-    if (range === 1 && attacking){attacker.location = ship.location}
+    if (range === 1 && attacking){attacker.hex = ship.hex}
     state.shipArray = state.shipArray.filter(e => e !== ship)
   }
 }
@@ -187,9 +187,9 @@ function nextTurn(){
   state.playerData[state.playerTurn].viewMask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
   for (let ship of state.shipArray){
     if (ship.owner === state.playerTurn){
-      console.log(ship);console.log(data.shipHulls[ship.type].shield);
+  //    console.log(ship);console.log(data.shipHulls[ship.type].shield);
       if (!ship.moved && !ship.attacked) ship.shield =  Math.min(ship.shield +1, data.shipHulls[ship.type].shield);
-      console.log(ship);
+//      console.log(ship);
       ship.moved = false;
       ship.attacked = false;
     }

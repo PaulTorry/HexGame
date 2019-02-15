@@ -13,7 +13,7 @@
 
 function makeMenu(hex){
 // console.log("makemenu");
-  let base = state.baseArray.find(b => b.location.compare(hex));
+  let base = state.baseArray.find(b => b.hex.compare(hex));
   let tile = state.tiles.get(hex.id);
   let  ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
   return data.thingList.filter(pos => {
@@ -27,7 +27,7 @@ function makeMenu(hex){
 
     if(pos.territoryState && pos.territoryState > territoryState(hex)) return false;
 
-    if(pos.base && !state.baseArray.filter(b => {return b.location.compare(hex) && b.owner === state.playerTurn})[0]) {
+    if(pos.base && !state.baseArray.filter(b => {return b.hex.compare(hex) && b.owner === state.playerTurn})[0]) {
       return false;
     }
 

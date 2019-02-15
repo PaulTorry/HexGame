@@ -6,12 +6,12 @@
 const data = {
 
   techs : [
-    {tech:'gasGiantMove', location:new Hex(0,1), cost:2,},
-    {tech:'navBeacons', location:new Hex(-1,0), cost:2, },
-    {tech:'missiles', location:new Hex(0,-1), cost:2, },
-    {tech:'heavyWeapons', location:new Hex(1,-1), cost:2, },
-    {tech:'mines', location:new Hex(1,0), cost:2, },
-    {tech:'asteroidMining', location:new Hex(-1,1), cost:2, }
+    {tech:'gasGiantMove', hex:new Hex(0,1), cost:2,},
+    {tech:'navBeacons', hex:new Hex(-1,0), cost:2, },
+    {tech:'missiles', hex:new Hex(0,-1), cost:2, },
+    {tech:'heavyWeapons', hex:new Hex(1,-1), cost:2, },
+    {tech:'mines', hex:new Hex(1,0), cost:2, },
+    {tech:'asteroidMining', hex:new Hex(-1,1), cost:2, }
   ],
 
 

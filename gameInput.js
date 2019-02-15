@@ -1,15 +1,16 @@
 "use strict";
 
 /*global
-Vec, Hex, Map
+Vec, Hex
 sel:true
 
 drawScreen, drawMenu, screenSettings,
+interactiveConsole
 
 nextTurn,  onMenuItemClicked,
   onTechHexClicked,
 onHexClicked,
- state:true,
+
 */
 
 let mouseDownLocation = new Vec(0,0);
@@ -163,41 +164,7 @@ function touchdrag(event){
   drawScreen();
 }
 
-function interactiveConsole (e){
+function keyHandle(e){
   console.log(e);
-  if(e.code === "Tab"){
-    var ans = prompt("\n 1. Save, \n2: Load, \n3: Cheat", "");
-
-    if(ans === "1"){
-      saveAs(prompt("Type Save Name"))
-    }
-    if(ans === "2"){
-      load(prompt("Type Save Name"))
-    }
-    if(ans === "3"){
-      state.playerData[0].money = 1000;
-    }
-    drawScreen();
-  }
-}
-
-function saveAs(savename = "quicksave"){
-  let savestate = state;
-  savestate.tiles = [...savestate.tiles]
-  //console.log(JSON.stringify(savestate));
-   localStorage.setItem(savename, JSON.stringify(savestate));
-}
-
-function load(savename = "quicksave"){
-  let newState = JSON.parse(localStorage.getItem(savename));
-  console.log(newState);
-  newState.tiles = new Map(newState.tiles);
-  console.log(newState);
-  newState.shipArray = newState.shipArray.map(x => {
-    x.location = Hex.getFromPQR(x.location);
-  })
-  console.log(newState.shipArray);
-  console.log(newState.tiles);
-  console.log(newState.baseArray);
-  state = newState;
+  if(e.code === "Tab") interactiveConsole();
 }

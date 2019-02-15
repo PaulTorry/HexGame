@@ -12,19 +12,19 @@ boardSize
 
 /* eslint-disable no-unused-vars */
 
-function buildShip(type, owner, location, moved=true, attacked=true){
+function buildShip(type, owner, hex, moved=true, attacked=true){
   console.log("building");
   let base = data.shipHulls[type];
   return ({type:base.type, hull:base.hull, shield:base.shield,
     attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
-    range: base.range, view:base.view, moved:moved, attacked:attacked, location:location, owner:owner
+    range: base.range, view:base.view, moved:moved, attacked:attacked, hex:hex, owner:owner
   })
 }
 
 //console.log( JSON.stringify(buildShip("scoutShip",0,new Hex(0,0))));
 
 function getShipOnHex(hex){
-  return state.shipArray.find(e => e.location.compare(hex));
+  return state.shipArray.find(e => e.hex.compare(hex));
 }
 
 function shipState(hex){

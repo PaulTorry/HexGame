@@ -15,6 +15,7 @@
   <script src="menuLogic.js"></script>
   <script src="gameLogic.js"></script>
   <script src="gameInput.js"></script>
+  <script src="consoleLogic.js"></script>
   <script src="viewLogic.js"></script>
   <script src="gameSprites.js"></script>
   <script src="gameOutput.js"></script>
@@ -52,7 +53,7 @@ window.onload = () => {
 
 drawScreen();
 // state.tiles.forEach(({hex:x}) => console.log(x));//(x.p, x.q, x.id));
-state.tiles.forEach(({hex:x}) => console.log(x, Hex.getFromPQR(x)));//(x.p, x.q, x.id));
+//state.tiles.forEach(({hex:x}) => console.log(x, Hex.getFromPQR(x)));//(x.p, x.q, x.id));
 // state.tiles.forEach(({hex:x}) => console.log(x.p, x.q, x.id, Hex.getFromID(x.id).p , Hex.getFromID(x.id).q))
 
 </script>

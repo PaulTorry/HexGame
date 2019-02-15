@@ -88,7 +88,7 @@ function drawScreen() {
       if(tile.navBeacon){
         drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
       }
-      let base = state.baseArray.find(b => b.location.compare(tile.hex));
+      let base = state.baseArray.find(b => b.hex.compare(tile.hex));
       if(base){
         if(curves["planetRing"]){drawFromData(c, curves["planetRing"], x, y, base.owner)}
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
@@ -108,21 +108,21 @@ function drawScreen() {
   }
 
   for(let ship of state.shipArray){
-    if(viewMask[ship.location.id] === 2){
+    if(viewMask[ship.hex.id] === 2){
       let borderColour = "black";
       if (ship.owner === state.playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
 
       if (curves[ship.type]){
-        let {x,y} = getXYfromHex(ship.location);
+        let {x,y} = getXYfromHex(ship.hex);
         let transparency = 1;
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
         drawFromData(c, curves[ship.type], x, y, ship.owner, transparency)
       }
       else if (baseShapes[ship.type]){
-        drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.location), 30,  2 , borderColour, getPlayerColour(ship.owner));
+        drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
       }
 
-      drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.location).add(new Vec(-20,0)), 28, "white")
+      drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(-20,0)), 28, "white")
     }
   }
 
@@ -175,7 +175,7 @@ document.getElementById("menu").height = 100 + 300 * ss.openTechTree;
 
   if (screenSettings.openTechTree){
     data.techs.forEach((t)=>{
-      let center = getXYfromHex(t.location, 50).add(ss.techTreeOffset);
+      let center = getXYfromHex(t.hex, 50).add(ss.techTreeOffset);
       let colour = "red";
       if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
       drawPoly(c, simpleShapes["hexVert"], center, 50, 1,  "white", "#120F22"  );
