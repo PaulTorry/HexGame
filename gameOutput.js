@@ -61,15 +61,16 @@ function drawScreen() {
   c.lineWidth = 5
 
   let viewMask = getUpdatedViewMask(state)
+  // console.log(viewMask);
   if (preturn){
      viewMask = makeNewViewMask(new Map());
      drawText(c, `Click to Start`, getXYfromHex(state.playerData[state.playerTurn].capital), 30, "white" )
    }
 
   for(let [id , tile] of state.tiles){
-    if(viewMask[id]){
+    if(viewMask[id] || debug){
       let {x,y} = getXYfromHex(tile.hex)
-      drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * viewMask[id] + ")"  );
+      drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * (viewMask[id] || debug) + ")"  );
       if(tile.terrain !== "space"){
       //  let {x,y} = getXYfromHex(tile.hex)
         if(curves[tile.terrain]){
@@ -99,7 +100,7 @@ function drawScreen() {
   }
 
   for(let [id , tile] of state.tiles){
-    if(viewMask[id]){
+    if(viewMask[id] || debug ){
       let planet = whichPlanetsTerritory(tile.hex);
       if(planet) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  getPlayerColour(planet.owner)  );
       if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-30,-30)),14 )
@@ -108,7 +109,7 @@ function drawScreen() {
   }
 
   for(let ship of state.shipArray){
-    if(viewMask[ship.hex.id] === 2){
+    if(viewMask[ship.hex.id] === 2 || debug){
       let borderColour = "black";
       if (ship.owner === state.playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
 

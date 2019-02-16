@@ -10,6 +10,7 @@ findPossibleAttacks, getShipOnHex, findPossibleMoves,
 buildShip,
 translateContextTo, getXYfromHex, drawMenu, removeActiveViews, getUpdatedViewMask
 data
+takeAIturn
 */
 
 // techs,
@@ -96,10 +97,11 @@ function territoryState(hex){
 }
 
 
-function onMenuItemClicked(item){
-  let tile = state.tiles.get(sel.hex.id)
-  let ship = getShipOnHex(sel.hex)
-  if (sel.state === 2){
+function onMenuItemClicked(item, hex = sel.hex){
+  let tile = state.tiles.get(hex.id)
+  let ship = getShipOnHex(hex)
+  if (sel.state !== 2) console.log("sel.state !== 2");
+
     state.playerData[state.playerTurn].money -= data.thingList.find(t => t.thing === item).price;
 
     if(item === "asteroidMining"){
@@ -107,7 +109,7 @@ function onMenuItemClicked(item){
     }
 
     if(item === "inhabitedPlanet"){
-      ship.moved = true;
+      ship.moved = true; ship.attacked = true;
       let existingBase = state.baseArray.find(b => b.hex.compare(tile.hex));
       if (existingBase){
         existingBase.owner = state.playerTurn;
@@ -136,7 +138,7 @@ function onMenuItemClicked(item){
     if(item === "mineShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
     if(item === "missileShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
 
-  }
+
   sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu();
 }
@@ -202,6 +204,11 @@ function nextTurn(){
   sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu(); drawScreen();
   preturn = true;
+
+  if(state.playerData[state.playerTurn].type === "AI"){
+    takeAIturn();
+    nextTurn()
+  }
 }
 
 function collectMoney(){
