@@ -77,8 +77,6 @@ class Hex{
 
   static neighbours() {return [new Hex(1,0), new Hex(0,-1), new Hex(-1,0), new Hex(-1,1), new Hex(0,1), new Hex(1,-1)]}
 
-  //  static neighbours() {return [new Hex(1,0,-1), new Hex(0,-1,1), new Hex(-1,0,1), new Hex(-1,1,0), new Hex(0,1,-1), new Hex(1,-1,0)]}
-
   static secondNeighbours () { return [
     new Hex(2,0), new Hex(2,-2), new Hex(2,-1), new Hex(-2,0), new Hex(-2,2), new Hex(-2,1),
     new Hex(1,-2), new Hex(1,1), new Hex(-1,2), new Hex(-1,-1), new Hex(0,2), new Hex(0,-2)

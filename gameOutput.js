@@ -2,18 +2,18 @@
 
 /* eslint-disable no-unused-vars */
 /*global
- screenSettings,
- Vec, Hex,
-  drawScreen,  sel,
-  state,
-  getUpdatedViewMask,
+screenSettings,
+Vec, Hex,
+drawScreen,  sel,
+state,
+getUpdatedViewMask,
 
-  simpleShapes, Map,  makeNewViewMask, preturn,
-   curves, debug, territoryState,  whichPlanetsTerritory,
-   baseShapes,
-   data,
+simpleShapes, Map,  makeNewViewMask, preturn,
+curves, debug, territoryState,  whichPlanetsTerritory,
+baseShapes,
+data,
 
- */
+*/
 
 //    boardSize, shipArray, playerData, baseArray, tiles, playerTurn
 
@@ -46,8 +46,7 @@ function mapColours(string, player, transparency = 1){
   else return string;
 }
 
-// const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
-const selectedColour = ["white","red", "blue", "orange"];
+const selectedColour = ["white", "red", "blue", "orange"];
 
 
 function getXYfromHex(hexCoord, size=screenSettings.hexSize){return Hex.getXYfromUnitHex(hexCoord).scale(size)}
@@ -61,22 +60,19 @@ function drawScreen() {
   c.lineWidth = 5
 
   let viewMask = getUpdatedViewMask(state)
-  // console.log(viewMask);
   if (preturn){
-     viewMask = makeNewViewMask(new Map());
-     drawText(c, `Click to Start`, getXYfromHex(state.playerData[state.playerTurn].capital), 30, "white" )
-   }
+    viewMask = makeNewViewMask(new Map());
+    drawText(c, `Click to Start`, getXYfromHex(state.playerData[state.playerTurn].capital), 30, "white" )
+  }
 
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug){
       let {x,y} = getXYfromHex(tile.hex)
       drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * (viewMask[id] || debug) + ")"  );
       if(tile.terrain !== "space"){
-      //  let {x,y} = getXYfromHex(tile.hex)
         if(curves[tile.terrain]){
           drawFromData(c, curves[tile.terrain], x, y)
         }
-        // drawPoly(c, hexVert, getXYfromHex(tile.hex), hexSize, 2 , "#25202D", "grey");
         else{
           let image = document.getElementById(tile.terrain + "Pic");
           c.drawImage(image, x - 70, y - 70, 140, 140);
@@ -136,18 +132,13 @@ function drawScreen() {
     }
     drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(sel.hex), ss.hexSize -5, 3 , selectedColour[sel.state]);
   }
-
-  // why cant this go atr top, very odd behavoiur // to end turn
-  //playerData[playerTurn].viewMask = removeActiveViews(viewMask);
-
   drawMenu();
 }
 
 function drawMenu(){
- let ss = screenSettings;
-// let currentPlayerData =
+  let ss = screenSettings;
   var c = document.getElementById("menu").getContext("2d");
-document.getElementById("menu").height = 100 + 300 * ss.openTechTree;
+  document.getElementById("menu").height = 100 + 300 * ss.openTechTree;
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
   if(sel.menu && sel.menu.length > 0){
@@ -182,10 +173,7 @@ document.getElementById("menu").height = 100 + 300 * ss.openTechTree;
       drawPoly(c, simpleShapes["hexVert"], center, 50, 1,  "white", "#120F22"  );
       drawText(c, `${t.tech}`, center.add(new Vec(-30,0)) , 14, colour )
       drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
-      //    console.log(getXYfromHex(t.location));
     })
-
-
   }
 }
 
@@ -255,7 +243,7 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
 
 
 function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "Georgia"){
-  let {x,y} = center//.scale(scale)
+  let {x,y} = center;
   c.font = `${size}px ${font}`;
   c.fillStyle = color;
   c.fillText(text, x, y);

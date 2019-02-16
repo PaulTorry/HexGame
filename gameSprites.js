@@ -5,8 +5,6 @@
 /* eslint-disable no-unused-vars */
 
 
-
-
 const simpleShapes = {
   hexVert : [new Vec(1,0), new Vec((1/2), Math.sqrt(3)/2), new Vec((-1/2), Math.sqrt(3)/2),
     new Vec(-1,0), new Vec((-1/2), -Math.sqrt(3)/2), new Vec((1/2), -Math.sqrt(3)/2)

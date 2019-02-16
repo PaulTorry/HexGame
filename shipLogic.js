@@ -1,14 +1,8 @@
 "use strict"
 
 /*global
-Hex, getUpdatedViewMask,
-state,
-data,
-boardSize
-
+  Hex, getUpdatedViewMask, state, data, boardSize
 */
-// tiles, playerTurn,  shipArray, playerData, baseArray,
-// shipHulls, boardSize
 
 /* eslint-disable no-unused-vars */
 
@@ -20,8 +14,6 @@ function buildShip(type, owner, hex, moved=true, attacked=true){
     range: base.range, view:base.view, moved:moved, attacked:attacked, hex:hex, owner:owner
   })
 }
-
-//console.log( JSON.stringify(buildShip("scoutShip",0,new Hex(0,0))));
 
 function getShipOnHex(hex){
   return state.shipArray.find(e => e.hex.compare(hex));

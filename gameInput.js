@@ -1,25 +1,16 @@
 "use strict";
 
 /*global
-Vec, Hex
-sel:true
+Vec, Hex, sel:true
 
-drawScreen, drawMenu, screenSettings,
-interactiveConsole
-
-nextTurn,  onMenuItemClicked,
-  onTechHexClicked,
-onHexClicked,
+drawScreen, drawMenu, screenSettings, interactiveConsole
+nextTurn,  onMenuItemClicked,  onTechHexClicked, onHexClicked,
 
 */
 
 let mouseDownLocation = new Vec(0,0);
 let mouseDownLocationABS = new Vec(0,0);
 let fingerDistance = null;
-
-
-//let screenSettings = screenSettings;
-
 
 /* eslint-disable no-unused-vars */
 
@@ -45,7 +36,6 @@ function translateContext(dif, ctx = "board") {
 }
 
 function translateContextTo(loc, ctx = "board"){
-  // console.log(loc);
   var c = document.getElementById(ctx).getContext("2d");
   let dif = loc.subtract(screenSettings.screenOffset).subtract(screenSettings.screenCenter);
   screenSettings.screenOffset = screenSettings.screenOffset.add(dif)
@@ -56,13 +46,11 @@ function translateContextTo(loc, ctx = "board"){
 function mousedown(event){
   mouseDownLocationABS = new Vec( event.offsetX, event.offsetY) ;
   mouseDownLocation = new Vec( event.offsetX, event.offsetY) ;
-  //  console.log("mousedown");
   document.getElementById("board").addEventListener("mousemove", drag);
   document.getElementById("board").addEventListener("mouseup", removeMousemove);
 }
 
 function removeMousemove(event){
-  //  console.log("removeMousemove");
   document.getElementById("board").removeEventListener("mousemove", drag);
   document.getElementById("board").removeEventListener("mouseup", removeMousemove);
 }
@@ -76,7 +64,6 @@ function mouseWheel(event){
 }
 
 function drag(event){
-  //console.log(mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(scale)).mag);
   if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(screenSettings.scale)).mag > 20){
     sel = {state:0, attacks:[], menu:[], moves:[]}
   }
@@ -96,7 +83,6 @@ function menuClick(event){
   if(event.offsetX < 90 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 90 && event.offsetX > 710) {
     screenSettings.openTechTree = !screenSettings.openTechTree;
-    // document.getElementById("menu").height = 100 + 300 * openTechTree;
   }
   else if(event.offsetY < 90 && event.offsetY > 10){
     console.log(event.offsetX);
@@ -127,13 +113,11 @@ function boardClick(event){
 function touchstart(event){
   let {pageX,pageY} = event.touches[0];
   mouseDownLocation = new Vec( pageX, pageY) ;
-  //console.log("touchstart");
   document.getElementById("board").addEventListener("touchmove", touchdrag);
   document.getElementById("board").addEventListener("touchend", removeTouchmove);
 }
 
 function removeTouchmove(event){
-  //  console.log("removeTouchmove");
   fingerDistance = null;
   document.getElementById("board").removeEventListener("touchmove", touchdrag);
   document.getElementById("board").removeEventListener("touchend", removeTouchmove);

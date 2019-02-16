@@ -29,13 +29,11 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers){
   }
 
   for(let i = 0; i < numPlayers; i++){
-
     let playerType = i<numHumans ? "human" : "AI";
-
     let hexloc = Hex.getUnitHexFromXY(   new Vec(
       Math.sin(2*Math.PI*i/numPlayers), Math.cos(2*Math.PI*i/numPlayers )
     ).scale(boardSize/1.2)  )
-
+    
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
     playerData.push({type: playerType, money:5, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
     shipArray.push({"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1, view:2, "maxMove":4,"moved":false,"attacked":false, hex:hexloc,"owner":i, range:1})

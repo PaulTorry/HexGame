@@ -4,12 +4,12 @@
 
 /* eslint-disable no-unused-vars */
 
-
 function makeNewViewMask(tiles){
   let mask = {};
   tiles.forEach( (a,id,b) => { mask[id] = 0 })
   return mask;
 }
+
 
 function removeActiveViews(viewMaskP){
   let viewMask = viewMaskP;
@@ -21,14 +21,11 @@ function removeActiveViews(viewMaskP){
 
 
 function getUpdatedViewMask(state){
-  //playerTurn, baseArray, shipArray, tiles, playerData[playerTurn].viewMask
 
 let mask = state.playerData[state.playerTurn].viewMask
 
   state.baseArray.forEach(b => {
-
     if(b.owner === state.playerTurn){
-          // console.log("b",b);
       mask[b.hex.id] = 2;
       b.territory.forEach(t => {
         mask[t.id] = 2;
@@ -36,45 +33,16 @@ let mask = state.playerData[state.playerTurn].viewMask
     }
   })
 
-// console.log("mask",mask);
-
   state.shipArray.forEach(s => {
-
     if(s.owner === state.playerTurn){
-              // console.log("s",s);
       mask[s.hex.id] = 2;
       s.hex.within(s.view).filter(h => h.mag < boardSize) .forEach(n => { mask[n.id] = 2; })
     }
   })
 
-// console.log("mask",mask);
   for(let [id , tile] of state.tiles){
     if(tile.navBeacon && tile.navBeacon.owner === state.playerTurn){ mask[tile.hex.id] = 2; }
   }
 
   return mask;
 }
-//
-// function getUpdatedViewMaskold(player, baseArray, shipArray, tiles, mask){
-//   baseArray.forEach(b => {
-//     if(b.owner === player){
-//       mask[b.hex.id] = 2;
-//       b.territory.forEach(t => {
-//         mask[t.id] = 2;
-//       })
-//     }
-//   })
-//
-//   shipArray.forEach(s => {
-//     if(s.owner === player){
-//       mask[s.hex.id] = 2;
-//       s.hex.within(s.view).forEach(n => { mask[n.id] = 2; })
-//     }
-//   })
-//
-//   for(let [id , tile] of tiles){
-//     if(tile.navBeacon && tile.navBeacon.owner === player){ mask[tile.hex.id] = 2; }
-//   }
-//
-//   return mask;
-// }

@@ -1,10 +1,12 @@
 "use strict"
 
 /*global
+  Hex,
   state,
-   territoryState, shipState, getShipOnHex,
+   getShipOnHex, getUpdatedViewMask
    data
-   findPossibleMoves, findPossibleAttacks, applyDamage
+   findPossibleMoves, findPossibleAttacks, applyDamage,
+   makeMenu, onMenuItemClicked
 */
 
  /* eslint-disable no-unused-vars */
