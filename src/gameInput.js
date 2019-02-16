@@ -1,6 +1,6 @@
 "use strict";
 
-/*global
+/* global
 Vec, Hex, sel:true
 
 drawScreen, drawMenu, screenSettings, interactiveConsole
@@ -8,35 +8,36 @@ nextTurn,  onMenuItemClicked,  onTechHexClicked, onHexClicked,
 
 */
 
-let mouseDownLocation = new Vec(0,0);
-let mouseDownLocationABS = new Vec(0,0);
+/* eslint-disable no-unused-vars, one-var, */
+
+let mouseDownLocation = new Vec();
+let mouseDownLocationABS = new Vec();
 let fingerDistance = null;
 
-/* eslint-disable no-unused-vars */
 
-function getRealXYfromScreenXY(a) {
-  return a.scale(1 / screenSettings.scale).add(screenSettings.screenOffset);
- }
+function getRealXYfromScreenXY (pt) {
+  return pt.scale(1 / screenSettings.scale).add(screenSettings.screenOffset);
+}
 
-function scaleContext(s){
-  var c = document.getElementById("board").getContext("2d");
-  screenSettings.scale *= s;
-  c.scale(s,s);
-  let off = screenSettings.screenOffset.scale(1/s)
-  let dif = screenSettings.screenOffset.subtract(off)
+function scaleContext (sc) {
+  const ctx = document.getElementById("board").getContext("2d");
+  screenSettings.scale *= sc;
+  ctx.scale(sc, sc);
+  const off = screenSettings.screenOffset.scale(1 / sc);
+  const dif = screenSettings.screenOffset.subtract(off);
 
   screenSettings.screenOffset = off;
   translateContext(dif);
 }
 
-function translateContext(dif, ctx = "board") {
-  var c = document.getElementById(ctx).getContext("2d");
-  screenSettings.screenOffset = screenSettings.screenOffset.add(dif)
-  c.translate(-dif.x,-dif.y)
+function translateContext (dif, contextName = "board") {
+  const ctx = document.getElementById(contextName).getContext("2d");
+  screenSettings.screenOffset = screenSettings.screenOffset.add(dif);
+  ctx.translate(-dif.x, -dif.y)
 }
 
-function translateContextTo(loc, ctx = "board"){
-  var c = document.getElementById(ctx).getContext("2d");
+function translateContextTo(loc, ctx = "board") {
+  const c = document.getElementById(ctx).getContext("2d");
   let dif = loc.subtract(screenSettings.screenOffset).subtract(screenSettings.screenCenter);
   screenSettings.screenOffset = screenSettings.screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
@@ -86,7 +87,7 @@ function menuClick(event){
   }
   else if(event.offsetY < 90 && event.offsetY > 10){
     console.log(event.offsetX);
-  console.log((event.offsetX-110), (event.offsetX-110)/60 );
+    console.log((event.offsetX-110), (event.offsetX-110)/60 );
     let num = Math.ceil((event.offsetX-110)/60);
     console.log(num);
     if (num && sel.menu[num-1]){
@@ -103,14 +104,14 @@ function menuClick(event){
 }
 
 
-function boardClick(event){
+function boardClick(event) {
   let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)). scale(1/screenSettings.hexSize))
   onHexClicked(clickHex);
   drawScreen();
 }
 
 
-function touchstart(event){
+function touchstart(event) {
   let {pageX,pageY} = event.touches[0];
   mouseDownLocation = new Vec( pageX, pageY) ;
   document.getElementById("board").addEventListener("touchmove", touchdrag);

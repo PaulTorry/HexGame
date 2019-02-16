@@ -11,7 +11,7 @@ interactiveConsole
 
 function interactiveConsole (){
 
-  var ans = prompt("\n1. Save, \n2: Load, \n3: Cheat", "");
+  var ans = prompt("\n1. Save, \n2: Load, \n3: Cheat, \n4: Toggle Debug", "");
 
   if(ans === "1"){
     saveAs(prompt("Type Save Name"))
@@ -22,6 +22,10 @@ function interactiveConsole (){
   if(ans === "3"){
     state.playerData[0].money = 1000;
   }
+  if(ans === "4"){
+    debug = !debug;
+  }
+
   drawScreen();
 }
 

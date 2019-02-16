@@ -1,6 +1,6 @@
 "use strict"
 
-/*global     */
+/*global  boardSize   */
 
 /* eslint-disable no-unused-vars */
 

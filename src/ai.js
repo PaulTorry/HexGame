@@ -1,21 +1,16 @@
 "use strict"
 
 /*global
-  Hex,
-  state,
-   getShipOnHex, getUpdatedViewMask
-   data
-   findPossibleMoves, findPossibleAttacks, applyDamage,
-   makeMenu, onMenuItemClicked
+Hex, state, getShipOnHex, getUpdatedViewMask, data,
+findPossibleMoves, findPossibleAttacks, applyDamage,
+makeMenu, onMenuItemClicked
 */
-
- /* eslint-disable no-unused-vars */
+  
+/* eslint-disable no-unused-vars */
 
 function takeAIturn(){
   let ships = state.shipArray.filter(s => s.owner === state.playerTurn);
   let viewHexes = Object.entries(getUpdatedViewMask(state)).filter(([k,v]) => v > 1).map(([k,v]) => Hex.getFromID(k))
-  //console.log(viewHexes);
-//  console.log(viewHexes);
 
   ships.forEach( ship => {
     let possibleMoves = findPossibleMoves(ship.hex, ship.maxMove);
@@ -31,14 +26,13 @@ function takeAIturn(){
     }
   })
 
+  let tech = data.techs[Math.floor(Math.random() * data.techs.length)];
+  let player = state.playerData[state.playerTurn];
 
-    let tech = data.techs[Math.floor(Math.random() * data.techs.length)];
-    let player = state.playerData[state.playerTurn];
-
-    if(!player.tech[tech.tech] && player.money >= tech.cost && Math.random() > 0.5){
-      player.tech[tech.tech] = true;
-      player.money -= tech.cost;
-    }
+  if(!player.tech[tech.tech] && player.money >= tech.cost && Math.random() > 0.5){
+    player.tech[tech.tech] = true;
+    player.money -= tech.cost;
+  }
 
 
   viewHexes.forEach(hex => {

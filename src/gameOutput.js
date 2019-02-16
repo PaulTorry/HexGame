@@ -1,25 +1,19 @@
 "use strict"
 
-/* eslint-disable no-unused-vars */
-/*global
-screenSettings,
-Vec, Hex,
-drawScreen,  sel,
-state,
-getUpdatedViewMask,
 
-simpleShapes, Map,  makeNewViewMask, preturn,
+
+/*global
+screenSettings, Vec, Hex,
+drawScreen,  sel, state,
+getUpdatedViewMask,
+simpleShapes,
+ Map,  makeNewViewMask, preturn,
 curves, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
 data,
 
 */
 
-//    boardSize, shipArray, playerData, baseArray, tiles, playerTurn
-
-//   techTreeOffset, openTechTree, techs,
-
-// shipHulls
 
 /* eslint-disable no-unused-vars */
 

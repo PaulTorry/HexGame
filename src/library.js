@@ -3,9 +3,9 @@
 /* eslint-disable no-unused-vars */
 
 function json(a) { return JSON.stringify(a); }
-
+ 
 class Vec {
-  constructor(x = 0, y = 0){    this.x = x;    this.y = y;  }
+  constructor (x = 0, y = 0){    this.x = x;    this.y = y;  }
 
   add(b){    return new Vec (this.x + b.x, this.y + b.y)  }
   addXY(x, y){return new Vec (this.x + x, this.y + y)}

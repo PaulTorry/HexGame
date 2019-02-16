@@ -46,7 +46,7 @@ const data = {
 
 const navBeaconCost = 0.25;
 
-let debug = true;
+let debug = false;
 
 let screenSettings = {
   openTechTree : false,
