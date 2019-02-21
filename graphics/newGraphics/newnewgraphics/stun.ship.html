@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<!-- Created with Ai->Canvas Export Plug-In Version 1.3 (PC/64) -->
+<!-- By Mike Swanson (http://blog.mikeswanson.com/)             -->
+
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <title>mine ship</title>
+  <script>
+
+    function init() {
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      draw(ctx);
+    }
+
+    function draw(ctx) {
+
+      var gradient;
+
+      // layer1/mine ship
+      ctx.save();
+
+      // layer1/mine ship/Path
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(33.9, 33.6);
+      ctx.lineTo(38.6, 37.4);
+      ctx.lineTo(37.6, 31.4);
+      ctx.lineTo(37.6, 31.4);
+      ctx.lineTo(43.6, 20.6);
+      ctx.lineTo(49.0, 18.2);
+      ctx.lineTo(43.6, 16.3);
+      ctx.lineTo(37.5, 6.1);
+      ctx.lineTo(38.4, 0.0);
+      ctx.lineTo(33.5, 3.5);
+      ctx.lineTo(20.6, 3.7);
+      ctx.lineTo(16.0, 0.2);
+      ctx.lineTo(17.2, 6.3);
+      ctx.lineTo(11.3, 16.7);
+      ctx.lineTo(11.4, 21.0);
+      ctx.lineTo(17.6, 31.6);
+      ctx.lineTo(16.3, 37.1);
+      ctx.lineTo(21.3, 33.8);
+      ctx.lineTo(33.9, 33.6);
+      ctx.lineTo(33.9, 33.6);
+      ctx.closePath();
+      ctx.fillStyle = "rgb(215, 35, 53)";
+      ctx.fill();
+
+      // layer1/mine ship/Rectangle
+      ctx.beginPath();
+      ctx.moveTo(1.3, 21.6);
+      ctx.lineTo(12.3, 21.6);
+      ctx.bezierCurveTo(13.0, 21.6, 13.5, 21.1, 13.5, 20.4);
+      ctx.lineTo(13.5, 17.1);
+      ctx.bezierCurveTo(13.5, 16.4, 13.0, 15.8, 12.3, 15.8);
+      ctx.lineTo(1.2, 15.8);
+      ctx.bezierCurveTo(0.6, 15.8, -0.0, 16.4, 0.0, 17.1);
+      ctx.lineTo(0.0, 20.4);
+      ctx.bezierCurveTo(0.0, 21.1, 0.6, 21.6, 1.3, 21.6);
+      ctx.closePath();
+      ctx.save();
+      ctx.transform(0.957, 0.290, 0.290, -0.957, 265.1, -727.5);
+      gradient = ctx.createLinearGradient(-26.0, -784.3, -35.7, -794.0);
+      gradient.addColorStop(0.00, "rgb(130, 6, 20)");
+      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      ctx.restore();
+      ctx.restore();
+      ctx.restore();
+    }
+  </script>
+ </head>
+ <body onload="init()">
+   <canvas id="canvas" width="50" height="38"></canvas>
+ </body>
+</html>

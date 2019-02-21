@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<!-- Created with Ai->Canvas Export Plug-In Version 1.3 (PC/64) -->
+<!-- By Mike Swanson (http://blog.mikeswanson.com/)             -->
+
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <title>laser.ship</title>
+  <script>
+
+    function init() {
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      draw(ctx);
+    }
+
+    function draw(ctx) {
+
+      var gradient;
+
+      // layer1/lasership
+      ctx.save();
+
+      // layer1/lasership/Path
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(38.5, 30.1);
+      ctx.bezierCurveTo(38.5, 44.4, 12.6, 70.3, 12.6, 56.0);
+      ctx.bezierCurveTo(12.6, 28.0, 2.9, 35.9, 2.9, 30.1);
+      ctx.bezierCurveTo(2.9, 23.7, 12.6, 30.1, 12.6, 4.2);
+      ctx.bezierCurveTo(12.6, -10.1, 38.5, 15.8, 38.5, 30.1);
+      ctx.closePath();
+      ctx.fillStyle = "rgb(215, 35, 53)";
+      ctx.fill();
+
+      // layer1/lasership/Rectangle
+      ctx.beginPath();
+      ctx.moveTo(1.3, 42.1);
+      ctx.lineTo(12.3, 42.1);
+      ctx.bezierCurveTo(13.0, 42.1, 13.5, 41.5, 13.5, 40.8);
+      ctx.lineTo(13.5, 37.5);
+      ctx.bezierCurveTo(13.5, 36.8, 13.0, 36.3, 12.3, 36.3);
+      ctx.lineTo(1.2, 36.3);
+      ctx.bezierCurveTo(0.6, 36.3, -0.0, 36.8, 0.0, 37.5);
+      ctx.lineTo(0.0, 40.8);
+      ctx.bezierCurveTo(0.0, 41.5, 0.6, 42.1, 1.3, 42.1);
+      ctx.closePath();
+      ctx.save();
+      ctx.transform(0.957, 0.290, 0.290, -0.957, 465.4, -620.7);
+      gradient = ctx.createLinearGradient(-242.7, -759.7, -252.5, -769.4);
+      gradient.addColorStop(0.00, "rgb(129, 21, 24)");
+      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // layer1/lasership/Rectangle
+      ctx.restore();
+      ctx.beginPath();
+      ctx.moveTo(1.3, 23.9);
+      ctx.lineTo(12.3, 23.9);
+      ctx.bezierCurveTo(13.0, 23.9, 13.5, 23.3, 13.5, 22.6);
+      ctx.lineTo(13.5, 19.3);
+      ctx.bezierCurveTo(13.5, 18.6, 13.0, 18.1, 12.3, 18.1);
+      ctx.lineTo(1.2, 18.1);
+      ctx.bezierCurveTo(0.6, 18.1, -0.0, 18.6, 0.0, 19.3);
+      ctx.lineTo(0.0, 22.6);
+      ctx.bezierCurveTo(0.0, 23.3, 0.6, 23.9, 1.3, 23.9);
+      ctx.closePath();
+      ctx.save();
+      ctx.transform(0.957, 0.290, 0.290, -0.957, 465.4, -620.7);
+      gradient = ctx.createLinearGradient(-248.0, -742.3, -257.7, -752.0);
+      gradient.addColorStop(0.00, "rgb(129, 21, 24)");
+      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // layer1/lasership/Path
+      ctx.restore();
+      ctx.beginPath();
+      ctx.moveTo(32.7, 33.5);
+      ctx.lineTo(20.8, 30.7);
+      ctx.bezierCurveTo(20.2, 30.6, 20.2, 29.7, 20.8, 29.6);
+      ctx.lineTo(32.9, 26.6);
+      ctx.bezierCurveTo(33.3, 26.6, 33.7, 26.9, 33.7, 27.2);
+      ctx.lineTo(33.4, 32.9);
+      ctx.bezierCurveTo(33.4, 33.3, 33.1, 33.6, 32.7, 33.5);
+      ctx.closePath();
+      ctx.fillStyle = "rgb(158, 28, 35)";
+      ctx.fill();
+      ctx.restore();
+      ctx.restore();
+    }
+  </script>
+ </head>
+ <body onload="init()">
+   <canvas id="canvas" width="39" height="61"></canvas>
+ </body>
+</html>
