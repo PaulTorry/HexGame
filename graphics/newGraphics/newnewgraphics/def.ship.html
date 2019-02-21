@@ -41,7 +41,7 @@
       ctx.lineTo(17.5, 28.2);
       ctx.bezierCurveTo(18.3, 29.5, 19.8, 30.3, 21.3, 30.3);
       ctx.closePath();
-      ctx.fillStyle = "rgb(215, 35, 53)";
+      ctx.fillStyle ( "rgb(215, 35, 53)");
       ctx.fill();
 
       // layer1/defensive ship/Rectangle
@@ -58,10 +58,10 @@
       ctx.closePath();
       ctx.save();
       ctx.transform(0.957, 0.290, 0.290, -0.957, 262.3, -731.4);
-      gradient = ctx.createLinearGradient(-23.2, -783.7, -33.0, -793.4);
-      gradient.addColorStop(0.00, "rgb(130, 6, 20)");
-      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
-      ctx.fillStyle = gradient;
+      ctx.createLinearGradient(-23.2, -783.7, -33.0, -793.4);
+      ctx.addColorStop(0.00, "rgb(130, 6, 20)");
+      ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+      ctx.fillStyle()
       ctx.fill();
       ctx.restore();
       ctx.restore();
