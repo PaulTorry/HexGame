@@ -33,7 +33,7 @@
       ctx.bezierCurveTo(62.8, 8.1, 47.4, 0.0, 33.1, 0.0);
       ctx.bezierCurveTo(18.8, -0.0, 11.0, 8.1, 11.0, 18.2);
       ctx.closePath();
-      ctx.fillStyle = "rgb(215, 35, 53)";
+      ctx.fillStyle ("rgb(215, 35, 53)");
       ctx.fill();
 
       // layer1/repairship/Rectangle
@@ -50,10 +50,10 @@
       ctx.closePath();
       ctx.save();
       ctx.transform(0.957, 0.290, 0.290, -0.957, -74.5, -728.6);
-      gradient = ctx.createLinearGradient(299.2, -686.2, 289.5, -696.0);
-      gradient.addColorStop(0.00, "rgb(129, 21, 24)");
-      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
-      ctx.fillStyle = gradient;
+      ctx.createLinearGradient(299.2, -686.2, 289.5, -696.0);
+      ctx.addColorStop(0.00, "rgb(129, 21, 24)");
+      ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+      ctx.fillStyle();
       ctx.fill();
 
       // layer1/repairship/Path
@@ -64,11 +64,11 @@
       ctx.bezierCurveTo(60.6, 25.0, 50.7, 33.3, 40.9, 33.3);
       ctx.lineTo(40.9, 3.2);
       ctx.closePath();
-      gradient = ctx.createLinearGradient(60.6, 18.3, 40.9, 18.3);
-      gradient.addColorStop(0.00, "rgb(129, 21, 24)");
-      gradient.addColorStop(0.42, "rgba(172, 28, 39, 0.50)");
-      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
-      ctx.fillStyle = gradient;
+      ctx.createLinearGradient(60.6, 18.3, 40.9, 18.3);
+      ctx.addColorStop(0.00, "rgb(129, 21, 24)");
+      ctx.addColorStop(0.42, "rgba(172, 28, 39, 0.50)");
+      ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+      ctx.fillStyle ();
       ctx.fill();
       ctx.restore();
       ctx.restore();

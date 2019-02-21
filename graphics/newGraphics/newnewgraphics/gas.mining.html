@@ -19,7 +19,7 @@
 
     function draw(ctx) {
 
-      var alpha = ctx.globalAlpha;
+      //var alpha = ctx.globalAlpha;
       var gradient;
 
       // layer1/Ellipse
@@ -31,17 +31,17 @@
       ctx.bezierCurveTo(15.2, 17.7, 32.3, 0.5, 53.5, 0.5);
       ctx.bezierCurveTo(74.7, 0.5, 91.8, 17.7, 91.8, 38.8);
       ctx.closePath();
-      gradient = ctx.createRadialGradient(53.5, 38.8, 0.0, 53.5, 38.8, 38.3);
-      gradient.addColorStop(0.67, "rgba(215, 35, 53, 0.00)");
-      gradient.addColorStop(0.90, "rgba(215, 35, 53, 0.15)");
-      gradient.addColorStop(1.00, "rgba(215, 35, 53, 0.30)");
-      ctx.fillStyle = gradient;
+      ctx.createRadialGradient(53.5, 38.8, 0.0, 53.5, 38.8, 38.3);
+      ctx.addColorStop(0.67, "rgba(215, 35, 53, 0.00)");
+      ctx.addColorStop(0.90, "rgba(215, 35, 53, 0.15)");
+      ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.30)");
+      ctx.fillStyle();
       ctx.fill();
-      ctx.strokeStyle = "rgb(215, 35, 53)";
+      ctx.strokeStyle ("rgb(215, 35, 53)");
       ctx.stroke();
 
       // layer1/Path
-      ctx.globalAlpha = alpha * 0.65;
+      //ctx.globalAlpha = alpha * 0.65;
       ctx.beginPath();
       ctx.moveTo(13.6, 39.6);
       ctx.bezierCurveTo(1.9, 50.8, 0.0, 56.2, 1.4, 59.8);
@@ -50,7 +50,7 @@
       ctx.bezierCurveTo(68.6, 50.2, 79.5, 43.8, 87.5, 37.3);
       ctx.bezierCurveTo(98.6, 28.3, 103.2, 20.6, 101.6, 16.1);
       ctx.bezierCurveTo(100.3, 12.1, 94.9, 9.6, 81.1, 10.9);
-      ctx.lineWidth = 2.0;
+      ctx.lineWidth (2.0);
       ctx.stroke();
       ctx.restore();
     }
