@@ -19,7 +19,7 @@
 
     function draw(ctx) {
 
-      var alpha = ctx.globalAlpha;
+      //var alpha = ctx.globalAlpha;
       var gradient;
 
       // layer1/star
@@ -53,7 +53,6 @@
       ctx.fill();
 
       // layer1/star/Ellipse
-      ctx.globalAlpha = alpha * 0.75;
       ctx.beginPath();
       ctx.moveTo(115.1, 67.3);
       ctx.bezierCurveTo(115.1, 93.8, 93.6, 115.3, 67.1, 115.3);
@@ -62,9 +61,9 @@
       ctx.bezierCurveTo(93.6, 19.3, 115.1, 40.8, 115.1, 67.3);
       ctx.closePath();
       ctx.createRadialGradient(67.1, 67.3, 0.0, 67.1, 67.3, 48.0);
-      ctx.addColorStop(0.28, "rgb(254, 240, 173)");
-      ctx.addColorStop(0.74, "rgb(251, 194, 102)");
-      ctx.addColorStop(1.00, "rgb(247, 148, 32)");
+      ctx.addColorStop(0.28, "rgba(254, 240, 173, 0.75)");
+      ctx.addColorStop(0.74, "rgba(251, 194, 102, 0.75)");
+      ctx.addColorStop(1.00, "rgba(247, 148, 32, 0.75)");
       ctx.fillStyle ();
       ctx.fill();
       ctx.restore();

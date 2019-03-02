@@ -19,15 +19,13 @@
 
     function draw(ctx) {
 
-      var alpha = ctx.globalAlpha;
+      //var alpha = ctx.globalAlpha;
 
       // layer1/hydrogen
       ctx.save();
-      ctx.globalAlpha = alpha * 0.30;
 
       // layer1/hydrogen/Path
       ctx.save();
-      ctx.globalAlpha = alpha * 1.00;
       ctx.beginPath();
       ctx.moveTo(2.4, 29.3);
       ctx.bezierCurveTo(1.3, 27.1, 0.4, 24.4, 0.1, 21.6);
@@ -109,7 +107,7 @@
       ctx.bezierCurveTo(10.3, 38.5, 8.3, 37.0, 6.6, 35.3);
       ctx.bezierCurveTo(4.9, 33.6, 3.5, 31.5, 2.4, 29.3);
       ctx.closePath();
-      ctx.fillStyle ("rgb(159, 215, 205)");
+      ctx.fillStyle ("rgba(159, 215, 205, 0.3)");
       ctx.fill();
       ctx.restore();
       ctx.restore();

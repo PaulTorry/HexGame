@@ -19,7 +19,7 @@
 
     function draw(ctx) {
 
-      var alpha = ctx.globalAlpha;
+      //var alpha = ctx.globalAlpha;
       var gradient;
 
       // layer1/white dwarf
@@ -53,7 +53,6 @@
       ctx.fill();
 
       // layer1/white dwarf/Ellipse
-      ctx.globalAlpha = alpha * 0.75;
       ctx.beginPath();
       ctx.moveTo(57.6, 33.7);
       ctx.bezierCurveTo(57.6, 46.9, 46.8, 57.7, 33.6, 57.7);
@@ -62,9 +61,9 @@
       ctx.bezierCurveTo(46.8, 9.6, 57.6, 20.4, 57.6, 33.7);
       ctx.closePath();
       ctx.createRadialGradient(33.6, 33.7, 0.0, 33.6, 33.7, 24.0);
-      ctx.addColorStop(0.28, "rgb(255, 255, 255)");
-      ctx.addColorStop(0.74, "rgb(197, 205, 207)");
-      ctx.addColorStop(1.00, "rgb(139, 156, 160)");
+      ctx.addColorStop(0.28, "rgba(255, 255, 255, 0.75)");
+      ctx.addColorStop(0.74, "rgba(197, 205, 207, 0.75)");
+      ctx.addColorStop(1.00, "rgba(139, 156, 160, 0.75)");
       ctx.fillStyle ();
       ctx.fill();
       ctx.restore();
