@@ -16,23 +16,30 @@ const data = {
 
 
   shipHulls : {
-    scoutShip:{type:'scoutShip',  hull:1, shield:2, maxMove:3, attack:2, retaliate:1, range:1, view:2},
-    basicShip:{type:'basicShip',  hull:2, shield:3, maxMove:2, attack:2, retaliate:2, range:1, view:1},
-    assaultShip:{type:'assaultShip',  hull:4, shield:3, maxMove:2, attack:5, retaliate:3, range:1, view:1},
-    mineShip:{type:'mineShip',  hull:4, shield:4, maxMove:1, attack:2, retaliate:5, range:1, view:1},
-    missileShip:{type:'missileShip',  hull:2, shield:2, maxMove:3, attack:3, retaliate:2, range:3, view:1}
+    scoutShip:{type:'scoutShip',  hull:2, shield:3, maxMove:4, attack:1, retaliate:0, range:1, defence:0, view:2},
+    basicFrigate:{type:'basicFrigate',  hull:3, shield:7, maxMove:1, attack:5, retaliate:3, range:1, defence:2, view:1},
+    battleship:{type:'battleship',  hull:5, shield:10, maxMove:1, attack:8, retaliate:5, range:1, defence:2, view:1}, 
+    armouredDestroyer:{type:'armouredDestroyer',  hull:5, shield:10, maxMove:1, attack:1, retaliate:10, range:1, defence:3, view:1},
+    titanShip:{type:'titanShip',  hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
+    fastFrigate:{type:'fastFrigate',  hull:3, shield:7, maxMove:2, attack:8, retaliate:3, range:1, defence:1, view:1},
+    cruiser:{type:'cruiser',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
+    missileFrigate:{type:'missileFrigate',  hull:3, shield:7, maxMove:1, attack:5, retaliate:3, range:2, defence:1, view:1},
+    missileDestroyer:{type:'missileDestroyer',  hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
   },
 
   thingList : [
-    {thing: 'navBeacon',tech:['navBeacons'], price: 2, territoryState: 1,  shipState: 'ownPresent',   terrain: ['space', 'asteroids', 'nebula', ] } ,
-    {thing: 'asteroidMining',tech:['asteroidMining'], price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['asteroids', ] } ,
-    {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresentUnmoved',   terrain: ['planet', ] } ,
-    {thing: 'scoutShip', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'basicShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'assaultShip', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [], tech:['heavyWeapons'] } ,
-    {thing: 'mineShip',tech:['mines'], price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] },
-    {thing: 'missileShip',tech:['missiles'], price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] },
-    {thing: 'destroy', price: 1, territoryState: 1, shipState: 'ownPresent', terrain: [], thingPresent: ["navBeacon"] },
+    {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy',   terrain: ['space', 'asteroids', 'nebula', ] } ,
+    {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['asteroids', ] } ,
+    {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
+    {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'basicFrigate', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'battleship', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'armouredDestroyer', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'titanShip', price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'fastFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'cruiser', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'missileFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
   ],
 
   terrainCostNew : {

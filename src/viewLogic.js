@@ -22,7 +22,7 @@ function removeActiveViews(viewMaskP){
 
 function getUpdatedViewMask(state){
 
-let mask = state.playerData[state.playerTurn].viewMask
+  let mask = state.playerData[state.playerTurn].viewMask
 
   state.baseArray.forEach(b => {
     if(b.owner === state.playerTurn){
@@ -36,7 +36,7 @@ let mask = state.playerData[state.playerTurn].viewMask
   state.shipArray.forEach(s => {
     if(s.owner === state.playerTurn){
       mask[s.hex.id] = 2;
-      s.hex.within(s.view).filter(h => h.mag < boardSize) .forEach(n => { mask[n.id] = 2; })
+      s.hex.within(s.view).filter(h => h.mag <= boardSize) .forEach(n => { mask[n.id] = 2; })
     }
   })
 

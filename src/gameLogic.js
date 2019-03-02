@@ -120,7 +120,7 @@ function onMenuItemClicked(item, hex = sel.hex){
     }
     else {state.baseArray.push(
       {type:"planet", owner:state.playerTurn, hex: tile.hex,
-      territory:tile.hex.neighbours.filter(t => territoryState(t) === 1)}
+        territory:tile.hex.neighbours.filter(t => territoryState(t) === 1)}
     )}
   }
 
@@ -131,12 +131,13 @@ function onMenuItemClicked(item, hex = sel.hex){
   if(item === "destroy"){
     tile.navBeacon = null;
   }
+  console.log("gamelogic in shiphulls", item, data.shipHulls)
+  let inhulle = data.shipHulls[item];
+  console.log(inhulle);
+  if(data.shipHulls[item]){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
 
-  if(item === "scoutShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
-  if(item === "assaultShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
-  if(item === "basicShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
-  if(item === "mineShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
-  if(item === "missileShip"){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
+
+
 
 
   sel = {state:0, attacks:[], menu:[], moves:[]}

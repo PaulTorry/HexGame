@@ -3,14 +3,14 @@
 /* global Hex, Map, Vec, makeNewViewMask     */
 /* eslint-disable no-unused-vars */
 
-const boardSize = 8;
+const boardSize = 9;
 let preturn = true;
 
 let state = {};
 
 let sel = {state:0, attacks:[], menu:[], moves:[]}
 
-state = setup(6, boardSize,2)
+state = setup(6, boardSize, 2)
 
 function setup(numPlayers, boardSize = 8, numHumans = numPlayers){
   let tiles = new Map();
@@ -29,14 +29,17 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers){
   }
 
   for(let i = 0; i < numPlayers; i++){
-    let playerType = i<numHumans ? "human" : "AI";
+    let playerType = i%(numPlayers/numHumans) ? "AI" : "human";
+    console.log(playerType, i);
+    //  let playerType = i<numHumans ? "human" : "AI";
     let hexloc = Hex.getUnitHexFromXY(   new Vec(
       Math.sin(2*Math.PI*i/numPlayers), Math.cos(2*Math.PI*i/numPlayers )
-    ).scale(boardSize/1.2)  )
+    ).scale(boardSize/1)  )
 
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
     playerData.push({type: playerType, money:5, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
-    shipArray.push({"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1, view:2, "maxMove":4,"moved":false,"attacked":false, hex:hexloc,"owner":i, range:1})
+    shipArray.push({"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,
+      view:2, "maxMove":4,"moved":false,"attacked":false, hex:hexloc,"owner":i, range:1})
     tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null});
   }
 
