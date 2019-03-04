@@ -59,8 +59,8 @@ function removeMousemove(event){
 
 function mouseWheel(event){
   event.preventDefault();
-  if (event.deltaY>0){    scaleContext(1.1);  }
-  if (event.deltaY<0){    scaleContext(1/1.1);  }
+  if (event.deltaY>0){    scaleContext(1/1.1);  }
+  if (event.deltaY<0){    scaleContext(1.1);  }
   drawScreen();
 }
 

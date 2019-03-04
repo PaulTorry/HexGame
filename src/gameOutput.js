@@ -236,7 +236,7 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
 }
 
 
-function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "Georgia"){
+function drawText(c, text, center = new Vec(0,0), size=28, color="blue", font= "Helvetica"){
   let {x,y} = center;
   c.font = `${size}px ${font}`;
   c.fillStyle = color;
