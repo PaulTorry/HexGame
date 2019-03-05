@@ -22,25 +22,29 @@ data,
 
 
 
-function getPlayerColour(player = state.playerTurn, opacity = 1, dark = false){
+function getPlayerColour(player = state.playerTurn, opacity = 1, mid = false, dark = false){
   const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
-  const playerColoursNew = [    [0,154,129], [216,36,53], [147,38,143], [0,153,188],
+  const playerColoursNew = [    [33,163,79], [216,36,53], [124,0,255], [0,131,219],
   [177,0,95],[158,170,30], [216,130,25]];
-  const playerColoursDark = [   [0,95,78],[130,5,20],[106,9,102],[0,90,112],[122,0,62],[101,112,8],[142,85,1]];
+  const playerColoursMid = [    [3,124,52], [158,28,35], [95,0,186], [0,113,170],
+  [139,0,73],[126,137,20], [172,104,14]];
+  const playerColoursDark = [   [0,110,43],[130,6,20],[19,55,-70],[0,80,124],[122,0,62],[101,112,8],[142,85,1]];
 
   let [r,g,b] = playerColoursNew[player];
+  if (mid) [r,g,b] = playerColoursMid[player];
   if (dark) [r,g,b] = playerColoursDark[player];
   return `rgba(${r},${g},${b},${opacity})`
 }
 
 function mapColours(string, player, transparency = 1){
   if(string === "rgb(130, 6, 20)")return getPlayerColour(player, transparency , 1)
+  else if (string === "rgb(158, 28, 35)") return getPlayerColour(player, transparency, 1);
   else if (string === "rgb(215, 35, 53)") return getPlayerColour(player, transparency);
   else if (string === "rgba(215, 35, 53, 0.00)") return getPlayerColour(player, 0);
   else return string;
 }
 
-const selectedColour = ["white", "red", "blue", "orange"];
+const selectedColour = ["white", "purple", "blue", "orange"];
 
 
 function getXYfromHex(hexCoord, size=screenSettings.hexSize){return Hex.getXYfromUnitHex(hexCoord).scale(size)}
@@ -119,10 +123,10 @@ function drawScreen() {
 
   if(sel.hex){
     for (let move of sel.moves){
-      drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "green");
+      drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
     }
     for (let attack of sel.attacks){
-      drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), ss.hexSize -5, 3 , "purple");
+      drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), ss.hexSize -5, 3 , "red");
     }
     drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(sel.hex), ss.hexSize -5, 3 , selectedColour[sel.state]);
   }
