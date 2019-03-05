@@ -100,13 +100,13 @@ const curves = {
   scoutShip:scoutShip,
 
   basicFrigate: basicFrigate,
-  battleship: planetRing,
+  battleship: battleship,
   armouredDestroyer: armouredDestroyer,
   titanShip: titanShip,
   cruiser: cruiser,
-  fastFrigate: defensive,
+  fastFrigate: fastFrigate,
   missileFrigate: missileFrigate,
-  missileDestroyer: repairShip,
+  missileDestroyer: missileDestroyer,
 
   asteroids:asteroids,
   planet:planet,
