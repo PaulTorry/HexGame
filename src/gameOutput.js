@@ -37,7 +37,7 @@ function getPlayerColour(player = state.playerTurn, opacity = 1, mid = false, da
 }
 
 function mapColours(string, player, transparency = 1){
-  if(string === "rgb(130, 6, 20)")return getPlayerColour(player, transparency , 1)
+  if(string === "rgb(130, 6, 20)")return getPlayerColour(player, transparency , 1) // MAYBE 0,1)
   else if (string === "rgb(158, 28, 35)") return getPlayerColour(player, transparency, 1);
   else if (string === "rgb(215, 35, 53)") return getPlayerColour(player, transparency);
   else if (string === "rgba(215, 35, 53, 0.00)") return getPlayerColour(player, 0);
