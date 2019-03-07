@@ -136,7 +136,7 @@ function drawScreen() {
 function drawMenu(){
   let ss = screenSettings;
   var c = document.getElementById("menu").getContext("2d");
-  document.getElementById("menu").height = 100 + 300 * ss.openTechTree;
+  document.getElementById("menu").height = 100 + 700 * ss.openTechTree;
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
   if(sel.menu && sel.menu.length > 0){
