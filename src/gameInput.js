@@ -23,10 +23,17 @@ function scaleContext (sc) {
   const ctx = document.getElementById("board").getContext("2d");
   screenSettings.scale *= sc;
   ctx.scale(sc, sc);
-  const off = screenSettings.screenOffset.scale(1 / sc);
-  const dif = screenSettings.screenOffset.subtract(off);
+  // const off = screenSettings.screenOffset.scale(1 / sc);
+  // const dif = screenSettings.screenOffset.subtract(off);
 
+  var off = screenSettings.screenOffset.scale(1 / sc);
+  var dif = screenSettings.screenOffset.subtract(off);
+
+ console.log(screenSettings.screenOffset, 1 / sc);
+ console.log(off);
+ console.log(dif);
   screenSettings.screenOffset = off;
+   console.log(screenSettings.screenOffset);
   translateContext(dif);
 }
 
@@ -105,7 +112,9 @@ function menuClick(event){
 
 
 function boardClick(event) {
-  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY)). scale(1/screenSettings.hexSize))
+  let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY))
+    .scale(1/screenSettings.hexSize)
+  )
   onHexClicked(clickHex);
   drawScreen();
 }

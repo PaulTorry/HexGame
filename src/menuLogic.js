@@ -36,9 +36,11 @@ function makeMenu(hex){
 
     if(pos.shipState === "noEnemy" &&  getShipOnHex(hex) && shipState(hex) < 1) return false;
 
-    if(pos.tech && pos.tech.length > 0){
-      for (let t of pos.tech){ if(!state.playerData[state.playerTurn].tech[t]) return false; }
-    }
+    if(pos.tech && !state.playerData[state.playerTurn].tech[pos.tech]) return false;
+
+    // if(pos.tech && pos.tech.length > 0){
+    //   for (let t of pos.tech){ if(!state.playerData[state.playerTurn].tech[t]) return false; }
+    // }
 
     if(pos.thingPresent && pos.thingPresent.find(t => t === "navBeacon") && !tile.navBeacon) return false;
 
