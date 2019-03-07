@@ -165,7 +165,7 @@ function drawMenu(){
 
   if (screenSettings.openTechTree){
     data.techs.forEach((t)=>{
-      let center = getXYfromHex(t.hex, 50).add(ss.techTreeOffset);
+      let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
       let colour = "red";
       if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
       drawPoly(c, simpleShapes["hexVert"], center, 50, 1,  "white", "#120F22"  );
