@@ -3,6 +3,8 @@
 /* global
 Vec, Hex, sel:true
 
+boardSize,
+
 drawScreen, drawMenu, screenSettings, interactiveConsole
 nextTurn,  onMenuItemClicked,  onTechHexClicked, onHexClicked,
 
@@ -20,27 +22,32 @@ function getRealXYfromScreenXY (pt) {
 }
 
 function scaleContext (sc) {
+  //console.log(sc,screenSettings.scale);
   const ctx = document.getElementById("board").getContext("2d");
+
+  if (screenSettings.scale * sc < 0.2) sc = 1;
+  if (screenSettings.scale * sc > 2) sc = 1;
+
+  const viewCentre = getRealXYfromScreenXY(new Vec(400,400));
   screenSettings.scale *= sc;
   ctx.scale(sc, sc);
-  // const off = screenSettings.screenOffset.scale(1 / sc);
-  // const dif = screenSettings.screenOffset.subtract(off);
+  screenSettings.screenOffset = screenSettings.screenOffset.scale(1 / sc);
+  const newViewCentre = getRealXYfromScreenXY(new Vec(400,400));
 
-  var off = screenSettings.screenOffset.scale(1 / sc);
-  var dif = screenSettings.screenOffset.subtract(off);
-
- console.log(screenSettings.screenOffset, 1 / sc);
- console.log(off);
- console.log(dif);
-  screenSettings.screenOffset = off;
-   console.log(screenSettings.screenOffset);
-  translateContext(dif);
+  translateContext((newViewCentre.subtract(viewCentre)).scale(-1));///screenSettings.scale));
 }
 
 function translateContext (dif, contextName = "board") {
   const ctx = document.getElementById(contextName).getContext("2d");
+
+  const viewCentre = getRealXYfromScreenXY(new Vec(400,400));
   screenSettings.screenOffset = screenSettings.screenOffset.add(dif);
   ctx.translate(-dif.x, -dif.y)
+  const newViewCentre = getRealXYfromScreenXY(new Vec(400,400));
+
+  if (newViewCentre.mag >= screenSettings.hexSize*boardSize*1.5+50 && newViewCentre.mag > viewCentre.mag){
+    translateContext(dif.scale(-1), contextName);
+  }
 }
 
 function translateContextTo(loc, ctx = "board") {
