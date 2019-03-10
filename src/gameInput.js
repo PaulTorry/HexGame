@@ -99,7 +99,7 @@ function menuClick(event){
   else if (event.offsetY < 90 && event.offsetX > 710) {
     screenSettings.openTechTree = !screenSettings.openTechTree;
   }
-  else if(event.offsetY < 90 && event.offsetY > 10){
+  else if(event.offsetY < 90 && event.offsetY > 10 && !screenSettings.openTechTree){
     console.log(event.offsetX);
     console.log((event.offsetX-110), (event.offsetX-110)/60 );
     let num = Math.ceil((event.offsetX-110)/60);
@@ -110,7 +110,7 @@ function menuClick(event){
     }
   }
   else{
-    let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/50))
+    let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/35))
     onTechHexClicked(clickHex);
   }
   drawScreen();

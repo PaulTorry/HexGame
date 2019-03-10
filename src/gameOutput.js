@@ -25,9 +25,9 @@ data,
 function getPlayerColour(player = state.playerTurn, opacity = 1, mid = false, dark = false){
   const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
   const playerColoursNew = [    [33,163,79], [216,36,53], [124,0,255], [0,131,219],
-  [177,0,95],[158,170,30], [216,130,25]];
+    [177,0,95],[158,170,30], [216,130,25]];
   const playerColoursMid = [    [3,124,52], [158,28,35], [95,0,186], [0,113,170],
-  [139,0,73],[126,137,20], [172,104,14]];
+    [139,0,73],[126,137,20], [172,104,14]];
   const playerColoursDark = [   [0,110,43],[130,6,20],[19,55,-70],[0,80,124],[122,0,62],[101,112,8],[142,85,1]];
 
   let [r,g,b] = playerColoursNew[player];
@@ -134,13 +134,15 @@ function drawScreen() {
 }
 
 function drawMenu(){
+  let arrows = [];
   let ss = screenSettings;
   var c = document.getElementById("menu").getContext("2d");
   document.getElementById("menu").height = 100 + 700 * ss.openTechTree;
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
-  if(sel.menu && sel.menu.length > 0){
-    let menu = sel.menu
+
+  if(sel.menu && sel.menu.length > 0 && !screenSettings.openTechTree){
+    let menu = sel.menu;
     for(let i=0; i<menu.length; i++){
       c.strokeRect (110+60*i, 10, 60, 80);
 
@@ -165,12 +167,23 @@ function drawMenu(){
 
   if (screenSettings.openTechTree){
     data.techs.forEach((t)=>{
+      if (t.requires){
+        t.requires.forEach(r => {
+          arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
+        })
+      }
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
       let colour = "red";
+      let colNum = t.colour;
+      let col = `rgb(${colNum[0]},${colNum[1]},${colNum[2]})`
       if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
-      drawPoly(c, simpleShapes["hexVert"], center, 50, 1,  "white", "#120F22"  );
+      drawPoly(c, simpleShapes["hexVert"], center, 45, 10,  col, "#120F22"  );
       drawText(c, `${t.tech}`, center.add(new Vec(-30,0)) , 14, colour )
       drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
+    })
+
+    arrows.forEach(a => {
+      drawArrow(c, getXYfromHex(a[1],35).add(ss.techTreeOffset),getXYfromHex(a[0],35).add(ss.techTreeOffset));
     })
   }
 }
@@ -192,6 +205,27 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   c.beginPath();c.closePath();   // Hack to stop drawing after clear
 }
 
+function drawArrow(c, start, end, width, colour){
+//  console.log(start,end);
+  let midpoint = start.add(end).scale(0.5);
+
+  c.lineWidth = 6;
+  c.moveTo(start.x, start.y);
+  c.beginPath();
+  c.lineTo(midpoint.x, midpoint.y);
+  c.lineTo(start.x, start.y);
+  c.closePath();
+  c.stroke();
+  c.beginPath();c.closePath();
+  c.lineWidth = 3;
+  c.moveTo(end.x, end.y);
+  c.beginPath();
+  c.lineTo(midpoint.x, midpoint.y);
+  c.lineTo(end.x, end.y);
+  c.closePath();
+  c.stroke();
+  c.beginPath();c.closePath();
+}
 
 function drawFromData(c, data, xx=0, yy=0, player, transparency){
   let add = (a, x, y) => a.map((v,i) => i%2 ? v+y  : v+x)

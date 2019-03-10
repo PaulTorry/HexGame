@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 
 function json(a) { return JSON.stringify(a); }
- 
+
 class Vec {
   constructor (x = 0, y = 0){    this.x = x;    this.y = y;  }
 
@@ -93,7 +93,7 @@ class Hex{
   static getXYfromUnitHex(hexCoord){
     const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
     return hexVec.p.scale(hexCoord.p).add(hexVec.q.scale(hexCoord.q))
-    .add(hexVec.r.scale(hexCoord.r))
+      .add(hexVec.r.scale(hexCoord.r))
   }
 
   static getUnitHexFromXY(xy){
@@ -121,17 +121,17 @@ class Hex{
 function randomInt(num) {return Math.floor(Math.random() * num);}
 
 var clone = function() {
-    var newObj = (this instanceof Array) ? [] : {};
-    for (var i in this) {
-        if (this[i] && typeof this[i] === "object") {
-            newObj[i] = this[i].clone();
-        }
-        else
-        {
-            newObj[i] = this[i];
-        }
+  var newObj = (this instanceof Array) ? [] : {};
+  for (var i in this) {
+    if (this[i] && typeof this[i] === "object") {
+      newObj[i] = this[i].clone();
     }
-    return newObj;
+    else
+    {
+      newObj[i] = this[i];
+    }
+  }
+  return newObj;
 };
 
 Object.defineProperty( Object.prototype, "clone", {value: clone, enumerable: false});

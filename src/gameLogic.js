@@ -149,15 +149,17 @@ function onTechHexClicked (hex){
   let player = state.playerData[state.playerTurn];
 
   if(!player.tech[tech.tech] && player.money >= tech.cost){
-    player.tech[tech.tech] = true;
-    player.money -= tech.cost;
+    if(!tech.requires || tech.requires.filter(r => !player.tech[r]).length === 0){
+      player.tech[tech.tech] = true;
+      player.money -= tech.cost;
+    }
   }
 }
 
 
 function applyDamage(attacker, ship, attacking = true){
   let {type, hull, shield} = ship;
-  let dammage = getWeaponPower(attacker, attacking);
+  let dammage = Math.max(getWeaponPower(attacker, attacking) -data.shipHulls[type].defence,0);
   let range = attacker.hex.distance(ship.hex);
   if ( attacker.range < range ){ dammage = 0}
 

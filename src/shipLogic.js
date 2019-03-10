@@ -48,27 +48,27 @@ function findPossibleMoves(center, moveLeft = 2){
     visited[current.loc.id] = current;
 
     newfrontier = current.loc.neighbours
-    .filter(n => n.mag <= boardSize)
-    .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:current.loc}})
-    .filter(({loc:hex, cost, from} ) => {
-      return hex.mag <= boardSize && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0
-    })
-    .concat(newfrontier)
-    .sort((a,b) => a.cost - b.cost)
+      .filter(n => n.mag <= boardSize)
+      .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:current.loc}})
+      .filter(({loc:hex, cost, from} ) => {
+        return hex.mag <= boardSize && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0
+      })
+      .concat(newfrontier)
+      .sort((a,b) => a.cost - b.cost)
 
     return findPossibleMovesFunctional(newfrontier, visited, terrainFunc)
   }
 
   let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
-  center.neighbours
-  .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 20)
-  .map(n => {return{loc:n, cost:0, from:center}})
-  .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
-  ,terrainFunc
-);
-return Object.values(temp).map(v => v.loc).filter(hex => {
-  return  (hex.mag <= boardSize) && !getShipOnHex(hex)
-});
+    center.neighbours
+      .filter(n => n.mag <= boardSize && terrainFunc(center.id, n.id) < 20)
+      .map(n => {return{loc:n, cost:0, from:center}})
+      .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
+    ,terrainFunc
+  );
+  return Object.values(temp).map(v => v.loc).filter(hex => {
+    return  (hex.mag <= boardSize) && !getShipOnHex(hex)
+  });
 }
 
 
