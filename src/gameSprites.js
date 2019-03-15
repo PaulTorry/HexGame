@@ -92,6 +92,7 @@ const cruiser = [ ["of",-25,-25],
 const repairShip = [ ["of",0,0],
 ["sv"],["sv"],["bp"],["mt",11,18.2],["ct",11,28.2,18,36.3,32.3,36.3],["ct",46.7,36.3,62.8,28.2,62.8,18.2],["ct",62.8,8.1,47.4,0,33.1,0],["ct",18.8,0,11,8.1,11,18.2],["cp"],["fs","rgb(215, 35, 53)"],["fl"],["bp"],["mt",1.3,21.1],["lt",12.3,21.1],["ct",13,21.1,13.5,20.5,13.5,19.8],["lt",13.5,16.5],["ct",13.5,15.8,13,15.3,12.3,15.3],["lt",1.2,15.3],["ct",0.6,15.3,0,15.8,0,16.5],["lt",0,19.8],["ct",0,20.5,0.6,21.1,1.3,21.1],["cp"],["sv"],["xlg",12.83639999999997,14.861400000000003,0.7115000000000009,21.42700000000002],["xcs",0,"rgb(130, 6, 20)"],["xcs",1,"rgba(215, 35, 53, 0.00)"],["fs"],["fl"],["re"],["re"],["re"]
 ];
+
 const planetDefShield = [
   ["sv"],["bp"],["mt",93.9,110.5],["lt",31.1,109.4],["lt",0.6,54.4],["lt",33,0.5],["lt",95.8,1.6],["lt",126.3,56.6],["lt",93.9,110.5],["cp"],["sv"],["xrg",63.45660000000001,55.512699999999995,0,63.45660000000001,55.512699999999995,59.3],["xcs",0.57,"rgba(0, 0, 0, 0.00)"],["xcs",0.81,"rgba(19, 84, 112, 0.33)"],["xcs",1,"rgba(39, 169, 225, 0.65)"],["fs"],["fl"],["ss","rgb(39, 169, 225)"],["st"],["re"],["re"]
 ];
@@ -107,6 +108,13 @@ const curves = {
   fastFrigate: fastFrigate,
   missileFrigate: missileFrigate,
   missileDestroyer: missileDestroyer,
+
+  whiteDwarf:whiteDwarf,
+  star:star,
+  hydrogen:hydrogen,
+  solarSail:solarSail,
+  planetDefShield:planetDefShield,
+  gasMining:gasMining,
 
   asteroids:asteroids,
   planet:planet,

@@ -83,6 +83,7 @@ const data = {
     gasGiant: { moveCost:1, techNeeded: "gasGiantMove", },
     planet: { moveCost:1, },
     nebula: { moveCost:5, },
+    whiteDwarf:{ moveCost:5, },
   },
 }
 
