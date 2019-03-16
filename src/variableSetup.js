@@ -39,13 +39,13 @@ const data = {
     {tech:'research cost', colour:[51,49,50], hex:new Hex(3,3), cost:99999, }, //reduce research costs **not availiable yet**
     {tech:'asteroid belt', colour:[116,116,158], hex:new Hex(1,5), cost:4, },  //fast frigate
     {tech:'asteroid move', colour:[69,63,96], requires:['asteroid belt'], hex:new Hex(-1,6), cost:4, },  //move through asteroids without taking damage
-    {tech:'research post', colour:[51,49,50], hex:new Hex(-3,6), cost:99999, },  //asteroid research post, extra def in asteroids**not availiable yet**
+    {tech:'asteroid def', colour:[51,49,50], requires:['asteroid move'], hex:new Hex(-3,6), cost:4, },  //asteroid research post, extra def in asteroids**not availiable yet**
     {tech:'trade & economy', colour:[116,116,158], hex:new Hex(-5,6), cost:4, },  //scout ships
     {tech:'spy ships', colour:[51,49,50], hex:new Hex(-6,5), cost:99999, }, //**not availiable yet**
     {tech:'nebula missile', colour:[51,49,50], hex:new Hex(-6,3), cost:99999, }, //nebula missile ship **not availiable yet**
     {tech:'nebula', colour:[116,116,158], hex:new Hex(-6,1), cost:4, },  //extra vision in nebulas
     {tech:'hydrogen', colour:[69,63,96], requires:['nebula'], hex:new Hex(-5,-1), cost:4, },  //harvest hydrogen
-    {tech:'research post', colour:[51,49,50], hex:new Hex(-3,-3), cost:99999, },  //nebula research post, extra defence in nebulas**not availiable yet**
+    {tech:'nebula def', colour:[51,49,50], requires:['hydrogen'], hex:new Hex(-3,-3), cost:4, },  //nebula research post, extra defence in nebulas**not availiable yet**
     {tech:'black holes', colour:[116,116,158], hex:new Hex(-1,-5), cost:4, }, //can detect black holes (distance 2 hexes?)
   ],
 
@@ -77,13 +77,13 @@ const data = {
     {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'gas refinery',  terrain: [] } ,
   ],
 
-  terrainCostNew : {
-    space: { moveCost:1, },
-    asteroids: { moveCost:3, },
-    gasGiant: { moveCost:1, techNeeded: "gasGiantMove", },
-    planet: { moveCost:1, },
-    nebula: { moveCost:5, },
-    whiteDwarf:{ moveCost:5, },
+  terrainInfo : {
+    space: { moveCost:1, defenceTech:'trade & economy'},
+    asteroids: { moveCost:3, defenceTech:'trade & economy'},
+    gasGiant: { moveCost:1, techNeeded: "gasGiantMove", defenceTech:'trade & economy' },
+    planet: { moveCost:1, defenceTech:'trade & economy'},
+    nebula: { moveCost:5, defenceTech:'trade & economy'},
+    whiteDwarf:{ moveCost:5, defenceTech:'trade & economy'},
   },
 }
 

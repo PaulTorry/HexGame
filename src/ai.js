@@ -3,9 +3,10 @@
 /*global
 Hex, state, getShipOnHex, getUpdatedViewMask, data,
 findPossibleMoves, findPossibleAttacks, applyDamage,
-makeMenu, onMenuItemClicked
+makeMenu, onMenuItemClicked,
+getTerrainDefVal
 */
-  
+
 /* eslint-disable no-unused-vars */
 
 function takeAIturn(){
@@ -18,7 +19,7 @@ function takeAIturn(){
 
     if (possibleAttacks.length && Math.random() > 0.5){
       let attack = possibleAttacks[Math.floor(Math.random() * possibleAttacks.length)];
-      applyDamage(ship, getShipOnHex(attack))
+      applyDamage(ship, getShipOnHex(attack),true, getTerrainDefVal(getShipOnHex(attack), attack))
     }
     else if (possibleMoves.length && Math.random() > 0.5){
       let move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];

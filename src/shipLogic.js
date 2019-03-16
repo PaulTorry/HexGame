@@ -85,8 +85,8 @@ function makeTerrainCostMap(){
   let viewMask = getUpdatedViewMask(state)
   for(let [ ,tile] of state.tiles){
 
-    let moveOff = data.terrainCostNew[tile.terrain].moveCost / 2;
-    let moveOn = data.terrainCostNew[tile.terrain].moveCost / 2;
+    let moveOff = data.terrainInfo[tile.terrain].moveCost / 2;
+    let moveOn = data.terrainInfo[tile.terrain].moveCost / 2;
     if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
 
     for(let hex2 of tile.hex.neighbours){
@@ -95,7 +95,7 @@ function makeTerrainCostMap(){
       if(ship && (!state.alliesGrid[ship.owner][state.playerTurn])) { moveOff = 9; }
     }
 
-    let techNeeded = data.terrainCostNew[tile.terrain].techNeeded;
+    let techNeeded = data.terrainInfo[tile.terrain].techNeeded;
     if(techNeeded && !state.playerData[state.playerTurn].tech[techNeeded]){
       moveOff += 77; moveOn += 77;
     }

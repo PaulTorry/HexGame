@@ -54,7 +54,7 @@ function onHexClicked(clickHex){
       else if(sel.attacks.find(e =>  e.compare(clickHex))) {
         let target = getShipOnHex(clickHex);
         if(target){
-          applyDamage(sel.ship, target, true, getTerrainDefVal(sel.ship, clickHex));
+          applyDamage(sel.ship, target, true, getTerrainDefVal(target, clickHex));
           sel.ship.moved = true; sel.ship.attacked = true;
         }
         else { console.log("error in attacks"); }
@@ -158,9 +158,19 @@ function onTechHexClicked (hex){
 
 
 function getTerrainDefVal(ship, hex){
-  console.log(ship, hex);
 
-  return 99;
+  if(data.terrainInfo[state.tiles.get(hex.id).terrain].defenceTech &&
+   state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].defenceTech]) {
+    console.log(ship, hex, "def1");
+    return 1;
+  }
+
+  if(state.baseArray.find(b => b.hex.id === hex.id && b.owner === ship.owner)){
+    console.log(ship, hex, "def1 base");
+    return 1;
+  }
+  console.log(ship, hex, "def0");
+  return 0;
 }
 
 
