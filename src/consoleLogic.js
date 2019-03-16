@@ -4,6 +4,7 @@
 Hex, Map
 state:true
 drawScreen,
+debug:true,
 interactiveConsole
 */
 

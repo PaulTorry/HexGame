@@ -11,21 +11,46 @@ function makeNewViewMask(tiles){
 }
 
 
-function removeActiveViews(viewMaskP){
-  let viewMask = viewMaskP;
-  for (let mask of Object.keys(viewMask)){
-    if (viewMask[mask] === 2){viewMask[mask] = 1}
+function removeActiveViews(viewMask){
+  let mask = {};
+
+  for (let k of Object.keys(viewMask)){
+    if (viewMask[k] === 2 || viewMask[k] === 1){mask[k] = 1}
   }
-  return viewMask;
+
+  return mask;
 }
 
 
-function getUpdatedViewMask(state){
+function addViewMasks(state, vm1, vm2){
+  let mask = {};
+
+  state.tiles.forEach(b => {
+    mask[b.hex.id] = Math.max(vm1[b.hex.id], vm2[b.hex.id]);
+  })
+
+  return mask;
+}
+
+function getUpdatedViewMask(state, player = state.playerTurn){
 
   let mask = state.playerData[state.playerTurn].viewMask
 
+  for(let i = 0; i < state.numPlayers; i++){
+    if(i === player || state.alliesGrid[player][i]){
+      mask = addViewMasks(state, mask, getOwnViewMask(state, i));
+    }
+  }
+
+  return mask;
+}
+
+function getOwnViewMask(state, player = state.playerTurn){
+
+  let mask = removeActiveViews(state.playerData[state.playerTurn].viewMask)
+
   state.baseArray.forEach(b => {
-    if(b.owner === state.playerTurn){
+    if(b.owner === player){
       mask[b.hex.id] = 2;
       b.territory.forEach(t => {
         mask[t.id] = 2;
@@ -34,15 +59,15 @@ function getUpdatedViewMask(state){
   })
 
   state.shipArray.forEach(s => {
-    if(s.owner === state.playerTurn){
+    if(s.owner === player){
       mask[s.hex.id] = 2;
       s.hex.within(s.view).filter(h => h.mag <= boardSize) .forEach(n => { mask[n.id] = 2; })
     }
   })
 
   for(let [id , tile] of state.tiles){
-    if(tile.navBeacon && tile.navBeacon.owner === state.playerTurn){ mask[tile.hex.id] = 2; }
+    if(tile.navBeacon && tile.navBeacon.owner === player){ mask[tile.hex.id] = 2; }
   }
-
+  state.playerData[state.playerTurn].viewMask = removeActiveViews(mask);
   return mask;
 }

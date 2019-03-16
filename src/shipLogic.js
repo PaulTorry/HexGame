@@ -91,7 +91,8 @@ function makeTerrainCostMap(){
 
     for(let hex2 of tile.hex.neighbours){
       let ship = getShipOnHex(hex2)
-      if(ship && (ship.owner !== state.playerTurn)) { moveOff = 9; }
+      //  if(ship && (ship.owner !== state.playerTurn)) { moveOff = 9; }
+      if(ship && (!state.alliesGrid[ship.owner][state.playerTurn])) { moveOff = 9; }
     }
 
     let techNeeded = data.terrainCostNew[tile.terrain].techNeeded;
@@ -99,7 +100,7 @@ function makeTerrainCostMap(){
       moveOff += 77; moveOn += 77;
     }
 
-    if(viewMask[tile.hex.id] <2 ){moveOff += 77; moveOn += 77;}
+    if(viewMask[tile.hex.id] !== 2 ){moveOff += 77; moveOn += 77;}
 
     terrainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
   }

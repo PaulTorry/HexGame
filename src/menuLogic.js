@@ -12,11 +12,13 @@ function makeMenu(hex){
   let base = state.baseArray.find(b => b.hex.compare(hex));
   let tile = state.tiles.get(hex.id);
   let  ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
+  // console.log("makeMenu",base, tile, ship, hex.id);
   return data.thingList.filter(pos => {
 
     if(pos.price > state.playerData[state.playerTurn].money) return false;
 
-    if(pos.terrain.length !== 0 && !pos.terrain.find(e => e === state.tiles.get(hex.id).terrain)) return false;
+    if(pos.terrain.length !== 0 &&
+       !pos.terrain.find(e => e === tile.terrain)) return false;
 
     if(pos.territoryState && pos.territoryState > territoryState(hex)) return false;
 

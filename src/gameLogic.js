@@ -3,12 +3,12 @@
 /*global
 drawScreen, sel:true, screenSettings,
 nextTurn,
-state,
+state, boardSize,
 onMenuItemClicked,
 preturn:true, makeMenu,
 findPossibleAttacks, getShipOnHex, findPossibleMoves,
 buildShip,
-translateContextTo, getXYfromHex, drawMenu, removeActiveViews, getUpdatedViewMask
+translateContextTo, getXYfromHex, drawMenu, getUpdatedViewMask
 data
 takeAIturn
 */
@@ -54,7 +54,7 @@ function onHexClicked(clickHex){
       else if(sel.attacks.find(e =>  e.compare(clickHex))) {
         let target = getShipOnHex(clickHex);
         if(target){
-          applyDamage(sel.ship, target);
+          applyDamage(sel.ship, target, true, getTerrainDefVal(sel.ship, clickHex));
           sel.ship.moved = true; sel.ship.attacked = true;
         }
         else { console.log("error in attacks"); }
@@ -120,7 +120,7 @@ function onMenuItemClicked(item, hex = sel.hex){
     }
     else {state.baseArray.push(
       {type:"planet", owner:state.playerTurn, hex: tile.hex,
-        territory:tile.hex.neighbours.filter(t => territoryState(t) === 1)}
+        territory:tile.hex.neighbours.filter(t => territoryState(t) === 1 && t.mag <= boardSize)}
     )}
   }
 
@@ -133,7 +133,7 @@ function onMenuItemClicked(item, hex = sel.hex){
   }
   console.log("gamelogic in shiphulls", item, data.shipHulls)
   let inhulle = data.shipHulls[item];
-  console.log(inhulle);
+  //console.log(inhulle);
   if(data.shipHulls[item]){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
 
 
@@ -157,9 +157,17 @@ function onTechHexClicked (hex){
 }
 
 
-function applyDamage(attacker, ship, attacking = true){
+function getTerrainDefVal(ship, hex){
+  console.log(ship, hex);
+
+  return 99;
+}
+
+
+function applyDamage(attacker, ship, attacking = true, terrainDefence = 0){
   let {type, hull, shield} = ship;
-  let dammage = Math.max(getWeaponPower(attacker, attacking) -data.shipHulls[type].defence,0);
+  let defence = data.shipHulls[type].defence + terrainDefence;
+  let dammage = Math.max(getWeaponPower(attacker, attacking) -defence,0);
   let range = attacker.hex.distance(ship.hex);
   if ( attacker.range < range ){ dammage = 0}
 
@@ -189,7 +197,8 @@ function getWeaponPower(ship, attacking = true){
 
 function nextTurn(){
   state.playerData[state.playerTurn].money += collectMoney();
-  state.playerData[state.playerTurn].viewMask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
+  // state.playerData[state.playerTurn].viewMask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
+  // state.playerData[state.playerTurn].viewMask = getUpdatedViewMask(state);
   for (let ship of state.shipArray){
     if (ship.owner === state.playerTurn){
       if (!ship.moved && !ship.attacked) ship.shield =  Math.min(ship.shield +1, data.shipHulls[ship.type].shield);

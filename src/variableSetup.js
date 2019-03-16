@@ -37,8 +37,8 @@ const data = {
     {tech:'gas giants', colour:[116,116,158], hex:new Hex(6,-1), cost:4, }, //missile frigate
     {tech:'research post', colour:[51,49,50], hex:new Hex(5,1), cost:99999, }, //**not availiable yet**
     {tech:'research cost', colour:[51,49,50], hex:new Hex(3,3), cost:99999, }, //reduce research costs **not availiable yet**
-    {tech:'asteroid belt', colour:[116,116,158], requires:['asteroid move'], hex:new Hex(1,5), cost:4, },  //fast frigate
-    {tech:'asteroid move', colour:[69,63,96], hex:new Hex(-1,6), cost:4, },  //move through asteroids without taking damage
+    {tech:'asteroid belt', colour:[116,116,158], hex:new Hex(1,5), cost:4, },  //fast frigate
+    {tech:'asteroid move', colour:[69,63,96], requires:['asteroid belt'], hex:new Hex(-1,6), cost:4, },  //move through asteroids without taking damage
     {tech:'research post', colour:[51,49,50], hex:new Hex(-3,6), cost:99999, },  //asteroid research post, extra def in asteroids**not availiable yet**
     {tech:'trade & economy', colour:[116,116,158], hex:new Hex(-5,6), cost:4, },  //scout ships
     {tech:'spy ships', colour:[51,49,50], hex:new Hex(-6,5), cost:99999, }, //**not availiable yet**

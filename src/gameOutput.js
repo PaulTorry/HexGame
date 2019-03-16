@@ -66,7 +66,8 @@ function drawScreen() {
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug){
       let {x,y} = getXYfromHex(tile.hex)
-      drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34," + 0.5 * (viewMask[id] || debug) + ")"  );
+      drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
+
       if(tile.terrain !== "space"){
         if(curves[tile.terrain]){
           drawFromData(c, curves[tile.terrain], x, y)
@@ -87,6 +88,9 @@ function drawScreen() {
       if(base){
         if(curves["planetRing"]){drawFromData(c, curves["planetRing"], x, y, base.owner)}
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
+      }
+      if(viewMask[id] === 1){
+        drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgba(200,200,200,0.1)", "rgba(200,200,200,0.1)"  );
       }
     }
     drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 2,  "rgb(37,32,45)");

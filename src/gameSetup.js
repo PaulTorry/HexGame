@@ -10,7 +10,7 @@ let state = {};
 
 let sel = {state:0, attacks:[], menu:[], moves:[]}
 
-state = setup(3, boardSize, 3, false)
+state = setup(5, boardSize, 2, false)
 
 function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogether = false){
   let tiles = new Map();
@@ -40,16 +40,19 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "human";  }
   }
 
-  // for(let i = 0; i < numPlayers; i++){
-  //   if(playersTogether){
-  //     playerlist[i] = i<numHumans ? "human" : "AI";
-  //   } else {
-  //     playerlist[i] = Math.floor(i%((numPlayers-1)/numHumans)) ? "AI" : "human";
-  //   }
-  //   console.log(playerlist[i], i);
-  // }
+  let alliesGrid = []
 
+  for(let i = 0; i < numPlayers; i++){
+    if(playersTogether){
+      alliesGrid[i] = [];
+      for(let j = 0; j < numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
+    } else {
+      alliesGrid[i] = [];
+      for(let j = 0; j < numPlayers; j++){ alliesGrid[i][j] = i === j }
+    }
+  }
 
+  console.log(alliesGrid);
 
   for(let i = 0; i < numPlayers; i++){
     let angle = 2*Math.PI*i/numPlayers
@@ -63,5 +66,5 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null});
   }
 
-  return {numPlayers:numPlayers, playerTurn:0, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray}
+  return {numPlayers:numPlayers, playerTurn:0, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid,}
 }
