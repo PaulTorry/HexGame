@@ -63,27 +63,32 @@ const data = {
   },
 
   thingList : [
-    {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy', tech: 'nav beacons',  terrain: ['space', 'asteroids', 'nebula', ] } ,
-    {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'mining',  terrain: ['asteroids', ] } ,
+
+    {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy', tech: 'navBeacons',  terrain: ['space', 'asteroids', 'nebula', ] } ,
+    {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
     {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
-    {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'trade & economy',  terrain: [] } ,
+    {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
     {thing: 'basicFrigate', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'battleship', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'ore refinery',  terrain: [] } ,
-    {thing: 'armouredDestroyer', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'radiation shield',  terrain: [] } ,
-    {thing: 'titanShip', price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'antimatter extraction', terrain: [] } ,
-    {thing: 'fastFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'asteroid belt', terrain: [] } ,
-    {thing: 'cruiser', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'trade network',  terrain: [] } ,
-    {thing: 'missileFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'gas giants',  terrain: [] } ,
-    {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'gas refinery',  terrain: [] } ,
+    {thing: 'battleship', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'heavyWeapons',  terrain: [] } ,
+    {thing: 'armouredDestroyer', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'mines',  terrain: [] } ,
+    {thing: 'titanShip', price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'fastFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'cruiser', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'missileFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missiles',  terrain: [] } ,
+    {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'gas giant mining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'gas extraction',  terrain: ['gasGiant', ] } ,
+    {thing: 'white dwarf mining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvest dwarves',  terrain: ['whiteDwarf', ] } ,
+  //  {thing: 'solar sails', price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['adjacent to star', ] } ,
   ],
 
   terrainInfo : {
-    space: { moveCost:1, defenceTech:'trade & economy'},
-    asteroids: { moveCost:3, defenceTech:'trade & economy'},
-    gasGiant: { moveCost:1, techNeeded: "gasGiantMove", defenceTech:'trade & economy' },
-    planet: { moveCost:1, defenceTech:'trade & economy'},
-    nebula: { moveCost:5, defenceTech:'trade & economy'},
-    whiteDwarf:{ moveCost:5, defenceTech:'trade & economy'},
+
+    space: { moveCost:1,},
+    asteroids: { moveCost:2,hullDamage:1,damTech:'asteroid move',defenceTech:'asteroid def',},
+    nebula: { moveCost:2,viewTech:'nebula',defenceTech:'nebula def',},
+    gasGiant: { moveCost:1,moveTech:'gasGiantMove',},
+    planet: { moveCost:1,defenceTech:'defence shield',},
+    whiteDwarf: { moveCost:5,},
   },
 }
 

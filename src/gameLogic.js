@@ -108,6 +108,14 @@ function onMenuItemClicked(item, hex = sel.hex){
     tile.station = {type: "asteroidMining", owner: state.playerTurn}
   }
 
+  if(item === "gas giant mining"){
+    tile.station = {type: "gas giant mining", owner: state.playerTurn}
+  }
+
+  if(item === "white dwarf mining"){
+    tile.station = {type: "white dwarf mining", owner: state.playerTurn}
+  }
+
   if(item === "inhabitedPlanet"){
     ship.moved = true; ship.attacked = true;
     let existingBase = state.baseArray.find(b => b.hex.compare(tile.hex));
@@ -127,6 +135,8 @@ function onMenuItemClicked(item, hex = sel.hex){
   if(item === "navBeacon"){
     tile.navBeacon = {owner: state.playerTurn}
   }
+
+
 
   if(item === "destroy"){
     tile.navBeacon = null;
@@ -233,7 +243,7 @@ function nextTurn(){
 
 function collectMoney(){
   let bases = state.baseArray.filter(b => b.owner === state.playerTurn);
-  let asteroidBases = Array.from(state.tiles).filter(([id, val]) => val.station && val.station.owner === state.playerTurn)
+  let stations = Array.from(state.tiles).filter(([id, val]) => val.station && val.station.owner === state.playerTurn)
 
-  return bases.length + asteroidBases.length;
+  return bases.length + stations.length;
 }

@@ -95,8 +95,8 @@ function makeTerrainCostMap(){
       if(ship && (!state.alliesGrid[ship.owner][state.playerTurn])) { moveOff = 9; }
     }
 
-    let techNeeded = data.terrainInfo[tile.terrain].techNeeded;
-    if(techNeeded && !state.playerData[state.playerTurn].tech[techNeeded]){
+    let moveTech = data.terrainInfo[tile.terrain].moveTech;
+    if(moveTech && !state.playerData[state.playerTurn].tech[moveTech]){
       moveOff += 77; moveOn += 77;
     }
 
