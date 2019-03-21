@@ -7,46 +7,46 @@ const data = {
 
   techs : [
     //centre
-    {tech:'antimatter extraction', colour:[69,63,96], requires:['ore refinery', 'gas refinery', 'defence shield'], hex:new Hex(0,0), cost:10,}, //titan ships
+    {name:'antimatter extraction', tech:'titanTech', colour:[50,47,73], requires:['battleshipTech', 'missileDestroyerTech', 'defShieldTech'], hex:new Hex(0,0), cost:10, },
     //1st ring, clockwise from top
-    {tech:'defence shield', colour:[69,63,96], requires:['radiation shield'], hex:new Hex(0,-2), cost:8,}, //planetary defence shields
-    {tech:'regen', colour:[51,49,50], hex:new Hex(2,-2), cost:99999, }, //regenerate hull damage in the field  **not availiable yet**
-    {tech:'gas refinery', colour:[69,63,96], requires:['gas extraction'], hex:new Hex(2,0), cost:8, }, //missile destroyer
-    {tech:'ore refinery', colour:[69,63,96], requires:['mining'], hex:new Hex(0,2), cost:8, }, //battleship
-    {tech:'trade network', colour:[69,63,96], requires:['nav beacons'], hex:new Hex(-2,2), cost:8, },  //cruiser
-    {tech:'space stations', colour:[51,49,50], hex:new Hex(-2,0), cost:99999, },  //**not availiable yet**
+    {name:'planet defence shield', tech:'defShieldTech', colour:[50,47,73], requires:['armouredDestroyerTech'], hex:new Hex(0,-2), cost:8, },
+    {name:'gas refinery', tech:'missileDestroyerTech', colour:[50,47,73], requires:['harvestGasGiant'], hex:new Hex(2,-2), cost:8, },
+    {name:'devourer', tech:'devourerTech', colour:[51,49,50], requires:['dismantle'], hex:new Hex(2,0), cost:99999, },
+    {name:'ore refinery', tech:'battleshipTech', colour:[50,47,73], requires:['asteroidMining'], hex:new Hex(0,2), cost:8, },
+    {name:'space stations', tech:'spaceStationTech', colour:[51,49,50], requires:['navBeacon'], hex:new Hex(-2,2), cost:99999, },
+    {name:'nebula destroyer', tech:'nebulaDestroyerTech', colour:[51,49,50], requires:['nebulaFrigateTech'], hex:new Hex(-2,0), cost:99999, },
     //2nd ring, clockwise from top
-    {tech:'emp blast', colour:[51,49,50], hex:new Hex(1,-4), cost:99999, }, //aoe stun ship  **not availiable yet**
-    {tech:'missile def', colour:[51,49,50], hex:new Hex(3,-4), cost:99999, }, //planetary missile defence system  **not availiable yet**
-    {tech:'shield regen', colour:[51,49,50], hex:new Hex(4,-3), cost:99999, }, //better shield regeneration in field  **not availiable yet**
-    {tech:'upgrade', colour:[51,49,50], hex:new Hex(4,-1), cost:99999, }, //upgrade units in field  **not availiable yet**
-    {tech:'gas extraction', colour:[69,63,96], requires:['gas giants'],  hex:new Hex(3,1), cost:6, }, //harvest gas giants
-    {tech:'mining', colour:[69,63,96], requires:['asteroid belt'], hex:new Hex(1,3), cost:6, }, //asteroid mining
-    {tech:'nav asteroids', colour:[69,63,96], requires:['nav beacons', 'asteroid move'], hex:new Hex(-1,4), cost:6, }, //nav beacons for asteroids
-    {tech:'nav beacons', colour:[69,63,96], requires:['trade & economy'], hex:new Hex(-3,4), cost:6, }, //roads
-    {tech:'nav nebula', colour:[69,63,96], requires:['nav beacons', 'nebula'], hex:new Hex(-4,3), cost:6, },  //nav beacons in nebula
-    {tech:'neb battleship', colour:[51,49,50], hex:new Hex(-4,1), cost:99999, },  //**not availiable yet**
-    {tech:'harvest dwarves', colour:[69,63,96], requires:['hydrogen'], hex:new Hex(-3,-1), cost:6, },  //harvest white dwarves
-    {tech:'radiation shield', colour:[69,63,96], requires:['black holes'], hex:new Hex(-1,-3), cost:6, },  //armoured destroyer
+    {name:'universities', tech:'universities', colour:[51,49,50], requires:['navigation', 'sewerTech'], hex:new Hex(1,-4), cost:99999, },
+    {name:'gas extraction', tech:'harvestGasGiant', colour:[50,47,73], requires:['missileFrigateTech'], hex:new Hex(3,-4), cost:6, },
+    {name:'planetary missile defence', tech:'planetMissileDefTech', colour:[51,49,50], requires:['guidedMissilesTech'], hex:new Hex(4,-3), cost:99999, },
+    {name:'dismantle units', tech:'dismantle', colour:[51,49,50], requires:['mediShipTech'], hex:new Hex(4,-1), cost:99999, },
+    {name:'advanced field repair', tech:'regeneration', colour:[51,49,50], requires:['factoryTech'],  hex:new Hex(3,1), cost:99999, },
+    {name:'asteroid mining', tech:'asteroidMining', colour:[50,47,73], requires:['fastFrigateTech'], hex:new Hex(1,3), cost:6, },
+    {name:'asteroid navigation', tech:'navAsteroid', colour:[50,47,73], requires:['asteroidMove', 'navBeacon'], hex:new Hex(-1,4), cost:6, },
+    {name:'navigation beacons', tech:'navBeacon', colour:[50,47,73], requires:['scoutShipTech'], hex:new Hex(-3,4), cost:6, },
+    {name:'nebula navigation', tech:'navNebula', colour:[50,47,73], requires:['nebulaResearchPostTech', 'navBeacon'], hex:new Hex(-4,3), cost:6, },
+    {name:'nebula frigate', tech:'nebulaFrigateTech', colour:[51,49,50], requires:['nebulaVision'], hex:new Hex(-4,1), cost:99999, },
+    {name:'harvest protostar', tech:'harvestProtostar', colour:[50,47,73], requires:['harvestHydrogen'], hex:new Hex(-3,-1), cost:6, },
+    {name:'radiation shield', tech:'armouredDestroyerTech', colour:[50,47,73], requires:['asteroidIceMining'], hex:new Hex(-1,-3), cost:6, },
     //3rd ring, clockwise from top
-    {tech:'navigation', colour:[69,63,96], requires:['black holes'], hex:new Hex(1,-6), cost:4, }, //black hole navigation
-    {tech:'guided missiles', colour:[51,49,50], hex:new Hex(3,-6), cost:99999, }, //**not availiable yet**
-    {tech:'nano bots', colour:[51,49,50], hex:new Hex(5,-6), cost:99999, }, //**not availiable yet**
-    {tech:'medi-ship', colour:[51,49,50], hex:new Hex(6,-5), cost:99999, }, //**not availiable yet**
-    {tech:'control ships', colour:[51,49,50], hex:new Hex(6,-3), cost:99999, }, //**not availiable yet**
-    {tech:'gas giants', colour:[116,116,158], hex:new Hex(6,-1), cost:4, }, //missile frigate
-    {tech:'research post', colour:[51,49,50], hex:new Hex(5,1), cost:99999, }, //**not availiable yet**
-    {tech:'research cost', colour:[51,49,50], hex:new Hex(3,3), cost:99999, }, //reduce research costs **not availiable yet**
-    {tech:'asteroid belt', colour:[116,116,158], hex:new Hex(1,5), cost:4, },  //fast frigate
-    {tech:'asteroid move', colour:[69,63,96], requires:['asteroid belt'], hex:new Hex(-1,6), cost:4, },  //move through asteroids without taking damage
-    {tech:'asteroid def', colour:[51,49,50], requires:['asteroid move'], hex:new Hex(-3,6), cost:4, },  //asteroid research post, extra def in asteroids**not availiable yet**
-    {tech:'trade & economy', colour:[116,116,158], hex:new Hex(-5,6), cost:4, },  //scout ships
-    {tech:'spy ships', colour:[51,49,50], hex:new Hex(-6,5), cost:99999, }, //**not availiable yet**
-    {tech:'nebula missile', colour:[51,49,50], hex:new Hex(-6,3), cost:99999, }, //nebula missile ship **not availiable yet**
-    {tech:'nebula', colour:[116,116,158], hex:new Hex(-6,1), cost:4, },  //extra vision in nebulas
-    {tech:'hydrogen', colour:[69,63,96], requires:['nebula'], hex:new Hex(-5,-1), cost:4, },  //harvest hydrogen
-    {tech:'nebula def', colour:[51,49,50], requires:['hydrogen'], hex:new Hex(-3,-3), cost:4, },  //nebula research post, extra defence in nebulas**not availiable yet**
-    {tech:'black holes', colour:[116,116,158], hex:new Hex(-1,-5), cost:4, }, //can detect black holes (distance 2 hexes?)
+    {name:'black hole navigation', tech:'navigation', colour:[51,49,50], requires:['asteroidIceMining'], hex:new Hex(1,-6), cost:99999, },
+    {name:'sewer systems', tech:'sewerTech', colour:[51,49,50], requires:['missileFrigateTech'], hex:new Hex(3,-6), cost:99999, },
+    {name:'missile frigate', tech:'missileFrigateTech', colour:[50,47,73], hex:new Hex(5,-6), cost:4, },
+    {name:'guided missiles', tech:'guidedMissilesTech', colour:[51,49,50], requires:['missileFrigateTech', 'controlEnemyShip'], hex:new Hex(6,-5), cost:99999, },
+    {name:'assimilation', tech:'controlEnemyShip', colour:[51,49,50], requires:['mediShipTech'], hex:new Hex(6,-3), cost:99999, },
+    {name:'nano bots', tech:'mediShipTech', colour:[51,49,50], hex:new Hex(6,-1), cost:99999, },
+    {name:'advanced manufacturing', tech:'factoryTech', colour:[51,49,50], requires:['mediShipTech'], hex:new Hex(5,1), cost:99999, },
+    {name:'recycling plant', tech:'recyclingTech', colour:[51,49,50], requires:['asteroidMining'], hex:new Hex(3,3), cost:99999, },
+    {name:'fast frigate', tech:'fastFrigateTech', colour:[50,47,73], hex:new Hex(1,5), cost:4, },
+    {name:'asteroid movement', tech:'asteroidMove', colour:[50,47,73], requires:['fastFrigateTech'], hex:new Hex(-1,6), cost:4, },
+    {name:'hydroponics', tech:'hydroponicsTech', colour:[51,49,50], requires:['navBeacon'], hex:new Hex(-3,6), cost:99999, },
+    {name:'scouting', tech:'scoutShipTech', colour:[50,47,73], hex:new Hex(-5,6), cost:4, },
+    {name:'spy ships', tech:'spyShipTech', colour:[51,49,50], requires:['scoutShipTech'], hex:new Hex(-6,5), cost:99999, },
+    {name:'nebula research post', tech:'nebulaResearchPostTech', colour:[50,47,73], requires:['nebulaVision'], hex:new Hex(-6,3), cost:4, },
+    {name:'advanced sensors', tech:'nebulaVision', colour:[50,47,73], hex:new Hex(-6,1), cost:4, },
+    {name:'harvest hydrogen', tech:'harvestHydrogen', colour:[50,47,73], requires:['nebulaVision'], hex:new Hex(-5,-1), cost:4, },
+    {name:'electro-magnetic pulse', tech:'EMPshipTech', colour:[51,49,50], requires:['asteroidIceMining'], hex:new Hex(-3,-3), cost:99999, },
+    {name:'asteroid ice mining', tech:'asteroidIceMining', colour:[50,47,73], hex:new Hex(-1,-5), cost:4, }
   ],
 
 
@@ -57,38 +57,38 @@ const data = {
     armouredDestroyer:{type:'armouredDestroyer',  hull:5, shield:10, maxMove:1, attack:1, retaliate:10, range:1, defence:3, view:1},
     titanShip:{type:'titanShip',  hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
     fastFrigate:{type:'fastFrigate',  hull:3, shield:7, maxMove:2, attack:8, retaliate:3, range:1, defence:1, view:1},
-    cruiser:{type:'cruiser',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
+    devourer:{type:'devourer',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
     missileFrigate:{type:'missileFrigate',  hull:3, shield:7, maxMove:1, attack:5, retaliate:3, range:2, defence:1, view:1},
     missileDestroyer:{type:'missileDestroyer',  hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
   },
 
   thingList : [
 
-    {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy', tech: 'navBeacons',  terrain: ['space', 'asteroids', 'nebula', ] } ,
+    {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy', tech: 'navBeacon',  terrain: ['space', 'asteroids', 'nebula', ] } ,
     {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
     {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
-    {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'scoutShipTech',  terrain: [] } ,
     {thing: 'basicFrigate', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'battleship', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'heavyWeapons',  terrain: [] } ,
-    {thing: 'armouredDestroyer', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'mines',  terrain: [] } ,
-    {thing: 'titanShip', price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'fastFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'cruiser', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'missileFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missiles',  terrain: [] } ,
-    {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'gas giant mining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'gas extraction',  terrain: ['gasGiant', ] } ,
-    {thing: 'white dwarf mining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvest dwarves',  terrain: ['whiteDwarf', ] } ,
+    {thing: 'battleship', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'battleshipTech',  terrain: [] } ,
+    {thing: 'armouredDestroyer', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'armouredDestroyerTech',  terrain: [] } ,
+    {thing: 'titanShip', price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'titanTech', terrain: [] } ,
+    {thing: 'fastFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'fastFrigateTech', terrain: [] } ,
+    {thing: 'devourer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'devourerTech', terrain: [] } ,
+    {thing: 'missileFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileFrigateTech',  terrain: [] } ,
+    {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileDestroyerTech',  terrain: [] } ,
+    {thing: 'harvestGasGiant', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ] } ,
+    {thing: 'harvestProtostar', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ] } ,
   //  {thing: 'solar sails', price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['adjacent to star', ] } ,
   ],
 
   terrainInfo : {
 
     space: { moveCost:1,},
-    asteroids: { moveCost:2,hullDamage:1,damTech:'asteroid move',defenceTech:'asteroid def',},
-    nebula: { moveCost:2,viewTech:'nebula',defenceTech:'nebula def',},
+    asteroids: { moveCost:2,hullDamage:1,damTech:'asteroidMove',defenceTech:'asteroidMining',},
+    nebula: { moveCost:2,viewTech:'nebula',defenceTech:'nebulaResearchPostTech',},
     gasGiant: { moveCost:1,moveTech:'gasGiantMove',},
-    planet: { moveCost:1,defenceTech:'defence shield',},
-    whiteDwarf: { moveCost:5,},
+    planet: { moveCost:1,defenceTech:'defShieldTech',},
+    protostar: { moveCost:5,},
   },
 }
 

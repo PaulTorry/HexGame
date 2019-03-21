@@ -108,53 +108,115 @@ function pasteHere(ctx){
 /// PASTE BELLOW THIS LINE ////////////////////////////////////////////////////////////////////////
 
 
+ctx.save();
 
+// layer1/titan/Path
 ctx.save();
 ctx.beginPath();
-
-// layer1/solar sail/Path
-ctx.moveTo(50.8, 1.7);
-ctx.bezierCurveTo(50.8, 1.7, 38.3, 9.8, 26.1, 9.8);
-ctx.bezierCurveTo(13.7, 9.8, 1.4, 1.7, 1.4, 1.7);
-ctx.bezierCurveTo(1.4, 1.7, 8.3, 14.6, 8.3, 26.3);
-ctx.bezierCurveTo(8.3, 39.2, 1.4, 51.0, 1.4, 51.0);
-ctx.bezierCurveTo(1.4, 51.0, 14.8, 44.0, 26.1, 43.8);
-ctx.bezierCurveTo(36.9, 43.6, 50.8, 51.0, 50.8, 51.0);
-ctx.bezierCurveTo(50.8, 51.0, 42.3, 37.2, 42.3, 27.0);
-ctx.bezierCurveTo(42.3, 15.2, 50.8, 1.7, 50.8, 1.7);
+ctx.moveTo(65.9, 47.9);
+ctx.bezierCurveTo(73.2, 37.7, 67.9, 23.5, 60.7, 14.3);
+ctx.lineTo(60.7, 14.3);
+ctx.bezierCurveTo(53.4, 5.1, 40.9, -3.3, 29.3, 1.3);
+ctx.bezierCurveTo(20.9, 4.6, 5.6, 14.9, 1.3, 24.6);
+ctx.bezierCurveTo(-2.6, 33.5, 25.0, 25.4, 32.8, 36.2);
+ctx.bezierCurveTo(40.6, 47.0, 26.0, 70.5, 35.8, 69.0);
+ctx.bezierCurveTo(45.5, 67.5, 60.7, 55.2, 65.9, 47.9);
 ctx.closePath();
+ctx.fillStyle ("rgb(215, 35, 53)");
+ctx.fill();
 
-// layer1/solar sail/Path
-ctx.moveTo(30.5, 23.5);
-ctx.bezierCurveTo(31.0, 24.3, 31.4, 25.3, 31.4, 26.3);
-ctx.bezierCurveTo(31.4, 27.4, 31.1, 28.3, 30.6, 29.1);
-ctx.bezierCurveTo(30.9, 29.5, 32.3, 31.2, 39.5, 39.6);
-ctx.lineTo(29.0, 30.7);
-ctx.bezierCurveTo(28.2, 31.3, 27.2, 31.6, 26.1, 31.6);
-ctx.bezierCurveTo(25.2, 31.6, 24.3, 31.4, 23.6, 31.0);
-ctx.bezierCurveTo(23.3, 31.3, 21.9, 32.6, 13.5, 40.5);
-ctx.lineTo(21.9, 29.6);
-ctx.bezierCurveTo(21.2, 28.7, 20.8, 27.6, 20.8, 26.3);
-ctx.bezierCurveTo(20.8, 25.4, 21.0, 24.4, 21.5, 23.6);
-ctx.bezierCurveTo(21.2, 23.3, 19.7, 21.6, 12.2, 13.4);
-ctx.lineTo(23.0, 22.0);
-ctx.bezierCurveTo(23.9, 21.4, 24.9, 21.1, 26.1, 21.1);
-ctx.bezierCurveTo(27.1, 21.1, 28.1, 21.4, 28.9, 21.9);
-ctx.lineTo(28.9, 21.9);
-ctx.lineTo(40.0, 13.4);
-ctx.lineTo(30.5, 23.5);
+// layer1/titan/Path
+ctx.beginPath();
+ctx.moveTo(38.1, 67.2);
+ctx.bezierCurveTo(38.1, 67.2, 58.5, 53.0, 63.2, 46.4);
+ctx.bezierCurveTo(68.4, 39.1, 66.9, 31.3, 63.6, 24.2);
+ctx.bezierCurveTo(62.6, 21.9, 55.7, 21.0, 54.2, 19.1);
+ctx.lineTo(54.2, 19.1);
+ctx.bezierCurveTo(52.6, 17.1, 53.3, 10.1, 51.2, 8.4);
+ctx.bezierCurveTo(46.3, 4.6, 37.8, 0.6, 29.8, 3.8);
+ctx.bezierCurveTo(22.2, 6.8, 3.5, 23.2, 3.5, 23.2);
+ctx.lineTo(38.1, 67.2);
 ctx.closePath();
-ctx.createRadialGradient(26.1, 26.3, 0.0, 26.1, 26.3, 24.7);
-ctx.addColorStop(0.00, "rgb(254, 240, 173)");
-ctx.addColorStop(0.37, "rgb(253, 215, 96)");
-ctx.addColorStop(0.51, "rgb(252, 189, 20)");
-ctx.addColorStop(0.75, "rgb(197, 138, 27)");
-ctx.addColorStop(0.99, "rgb(141, 87, 35)");
+ctx.createLinearGradient(55.5, 12.8, 19.6, 48.7);
+ctx.addColorStop(0.00, "rgb(129, 21, 24)");
+ctx.addColorStop(0.31, "rgba(172, 28, 39, 0.50)");
+ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
 ctx.fillStyle ();
 ctx.fill();
-ctx.strokeStyle ("rgb(215, 35, 53)");
-ctx.stroke();
+
+// layer1/titan/Rectangle
+ctx.beginPath();
+ctx.moveTo(5.0, 39.2);
+ctx.lineTo(17.1, 30.5);
+ctx.bezierCurveTo(17.7, 30.1, 17.8, 29.3, 17.4, 28.8);
+ctx.lineTo(14.3, 24.5);
+ctx.bezierCurveTo(13.9, 23.9, 13.1, 23.8, 12.6, 24.2);
+ctx.lineTo(0.5, 32.9);
+ctx.bezierCurveTo(-0.0, 33.3, -0.2, 34.0, 0.2, 34.6);
+ctx.lineTo(3.3, 38.9);
+ctx.bezierCurveTo(3.7, 39.4, 4.5, 39.6, 5.0, 39.2);
+ctx.closePath();
+ctx.save();
+ctx.transform(0.913, -0.298, -0.332, -0.939, -569.9, 1157.7);
+ctx.createLinearGradient(965.6, 901.3, 952.4, 888.0);
+ctx.addColorStop(0.00, "rgb(129, 21, 24)");
+ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+ctx.fillStyle ();
+ctx.fill();
+
+// layer1/titan/Rectangle
 ctx.restore();
+ctx.beginPath();
+ctx.moveTo(28.2, 66.3);
+ctx.lineTo(39.5, 57.4);
+ctx.bezierCurveTo(40.1, 57.0, 40.2, 56.2, 39.8, 55.7);
+ctx.lineTo(36.5, 51.5);
+ctx.bezierCurveTo(36.1, 51.0, 35.3, 50.9, 34.8, 51.3);
+ctx.lineTo(23.4, 60.2);
+ctx.bezierCurveTo(22.8, 60.7, 22.7, 61.4, 23.2, 62.0);
+ctx.lineTo(26.4, 66.1);
+ctx.bezierCurveTo(26.8, 66.7, 27.6, 66.8, 28.2, 66.3);
+ctx.closePath();
+ctx.save();
+ctx.transform(0.883, -0.324, -0.377, -0.921, -504.7, 1315.5);
+ctx.createLinearGradient(1040.6, 1007.8, 1027.3, 994.5);
+ctx.addColorStop(0.00, "rgb(129, 21, 24)");
+ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+ctx.fillStyle ();
+ctx.fill();
+
+// layer1/titan/Path
+ctx.restore();
+ctx.beginPath();
+ctx.moveTo(34.4, 20.1);
+ctx.lineTo(29.1, 18.8);
+ctx.bezierCurveTo(27.8, 18.4, 27.2, 16.9, 28.0, 15.8);
+ctx.lineTo(31.5, 11.2);
+ctx.bezierCurveTo(32.0, 10.5, 32.8, 10.3, 33.6, 10.5);
+ctx.lineTo(38.9, 12.3);
+ctx.bezierCurveTo(40.1, 12.8, 40.5, 14.3, 39.7, 15.3);
+ctx.lineTo(36.3, 19.5);
+ctx.bezierCurveTo(35.8, 20.1, 35.1, 20.3, 34.4, 20.1);
+ctx.closePath();
+ctx.fillStyle ("rgb(158, 28, 35)");
+ctx.fill();
+
+// layer1/titan/Path
+ctx.beginPath();
+ctx.moveTo(56.6, 42.9);
+ctx.lineTo(51.6, 45.1);
+ctx.bezierCurveTo(50.3, 45.6, 49.0, 44.7, 48.9, 43.4);
+ctx.lineTo(48.8, 37.6);
+ctx.bezierCurveTo(48.8, 36.8, 49.3, 36.1, 50.1, 35.8);
+ctx.lineTo(55.4, 34.0);
+ctx.bezierCurveTo(56.6, 33.6, 57.9, 34.5, 57.8, 35.8);
+ctx.lineTo(57.7, 41.2);
+ctx.bezierCurveTo(57.7, 42.0, 57.3, 42.6, 56.6, 42.9);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+ctx.restore();
+
 /// PASTE ABOVE  THIS LINE  ////////////////////////////////////////////////////////////////////////
 
   return ctx.data;

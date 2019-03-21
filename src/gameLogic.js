@@ -108,12 +108,12 @@ function onMenuItemClicked(item, hex = sel.hex){
     tile.station = {type: "asteroidMining", owner: state.playerTurn}
   }
 
-  if(item === "gas giant mining"){
-    tile.station = {type: "gas giant mining", owner: state.playerTurn}
+  if(item === "harvestGasGiant"){
+    tile.station = {type: "harvestGasGiant", owner: state.playerTurn}
   }
 
-  if(item === "white dwarf mining"){
-    tile.station = {type: "white dwarf mining", owner: state.playerTurn}
+  if(item === "harvestProtostar"){
+    tile.station = {type: "harvestProtostar", owner: state.playerTurn}
   }
 
   if(item === "inhabitedPlanet"){

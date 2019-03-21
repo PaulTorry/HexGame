@@ -178,12 +178,13 @@ function drawMenu(){
         })
       }
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
-      let colour = "red";
+      let colour = "white";
       let colNum = t.colour;
       let col = `rgb(${colNum[0]},${colNum[1]},${colNum[2]})`
-      if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
-      drawPoly(c, simpleShapes["hexVert"], center, 45, 10,  col, "#120F22"  );
-      drawText(c, `${t.tech}`, center.add(new Vec(-30,0)) , 14, colour )
+      //if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
+      if (state.playerData[state.playerTurn].tech[t.tech]) {col = "rgb(78,78,117)"}
+      drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col,  );
+      drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 14, colour )
       drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
     })
 
@@ -198,6 +199,7 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   if(sColor){c.strokeStyle = sColor}
   if(fColor){c.fillStyle = fColor}
 
+  c.lineWidth = 3;
   c.moveTo(pointVec[0].x, pointVec[0].y);
   c.beginPath();
   for (let point of pointVec){
@@ -214,7 +216,7 @@ function drawArrow(c, start, end, width, colour){
 //  console.log(start,end);
   let midpoint = start.add(end).scale(0.5);
 
-  c.lineWidth = 6;
+  c.lineWidth = 3;
   c.moveTo(start.x, start.y);
   c.beginPath();
   c.lineTo(midpoint.x, midpoint.y);
