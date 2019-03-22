@@ -8,7 +8,7 @@ drawScreen,  sel, state,
 getUpdatedViewMask,
 simpleShapes,
  Map,  makeNewViewMask, preturn,
-curves, debug, territoryState,  whichPlanetsTerritory,
+gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
 data,
 
@@ -69,16 +69,13 @@ function drawScreen() {
       drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
 
       if(tile.terrain !== "space"){
-        if(curves[tile.terrain]){
-          drawFromData(c, curves[tile.terrain], x, y)
+        if(gameSprites[tile.terrain]){
+          drawFromData(c, gameSprites[tile.terrain], x, y)
         }
-        else{
-          let image = document.getElementById(tile.terrain + "Pic");
-          c.drawImage(image, x - 70, y - 70, 140, 140);
-        }
+        else{ console.log("filed draw, no curve"); }
       }
       if(tile.station){
-        drawFromData(c, curves[tile.station.type], x, y, tile.station.owner)
+        drawFromData(c, gameSprites[tile.station.type], x, y, tile.station.owner)
         // if(tile.station.type === "asteroidMining"){drawFromData(c, curves["asteroidMining"], x, y, tile.station.owner)  }
         // else drawPoly(c, baseShapes["asteroidMining"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
@@ -87,7 +84,7 @@ function drawScreen() {
       }
       let base = state.baseArray.find(b => b.hex.compare(tile.hex));
       if(base){
-        if(curves["planetRing"]){drawFromData(c, curves["planetRing"], x, y, base.owner)}
+        if(gameSprites["planetRing"]){drawFromData(c, gameSprites["planetRing"], x, y, base.owner)}
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
       if(viewMask[id] === 1){
@@ -112,11 +109,11 @@ function drawScreen() {
       let borderColour = "black";
       if (ship.owner === state.playerTurn && (!ship.moved || !ship.attacked)) {borderColour = "white"}
 
-      if (curves[ship.type]){
+      if (gameSprites[ship.type]){
         let {x,y} = getXYfromHex(ship.hex);
         let transparency = 1;
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
-        drawFromData(c, curves[ship.type], x, y, ship.owner, transparency)
+        drawFromData(c, gameSprites[ship.type], x, y, ship.owner, transparency)
       }
       else if (baseShapes[ship.type]){
         drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
@@ -151,8 +148,8 @@ function drawMenu(){
     for(let i=0; i<menu.length; i++){
       c.strokeRect (110+60*i, 10, 60, 80);
 
-      if(curves[menu[i]]){
-        drawFromData(c, curves[menu[i]], 130+60*i, 40, state.playerTurn)
+      if(gameSprites[menu[i]]){
+        drawFromData(c, gameSprites[menu[i]], 130+60*i, 40, state.playerTurn)
       }
 
       else if(baseShapes[menu[i]]){
@@ -177,20 +174,25 @@ function drawMenu(){
           arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
         })
       }
+    })
+
+    arrows.forEach(a => {
+      drawArrow(c, getXYfromHex(a[1],35).add(ss.techTreeOffset),getXYfromHex(a[0],35).add(ss.techTreeOffset));
+    })
+
+    data.techs.forEach((t)=>{
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
       let colour = "white";
       let colNum = t.colour;
       let col = `rgb(${colNum[0]},${colNum[1]},${colNum[2]})`
       //if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
       if (state.playerData[state.playerTurn].tech[t.tech]) {col = "rgb(78,78,117)"}
-      drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col,  );
+      drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
       drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 14, colour )
       drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
     })
 
-    arrows.forEach(a => {
-      drawArrow(c, getXYfromHex(a[1],35).add(ss.techTreeOffset),getXYfromHex(a[0],35).add(ss.techTreeOffset));
-    })
+
   }
 }
 

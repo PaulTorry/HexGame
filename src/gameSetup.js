@@ -22,7 +22,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     let buildingHex = {hex: hex, terrain:"space", station:null};
     if(Math.random()<0.3){buildingHex.terrain = "nebula"}
     if(Math.random()<0.1){buildingHex.terrain = "planet"}
-    //if(Math.random()<0.1){buildingHex.terrain = "protostar"}
+    if(Math.random()<0.1){buildingHex.terrain = "protostar"}
     if(Math.random()<0.35){buildingHex.terrain = "asteroids"}
     if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
 
