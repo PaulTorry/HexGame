@@ -82,6 +82,19 @@ class Hex{
     new Hex(1,-2), new Hex(1,1), new Hex(-1,2), new Hex(-1,-1), new Hex(0,2), new Hex(0,-2)
   ]}
 
+  static secondNeighboursDependants () { return {
+    "2,0":[new Hex(1,0)], "2,-2":[new Hex(1,-1)],  "-2,0":[new Hex(-1,0)],
+    "-2,2":[new Hex(-1,1)],  "0,2":[new Hex(0,1)], "0,-2":[new Hex(0,-1)],
+    "2,-1":[new Hex(1,-1), new Hex(1,0)], "-2,1":[new Hex(-1,-1), new Hex(-1,0)],
+    "1,-2":[new Hex(0,-1), new Hex(1,-1)],"-1,2":[new Hex(0,1), new Hex(-1,1)],
+    "1,1":[new Hex(0,1), new Hex(1,0)], "-1,-1":[new Hex(0,-1), new Hex(-1,0)],
+  }}
+
+  static getDependants(x,y){
+    let things = Hex.secondNeighboursDependants()[x.subtract(y).id].map(n => n.add(y))
+    return things;
+  }
+
   static thirdNeighbours () { return [
     new Hex(3,-3), new Hex(3,-2), new Hex(3,-1), new Hex(3,0),
     new Hex(-3,3), new Hex(-3,2), new Hex(-3,1), new Hex(-3,0),
@@ -89,6 +102,20 @@ class Hex{
     new Hex(1,-3), new Hex(1,2), new Hex(-1,3), new Hex(-1,-2),
     new Hex(0,3), new Hex(0,-3)
   ]}
+
+  // static between (x,y) {
+  //   let z = x.subtract(y)
+  //   if (z.p % 2 === 0 && z.q % 2 === 0){
+  //     return [new Hex(z.p/2 + y.p,z.p/2 + y.p)];
+  //   }
+  //   if (z.p % 2 !== 0 && z.q % 2 === 0){
+  //     return [new Hex((z.p+1)/2 + y.p),new Hex(z.p/2 + y.p)];
+  //   }
+  //   if (z.p % 2 === 0 && z.q % 2 === 0){
+  //     return [new Hex(z.p/2 + y.p)];
+  //   }
+  //
+  // }
 
   static getXYfromUnitHex(hexCoord){
     const hexVec = {p: new Vec(1,0),   q: new Vec((-1/2), Math.sqrt(3)/2),  r: new Vec((-1/2), -Math.sqrt(3)/2) }
@@ -133,5 +160,8 @@ var clone = function() {
   }
   return newObj;
 };
+
+//console.log(Hex.secondNeighbours ());
+// console.log(Hex.getDependants(new Hex(3,1), new Hex(2,0)));
 
 Object.defineProperty( Object.prototype, "clone", {value: clone, enumerable: false});

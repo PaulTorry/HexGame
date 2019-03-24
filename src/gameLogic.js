@@ -98,23 +98,33 @@ function territoryState(hex){
 
 
 function onMenuItemClicked(item, hex = sel.hex){
-  let tile = state.tiles.get(hex.id)
-  let ship = getShipOnHex(hex)
+  let tile = state.tiles.get(hex.id);
+  let ship = getShipOnHex(hex);
+  let thing = data.thingList.find(t => t.thing === item);
   if (sel.state !== 2) console.log("sel.state !== 2");
 
-  state.playerData[state.playerTurn].money -= data.thingList.find(t => t.thing === item).price;
+  state.playerData[state.playerTurn].money -= thing.price;
 
-  if(item === "asteroidMining"){
-    tile.station = {type: "asteroidMining", owner: state.playerTurn}
+  if(thing.type && thing.type === "industry"){
+    tile.station = {type: item, owner: state.playerTurn}
   }
 
-  if(item === "harvestGasGiant"){
-    tile.station = {type: "harvestGasGiant", owner: state.playerTurn}
+  if(thing.type && thing.type === "ship"){
+    state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))
+    //tile.station = {type: item, owner: state.playerTurn}
   }
 
-  if(item === "harvestProtostar"){
-    tile.station = {type: "harvestProtostar", owner: state.playerTurn}
+  if(thing.type && thing.type === "nav"){
+    tile.navBeacon = {owner: state.playerTurn}
   }
+
+  // if(item === "harvestGasGiant"){
+  //   tile.station = {type: "harvestGasGiant", owner: state.playerTurn}
+  // }
+  //
+  // if(item === "harvestProtostar"){
+  //   tile.station = {type: "harvestProtostar", owner: state.playerTurn}
+  // }
 
   if(item === "inhabitedPlanet"){
     ship.moved = true; ship.attacked = true;
@@ -132,19 +142,16 @@ function onMenuItemClicked(item, hex = sel.hex){
     )}
   }
 
-  if(item === "navBeacon"){
-    tile.navBeacon = {owner: state.playerTurn}
-  }
-
 
 
   if(item === "destroy"){
     tile.navBeacon = null;
   }
-  console.log("gamelogic in shiphulls", item, data.shipHulls)
-  let inhulle = data.shipHulls[item];
-  //console.log(inhulle);
-  if(data.shipHulls[item]){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
+
+  // console.log("gamelogic in shiphulls", item, data.shipHulls)
+  // let inhulle = data.shipHulls[item];
+  // //console.log(inhulle);
+  // if(data.shipHulls[item]){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
 
 
 

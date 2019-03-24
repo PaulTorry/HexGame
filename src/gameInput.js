@@ -7,7 +7,7 @@ boardSize,
 
 drawScreen, drawMenu, screenSettings, interactiveConsole
 nextTurn,  onMenuItemClicked,  onTechHexClicked, onHexClicked,
-
+preturn,
 */
 
 /* eslint-disable no-unused-vars, one-var, */
@@ -97,7 +97,7 @@ function menuClick(event){
   event.preventDefault();
   if(event.offsetX < 90 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 90 && event.offsetX > 710) {
-    screenSettings.openTechTree = !screenSettings.openTechTree;
+    if(!preturn)screenSettings.openTechTree = !screenSettings.openTechTree;
   }
   else if(event.offsetY < 90 && event.offsetY > 10 && !screenSettings.openTechTree){
     console.log(event.offsetX);

@@ -1,6 +1,6 @@
 "use strict"
 
-/*global  boardSize   */
+/*global  boardSize , Hex, data  */
 
 /* eslint-disable no-unused-vars */
 
@@ -46,22 +46,39 @@ function getUpdatedViewMask(state, player = state.playerTurn){
 }
 
 function getOwnViewMask(state, player = state.playerTurn){
+  let mask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
 
-  let mask = removeActiveViews(state.playerData[state.playerTurn].viewMask)
+  let viewHex = n => {
+    if(
+      data.terrainInfo[state.tiles.get(n.id).terrain].viewTech
+       && !state.playerData[state.playerTurn].tech[data.terrainInfo[state.tiles.get(n.id).terrain].viewTech]
+    ) { mask[n.id] = 1;}
+    else{ mask[n.id] = 2; }
+  };
 
-  state.baseArray.forEach(b => {
-    if(b.owner === player){
-      mask[b.hex.id] = 2;
-      b.territory.forEach(t => {
-        mask[t.id] = 2;
-      })
-    }
-  })
+  let checkBetween = (x) => {
+    return (y) => {
+      if ( Hex.getDependants(x,y).find(x => state.tiles.get(x.id).terrain !== "nebula") ) return true;
+      else { return false; }
+    };
+  }
 
   state.shipArray.forEach(s => {
     if(s.owner === player){
       mask[s.hex.id] = 2;
-      s.hex.within(s.view).filter(h => h.mag <= boardSize) .forEach(n => { mask[n.id] = 2; })
+      s.hex.neighbours.filter(h => h.mag <= boardSize).forEach(viewHex)
+      if(s.view>1){
+        s.hex.secondNeighbours.filter(h => h.mag <= boardSize)
+          .filter(checkBetween(s.hex))
+          .forEach(viewHex)
+      }
+    }
+  })
+
+  state.baseArray.forEach(b => {
+    if(b.owner === player){
+      mask[b.hex.id] = 2;
+      b.territory.forEach(t => { mask[t.id] = 2; })
     }
   })
 

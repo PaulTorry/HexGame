@@ -14,6 +14,8 @@ function makeMenu(hex){
   let ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
   // console.log("makeMenu",base, tile, ship, hex.id);
   return data.thingList.filter(pos => {
+
+
     // console.log("pos ", pos);
     if(pos.price > state.playerData[state.playerTurn].money) return false;
     // console.log(" price  success");
@@ -57,11 +59,11 @@ function makeMenu(hex){
     // console.log(" thingPresent  success");
     // Self check
 
-    if(pos.thing === " navBeacon"){if (tile.navBeacon && tile.navBeacon.owner === state.playerTurn) return false;}
+    if(pos.thing === "navBeacon"){if (tile.navBeacon && tile.navBeacon.owner === state.playerTurn) return false;}
 
-    if(pos.thing === " asteroidMining" && tile.station && tile.station.type === "asteroidMining") return false;
+    if(pos.type === "industry" && tile.station) return false;
 
-    if(pos.thing === " inhabitedPlanet" &&  base && base.owner === state.playerTurn) return false;
+    if(pos.thing === "inhabitedPlanet" &&  base && base.owner === state.playerTurn) return false;
 
     return true
 

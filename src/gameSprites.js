@@ -20,10 +20,10 @@ const simpleShapes = {
 }
 
 const baseShapes = {"asteroidMining":simpleShapes["triangleVert"],  "inhabitedPlanet":simpleShapes["hexVert"],
-"navBeacon":simpleShapes["squareVert"], "basicShip":simpleShapes["triangleVert2"],
+"navBeacon":simpleShapes["squareVert"], "navAsteroid":simpleShapes["squareVert"], "navNebula":simpleShapes["squareVert"], "basicShip":simpleShapes["triangleVert2"],
 "assaultShip":simpleShapes["triangleVert4"],"mineShip":simpleShapes["triangleVert5"],
 "missileShip":simpleShapes["triangleVert6"], "scoutShip":simpleShapes["triangleVert3"],
-destroy:simpleShapes["cross"],
+"destroy":simpleShapes["cross"],
 }
 
 

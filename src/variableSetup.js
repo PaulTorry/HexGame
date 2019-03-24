@@ -64,30 +64,37 @@ const data = {
 
   thingList : [
 
-    {thing: 'navBeacon', price: 2, territoryState: 1,  shipState: 'noEnemy', tech: 'navBeacon',  terrain: ['space', 'asteroids', 'nebula', ] } ,
-    {thing: 'asteroidMining', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
+    {thing: 'navBeacon', type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navBeacon',  terrain: ['space', ] } ,
+    {thing: 'navAsteroid', type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navAsteroid',  terrain: ['asteroids', ] } ,
+    {thing: 'navNebula',  type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navNebula',  terrain: [ 'nebula', ] } ,
+
+
+    {thing: 'asteroidMining', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
+    {thing: 'harvestGasGiant', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ] } ,
+    {thing: 'harvestProtostar', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ] } ,
+
     {thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
-    {thing: 'scoutShip', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'scoutShipTech',  terrain: [] } ,
-    {thing: 'basicFrigate', price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {thing: 'battleship', price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'battleshipTech',  terrain: [] } ,
-    {thing: 'armouredDestroyer', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'armouredDestroyerTech',  terrain: [] } ,
-    {thing: 'titanShip', price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'titanTech', terrain: [] } ,
-    {thing: 'fastFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'fastFrigateTech', terrain: [] } ,
-    {thing: 'devourer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'devourerTech', terrain: [] } ,
-    {thing: 'missileFrigate', price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileFrigateTech',  terrain: [] } ,
-    {thing: 'missileDestroyer', price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileDestroyerTech',  terrain: [] } ,
-    {thing: 'harvestGasGiant', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ] } ,
-    {thing: 'harvestProtostar', price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ] } ,
+
+    {thing: 'scoutShip', type:"ship", price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'scoutShipTech',  terrain: [] } ,
+    {thing: 'basicFrigate', type:"ship", price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
+    {thing: 'battleship', type:"ship", price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'battleshipTech',  terrain: [] } ,
+    {thing: 'armouredDestroyer', type:"ship",  price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'armouredDestroyerTech',  terrain: [] } ,
+    {thing: 'titanShip', type:"ship", price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'titanTech', terrain: [] } ,
+    {thing: 'fastFrigate', type:"ship", price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'fastFrigateTech', terrain: [] } ,
+    {thing: 'devourer', type:"ship", price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'devourerTech', terrain: [] } ,
+    {thing: 'missileFrigate', type:"ship", price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileFrigateTech',  terrain: [] } ,
+    {thing: 'missileDestroyer', type:"ship", price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileDestroyerTech',  terrain: [] } ,
+
   //  {thing: 'solar sails', price: 2, territoryState: 2,  shipState: 'noEnemy',   terrain: ['adjacent to star', ] } ,
   ],
 
   terrainInfo : {
 
     space: { moveCost:1,},
-    asteroids: { moveCost:2,hullDamage:1,damTech:'asteroidMove',defenceTech:'asteroidMining',},
-    nebula: { moveCost:2,viewTech:'nebula',defenceTech:'nebulaResearchPostTech',},
-    gasGiant: { moveCost:1,moveTech:'gasGiantMove',},
-    planet: { moveCost:1,defenceTech:'defShieldTech',},
+    asteroids: { moveCost:2, hullDamage:1, damTech:'asteroidMove', defenceTech:'asteroidMining',},
+    nebula: { moveCost:2, viewTech:'nebulaVision',defenceTech:'nebulaResearchPostTech',},
+    gasGiant: { moveCost:1, moveTech:'gasGiantMove',},
+    planet: { moveCost:1, defenceTech:'defShieldTech',},
     protostar: { moveCost:5,},
   },
 }
