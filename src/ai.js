@@ -15,7 +15,7 @@ function takeAIturn(){
 
   ships.forEach( ship => {
     let possibleMoves = findPossibleMoves(ship.hex, ship.maxMove);
-    let possibleAttacks = findPossibleAttacks(ship.hex, ship.range);
+    let possibleAttacks = findPossibleAttacks(ship.hex,  data.shipHulls[ship.type].range);
 
     if (possibleAttacks.length && Math.random() > 0.5){
       let attack = possibleAttacks[Math.floor(Math.random() * possibleAttacks.length)];

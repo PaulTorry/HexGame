@@ -91,8 +91,8 @@ const data = {
   terrainInfo : {
 
     space: { moveCost:1,},
-    asteroids: { moveCost:2, hullDamage:1, damTech:'asteroidMove', defenceTech:'asteroidMining',},
-    nebula: { moveCost:2, viewTech:'nebulaVision',defenceTech:'nebulaResearchPostTech',},
+    asteroids: { moveCost:4, hullDamage:1, damTech:'asteroidMove', defenceTech:'asteroidMining',},
+    nebula: { moveCost:2, viewTech:'nebulaVision', defenceTech:'nebulaResearchPostTech',},
     gasGiant: { moveCost:1, moveTech:'gasGiantMove',},
     planet: { moveCost:1, defenceTech:'defShieldTech',},
     protostar: { moveCost:5,},

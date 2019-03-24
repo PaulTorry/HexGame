@@ -61,8 +61,8 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
 
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
     playerData.push({type: playerlist[i], money:5, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
-    shipArray.push({"type":"scoutShip","hull":1,"shield":2,"attack":2,"retaliate":1,
-      view:2, "maxMove":4,"moved":false,"attacked":false, hex:hexloc,"owner":i, range:1})
+    shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
+      "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})
     tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null});
   }
 

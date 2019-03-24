@@ -6,7 +6,7 @@
 screenSettings, Vec, Hex,
 drawScreen,  sel, state,
 getUpdatedViewMask,
-simpleShapes,
+simpleShapes, getTerrainDamage
  Map,  makeNewViewMask, preturn,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
@@ -60,12 +60,11 @@ function drawScreen() {
   let viewMask = getUpdatedViewMask(state)
   if (preturn){
     viewMask = makeNewViewMask(new Map());
-    drawText(c, `Click to Start`, getXYfromHex(state.playerData[state.playerTurn].capital), 30, "white" )
   }
 
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug){
-      let {x,y} = getXYfromHex(tile.hex)
+      let {x,y} = getXYfromHex(tile.hex)//.subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
       drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
 
       if(tile.terrain !== "space"){
@@ -125,15 +124,28 @@ function drawScreen() {
 
   if(sel.hex){
     for (let move of sel.moves){
-      drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
+      if(getTerrainDamage(sel.ship, move) > 0) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(255,91,87)");
+      else drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
     }
     for (let attack of sel.attacks){
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), ss.hexSize -5, 3 , "red");
     }
     drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(sel.hex), ss.hexSize -5, 3 , selectedColour[sel.state]);
   }
+
+  if (preturn){
+  //  viewMask = makeNewViewMask(new Map());
+    let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
+    let {x,y} = playerLoc;
+    drawFromData(c, gameSprites["logo"], x-20, y-230, 1, null, 0.3)
+    drawText(c, `Player ${state.playerTurn}`, playerLoc, 50, getPlayerColour(state.playerTurn) )
+    drawText(c, `Click to Start`, playerLoc.add(new Vec(0,50)), 30, "white" )
+  }
+
   drawMenu();
 }
+
+
 
 function drawMenu(){
   let arrows = [];
@@ -149,7 +161,7 @@ function drawMenu(){
       c.strokeRect (110+60*i, 10, 60, 80);
 
       if(gameSprites[menu[i]]){
-        drawFromData(c, gameSprites[menu[i]], 130+60*i, 40, state.playerTurn)
+        drawFromData(c, gameSprites[menu[i]], 130+60*i, 40, state.playerTurn, 1 ,0.5)
       }
 
       else if(baseShapes[menu[i]]){
@@ -158,14 +170,15 @@ function drawMenu(){
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn);
-  c.strokeRect (10, 10, 80, 80);
-  c.strokeRect (710, 10, 80, 80);
+  drawFromData(c, gameSprites["nextTurnButton"], 0, 0, state.playerTurn, 1 ,0.15);
+  drawFromData(c, gameSprites["techTreeButton"], 700, 0, state.playerTurn, 1 ,0.15)
+
   c.stroke();
-  c.stroke();
+
   drawText(c, `Player: ${state.playerTurn}`, new Vec(10,30), 15, "white" )
   if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}`, new Vec(10,60), 15, "white" )
 
-  drawText(c, `Tech Tree`, new Vec(720,30), 15, "white" )
+  //drawText(c, `Tech Tree`, new Vec(720,30), 15, "white" )
 
   if (screenSettings.openTechTree){
     data.techs.forEach((t)=>{
@@ -184,12 +197,25 @@ function drawMenu(){
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
       let colour = "white";
       let colNum = t.colour;
+
+      let draw = t.cost < 99;
+
       let col = `rgb(${colNum[0]},${colNum[1]},${colNum[2]})`
       //if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
-      if (state.playerData[state.playerTurn].tech[t.tech]) {col = "rgb(78,78,117)"}
-      drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
-      drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 14, colour )
-      drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
+      if (state.playerData[state.playerTurn].tech[t.tech]) {
+      //  col = "rgb(78,78,117)"
+        drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), "rgb(78,78,117)")
+      } else if (t.cost > 99 || (t.requires &&
+        t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
+      )
+      ) {
+        drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", col)
+      } else {
+        drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", "rgb(78,78,117)")
+      }
+    //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
+      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 14, colour )
+      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
     })
 
 
@@ -236,8 +262,8 @@ function drawArrow(c, start, end, width, colour){
   c.beginPath();c.closePath();
 }
 
-function drawFromData(c, data, xx=0, yy=0, player, transparency){
-  let add = (a, x, y) => a.map((v,i) => i%2 ? v+y  : v+x)
+function drawFromData(c, data, xx=0, yy=0, player, transparency, scale = 1){
+  let add = (a, x, y) => a.map((v,i) => i%2 ? v*scale+y  : v*scale+x);
   let gradient;
   let x = xx;
   let y = yy;
@@ -250,7 +276,7 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
 
   data.forEach(([t, ...v]) => {
     if(t === "sv") c.save();
-    else if(t === "of") {x = xx + v[0]; y = yy + v[1];}
+    else if(t === "of") {x = xx + v[0]*scale; y = yy + v[1]*scale;}
     else if(t === "bp") c.beginPath();
     else if(t === "mt") c.moveTo(...add(v,x,y));
     else if(t === "lt") c.lineTo(...add(v,x,y));
@@ -265,8 +291,8 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency){
     else if(t === "ct") c.bezierCurveTo(...add(v,x,y));
     else if(t === "re") c.restore();
     else if(t === "st") c.stroke()
-    else if(t === "tr") c.transform(...v)
-    else if(t === "xrg"){gradient = c.createRadialGradient(v[0]+x,v[1]+y,v[2],v[3]+x,v[4]+y,v[5])    }
+    //else if(t === "tr") c.transform(...v)
+    else if(t === "xrg"){gradient = c.createRadialGradient(v[0]*scale+x,v[1]*scale+y,v[2]*scale,v[3]*scale+x,v[4]*scale+y,v[5]*scale)    }
     else if(t === "xlg"){gradient = c.createLinearGradient(...add(v,x,y))
     }
     else if(t === "xcs"){

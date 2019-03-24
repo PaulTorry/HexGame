@@ -67,7 +67,7 @@ function getOwnViewMask(state, player = state.playerTurn){
     if(s.owner === player){
       mask[s.hex.id] = 2;
       s.hex.neighbours.filter(h => h.mag <= boardSize).forEach(viewHex)
-      if(s.view>1){
+      if(data.shipHulls[s.type].view>1){
         s.hex.secondNeighbours.filter(h => h.mag <= boardSize)
           .filter(checkBetween(s.hex))
           .forEach(viewHex)

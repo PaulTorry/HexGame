@@ -42,7 +42,10 @@ function onHexClicked(clickHex){
         sel.ship.hex = clickHex;
         sel.ship.moved = true;
         sel.hex = clickHex;
-        possibleAttacks = findPossibleAttacks(clickHex, sel.ship.range);
+
+        applyTerrainDamage(sel.ship, getTerrainDamage(sel.ship, clickHex));
+
+        possibleAttacks = findPossibleAttacks(clickHex, data.shipHulls[sel.ship.type].range);
         if (possibleAttacks.length > 0) { sel.moves = []; sel.attacks = possibleAttacks}
         else{
           sel.ship.attacked = true;
@@ -190,6 +193,22 @@ function getTerrainDefVal(ship, hex){
   return 0;
 }
 
+function getTerrainDamage(ship, hex){
+  console.log(ship, hex, state.tiles.get(hex.id));
+  if (data.terrainInfo[state.tiles.get(hex.id).terrain].damTech && !state.tiles.get(hex.id).navBeacon){
+
+    if (!state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].damTech]
+      || data.shipHulls[ship.type].maxMove < 2){
+      return 1
+    }
+  }
+  return 0;
+}
+
+function applyTerrainDamage(ship, damage){
+  ship.hull -= damage;
+  if(ship.hull <= 0) state.shipArray = state.shipArray.filter(e => e !== ship)
+}
 
 function applyDamage(attacker, ship, attacking = true, terrainDefence = 0){
   let {type, hull, shield} = ship;
@@ -215,7 +234,10 @@ function applyDamage(attacker, ship, attacking = true, terrainDefence = 0){
 
 
 function getWeaponPower(ship, attacking = true){
-  let {type, hull, attack, retaliate} = ship;
+  let {type, hull} = ship;
+  let  {attack, retaliate} = data.shipHulls[type];
+  console.log(type, hull, attack, retaliate);
+
   if(attacking){ return attack * hull / data.shipHulls[type].hull; }
   else{ return retaliate * hull / data.shipHulls[type].hull; }
 }
@@ -224,8 +246,7 @@ function getWeaponPower(ship, attacking = true){
 
 function nextTurn(){
   state.playerData[state.playerTurn].money += collectMoney();
-  // state.playerData[state.playerTurn].viewMask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
-  // state.playerData[state.playerTurn].viewMask = getUpdatedViewMask(state);
+
   for (let ship of state.shipArray){
     if (ship.owner === state.playerTurn){
       if (!ship.moved && !ship.attacked) ship.shield =  Math.min(ship.shield +1, data.shipHulls[ship.type].shield);
