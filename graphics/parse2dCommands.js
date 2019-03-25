@@ -110,109 +110,181 @@ function pasteHere(ctx){
 
 ctx.save();
 
-// layer1/titan/Path
+// layer1/gas giant/Ellipse
 ctx.save();
 ctx.beginPath();
-ctx.moveTo(65.9, 47.9);
-ctx.bezierCurveTo(73.2, 37.7, 67.9, 23.5, 60.7, 14.3);
-ctx.lineTo(60.7, 14.3);
-ctx.bezierCurveTo(53.4, 5.1, 40.9, -3.3, 29.3, 1.3);
-ctx.bezierCurveTo(20.9, 4.6, 5.6, 14.9, 1.3, 24.6);
-ctx.bezierCurveTo(-2.6, 33.5, 25.0, 25.4, 32.8, 36.2);
-ctx.bezierCurveTo(40.6, 47.0, 26.0, 70.5, 35.8, 69.0);
-ctx.bezierCurveTo(45.5, 67.5, 60.7, 55.2, 65.9, 47.9);
+ctx.moveTo(86.2, 14.2);
+ctx.bezierCurveTo(99.6, 30.8, 97.2, 55.1, 80.6, 68.6);
+ctx.bezierCurveTo(64.1, 82.1, 39.7, 79.6, 26.3, 63.0);
+ctx.bezierCurveTo(12.8, 46.5, 15.3, 22.2, 31.8, 8.7);
+ctx.bezierCurveTo(48.4, -4.8, 72.7, -2.3, 86.2, 14.2);
 ctx.closePath();
-ctx.fillStyle ("rgb(215, 35, 53)");
+ctx.fillStyle ("rgb(59, 26, 86)");
 ctx.fill();
 
-// layer1/titan/Path
+// layer1/gas giant/Path
 ctx.beginPath();
-ctx.moveTo(38.1, 67.2);
-ctx.bezierCurveTo(38.1, 67.2, 58.5, 53.0, 63.2, 46.4);
-ctx.bezierCurveTo(68.4, 39.1, 66.9, 31.3, 63.6, 24.2);
-ctx.bezierCurveTo(62.6, 21.9, 55.7, 21.0, 54.2, 19.1);
-ctx.lineTo(54.2, 19.1);
-ctx.bezierCurveTo(52.6, 17.1, 53.3, 10.1, 51.2, 8.4);
-ctx.bezierCurveTo(46.3, 4.6, 37.8, 0.6, 29.8, 3.8);
-ctx.bezierCurveTo(22.2, 6.8, 3.5, 23.2, 3.5, 23.2);
-ctx.lineTo(38.1, 67.2);
+ctx.moveTo(19.8, 33.2);
+ctx.bezierCurveTo(24.9, 26.8, 31.5, 23.2, 33.4, 22.5);
+ctx.bezierCurveTo(41.2, 20.0, 43.7, 22.4, 51.4, 21.4);
+ctx.bezierCurveTo(57.3, 20.6, 65.8, 15.3, 71.9, 10.5);
+ctx.bezierCurveTo(73.0, 9.7, 75.8, 7.5, 78.4, 8.2);
+ctx.bezierCurveTo(79.9, 8.6, 81.3, 10.0, 81.1, 10.7);
+ctx.bezierCurveTo(80.8, 11.4, 78.9, 11.3, 77.8, 11.4);
+ctx.bezierCurveTo(72.9, 11.8, 70.6, 17.7, 66.6, 22.5);
+ctx.bezierCurveTo(62.9, 27.0, 54.6, 34.0, 46.8, 32.9);
+ctx.bezierCurveTo(42.8, 32.3, 41.5, 30.0, 35.8, 29.7);
+ctx.bezierCurveTo(34.1, 29.6, 31.1, 29.5, 27.8, 30.9);
+ctx.bezierCurveTo(21.8, 33.3, 19.2, 38.7, 18.8, 38.4);
+ctx.bezierCurveTo(18.5, 38.2, 17.4, 36.2, 19.8, 33.2);
 ctx.closePath();
-ctx.createLinearGradient(55.5, 12.8, 19.6, 48.7);
-ctx.addColorStop(0.00, "rgb(129, 21, 24)");
-ctx.addColorStop(0.31, "rgba(172, 28, 39, 0.50)");
-ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+ctx.fillStyle ("rgb(102, 46, 143)");
+ctx.fill();
+
+// layer1/gas giant/Path
+ctx.beginPath();
+ctx.moveTo(31.6, 45.9);
+ctx.bezierCurveTo(32.1, 46.6, 42.1, 45.6, 41.9, 41.4);
+ctx.bezierCurveTo(41.8, 38.2, 36.0, 35.0, 32.0, 35.0);
+ctx.bezierCurveTo(26.8, 35.1, 22.0, 40.1, 20.8, 45.0);
+ctx.bezierCurveTo(19.2, 51.4, 25.2, 57.0, 29.3, 59.4);
+ctx.bezierCurveTo(38.9, 65.0, 53.7, 53.9, 62.1, 46.4);
+ctx.bezierCurveTo(66.2, 42.7, 68.5, 37.7, 74.1, 36.9);
+ctx.bezierCurveTo(77.4, 36.4, 82.3, 37.2, 83.6, 40.0);
+ctx.bezierCurveTo(86.3, 45.9, 76.3, 57.4, 69.3, 63.4);
+ctx.bezierCurveTo(62.8, 68.8, 57.6, 70.8, 57.8, 71.2);
+ctx.bezierCurveTo(58.0, 71.8, 68.0, 68.4, 77.3, 60.7);
+ctx.bezierCurveTo(79.2, 59.1, 81.7, 57.4, 83.8, 54.4);
+ctx.bezierCurveTo(88.2, 48.0, 96.0, 31.6, 90.9, 27.2);
+ctx.bezierCurveTo(86.0, 23.0, 71.3, 31.9, 68.4, 34.0);
+ctx.bezierCurveTo(58.1, 41.5, 55.9, 45.9, 47.4, 49.9);
+ctx.bezierCurveTo(38.6, 54.0, 31.0, 55.9, 28.1, 50.6);
+ctx.bezierCurveTo(26.5, 47.7, 26.4, 42.3, 29.3, 40.2);
+ctx.bezierCurveTo(31.8, 38.4, 36.5, 39.8, 37.2, 41.3);
+ctx.bezierCurveTo(38.1, 43.4, 31.1, 45.2, 31.6, 45.9);
+ctx.closePath();
+ctx.fill();
+
+// layer1/gas giant/Ellipse
+ctx.beginPath();
+ctx.moveTo(86.2, 14.2);
+ctx.bezierCurveTo(99.6, 30.8, 97.2, 55.1, 80.6, 68.6);
+ctx.bezierCurveTo(64.1, 82.1, 39.7, 79.6, 26.3, 63.0);
+ctx.bezierCurveTo(12.8, 46.5, 15.3, 22.2, 31.8, 8.7);
+ctx.bezierCurveTo(48.4, -4.8, 72.7, -2.3, 86.2, 14.2);
+ctx.closePath();
+ctx.save();
+ctx.transform(-0.775, 0.632, 0.632, 0.775, 5041.1, -2573.3);
+ctx.createRadialGradient(5522.1, -1135.4, 0.0, 5522.1, -1135.4, 45.1);
+ctx.addColorStop(0.28, "rgba(26, 60, 87, 0.65)");
+ctx.addColorStop(0.58, "rgba(35, 51, 85, 0.65)");
+ctx.addColorStop(0.90, "rgba(45, 42, 83, 0.65)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/titan/Rectangle
-ctx.beginPath();
-ctx.moveTo(5.0, 39.2);
-ctx.lineTo(17.1, 30.5);
-ctx.bezierCurveTo(17.7, 30.1, 17.8, 29.3, 17.4, 28.8);
-ctx.lineTo(14.3, 24.5);
-ctx.bezierCurveTo(13.9, 23.9, 13.1, 23.8, 12.6, 24.2);
-ctx.lineTo(0.5, 32.9);
-ctx.bezierCurveTo(-0.0, 33.3, -0.2, 34.0, 0.2, 34.6);
-ctx.lineTo(3.3, 38.9);
-ctx.bezierCurveTo(3.7, 39.4, 4.5, 39.6, 5.0, 39.2);
-ctx.closePath();
-ctx.save();
-ctx.transform(0.913, -0.298, -0.332, -0.939, -569.9, 1157.7);
-ctx.createLinearGradient(965.6, 901.3, 952.4, 888.0);
-ctx.addColorStop(0.00, "rgb(129, 21, 24)");
-ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
-ctx.fillStyle ();
-ctx.fill();
-
-// layer1/titan/Rectangle
+// layer1/gas giant/Path
 ctx.restore();
 ctx.beginPath();
-ctx.moveTo(28.2, 66.3);
-ctx.lineTo(39.5, 57.4);
-ctx.bezierCurveTo(40.1, 57.0, 40.2, 56.2, 39.8, 55.7);
-ctx.lineTo(36.5, 51.5);
-ctx.bezierCurveTo(36.1, 51.0, 35.3, 50.9, 34.8, 51.3);
-ctx.lineTo(23.4, 60.2);
-ctx.bezierCurveTo(22.8, 60.7, 22.7, 61.4, 23.2, 62.0);
-ctx.lineTo(26.4, 66.1);
-ctx.bezierCurveTo(26.8, 66.7, 27.6, 66.8, 28.2, 66.3);
+ctx.moveTo(108.3, 15.2);
+ctx.bezierCurveTo(105.4, 8.8, 95.1, 6.6, 81.3, 8.3);
+ctx.bezierCurveTo(83.2, 9.9, 84.9, 11.7, 86.5, 13.7);
+ctx.bezierCurveTo(93.0, 13.2, 97.4, 14.3, 98.7, 17.1);
+ctx.bezierCurveTo(99.9, 19.8, 97.9, 23.6, 93.7, 28.0);
+ctx.bezierCurveTo(87.1, 34.7, 74.8, 42.7, 59.8, 49.4);
+ctx.bezierCurveTo(46.2, 55.5, 33.2, 59.2, 23.8, 60.2);
+ctx.bezierCurveTo(16.4, 60.9, 11.3, 59.9, 9.9, 56.9);
+ctx.bezierCurveTo(8.5, 53.7, 11.4, 49.0, 17.3, 43.7);
+ctx.bezierCurveTo(17.0, 41.8, 16.9, 39.9, 16.9, 38.0);
+ctx.bezierCurveTo(16.9, 37.3, 16.9, 36.6, 16.9, 35.9);
+ctx.bezierCurveTo(4.6, 45.9, -1.9, 56.1, 1.3, 63.1);
+ctx.bezierCurveTo(4.4, 70.2, 16.7, 72.1, 32.7, 69.4);
+ctx.bezierCurveTo(42.2, 67.7, 52.9, 64.4, 63.9, 59.5);
+ctx.bezierCurveTo(76.3, 53.9, 87.0, 47.2, 94.9, 40.4);
+ctx.bezierCurveTo(105.7, 31.1, 111.2, 21.7, 108.3, 15.2);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.883, -0.324, -0.377, -0.921, -504.7, 1315.5);
-ctx.createLinearGradient(1040.6, 1007.8, 1027.3, 994.5);
-ctx.addColorStop(0.00, "rgb(129, 21, 24)");
-ctx.addColorStop(1.00, "rgba(215, 35, 53, 0.00)");
+ctx.fillStyle ("rgb(59, 26, 86)");
+ctx.fill();
+
+// layer1/gas giant/Path
+ctx.beginPath();
+ctx.moveTo(108.3, 15.2);
+ctx.bezierCurveTo(105.4, 8.8, 95.1, 6.6, 81.3, 8.3);
+ctx.bezierCurveTo(83.2, 9.9, 84.9, 11.7, 86.5, 13.7);
+ctx.bezierCurveTo(93.0, 13.2, 97.4, 14.3, 98.7, 17.1);
+ctx.bezierCurveTo(99.9, 19.8, 97.9, 23.6, 93.7, 28.0);
+ctx.bezierCurveTo(87.1, 34.7, 74.8, 42.7, 59.8, 49.4);
+ctx.bezierCurveTo(46.2, 55.5, 33.2, 59.2, 23.8, 60.2);
+ctx.bezierCurveTo(16.4, 60.9, 11.3, 59.9, 9.9, 56.9);
+ctx.bezierCurveTo(8.5, 53.7, 11.4, 49.0, 17.3, 43.7);
+ctx.bezierCurveTo(17.0, 41.8, 16.9, 39.9, 16.9, 38.0);
+ctx.bezierCurveTo(16.9, 37.3, 16.9, 36.6, 16.9, 35.9);
+ctx.bezierCurveTo(4.6, 45.9, -1.9, 56.1, 1.3, 63.1);
+ctx.bezierCurveTo(4.4, 70.2, 16.7, 72.1, 32.7, 69.4);
+ctx.bezierCurveTo(42.2, 67.7, 52.9, 64.4, 63.9, 59.5);
+ctx.bezierCurveTo(76.3, 53.9, 87.0, 47.2, 94.9, 40.4);
+ctx.bezierCurveTo(105.7, 31.1, 111.2, 21.7, 108.3, 15.2);
+ctx.closePath();
+ctx.createLinearGradient(0.5, 39.1, 109.0, 39.1);
+ctx.addColorStop(0.00, "rgba(26, 60, 87, 0.65)");
+ctx.addColorStop(0.14, "rgba(35, 51, 85, 0.65)");
+ctx.addColorStop(0.41, "rgba(45, 42, 83, 0.65)");
+ctx.addColorStop(0.89, "rgba(35, 51, 85, 0.65)");
+ctx.addColorStop(1.00, "rgba(26, 60, 87, 0.65)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/titan/Path
-ctx.restore();
+// layer1/gas giant/Compound Path
 ctx.beginPath();
-ctx.moveTo(34.4, 20.1);
-ctx.lineTo(29.1, 18.8);
-ctx.bezierCurveTo(27.8, 18.4, 27.2, 16.9, 28.0, 15.8);
-ctx.lineTo(31.5, 11.2);
-ctx.bezierCurveTo(32.0, 10.5, 32.8, 10.3, 33.6, 10.5);
-ctx.lineTo(38.9, 12.3);
-ctx.bezierCurveTo(40.1, 12.8, 40.5, 14.3, 39.7, 15.3);
-ctx.lineTo(36.3, 19.5);
-ctx.bezierCurveTo(35.8, 20.1, 35.1, 20.3, 34.4, 20.1);
-ctx.closePath();
-ctx.fillStyle ("rgb(158, 28, 35)");
-ctx.fill();
 
-// layer1/titan/Path
-ctx.beginPath();
-ctx.moveTo(56.6, 42.9);
-ctx.lineTo(51.6, 45.1);
-ctx.bezierCurveTo(50.3, 45.6, 49.0, 44.7, 48.9, 43.4);
-ctx.lineTo(48.8, 37.6);
-ctx.bezierCurveTo(48.8, 36.8, 49.3, 36.1, 50.1, 35.8);
-ctx.lineTo(55.4, 34.0);
-ctx.bezierCurveTo(56.6, 33.6, 57.9, 34.5, 57.8, 35.8);
-ctx.lineTo(57.7, 41.2);
-ctx.bezierCurveTo(57.7, 42.0, 57.3, 42.6, 56.6, 42.9);
+// layer1/gas giant/Compound Path/Path
+ctx.moveTo(20.0, 71.1);
+ctx.bezierCurveTo(10.0, 71.1, 3.1, 68.4, 0.8, 63.3);
+ctx.bezierCurveTo(-2.3, 56.4, 3.6, 46.0, 16.6, 35.5);
+ctx.lineTo(17.5, 34.8);
+ctx.lineTo(17.4, 36.0);
+ctx.bezierCurveTo(17.4, 36.6, 17.4, 37.3, 17.4, 38.0);
+ctx.bezierCurveTo(17.4, 39.8, 17.5, 41.8, 17.8, 43.6);
+ctx.lineTo(17.8, 43.9);
+ctx.lineTo(17.6, 44.1);
+ctx.bezierCurveTo(11.7, 49.4, 9.1, 53.9, 10.4, 56.6);
+ctx.bezierCurveTo(11.6, 59.3, 16.3, 60.4, 23.8, 59.7);
+ctx.bezierCurveTo(33.4, 58.7, 46.5, 54.8, 59.6, 48.9);
+ctx.bezierCurveTo(73.9, 42.5, 86.5, 34.6, 93.3, 27.6);
+ctx.bezierCurveTo(97.5, 23.3, 99.3, 19.7, 98.2, 17.3);
+ctx.bezierCurveTo(97.1, 14.9, 93.0, 13.7, 86.5, 14.2);
+ctx.lineTo(86.3, 14.2);
+ctx.lineTo(86.1, 14.0);
+ctx.bezierCurveTo(84.6, 12.0, 82.8, 10.2, 80.9, 8.6);
+ctx.lineTo(80.1, 7.9);
+ctx.lineTo(81.2, 7.8);
+ctx.bezierCurveTo(95.8, 6.0, 105.8, 8.6, 108.7, 15.0);
+ctx.lineTo(108.7, 15.0);
+ctx.bezierCurveTo(111.6, 21.5, 106.7, 30.9, 95.2, 40.8);
+ctx.bezierCurveTo(86.9, 47.9, 76.2, 54.6, 64.1, 60.0);
+ctx.bezierCurveTo(53.5, 64.7, 42.6, 68.1, 32.8, 69.9);
+ctx.bezierCurveTo(28.1, 70.7, 23.8, 71.1, 20.0, 71.1);
 ctx.closePath();
+
+// layer1/gas giant/Compound Path/Path
+ctx.moveTo(16.4, 37.0);
+ctx.bezierCurveTo(4.4, 46.9, -1.1, 56.5, 1.7, 62.9);
+ctx.bezierCurveTo(4.7, 69.5, 16.2, 71.7, 32.6, 68.9);
+ctx.bezierCurveTo(42.4, 67.2, 53.1, 63.8, 63.7, 59.1);
+ctx.bezierCurveTo(75.7, 53.7, 86.4, 47.1, 94.6, 40.1);
+ctx.bezierCurveTo(105.7, 30.5, 110.5, 21.5, 107.8, 15.4);
+ctx.lineTo(107.8, 15.4);
+ctx.bezierCurveTo(105.2, 9.6, 96.0, 7.1, 82.4, 8.6);
+ctx.bezierCurveTo(84.0, 10.0, 85.4, 11.5, 86.7, 13.1);
+ctx.bezierCurveTo(93.6, 12.7, 97.8, 14.0, 99.1, 16.9);
+ctx.bezierCurveTo(100.4, 19.7, 98.6, 23.7, 94.0, 28.3);
+ctx.bezierCurveTo(87.1, 35.4, 74.4, 43.4, 60.0, 49.8);
+ctx.bezierCurveTo(46.8, 55.8, 33.7, 59.7, 23.9, 60.7);
+ctx.bezierCurveTo(15.8, 61.5, 10.9, 60.2, 9.4, 57.1);
+ctx.bezierCurveTo(8.0, 53.8, 10.5, 49.1, 16.8, 43.5);
+ctx.bezierCurveTo(16.5, 41.7, 16.4, 39.8, 16.4, 38.0);
+ctx.bezierCurveTo(16.4, 37.6, 16.4, 37.3, 16.4, 37.0);
+ctx.closePath();
+ctx.fillStyle ("rgb(21, 19, 35)");
 ctx.fill();
 ctx.restore();
 ctx.restore();

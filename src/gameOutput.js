@@ -158,14 +158,18 @@ function drawMenu(){
   if(sel.menu && sel.menu.length > 0 && !screenSettings.openTechTree){
     let menu = sel.menu;
     for(let i=0; i<menu.length; i++){
-      c.strokeRect (110+60*i, 10, 60, 80);
+      c.strokeRect (110+70*i, 30, 60, 60);
 
       if(gameSprites[menu[i]]){
-        drawFromData(c, gameSprites[menu[i]], 130+60*i, 40, state.playerTurn, 1 ,0.5)
+        drawFromData(c, gameSprites["roundedHex"], 110+70*i, 32, state.playerTurn, 1 ,0.35)
+        drawFromData(c, gameSprites[menu[i]], 140+70*i, 60, state.playerTurn, 1 ,0.5)
+        drawText(c, 'cost', new Vec(125+70*i, 40), 10, "white" )
+        drawText(c, 'name', new Vec(125+70*i, 85), 10, "white" )
       }
 
       else if(baseShapes[menu[i]]){
-        drawPoly(c, baseShapes[menu[i]], new Vec(130+60*i, 30), 10, 4 , getPlayerColour(state.playerTurn) );
+        drawFromData(c, gameSprites["roundedHex"], 110+70*i, 32, state.playerTurn, 1 ,0.35)
+        drawPoly(c, baseShapes[menu[i]], new Vec(130+70*i, 60), 10, 4 , getPlayerColour(state.playerTurn) );
       } else i
     }
   }
@@ -175,8 +179,9 @@ function drawMenu(){
 
   c.stroke();
 
-  drawText(c, `Player: ${state.playerTurn}`, new Vec(10,30), 15, "white" )
-  if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}`, new Vec(10,60), 15, "white" )
+  drawText(c, `Player: ${state.playerTurn}`, new Vec(100,20), 15, "white" )
+  if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}`, new Vec(180,20), 15, "white" )
+  if(!preturn) drawText(c, `City Points: **`, new Vec(280,20), 15, "white" )
 
   //drawText(c, `Tech Tree`, new Vec(720,30), 15, "white" )
 

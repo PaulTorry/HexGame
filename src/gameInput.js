@@ -101,8 +101,8 @@ function menuClick(event){
   }
   else if(event.offsetY < 90 && event.offsetY > 10 && !screenSettings.openTechTree){
     console.log(event.offsetX);
-    console.log((event.offsetX-110), (event.offsetX-110)/60 );
-    let num = Math.ceil((event.offsetX-110)/60);
+    console.log((event.offsetX-110), (event.offsetX-110)/70 );
+    let num = Math.ceil((event.offsetX-110)/70);
     console.log(num);
     if (num && sel.menu[num-1]){
       console.log(sel, sel.menu, sel.menu[num-1]);
