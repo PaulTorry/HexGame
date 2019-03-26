@@ -13,35 +13,29 @@ function makeNewViewMask(tiles){
 
 function removeActiveViews(viewMask){
   let mask = {};
-
   for (let k of Object.keys(viewMask)){
     if (viewMask[k] === 2 || viewMask[k] === 1){mask[k] = 1}
   }
-
   return mask;
 }
 
 
 function addViewMasks(state, vm1, vm2){
   let mask = {};
-
   state.tiles.forEach(b => {
     mask[b.hex.id] = Math.max(vm1[b.hex.id], vm2[b.hex.id]);
   })
-
   return mask;
 }
 
 function getUpdatedViewMask(state, player = state.playerTurn){
 
   let mask = state.playerData[state.playerTurn].viewMask
-
   for(let i = 0; i < state.numPlayers; i++){
     if(i === player || state.alliesGrid[player][i]){
       mask = addViewMasks(state, mask, getOwnViewMask(state, i));
     }
   }
-
   return mask;
 }
 
@@ -58,7 +52,8 @@ function getOwnViewMask(state, player = state.playerTurn){
 
   let checkBetween = (x) => {
     return (y) => {
-      if ( Hex.getDependants(x,y).find(x => state.tiles.get(x.id).terrain !== "nebula") ) return true;
+      if ( Hex.getDependants(x,y).filter(h => h.mag <= boardSize)
+        .find(x => state.tiles.get(x.id).terrain !== "nebula") ) return true;
       else { return false; }
     };
   }

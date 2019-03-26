@@ -161,6 +161,8 @@ var clone = function() {
   return newObj;
 };
 
+//Hex.getDependants(new Hex(), new Hex())
+
 //console.log(Hex.secondNeighbours ());
 // console.log(Hex.getDependants(new Hex(3,1), new Hex(2,0)));
 

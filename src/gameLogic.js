@@ -194,7 +194,7 @@ function getTerrainDefVal(ship, hex){
 }
 
 function getTerrainDamage(ship, hex){
-  console.log(ship, hex, state.tiles.get(hex.id));
+//  console.log(ship, hex, state.tiles.get(hex.id));
   if (data.terrainInfo[state.tiles.get(hex.id).terrain].damTech && !state.tiles.get(hex.id).navBeacon){
 
     if (!state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].damTech]

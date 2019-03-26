@@ -158,13 +158,13 @@ function drawMenu(){
   if(sel.menu && sel.menu.length > 0 && !screenSettings.openTechTree){
     let menu = sel.menu;
     for(let i=0; i<menu.length; i++){
-      c.strokeRect (110+70*i, 30, 60, 60);
 
       if(gameSprites[menu[i]]){
         drawFromData(c, gameSprites["roundedHex"], 110+70*i, 32, state.playerTurn, 1 ,0.35)
         drawFromData(c, gameSprites[menu[i]], 140+70*i, 60, state.playerTurn, 1 ,0.5)
-        drawText(c, 'cost', new Vec(125+70*i, 40), 10, "white" )
-        drawText(c, 'name', new Vec(125+70*i, 85), 10, "white" )
+        let details = data.thingList.find(t => t.thing === menu[i]);
+        drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
+        drawText(c, `${details.thing}`, new Vec(125+70*i, 85), 10, "white" )
       }
 
       else if(baseShapes[menu[i]]){
@@ -218,7 +218,7 @@ function drawMenu(){
       } else {
         drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", "rgb(78,78,117)")
       }
-    //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
+      //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
       if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 14, colour )
       if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
     })
