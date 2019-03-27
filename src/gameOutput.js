@@ -26,9 +26,9 @@ function getPlayerColour(player = state.playerTurn, opacity = 1, mid = false, da
   const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
   const playerColoursNew = [    [33,163,79], [216,36,53], [124,0,255], [0,131,219],
     [177,0,95],[158,170,30], [216,130,25]];
-  const playerColoursMid = [    [3,124,52], [158,28,35], [95,0,186], [0,113,170],
+  const playerColoursMid = [    [3,124,52], [158,28,35], [95,0,186], [0,107,188],
     [139,0,73],[126,137,20], [172,104,14]];
-  const playerColoursDark = [   [0,110,43],[130,6,20],[19,55,-70],[0,80,124],[122,0,62],[101,112,8],[142,85,1]];
+  const playerColoursDark = [   [0,110,43],[130,6,20],[58,5,161],[0,74,156],[122,0,62],[101,112,8],[142,85,1]];
 
   let [r,g,b] = playerColoursNew[player];
   if (mid) [r,g,b] = playerColoursMid[player];
@@ -97,7 +97,7 @@ function drawScreen() {
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug ){
       let planet = whichPlanetsTerritory(tile.hex);
-      if(planet) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  getPlayerColour(planet.owner)  );
+      if(planet) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  getPlayerColour(planet.owner, 1, 0, 1)  );
       if(debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-30,-30)),14 )
       if(debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-40,+40)),14, "grey" )
     }
@@ -118,7 +118,9 @@ function drawScreen() {
         drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
       }
 
-      drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(-20,0)), 28, "white")
+      //drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
+      drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
+      drawText(c, `(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
     }
   }
 
@@ -160,16 +162,19 @@ function drawMenu(){
     for(let i=0; i<menu.length; i++){
 
       if(gameSprites[menu[i]]){
-        drawFromData(c, gameSprites["roundedHex"], 110+70*i, 32, state.playerTurn, 1 ,0.35)
+        drawFromData(c, gameSprites["roundedHex"], 110+70*i, 30, state.playerTurn, 1 ,0.35)
         drawFromData(c, gameSprites[menu[i]], 140+70*i, 60, state.playerTurn, 1 ,0.5)
         let details = data.thingList.find(t => t.thing === menu[i]);
         drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
-        drawText(c, `${details.thing}`, new Vec(125+70*i, 85), 10, "white" )
+        drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
       }
 
       else if(baseShapes[menu[i]]){
         drawFromData(c, gameSprites["roundedHex"], 110+70*i, 32, state.playerTurn, 1 ,0.35)
         drawPoly(c, baseShapes[menu[i]], new Vec(130+70*i, 60), 10, 4 , getPlayerColour(state.playerTurn) );
+        let details = data.thingList.find(t => t.thing === menu[i]);
+        drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
+        drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
       } else i
     }
   }
@@ -219,8 +224,8 @@ function drawMenu(){
         drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", "rgb(78,78,117)")
       }
       //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
-      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 14, colour )
-      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 14, "white" )
+      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, colour )
+      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 12, colour )
     })
 
 
