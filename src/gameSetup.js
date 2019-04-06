@@ -60,11 +60,11 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     let hexloc = Hex.getUnitHexFromXY(new Vec(Math.sin(angle), Math.cos(angle)).scale(boardSize/1))
 
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
-    playerData.push({type: playerlist[i], money:5, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
+    playerData.push({type: playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
     shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
       "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})
     tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null});
   }
 
-  return {numPlayers:numPlayers, playerTurn:0, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid,}
+  return {numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid,}
 }

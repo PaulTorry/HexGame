@@ -161,6 +161,7 @@ function onMenuItemClicked(item, hex = sel.hex){
 
 
   sel = {state:0, attacks:[], menu:[], moves:[]}
+  reSetIncomes();
   drawMenu();
 }
 
@@ -245,7 +246,7 @@ function getWeaponPower(ship, attacking = true){
 
 
 function nextTurn(){
-  state.playerData[state.playerTurn].money += collectMoney();
+  state.playerData[state.playerTurn].money += state.playerData[state.playerTurn].income;
 
   for (let ship of state.shipArray){
     if (ship.owner === state.playerTurn){
@@ -255,6 +256,7 @@ function nextTurn(){
     }
   }
   state.playerTurn = (state.playerTurn + 1) % state.numPlayers;
+  if (state.playerTurn === 0) state.turnNumber += 1;
   translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
   screenSettings.openTechTree = false;
   drawMenu(); drawScreen();
@@ -269,9 +271,15 @@ function nextTurn(){
   }
 }
 
-function collectMoney(){
-  let bases = state.baseArray.filter(b => b.owner === state.playerTurn);
-  let stations = Array.from(state.tiles).filter(([id, val]) => val.station && val.station.owner === state.playerTurn)
+function reSetIncomes(){
+  state.playerData.forEach((v,i) => {
+    state.playerData[i].income = calcIncome(i);
+  })
+}
+
+function calcIncome(player){
+  let bases = state.baseArray.filter(b => b.owner === player);
+  let stations = Array.from(state.tiles).filter(([id, val]) => val.station && val.station.owner === player)
 
   return bases.length + stations.length;
 }

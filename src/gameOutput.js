@@ -185,8 +185,10 @@ function drawMenu(){
   c.stroke();
 
   drawText(c, `Player: ${state.playerTurn}`, new Vec(100,20), 15, "white" )
-  if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}`, new Vec(180,20), 15, "white" )
-  if(!preturn) drawText(c, `City Points: **`, new Vec(280,20), 15, "white" )
+  drawText(c, `Turn: ${state.turnNumber}`, new Vec(180,20), 15, "white" )
+  if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245,20), 15, "white" )
+//  if(!preturn) drawText(c, `( ${state.playerData[state.playerTurn].income} )`, new Vec(320,20), 15, "white" )
+  if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
 
   //drawText(c, `Tech Tree`, new Vec(720,30), 15, "white" )
 
