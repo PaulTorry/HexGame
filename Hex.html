@@ -9,7 +9,9 @@
   body {overflow: hidden; }
   img {display: none}
   </style>
-  <meta charset="UTF-8" user-scalable=no/>
+  <!--meta charset="UTF-8" user-scalable=no/-->
+  <meta name="viewport" content="width=device-width,
+    initial-scale=0.45, maximum-scale=1, user-scalable=0"/>
   <link rel="stylesheet" href="" type="text/css"/>
 
   <script src="./src/library.js"></script>
@@ -41,6 +43,8 @@ document.body.querySelector("#menu").addEventListener("click", menuClick);
 
 document.body.querySelector("#board").addEventListener("touchstart", touchstart);
 document.body.addEventListener("keydown", interactiveConsole);
+
+//document.body.addEventListener('touchstart', function(e){ e.preventDefault(); });
 
 window.onload = () => {
   console.log("Hi");
