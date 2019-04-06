@@ -3,7 +3,10 @@
 <head>
   <title>Space heX</title>
   <style>
+  body, html {height:100%; width:100%;}
+  div.wrap {height:100%; width:100%; overflow:hidden;}
   body {background-color: #101010}
+  body {overflow: hidden; }
   img {display: none}
   </style>
   <meta charset="UTF-8" user-scalable=no/>
@@ -24,10 +27,10 @@
 
 </head>
 <body>
-
+<div class=wrap>
 <canvas id="menu" width="800" height="100" style="border:1px solid #d3d3d3;"></canvas>
 <canvas id="board" width="800" height="800" style="border:1px solid #d3d3d3;"></canvas>
-
+</div>
 </body>
 <script>
 
