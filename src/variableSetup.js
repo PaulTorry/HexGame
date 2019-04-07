@@ -96,6 +96,8 @@ const data = {
     gasGiant: { moveCost:1, moveTech:'gasGiantMove',},
     planet: { moveCost:1, defenceTech:'defShieldTech',},
     protostar: { moveCost:5,},
+    star: { moveCost:5, moveTech:'none'},
+    blackHole: { moveCost:5, moveTech:'none', damTech:'none',},
   },
 }
 

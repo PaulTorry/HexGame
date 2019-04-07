@@ -5,7 +5,8 @@ Hex, Map
 state:true
 drawScreen,
 debug:true,
-interactiveConsole
+interactiveConsole,
+setup
 data
 */
 
@@ -16,13 +17,13 @@ function interactiveConsole (num = ""){
   let ans = prompt("\n0. New Game,\n1. Save, \n2: Load, \n3:  Money,\n4:  Tech, \n5: Toggle Debug", num);
 
   if(ans === "0"){
-    let ans2 = Number(prompt("Number of players", 2));
+    let ans2 = Number(prompt("Number of players", 4));
     let ans3 = Number(prompt("Number of Humans ", 2));
     let ans4 = Number(prompt("Size of Board ", 8));
     let ans5 = prompt("Allied Humans y/n", "n")
-    console.log(ans4);
-    if(ans5 === "y") state = setup(ans2, ans4, ans3, true);
-    if(ans5 === "n") state = setup(ans2, ans4, ans3, false);
+    state.boardSize = ans4;
+    if(ans5 === "y") state = setup(ans2, state.boardSize, ans3, true);
+    if(ans5 === "n") state = setup(ans2, state.boardSize, ans3, false);
 
   }
 

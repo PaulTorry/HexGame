@@ -3,7 +3,7 @@
 /*global
 drawScreen, sel:true, screenSettings,
 nextTurn,
-state, boardSize,
+state,
 onMenuItemClicked,
 preturn:true, makeMenu,
 findPossibleAttacks, getShipOnHex, findPossibleMoves,
@@ -141,7 +141,7 @@ function onMenuItemClicked(item, hex = sel.hex){
     }
     else {state.baseArray.push(
       {type:"planet", owner:state.playerTurn, hex: tile.hex,
-        territory:tile.hex.neighbours.filter(t => territoryState(t) === 1 && t.mag <= boardSize)}
+        territory:tile.hex.neighbours.filter(t => territoryState(t) === 1 && t.mag <= state.boardSize)}
     )}
   }
 

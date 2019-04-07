@@ -1,9 +1,9 @@
 "use strict";
 
 /* global
-Vec, Hex, sel:true
+Vec, Hex, sel:true,
 
-boardSize,
+state,
 
 drawScreen, drawMenu, screenSettings, interactiveConsole
 nextTurn,  onMenuItemClicked,  onTechHexClicked, onHexClicked,
@@ -45,7 +45,7 @@ function translateContext (dif, contextName = "board") {
   ctx.translate(-dif.x, -dif.y)
   const newViewCentre = getRealXYfromScreenXY(new Vec(400,400));
 
-  if (newViewCentre.mag >= screenSettings.hexSize*boardSize*1.5+50 && newViewCentre.mag > viewCentre.mag){
+  if (newViewCentre.mag >= screenSettings.hexSize * state.boardSize*1.5+50 && newViewCentre.mag > viewCentre.mag){
     translateContext(dif.scale(-1), contextName);
   }
 }
