@@ -6,13 +6,25 @@ state:true
 drawScreen,
 debug:true,
 interactiveConsole
+data
 */
 
 /* eslint-disable no-unused-vars */
 
-function interactiveConsole (){
+function interactiveConsole (num = ""){
+  console.log(num);
+  let ans = prompt("\n0. New Game,\n1. Save, \n2: Load, \n3:  Money,\n4:  Tech, \n5: Toggle Debug", num);
 
-  var ans = prompt("\n1. Save, \n2: Load, \n3: Cheat, \n4: Toggle Debug", "");
+  if(ans === "0"){
+    let ans2 = Number(prompt("Number of players", 2));
+    let ans3 = Number(prompt("Number of Humans ", 2));
+    let ans4 = Number(prompt("Size of Board ", 8));
+    let ans5 = prompt("Allied Humans y/n", "n")
+    console.log(ans4);
+    if(ans5 === "y") state = setup(ans2, ans4, ans3, true);
+    if(ans5 === "n") state = setup(ans2, ans4, ans3, false);
+
+  }
 
   if(ans === "1"){
     saveAs(prompt("Type Save Name"))
@@ -21,9 +33,17 @@ function interactiveConsole (){
     load(prompt("Type Save Name"))
   }
   if(ans === "3"){
-    state.playerData[0].money = 1000;
+    state.playerData[state.playerTurn].money = 99;
   }
   if(ans === "4"){
+    data.techs.forEach(t => {
+      console.log(state.playerData[state.playerTurn].tech);
+      console.log(t);
+      state.playerData[state.playerTurn].tech[t.tech] = true;
+    })
+
+  }
+  if(ans === "5"){
     debug = !debug;
   }
 

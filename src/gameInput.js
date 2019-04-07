@@ -99,6 +99,9 @@ function menuClick(event){
   else if (event.offsetY < 90 && event.offsetX > 710) {
     if(!preturn)screenSettings.openTechTree = !screenSettings.openTechTree;
   }
+  else if ( event.offsetX > 655 && event.offsetX < 700 && event.offsetY > 5 && event.offsetY < 50 ) {
+    interactiveConsole();
+  }
   else if(event.offsetY < 90 && event.offsetY > 10 && !screenSettings.openTechTree){
     console.log(event.offsetX);
     console.log((event.offsetX-110), (event.offsetX-110)/70 );
@@ -166,6 +169,7 @@ function touchdrag(event){
 }
 
 function keyHandle(e){
-  console.log(e);
+//  console.log(e);
   if(e.code === "Tab") interactiveConsole();
+  if(Number(e.key)) interactiveConsole(Number(e.key));
 }
