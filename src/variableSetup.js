@@ -9,7 +9,7 @@ const data = {
     //centre
     {name:'Antimatter Extraction', tech:'titanTech', colour:[50,47,73], requires:['battleshipTech', 'missileDestroyerTech', 'defShieldTech'], hex:new Hex(0,0), cost:10, sprite:[['titanShip',0,0,1]] },
     //1st ring, clockwise from top
-    {name:'Planet Defence Shield', tech:'defShieldTech', colour:[50,47,73], requires:['armouredDestroyerTech'], hex:new Hex(0,-2), cost:8, sprite:[['planet',0,0,1],['planetRing',0,0,1],['planetDefShield',0,0,1]] },
+    {name:'Planet Defence Shield', tech:'defShieldTech', colour:[50,47,73], requires:['armouredDestroyerTech'], hex:new Hex(0,-2), cost:8, sprite:[['planet',0,-10,0.70],['planetRing',0,-10,0.70],['planetDefShield',0,-10,0.80]] },
     {name:'Gas Refinery', tech:'missileDestroyerTech', colour:[50,47,73], requires:['harvestGasGiant'], hex:new Hex(2,-2), cost:8, sprite:[['missileDestroyer',0,0,1]] },
     {name:'Devourer', tech:'devourerTech', colour:[51,49,50], requires:['dismantle'], hex:new Hex(2,0), cost:99999, sprite:[['devourer',0,0,1]] },
     {name:'Ore Refinery', tech:'battleshipTech', colour:[50,47,73], requires:['asteroidMining'], hex:new Hex(0,2), cost:8, sprite:[['battleship',0,0,1]] },
