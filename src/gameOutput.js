@@ -211,6 +211,7 @@ function drawMenu(){
 
     data.techs.forEach((t)=>{
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
+      let {x,y} = center;
       let colour = "white";
       let colNum = t.colour;
 
@@ -220,7 +221,10 @@ function drawMenu(){
       //if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
       if (state.playerData[state.playerTurn].tech[t.tech]) {
       //  col = "rgb(78,78,117)"
+
         drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), "rgb(78,78,117)")
+      //  drawFromData(c, gameSprites["roundedHex"], x - 45, y - 32, state.playerTurn, 1 ,0.55)
+
       } else if (t.cost > 99 || (t.requires &&
         t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
       )
@@ -229,6 +233,9 @@ function drawMenu(){
       } else {
         drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", "rgb(78,78,117)")
       }
+
+      if(t.sprite) drawFromData(c, gameSprites[t.sprite], x , y , state.playerTurn, 1 ,0.55)
+
       //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
       if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, colour )
       if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 12, colour )
