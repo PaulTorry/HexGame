@@ -232,8 +232,8 @@ function drawMenu(){
       if (state.playerData[state.playerTurn].tech[t.tech]) {
       //  col = "rgb(78,78,117)"
 
-        drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), "rgb(78,78,117)")
-      //  drawFromData(c, gameSprites["roundedHex"], x - 45, y - 32, state.playerTurn, 1 ,0.55)
+        //drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), "rgb(78,78,117)")
+      drawFromData(c, gameSprites["roundedHex"], x - 45, y - 32, state.playerTurn, 1 ,0.55)
 
       } else if (t.cost > 99 || (t.requires &&
         t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
