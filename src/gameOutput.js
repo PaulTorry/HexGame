@@ -44,6 +44,11 @@ function mapColours(string, player, transparency = 1){
   else return string;
 }
 
+function getColMap(player, transparency = 1){
+  return (v) =>  mapColours(v, player, transparency)
+}
+
+
 const selectedColour = ["white", "purple", "blue", "orange"];
 
 
@@ -234,8 +239,13 @@ function drawMenu(){
         drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", "rgb(78,78,117)")
       }
 
-      if(t.sprite) drawFromData(c, gameSprites[t.sprite], x , y , state.playerTurn, 1 ,0.55)
+      if(t.sprite) {
+        t.sprite.forEach(s => {
+          console.log(s[0], x*s[1] , y*s[2] , state.playerTurn, 1 ,0.55*s[3]);
 
+          drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , state.playerTurn, 1 ,0.55*s[3])
+        })
+      }
       //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
       if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, colour )
       if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 12, colour )
@@ -286,6 +296,8 @@ function drawArrow(c, start, end, width, colour){
 }
 
 function drawFromData(c, data, xx=0, yy=0, player, transparency, scale = 1){
+
+  let colourMap = (v) =>  mapColours(v, player, transparency)
   let add = (a, x, y) => a.map((v,i) => i%2 ? v*scale+y  : v*scale+x);
   let gradient;
   let x = xx;
@@ -306,10 +318,10 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency, scale = 1){
     else if(t === "lw") c.lineWidth = v[0];
     else if(t === "cp") c.closePath();
     else if(t === "fs"){
-      if (v && v[0] ){ c.fillStyle = mapColours(v[0], player, transparency); }
+      if (v && v[0] ){ c.fillStyle = colourMap(v[0]); }
       else if (gradient) {c.fillStyle = gradient}
     }
-    else if(t === "ss"){ if (v){ c.strokeStyle = mapColours(v[0], player, transparency);}}
+    else if(t === "ss"){ if (v){ c.strokeStyle = colourMap(v[0]);}}
     else if(t === "fl") c.fill();
     else if(t === "ct") c.bezierCurveTo(...add(v,x,y));
     else if(t === "re") c.restore();
@@ -318,9 +330,7 @@ function drawFromData(c, data, xx=0, yy=0, player, transparency, scale = 1){
     else if(t === "xrg"){gradient = c.createRadialGradient(v[0]*scale+x,v[1]*scale+y,v[2]*scale,v[3]*scale+x,v[4]*scale+y,v[5]*scale)    }
     else if(t === "xlg"){gradient = c.createLinearGradient(...add(v,x,y))
     }
-    else if(t === "xcs"){
-      gradient.addColorStop(v[0],mapColours(v[1], player, transparency))
-    }
+    else if(t === "xcs"){gradient.addColorStop(v[0], colourMap(v[1])) }
   })
   c.shadowOffsetX = 0;
   c.shadowOffsetY = 0;
