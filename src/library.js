@@ -46,6 +46,8 @@ class Hex{
   get secondNeighbours() {return Hex.secondNeighbours().map(n => n.add(this))}
   get thirdNeighbours() {return Hex.thirdNeighbours().map(n => n.add(this))}
 
+  get randomNeighbour(){return this.neighbours[randomInt(6)]}
+
   get secondNeighboursInclusive() {return this.neighbours.concat(this.secondNeighbours)}
   get thirdNeighboursInclusive() {return this.secondNeighboursInclusive.concat(this.thirdNeighbours)}
 
@@ -73,6 +75,11 @@ class Hex{
       }
     }
     return list;
+  }
+
+  static arrayToID(l){
+    let [a,b] = l;
+    return `${a},${b}`
   }
 
   static getRandomPicker(n){
