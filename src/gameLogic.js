@@ -112,6 +112,8 @@ function onMenuItemClicked(item, hex = sel.hex){
     tile.station = {type: item, owner: state.playerTurn}
   }
 
+  if(thing.type && thing.type === "resource"){  tile.resource = null;  }
+
   if(thing.type && thing.type === "ship"){
     state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))
     //tile.station = {type: item, owner: state.playerTurn}
@@ -144,7 +146,6 @@ function onMenuItemClicked(item, hex = sel.hex){
         territory:tile.hex.neighbours.filter(t => territoryState(t) === 1 && t.mag <= state.boardSize)}
     )}
   }
-
 
 
   if(item === "destroy"){
