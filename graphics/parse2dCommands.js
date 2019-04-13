@@ -110,226 +110,356 @@ function pasteHere(ctx){
 
 ctx.save();
 
-// layer1/nebula/Group
+// layer1/icy asteroids/base colour
 ctx.save();
 
-// layer1/nebula/Group/Path
+// layer1/icy asteroids/base colour/Path
 ctx.save();
 ctx.beginPath();
-ctx.moveTo(17.1, 90.5);
-ctx.bezierCurveTo(18.7, 90.4, 20.2, 90.1, 21.6, 89.4);
-ctx.bezierCurveTo(28.7, 85.9, 34.2, 88.4, 35.8, 78.4);
-ctx.bezierCurveTo(37.3, 68.3, 61.3, 79.7, 64.6, 74.3);
-ctx.bezierCurveTo(70.0, 65.8, 74.1, 65.7, 93.1, 55.3);
-ctx.bezierCurveTo(102.2, 50.3, 99.6, 42.1, 106.5, 41.0);
-ctx.bezierCurveTo(114.5, 39.6, 109.4, 42.6, 123.5, 42.7);
-ctx.bezierCurveTo(131.3, 42.8, 131.9, 32.5, 128.6, 26.9);
-ctx.lineTo(119.4, 10.2);
-ctx.lineTo(40.5, 10.0);
-ctx.lineTo(0.0, 78.0);
-ctx.lineTo(7.3, 90.7);
-ctx.lineTo(17.1, 90.5);
+ctx.moveTo(32.8, 3.9);
+ctx.lineTo(34.8, 8.6);
+ctx.lineTo(40.8, 8.6);
+ctx.lineTo(46.3, 3.9);
+ctx.lineTo(40.8, 0.4);
+ctx.lineTo(32.8, 3.9);
 ctx.closePath();
+ctx.fillStyle ("rgb(0, 173, 239)");
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(92.5, 53.4);
+ctx.lineTo(110.5, 53.4);
+ctx.lineTo(115.5, 61.4);
+ctx.lineTo(112.5, 74.9);
+ctx.lineTo(115.5, 80.4);
+ctx.lineTo(110.5, 91.9);
+ctx.lineTo(97.0, 95.9);
+ctx.lineTo(89.0, 86.9);
+ctx.lineTo(92.5, 78.4);
+ctx.lineTo(89.0, 70.4);
+ctx.lineTo(84.7, 63.4);
+ctx.lineTo(92.5, 53.4);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(21.8, 65.9);
+ctx.lineTo(25.5, 72.2);
+ctx.lineTo(19.3, 78.9);
+ctx.lineTo(5.3, 76.4);
+ctx.lineTo(0.8, 65.9);
+ctx.lineTo(8.8, 60.9);
+ctx.lineTo(21.8, 65.9);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(62.3, 74.7);
+ctx.lineTo(76.3, 78.9);
+ctx.lineTo(82.3, 90.9);
+ctx.lineTo(84.7, 99.4);
+ctx.lineTo(82.3, 108.4);
+ctx.lineTo(69.3, 114.4);
+ctx.lineTo(57.5, 111.4);
+ctx.lineTo(57.5, 103.4);
+ctx.lineTo(62.3, 95.9);
+ctx.lineTo(57.5, 92.4);
+ctx.lineTo(43.3, 89.4);
+ctx.lineTo(43.3, 78.9);
+ctx.lineTo(49.3, 74.7);
+ctx.lineTo(62.3, 74.7);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(27.8, 95.9);
+ctx.lineTo(24.1, 102.4);
+ctx.lineTo(25.5, 107.9);
+ctx.lineTo(32.8, 110.9);
+ctx.lineTo(39.5, 105.9);
+ctx.lineTo(36.8, 98.9);
+ctx.lineTo(27.8, 95.9);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(69.3, 65.9);
+ctx.lineTo(74.5, 69.9);
+ctx.lineTo(78.8, 65.4);
+ctx.lineTo(78.8, 57.9);
+ctx.lineTo(71.3, 60.9);
+ctx.lineTo(69.3, 65.9);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(16.3, 40.4);
+ctx.lineTo(9.3, 44.4);
+ctx.lineTo(7.1, 40.4);
+ctx.lineTo(8.7, 35.2);
+ctx.lineTo(13.1, 29.9);
+ctx.lineTo(16.3, 35.2);
+ctx.lineTo(16.3, 40.4);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(102.4, 8.6);
+ctx.lineTo(93.9, 15.8);
+ctx.lineTo(93.9, 23.8);
+ctx.lineTo(100.1, 28.5);
+ctx.lineTo(112.5, 35.3);
+ctx.lineTo(117.8, 32.3);
+ctx.lineTo(117.8, 26.8);
+ctx.lineTo(113.3, 16.9);
+ctx.lineTo(106.8, 10.0);
+ctx.lineTo(102.4, 8.6);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(24.1, 44.1);
+ctx.lineTo(35.5, 26.8);
+ctx.lineTo(48.1, 30.1);
+ctx.lineTo(48.1, 40.1);
+ctx.lineTo(57.5, 44.1);
+ctx.lineTo(57.5, 53.4);
+ctx.lineTo(51.5, 59.4);
+ctx.lineTo(30.1, 62.1);
+ctx.lineTo(24.1, 52.8);
+ctx.lineTo(24.1, 44.1);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(62.3, 7.5);
+ctx.lineTo(74.8, 0.4);
+ctx.lineTo(84.7, 3.9);
+ctx.lineTo(86.8, 10.9);
+ctx.lineTo(84.7, 16.9);
+ctx.lineTo(72.8, 16.9);
+ctx.lineTo(68.3, 12.9);
+ctx.lineTo(62.3, 12.4);
+ctx.lineTo(62.3, 7.5);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/base colour/Path
+ctx.beginPath();
+ctx.moveTo(69.3, 28.9);
+ctx.lineTo(72.3, 44.4);
+ctx.lineTo(86.8, 44.4);
+ctx.lineTo(95.3, 38.9);
+ctx.lineTo(91.8, 28.9);
+ctx.lineTo(78.8, 22.9);
+ctx.lineTo(69.3, 28.9);
+ctx.closePath();
+ctx.fill();
+
+// layer1/icy asteroids/gradients
+ctx.restore();
+
+// layer1/icy asteroids/gradients/Path
 ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createLinearGradient(1264.0, -2034.7, 1299.2, -2095.6);
-ctx.addColorStop(0.00, "rgba(39, 168, 224, 0.20)");
-ctx.addColorStop(0.18, "rgba(39, 168, 224, 0.10)");
-ctx.addColorStop(1.00, "rgba(39, 168, 224, 0.00)");
+ctx.beginPath();
+ctx.moveTo(32.2, 3.8);
+ctx.lineTo(34.4, 9.0);
+ctx.lineTo(40.9, 9.0);
+ctx.lineTo(46.9, 3.8);
+ctx.lineTo(40.9, 0.0);
+ctx.lineTo(32.2, 3.8);
+ctx.closePath();
+ctx.createRadialGradient(39.6, 4.5, 0.0, 39.6, 4.5, 6.1);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group/Path
-ctx.restore();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(141.3, 66.8);
-ctx.bezierCurveTo(139.7, 66.9, 138.1, 67.2, 136.7, 67.9);
-ctx.bezierCurveTo(129.6, 71.4, 124.2, 69.0, 122.7, 79.0);
-ctx.bezierCurveTo(121.1, 89.1, 97.2, 77.8, 93.8, 83.2);
-ctx.bezierCurveTo(88.5, 91.8, 84.4, 91.9, 65.4, 102.4);
-ctx.bezierCurveTo(56.4, 107.4, 59.0, 115.6, 52.2, 116.8);
-ctx.bezierCurveTo(44.1, 118.2, 49.2, 115.2, 35.2, 115.1);
-ctx.bezierCurveTo(27.3, 115.1, 26.8, 125.4, 30.1, 131.0);
-ctx.lineTo(38.9, 146.8);
-ctx.lineTo(118.3, 147.4);
-ctx.lineTo(158.4, 79.2);
-ctx.lineTo(151.0, 66.6);
-ctx.lineTo(141.3, 66.8);
+ctx.moveTo(92.4, 52.8);
+ctx.lineTo(110.8, 52.8);
+ctx.lineTo(116.0, 60.9);
+ctx.lineTo(112.9, 74.8);
+ctx.lineTo(116.0, 80.4);
+ctx.lineTo(110.8, 92.2);
+ctx.lineTo(96.8, 96.4);
+ctx.lineTo(88.6, 86.9);
+ctx.lineTo(92.0, 78.4);
+ctx.lineTo(88.5, 70.3);
+ctx.lineTo(84.3, 63.4);
+ctx.lineTo(92.4, 52.8);
 ctx.closePath();
-ctx.save();
-ctx.transform(-0.502, 0.865, -0.865, -0.502, 3573.1, -1946.6);
-ctx.createLinearGradient(3510.1, 1997.5, 3545.3, 1936.6);
-ctx.addColorStop(0.00, "rgba(39, 168, 224, 0.20)");
-ctx.addColorStop(0.18, "rgba(39, 168, 224, 0.10)");
-ctx.addColorStop(1.00, "rgba(39, 168, 224, 0.00)");
+ctx.createRadialGradient(100.2, 74.6, 0.0, 100.2, 74.6, 19.0);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group
-ctx.restore();
-ctx.restore();
-
-// layer1/nebula/Group/Ellipse
-ctx.save();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(86.9, 58.3);
-ctx.bezierCurveTo(62.1, 43.7, 30.1, 52.0, 15.5, 76.8);
-ctx.bezierCurveTo(0.9, 101.6, 9.2, 133.6, 34.0, 148.2);
-ctx.bezierCurveTo(58.9, 162.8, 90.8, 154.5, 105.4, 129.7);
-ctx.bezierCurveTo(120.0, 104.8, 111.7, 72.9, 86.9, 58.3);
+ctx.moveTo(22.2, 65.7);
+ctx.lineTo(26.1, 72.4);
+ctx.lineTo(19.6, 79.5);
+ctx.lineTo(4.8, 76.9);
+ctx.lineTo(0.0, 65.7);
+ctx.lineTo(8.5, 60.4);
+ctx.lineTo(22.2, 65.7);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createRadialGradient(1229.0, -2031.2, 0.0, 1229.0, -2031.2, 52.2);
-ctx.addColorStop(0.29, "rgba(7, 121, 169, 0.20)");
-ctx.addColorStop(0.69, "rgba(7, 121, 169, 0.10)");
-ctx.addColorStop(1.00, "rgba(7, 121, 169, 0.00)");
+ctx.createRadialGradient(13.1, 70.0, 0.0, 13.1, 70.0, 11.4);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group/Path
-ctx.restore();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(137.0, 26.6);
-ctx.bezierCurveTo(113.9, 13.1, 84.3, 20.8, 70.8, 43.8);
-ctx.bezierCurveTo(57.2, 66.9, 64.4, 96.5, 88.0, 110.0);
-ctx.bezierCurveTo(107.8, 121.4, 141.4, 114.0, 154.2, 92.8);
-ctx.bezierCurveTo(168.7, 68.7, 160.0, 40.2, 137.0, 26.6);
+ctx.moveTo(62.4, 74.2);
+ctx.lineTo(76.5, 78.2);
+ctx.lineTo(82.8, 90.7);
+ctx.lineTo(85.4, 99.7);
+ctx.lineTo(82.6, 109.0);
+ctx.lineTo(69.3, 115.0);
+ctx.lineTo(56.8, 111.9);
+ctx.lineTo(57.1, 103.4);
+ctx.lineTo(61.6, 96.0);
+ctx.lineTo(56.7, 92.6);
+ctx.lineTo(42.6, 89.9);
+ctx.lineTo(42.7, 78.9);
+ctx.lineTo(49.0, 74.3);
+ctx.lineTo(62.4, 74.2);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createRadialGradient(1285.5, -2004.0, 0.0, 1285.5, -2004.0, 48.4);
-ctx.addColorStop(0.29, "rgba(78, 127, 113, 0.20)");
-ctx.addColorStop(0.69, "rgba(78, 127, 113, 0.10)");
-ctx.addColorStop(1.00, "rgba(78, 127, 113, 0.00)");
+ctx.createRadialGradient(64.0, 94.6, 0.0, 64.0, 94.6, 20.9);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group/Ellipse
-ctx.restore();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(79.1, 6.3);
-ctx.bezierCurveTo(57.2, -6.5, 29.1, 0.8, 16.3, 22.7);
-ctx.bezierCurveTo(3.4, 44.5, 10.7, 72.6, 32.6, 85.5);
-ctx.bezierCurveTo(54.4, 98.3, 82.6, 91.0, 95.4, 69.2);
-ctx.bezierCurveTo(108.3, 47.3, 101.0, 19.2, 79.1, 6.3);
+ctx.moveTo(27.5, 95.4);
+ctx.lineTo(23.5, 102.4);
+ctx.lineTo(25.0, 108.3);
+ctx.lineTo(32.9, 111.5);
+ctx.lineTo(40.1, 106.1);
+ctx.lineTo(37.2, 98.6);
+ctx.lineTo(27.5, 95.4);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createRadialGradient(1276.1, -2064.2, 0.0, 1276.1, -2064.2, 45.9);
-ctx.addColorStop(0.29, "rgba(0, 166, 110, 0.10)");
-ctx.addColorStop(0.69, "rgba(0, 166, 110, 0.05)");
-ctx.addColorStop(1.00, "rgba(0, 166, 110, 0.00)");
+ctx.createRadialGradient(31.8, 103.4, 0.0, 31.8, 103.4, 8.2);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group
-ctx.restore();
-ctx.restore();
-
-// layer1/nebula/Group/Ellipse
-ctx.save();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(30.6, 59.4);
-ctx.bezierCurveTo(27.9, 57.8, 24.5, 58.7, 22.9, 61.4);
-ctx.bezierCurveTo(21.3, 64.1, 22.2, 67.6, 24.9, 69.2);
-ctx.bezierCurveTo(27.6, 70.7, 31.1, 69.8, 32.7, 67.1);
-ctx.bezierCurveTo(34.3, 64.4, 33.3, 61.0, 30.6, 59.4);
+ctx.moveTo(68.8, 66.1);
+ctx.lineTo(74.6, 70.5);
+ctx.lineTo(79.3, 65.6);
+ctx.lineTo(79.3, 57.3);
+ctx.lineTo(71.0, 60.6);
+ctx.lineTo(68.8, 66.1);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createRadialGradient(1246.1, -2079.1, 0.0, 1246.1, -2079.1, 5.7);
-ctx.addColorStop(0.29, "rgba(7, 121, 169, 0.50)");
-ctx.addColorStop(0.69, "rgba(7, 121, 169, 0.25)");
-ctx.addColorStop(1.00, "rgba(7, 121, 169, 0.00)");
+ctx.createRadialGradient(74.0, 63.9, 0.0, 74.0, 63.9, 5.9);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group/Ellipse
-ctx.restore();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(77.7, 17.1);
-ctx.bezierCurveTo(71.6, 13.5, 63.8, 15.5, 60.2, 21.6);
-ctx.bezierCurveTo(56.7, 27.7, 58.7, 35.5, 64.8, 39.1);
-ctx.bezierCurveTo(70.9, 42.7, 78.7, 40.6, 82.3, 34.6);
-ctx.bezierCurveTo(85.8, 28.5, 83.8, 20.7, 77.7, 17.1);
+ctx.moveTo(16.6, 40.6);
+ctx.lineTo(9.1, 44.9);
+ctx.lineTo(6.7, 40.4);
+ctx.lineTo(8.3, 35.2);
+ctx.lineTo(13.2, 29.5);
+ctx.lineTo(16.6, 35.0);
+ctx.lineTo(16.6, 40.6);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createRadialGradient(1299.3, -2059.9, 0.0, 1299.3, -2059.9, 12.8);
-ctx.addColorStop(0.29, "rgba(0, 78, 124, 0.50)");
-ctx.addColorStop(0.69, "rgba(0, 78, 124, 0.25)");
-ctx.addColorStop(1.00, "rgba(0, 78, 124, 0.00)");
+ctx.createRadialGradient(11.7, 37.2, 0.0, 11.7, 37.2, 6.5);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/nebula/Group/Ellipse
-ctx.restore();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(111.7, 102.5);
-ctx.bezierCurveTo(108.2, 100.5, 103.8, 101.6, 101.7, 105.1);
-ctx.bezierCurveTo(99.7, 108.6, 100.9, 113.0, 104.3, 115.1);
-ctx.bezierCurveTo(107.8, 117.1, 112.3, 115.9, 114.3, 112.5);
-ctx.bezierCurveTo(116.3, 109.0, 115.2, 104.6, 111.7, 102.5);
+ctx.moveTo(102.3, 8.3);
+ctx.lineTo(93.6, 15.6);
+ctx.lineTo(93.6, 23.8);
+ctx.lineTo(99.9, 28.9);
+ctx.lineTo(112.5, 35.8);
+ctx.lineTo(118.1, 32.6);
+ctx.lineTo(118.1, 26.9);
+ctx.lineTo(113.8, 16.8);
+ctx.lineTo(106.8, 9.7);
+ctx.lineTo(102.3, 8.3);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.507, -0.862, 0.862, 0.507, 1188.9, 2192.0);
-ctx.createRadialGradient(1248.4, -1987.3, 0.0, 1248.4, -1987.3, 7.3);
-ctx.addColorStop(0.00, "rgba(39, 168, 224, 0.50)");
-ctx.addColorStop(0.56, "rgba(39, 168, 224, 0.25)");
-ctx.addColorStop(1.00, "rgba(39, 168, 224, 0.00)");
+ctx.createRadialGradient(105.9, 22.0, 0.0, 105.9, 22.0, 13.1);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/white dwarf
-ctx.restore();
-ctx.restore();
-ctx.restore();
-
-// layer1/white dwarf/Ellipse
-ctx.save();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(115.3, 79.9);
-ctx.bezierCurveTo(114.5, 99.6, 98.0, 114.9, 78.3, 114.1);
-ctx.bezierCurveTo(58.7, 113.4, 43.4, 96.8, 44.1, 77.2);
-ctx.bezierCurveTo(44.9, 57.5, 61.4, 42.2, 81.1, 42.9);
-ctx.bezierCurveTo(100.7, 43.7, 116.1, 60.3, 115.3, 79.9);
+ctx.moveTo(62.0, 7.3);
+ctx.lineTo(74.8, 0.0);
+ctx.lineTo(85.2, 3.7);
+ctx.lineTo(87.3, 11.0);
+ctx.lineTo(85.2, 17.3);
+ctx.lineTo(72.7, 17.3);
+ctx.lineTo(68.2, 13.3);
+ctx.lineTo(61.9, 12.8);
+ctx.lineTo(62.0, 7.3);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.999, 0.039, 0.039, -0.999, 36.9, 85.3);
-ctx.createRadialGradient(42.5, 8.4, 0.0, 42.5, 8.4, 35.6);
-ctx.addColorStop(0.42, "rgb(41, 170, 226)");
-ctx.addColorStop(0.65, "rgba(41, 170, 226, 0.50)");
-ctx.addColorStop(1.00, "rgba(41, 170, 226, 0.00)");
+ctx.createRadialGradient(74.6, 8.6, 0.0, 74.6, 8.6, 10.9);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 
-// layer1/white dwarf/Ellipse
-ctx.restore();
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(105.3, 79.7);
-ctx.bezierCurveTo(104.8, 93.8, 92.9, 104.8, 78.8, 104.3);
-ctx.bezierCurveTo(64.7, 103.7, 53.7, 91.8, 54.3, 77.7);
-ctx.bezierCurveTo(54.8, 63.6, 66.7, 52.7, 80.8, 53.2);
-ctx.bezierCurveTo(94.9, 53.8, 105.9, 65.6, 105.3, 79.7);
+ctx.moveTo(68.8, 28.8);
+ctx.lineTo(71.9, 44.8);
+ctx.lineTo(87.0, 44.8);
+ctx.lineTo(95.8, 39.1);
+ctx.lineTo(92.1, 28.8);
+ctx.lineTo(78.7, 22.5);
+ctx.lineTo(68.8, 28.8);
 ctx.closePath();
-ctx.fillStyle ("rgb(41, 170, 226)");
+ctx.createRadialGradient(82.3, 33.7, 0.0, 82.3, 33.7, 12.3);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
+ctx.fillStyle ();
 ctx.fill();
 
-// layer1/white dwarf/Ellipse
+// layer1/icy asteroids/gradients/Path
 ctx.beginPath();
-ctx.moveTo(105.3, 79.7);
-ctx.bezierCurveTo(104.8, 93.8, 92.9, 104.8, 78.8, 104.3);
-ctx.bezierCurveTo(64.7, 103.7, 53.7, 91.8, 54.3, 77.7);
-ctx.bezierCurveTo(54.8, 63.6, 66.7, 52.7, 80.8, 53.2);
-ctx.bezierCurveTo(94.9, 53.8, 105.9, 65.6, 105.3, 79.7);
+ctx.moveTo(23.7, 44.1);
+ctx.lineTo(35.3, 26.3);
+ctx.lineTo(48.5, 29.9);
+ctx.lineTo(48.5, 39.9);
+ctx.lineTo(57.9, 43.9);
+ctx.lineTo(57.9, 53.6);
+ctx.lineTo(51.7, 59.8);
+ctx.lineTo(29.9, 62.5);
+ctx.lineTo(23.7, 53.0);
+ctx.lineTo(23.7, 44.1);
 ctx.closePath();
-ctx.save();
-ctx.transform(0.999, 0.039, 0.039, -0.999, 36.9, 85.3);
-ctx.createRadialGradient(42.6, 8.2, 0.0, 42.6, 8.2, 25.5);
-ctx.addColorStop(0.28, "rgba(255, 255, 255, 0.75)");
-ctx.addColorStop(0.74, "rgba(197, 205, 207, 0.75)");
-ctx.addColorStop(1.00, "rgba(139, 156, 160, 0.75)");
+ctx.createRadialGradient(40.8, 44.4, 0.0, 40.8, 44.4, 17.6);
+ctx.addColorStop(0.23, "rgba(21, 55, 81, 0.80)");
+ctx.addColorStop(0.90, "rgba(36, 34, 73, 0.80)");
 ctx.fillStyle ();
 ctx.fill();
 ctx.restore();
