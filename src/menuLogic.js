@@ -16,7 +16,7 @@ function makeMenu(hex){
   return data.thingList.filter(pos => {
 
 
-    // console.log("pos ", pos);
+  //  console.log("pos ", pos);
     if(pos.price > state.playerData[state.playerTurn].money) return false;
     // console.log(" price  success");
 
@@ -26,6 +26,8 @@ function makeMenu(hex){
 
     if(pos.territoryState && pos.territoryState > territoryState(hex)) return false;
     // console.log(" territoryState  success");
+
+    if(pos.resource && pos.resource !== tile.resource) return false;
 
     if(pos.base && !state.baseArray.filter(b => {return b.hex.compare(hex) && b.owner === state.playerTurn})[0]) {
       return false;
@@ -58,6 +60,8 @@ function makeMenu(hex){
     if(pos.thingPresent && pos.thingPresent.find(t => t === "navBeacon") && !tile.navBeacon) return false;
     // console.log(" thingPresent  success");
     // Self check
+
+    if(pos.nextTo && !hex.neighbours.find((x)=> state.tiles.get(x.id).terrain === pos.nextTo)) return false;
 
     if(pos.thing === "navBeacon"){if (tile.navBeacon && tile.navBeacon.owner === state.playerTurn) return false;}
 

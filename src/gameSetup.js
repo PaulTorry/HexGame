@@ -21,11 +21,13 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
 
 
   for(let hex of Hex.findWithin(boardSize)){
-    let buildingHex = {hex: hex, terrain:"space", station:null};
-    if(Math.random()<0.3){buildingHex.terrain = "nebula"}
-    if(Math.random()<0.1){buildingHex.terrain = "protostar"}
-    if(Math.random()<0.35){buildingHex.terrain = "asteroids"}
-    if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
+    let buildingHex = {hex: hex, terrain:"space", station:null, resource:null};
+    if(Math.random()<0.1){buildingHex.terrain = "nebula"; buildingHex.resource = "hydrogen" }
+    else if(Math.random()<0.1){buildingHex.terrain = "nebula"}
+    else if(Math.random()<0.05){buildingHex.terrain = "protostar"}
+    else if(Math.random()<0.15){buildingHex.terrain = "asteroids"}
+    else if(Math.random()<0.15){buildingHex.terrain = "asteroids"; buildingHex.resource = "icyAsteroids"}
+    else if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
 
     //   if(Math.random()<0.1){buildingHex.terrain = "planet"}
     //   if(Math.random()<0.05){buildingHex.terrain = "star"}
@@ -33,11 +35,11 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
 
     tiles.set(hex.id, buildingHex);
   }
-  console.log(randomPicker(0.5));
-  console.log(Hex.arrayToID(randomPicker(0.5)));
-  console.log(tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain);
+  // console.log(randomPicker(0.5));
+  // console.log(Hex.arrayToID(randomPicker(0.5)));
+  // console.log(tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain);
   tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain = "blackHole";
-  console.log(tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain);
+  // console.log(tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain);
 
   let playerlist = []
 
