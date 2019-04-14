@@ -213,7 +213,7 @@ function drawMenu(){
       //let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
       if (t.cost > 99){
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(0,0,0)" ,0.55);
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(30,30,30)" ,0.55);
       }
 
       else if (state.playerData[state.playerTurn].tech[t.tech]) {
@@ -231,13 +231,13 @@ function drawMenu(){
       }
 
 
-      if((draw || debug) && t.sprite) {
+      if((true || draw || debug) && t.sprite) {
         t.sprite.forEach(s => {
           drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
         })
       }
       if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "white" )
-      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 12, "white" )
+      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40,+6)) , 12, "white" )
     })
   }
 }
