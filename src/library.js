@@ -88,7 +88,6 @@ class Hex{
       list.push ([i, Math.max(-n, -n-i), Math.min(n, n-i) - Math.max(-n, -n-i) + 1])
     }
     let total = list.reduce((a,c)=>a+c[2],0);
-
     return (r)=>Hex.getNfromWeightedList(Math.floor(r*(total)), list)
   }
 
@@ -136,9 +135,8 @@ class Hex{
   }
 
   static getUnitHexFromXY(xy){
-    const invHexVec = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
-    let {p, q, r} = invHexVec;
-    //let xy = xyScaled.scale(1/hexSize);
+    const {p, q, r} = {p: new Vec(2/(3),0),   q: new Vec((-2/6), Math.sqrt(3)/3),  r: new Vec((-2/6), -Math.sqrt(3)/3) }
+    //let {p, q, r} = invHexVec;
     return Hex.hex_round(new Hex(xy.dot(p), xy.dot(q),xy.dot(r)))
   }
 
@@ -171,12 +169,5 @@ var clone = function() {
   }
   return newObj;
 };
-
-// let picker = Hex.getRandomPicker(9);
-//
-// for(let i = 0; i<=10000;i++){
-//   console.log(picker(Math.random()));
-// }
-
 
 Object.defineProperty( Object.prototype, "clone", {value: clone, enumerable: false});

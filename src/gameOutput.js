@@ -90,12 +90,14 @@ function drawScreen() {
         // if(tile.station.type === "asteroidMining"){drawFromData(c, curves["asteroidMining"], x, y, tile.station.owner)  }
         // else drawPoly(c, baseShapes["asteroidMining"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
-      if(tile.navBeacon){
+      if(tile.navBeacon){    // @TODO   Remove baseshapes
         drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
       }
       let base = state.baseArray.find(b => b.hex.compare(tile.hex));
       if(base){
-        if(gameSprites["planetRing"]){drawFromData(c, gameSprites["planetRing"], x, y, getColMap(base.owner))}
+        if(gameSprites["planetRing"]){
+          drawFromData(c, gameSprites["planetRing"], x, y, getColMap(base.owner))
+        }
         else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
       if(viewMask[id] === 1){

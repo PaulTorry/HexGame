@@ -1,7 +1,7 @@
 "use strict"
 
 /*global
-  Hex, getUpdatedViewMask, state, data, boardSize
+  Hex, getUpdatedViewMask, state, data
 */
 
 /* eslint-disable no-unused-vars */
