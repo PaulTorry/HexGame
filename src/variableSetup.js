@@ -69,14 +69,14 @@ const data = {
     {name: 'Nav. Beacon', thing: 'navNebula',  type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navNebula',  terrain: [ 'nebula', ] } ,
 
 
-    {name: 'Ast. Mining', thing: 'asteroidMining', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
-    {name: 'Gas Extraction', thing: 'harvestGasGiant', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ] } ,
-    {name: 'Harvest Protostar', thing: 'harvestProtostar', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ] } ,
-    {name: 'Solar Panel', thing: 'solarSail', type:"industry", price: 2, territoryState: 2,  shipState: 'noEnemy',  terrain: ['space', ], nextTo:"star" } ,
+    {name: 'Ast. Mining', thing: 'asteroidMining', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
+    {name: 'Gas Extraction', thing: 'harvestGasGiant', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ] } ,
+    {name: 'Harvest Protostar', thing: 'harvestProtostar', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ] } ,
+    {name: 'Solar Panel', thing: 'solarSail', type:"industry", price: 2, income: 1, territoryState: 2,  shipState: 'noEnemy',  terrain: ['space', ], nextTo:"star" } ,
 
 
 
-    {name: 'Ice. Collection', thing: 'icyAsteroids', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidIceMining',  terrain: ['asteroids', ] , resource:"icyAsteroids"} ,
+    {name: 'Ice Collection', thing: 'icyAsteroids', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidIceMining',  terrain: ['asteroids', ] , resource:"icyAsteroids"} ,
     {name: 'Hydrogen. Collection', thing: 'hydrogen', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestHydrogen',  terrain: ['nebula', ] , resource:"hydrogen"} ,
 
 
