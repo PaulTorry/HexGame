@@ -209,9 +209,7 @@ function drawMenu(){
     data.techs.forEach((t)=>{
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
       let {x,y} = center;
-
       let draw = t.cost < 99;
-
       //let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
       if (t.cost > 99){
@@ -231,9 +229,7 @@ function drawMenu(){
         drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
         drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(255,255,255)" ,0.55)
       }
-      //  else{
-      //   drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(0,0,0)" ,0.55)
-      // }
+
 
       if((draw || debug) && t.sprite) {
         t.sprite.forEach(s => {
@@ -290,6 +286,7 @@ function drawFromData(c, data, xx=0, yy=0, colourMap = x=>x, scale = 1, rotation
 
   data.forEach(([t, ...v]) => {
     if(t === "sv") c.save();
+    else if(t === "sc") {scale *= v[0]}
     else if(t === "of") {x = xx + v[0]*scale; y = yy + v[1]*scale;}
     else if(t === "bp") c.beginPath();
     else if(t === "mt") c.moveTo(...add(v,x,y));
