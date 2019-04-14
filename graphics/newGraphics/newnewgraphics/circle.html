@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<!-- Created with Ai->Canvas Export Plug-In Version 1.3 (PC/64) -->
+<!-- By Mike Swanson (http://blog.mikeswanson.com/)             -->
+
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <title>circle</title>
+  <script>
+
+    function init() {
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      draw(ctx);
+    }
+
+    function draw(ctx) {
+
+      // layer1/Ellipse
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(43.6, 21.8);
+      ctx.bezierCurveTo(43.6, 33.8, 33.8, 43.6, 21.8, 43.6);
+      ctx.bezierCurveTo(9.8, 43.6, 0.0, 33.8, 0.0, 21.8);
+      ctx.bezierCurveTo(0.0, 9.8, 9.8, 0.0, 21.8, 0.0);
+      ctx.bezierCurveTo(33.8, 0.0, 43.6, 9.8, 43.6, 21.8);
+      ctx.closePath();
+      ctx.fillStyle ("rgb(165, 191, 187)");
+      ctx.fill();
+      ctx.restore();
+    }
+  </script>
+ </head>
+ <body onload="init()">
+   <canvas id="canvas" width="44" height="44"></canvas>
+ </body>
+</html>
