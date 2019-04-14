@@ -126,9 +126,9 @@ function drawScreen() {
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
         drawFromData(c, gameSprites[ship.type], x, y, getColMap(ship.owner, transparency))
       }
-      else if (baseShapes[ship.type]){
-        drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
-      }
+      // else if (baseShapes[ship.type]){
+      //   drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
+      // }
 
       //drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
@@ -181,14 +181,6 @@ function drawMenu(){
         drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
         drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
       }
-
-      else if(baseShapes[menu[i]]){
-        drawFromData(c, gameSprites["roundedHex"], 110+70*i, 32, getColMap(state.playerTurn, 1) ,0.35)
-        drawPoly(c, baseShapes[menu[i]], new Vec(130+70*i, 60), 10, 4 , getPlayerColour(state.playerTurn) );
-        let details = data.thingList.find(t => t.thing === menu[i]);
-        drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
-        drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
-      } else i
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn);
@@ -201,18 +193,13 @@ function drawMenu(){
   drawText(c, `Player: ${state.playerTurn}`, new Vec(100,20), 15, "white" )
   drawText(c, `Turn: ${state.turnNumber}`, new Vec(180,20), 15, "white" )
   if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245,20), 15, "white" )
-  //  if(!preturn) drawText(c, `( ${state.playerData[state.playerTurn].income} )`, new Vec(320,20), 15, "white" )
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
-
-  //drawText(c, `Tech Tree`, new Vec(720,30), 15, "white" )
 
   if (screenSettings.openTechTree){
     data.techs.forEach((t)=>{
-      if (t.requires){
-        t.requires.forEach(r => {
-          arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
-        })
-      }
+      if (t.requires){ t.requires.forEach(r => {
+        arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
+      })}
     })
 
     arrows.forEach(a => {
@@ -222,41 +209,40 @@ function drawMenu(){
     data.techs.forEach((t)=>{
       let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
       let {x,y} = center;
-      let colour = "white";
-      let colNum = t.colour;
 
       let draw = t.cost < 99;
 
-      let col = `rgb(${colNum[0]},${colNum[1]},${colNum[2]})`
-      //if (state.playerData[state.playerTurn].tech[t.tech]) {colour = "yellow"}
-      if (state.playerData[state.playerTurn].tech[t.tech]) {
-      //  col = "rgb(78,78,117)"
+      //let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
-        //drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), "rgb(78,78,117)")
-      drawFromData(c, gameSprites["roundedHex"], x - 45, y - 32, state.playerTurn, 1 ,0.55)
-
-      } else if (t.cost > 99 || (t.requires &&
-        t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
-      )
-      ) {
-        drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", col)
-      } else {
-        drawPoly(c, simpleShapes["hexVert"], center, 45, 10, "white", "rgb(78,78,117)")
+      if (t.cost > 99){
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(0,0,0)" ,0.55);
       }
 
-      if(t.sprite) {
-        t.sprite.forEach(s => {
-          console.log(s[0], x*s[1] , y*s[2] , state.playerTurn, 1 ,0.55*s[3]);
+      else if (state.playerData[state.playerTurn].tech[t.tech]) {
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
+        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, getColMap(state.playerTurn, 1) ,0.55)
 
+      } else if ( t.cost > 99 || (t.requires &&
+        t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
+      )) {
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
+        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(0,0,0)" ,0.55)
+      } else {// if (draw){
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
+        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(255,255,255)" ,0.55)
+      }
+      //  else{
+      //   drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(0,0,0)" ,0.55)
+      // }
+
+      if((draw || debug) && t.sprite) {
+        t.sprite.forEach(s => {
           drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
         })
       }
-      //  drawPoly(c, simpleShapes["hexVert"], center, 45, 10, getPlayerColour(state.playerTurn), col)
-      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, colour )
-      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 12, colour )
+      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "white" )
+      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-20,-20)) , 12, "white" )
     })
-
-
   }
 }
 
@@ -278,29 +264,19 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   c.beginPath();c.closePath();   // Hack to stop drawing after clear
 }
 
-function drawArrow(c, start, end, width, colour){
+function drawArrow(c, start, end, width = 3, color){
 //  console.log(start,end);
   let midpoint = start.add(end).scale(0.5);
-
-  c.lineWidth = 3;
+  //c.strokeStyle = sColor                          // keep col form last func
+  c.lineWidth = width;
+  c.beginPath();
   c.moveTo(start.x, start.y);
-  c.beginPath();
-  c.lineTo(midpoint.x, midpoint.y);
-  c.lineTo(start.x, start.y);
-  c.closePath();
-  c.stroke();
-  c.beginPath();c.closePath();
-  c.lineWidth = 3;
-  c.moveTo(end.x, end.y);
-  c.beginPath();
-  c.lineTo(midpoint.x, midpoint.y);
   c.lineTo(end.x, end.y);
-  c.closePath();
   c.stroke();
-  c.beginPath();c.closePath();
+  c.closePath();
 }
 
-function drawFromData(c, data, xx=0, yy=0, colourMap = (x)=>x, scale = 1){
+function drawFromData(c, data, xx=0, yy=0, colourMap = x=>x, scale = 1, rotation = 0){
 
   let add = (a, x, y) => a.map((v,i) => i%2 ? v*scale+y  : v*scale+x);
   let gradient;
@@ -309,8 +285,7 @@ function drawFromData(c, data, xx=0, yy=0, colourMap = (x)=>x, scale = 1){
 
   //c.save();
   //c.shadowColor = "rgba(0, 0, 0, 0.35)";
-  //c.shadowOffsetX = 3.0;
-  //c.shadowOffsetY = 3.0;
+  //c.shadowOffsetX = 3.0; c.shadowOffsetY = 3.0;
   //c.shadowBlur = 10.0;
 
   data.forEach(([t, ...v]) => {
@@ -336,11 +311,8 @@ function drawFromData(c, data, xx=0, yy=0, colourMap = (x)=>x, scale = 1){
     }
     else if(t === "xcs"){gradient.addColorStop(v[0], colourMap(v[1])) }
   })
-  c.shadowOffsetX = 0;
-  c.shadowOffsetY = 0;
-  c.shadowBlur = 0.0;
-  c.restore()
-  c.beginPath();c.closePath(); // Hack to stop drawing after clear
+  c.shadowOffsetX = 0;  c.shadowOffsetY = 0;  c.shadowBlur = 0.0;
+  c.restore(); c.beginPath();c.closePath(); // Hack to stop drawing after clear
 
   if (c.data) return c.data;
 }
