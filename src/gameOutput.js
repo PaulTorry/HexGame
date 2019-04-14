@@ -217,17 +217,17 @@ function drawMenu(){
       }
 
       else if (state.playerData[state.playerTurn].tech[t.tech]) {
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55)
         drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, getColMap(state.playerTurn, 1) ,0.55)
 
       } else if ( t.cost > 99 || (t.requires &&
         t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
       )) {
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
-        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(0,0,0)" ,0.55)
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55)
+        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(36,34,73)" ,0.55)
       } else {// if (draw){
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, undefined ,0.55)
-        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(255,255,255)" ,0.55)
+        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55)
+        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(159,216,206)" ,0.55)
       }
 
 
@@ -236,8 +236,8 @@ function drawMenu(){
           drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
         })
       }
-      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "white" )
-      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40,+6)) , 12, "white" )
+      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40,+6)) , 12, "rgb(159,216,206)" )
     })
   }
 }
