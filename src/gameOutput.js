@@ -91,7 +91,8 @@ function drawScreen() {
         // else drawPoly(c, baseShapes["asteroidMining"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
       if(tile.navBeacon){    // @TODO   Remove baseshapes
-        drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
+      //  drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
+        drawFromData(c, gameSprites["navBeacon"], x, y, getColMap(tile.navBeacon.owner))
       }
       let base = state.baseArray.find(b => b.hex.compare(tile.hex));
       if(base){
@@ -176,13 +177,24 @@ function drawMenu(){
     let menu = sel.menu;
     for(let i=0; i<menu.length; i++){
 
-      if(gameSprites[menu[i]]){
+
+      let details = data.thingList.find(t => t.thing === menu[i]);
+      console.log(details);
+      if(details.sprite && gameSprites[details.sprite[0][0]] ) {
         drawFromData(c, gameSprites["roundedHex"], 110+70*i, 30, getColMap(state.playerTurn, 1) ,0.35)
-        drawFromData(c, gameSprites[menu[i]], 140+70*i, 60, getColMap(state.playerTurn, 1) ,0.5)
-        let details = data.thingList.find(t => t.thing === menu[i]);
+        details.sprite.forEach(x=> {
+          drawFromData(c, gameSprites[x[0]], 140+70*i+x[1], 60+x[2], getColMap(state.playerTurn, 1) ,0.5*x[3])
+        });
         drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
         drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
       }
+      else if(gameSprites[menu[i]] ) {
+        drawFromData(c, gameSprites["roundedHex"], 110+70*i, 30, getColMap(state.playerTurn, 1) ,0.35)
+        drawFromData(c, gameSprites[menu[i]], 140+70*i, 60, getColMap(state.playerTurn, 1) ,0.5)
+        drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
+        drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
+      }
+      else (console.log("problem"));
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn);
