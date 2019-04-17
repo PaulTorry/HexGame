@@ -11,7 +11,7 @@ const data = {
     //1st ring, clockwise from top
     {name:'Planet Defence Shield', tech:'defShieldTech', colour:[50,47,73], requires:['armouredDestroyerTech'], hex:new Hex(0,-2), cost:8, sprite:[['planet',0,-10,0.70],['planetRing',0,-10,0.70],['planetDefShield',0,-10,0.80]] },
     {name:'Gas Refinery', tech:'missileDestroyerTech', colour:[50,47,73], requires:['harvestGasGiant'], hex:new Hex(2,-2), cost:8, sprite:[['missileDestroyer',0,0,1]] },
-    {name:'Devourer', tech:'devourerTech', colour:[51,49,50], requires:['dismantle'], hex:new Hex(2,0), cost:99999, sprite:[['devourer',0,0,1]] },
+    {name:'Devourer', tech:'devourerTech', colour:[51,49,50], requires:['dismantle'], hex:new Hex(2,0), cost:99999, },
     {name:'Ore Refinery', tech:'battleshipTech', colour:[50,47,73], requires:['asteroidMining'], hex:new Hex(0,2), cost:8, sprite:[['battleship',0,0,1]] },
     {name:'Space Stations', tech:'spaceStationTech', colour:[51,49,50], requires:['navBeacon'], hex:new Hex(-2,2), cost:99999, },
     {name:'Nebula Destroyer', tech:'nebulaDestroyerTech', colour:[51,49,50], requires:['nebulaFrigateTech'], hex:new Hex(-2,0), cost:99999, },
@@ -57,40 +57,40 @@ const data = {
     armouredDestroyer:{type:'armouredDestroyer',  hull:5, shield:10, maxMove:1, attack:2, retaliate:10, range:1, defence:3, view:1},
     titanShip:{type:'titanShip',  hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
     fastFrigate:{type:'fastFrigate',  hull:3, shield:7, maxMove:2, attack:6, retaliate:2, range:1, defence:1, view:1},
-    devourer:{type:'devourer',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
+    //devourer:{type:'devourer',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
     missileFrigate:{type:'missileFrigate',  hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:2, defence:1, view:1},
     missileDestroyer:{type:'missileDestroyer',  hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
   },
 
   thingList : [
 
-    {name: 'Nav. Beacon', thing: 'navBeacon', type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navBeacon',  terrain: ['space', ], sprite:[['navBeaconCross',-20,-20,1],['navBeaconCross',-10,-20,1]] } ,
-    {name: 'Nav. Beacon', thing: 'navAsteroid', type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navAsteroid',  terrain: ['asteroids', ] } ,
-    {name: 'Nav. Beacon', thing: 'navNebula',  type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navNebula',  terrain: [ 'nebula', ] } ,
+    {name: 'Nav. Beacon', thing: 'navBeacon', type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navBeacon',  terrain: ['space', ], sprite:[['navBeaconCross',-15,-18,1]] } ,
+    {name: 'Nav. Beacon', thing: 'navAsteroid', type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navAsteroid',  terrain: ['asteroids', ], sprite:[['asteroids',0,-2  ,0.75],['navBeaconCross',-15,-18,1]] } ,
+    {name: 'Nav. Beacon', thing: 'navNebula',  type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navNebula',  terrain: [ 'nebula', ], sprite:[['nebula',1,-2,0.75],['navBeaconCross',-15,-18,1]] } ,
 
 
-    {name: 'Ast. Mining', thing: 'asteroidMining', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ] } ,
-    {name: 'Gas Extraction', thing: 'harvestGasGiant', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ] } ,
-    {name: 'Harvest Protostar', thing: 'harvestProtostar', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ] } ,
-    {name: 'Solar Panel', thing: 'solarSail', type:"industry", price: 2, income: 1, territoryState: 2,  shipState: 'noEnemy',  terrain: ['space', ], nextTo:"star" } ,
+    {name: 'Ast. Mining', thing: 'asteroidMining', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ], sprite:[['asteroids',0,-2,0.75],['asteroidMining',0,-2,0.75]] } ,
+    {name: 'Gas Extraction', thing: 'harvestGasGiant', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ], sprite:[['gasGiant',0,0,1],['harvestGasGiant',0,0,1]] } ,
+    {name: 'Harvest Protostar', thing: 'harvestProtostar', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ], sprite:[['protostar',1,-1,0.75],['harvestProtostar',1,-1,0.75]] } ,
+    {name: 'Solar Panel', thing: 'solarSail', type:"industry", price: 2, income: 1, territoryState: 2,  shipState: 'noEnemy',  terrain: ['space', ], nextTo:"star" , sprite:[['solarSail',0,0,1]]} ,
 
 
 
-    {name: 'Ice Collection', thing: 'icyAsteroids', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidIceMining',  terrain: ['asteroids', ] , resource:"icyAsteroids"} ,
-    {name: 'Hydrogen. Collection', thing: 'hydrogen', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestHydrogen',  terrain: ['nebula', ] , resource:"hydrogen"} ,
+    {name: 'Ice Collection', thing: 'icyAsteroids', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidIceMining',  terrain: ['asteroids', ] , resource:"icyAsteroids", sprite:[['icyAsteroids',0,-2,0.75]] } ,
+    {name: 'Hydrogen. Collection', thing: 'hydrogen', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestHydrogen',  terrain: ['nebula', ] , resource:"hydrogen", sprite:[['nebula',1,-2,0.75],['hydrogen',0,0,1]] } ,
 
 
-    {name: 'Conquer Planet', thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ] } ,
+    {name: 'Conquer Planet', thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresent',   terrain: ['planet', ], sprite:[['planet',0,0,0.75],['planetRing',0,0,0.75]] } ,
 
-    {name: ' Scout Ship', thing: 'scoutShip', type:"ship", price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'scoutShipTech',  terrain: [] } ,
-    {name: 'Basic Frigate', thing: 'basicFrigate', type:"ship", price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [] } ,
-    {name: 'Fast Frigate', thing: 'fastFrigate', type:"ship", price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'fastFrigateTech', terrain: [] } ,
-    {name: '  Battleship', thing: 'battleship', type:"ship", price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'battleshipTech',  terrain: [] } ,
-    {name: ' Arm. Dest.', thing: 'armouredDestroyer', type:"ship",  price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'armouredDestroyerTech',  terrain: [] } ,
-    {name: 'Devourer', thing: 'devourer', type:"ship", price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'devourerTech', terrain: [] } ,
-    {name: ' Missile Frig.', thing: 'missileFrigate', type:"ship", price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileFrigateTech',  terrain: [] } ,
-    {name: 'Missile Dest.', thing: 'missileDestroyer', type:"ship", price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileDestroyerTech',  terrain: [] } ,
-    {name: '     Titan', thing: 'titanShip', type:"ship", price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'titanTech', terrain: [] } ,
+    {name: ' Scout Ship', thing: 'scoutShip', type:"ship", price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'scoutShipTech',  terrain: [], sprite:[['scoutShip',0,0,1]] } ,
+    {name: 'Basic Frigate', thing: 'basicFrigate', type:"ship", price: 2, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',   terrain: [], sprite:[['basicFrigate',0,0,1]] } ,
+    {name: 'Fast Frigate', thing: 'fastFrigate', type:"ship", price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'fastFrigateTech', terrain: [], sprite:[['fastFrigate',0,0,1]] } ,
+    {name: '  Battleship', thing: 'battleship', type:"ship", price: 5, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'battleshipTech',  terrain: [], sprite:[['battleship',0,0,1]] } ,
+    {name: ' Arm. Dest.', thing: 'armouredDestroyer', type:"ship",  price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'armouredDestroyerTech',  terrain: [], sprite:[['scoutShip',0,0,1]] } ,
+    //{name: 'Devourer', thing: 'devourer', type:"ship", price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'devourerTech', terrain: [], sprite:[['devourer',0,0,1]] } ,
+    {name: ' Missile Frig.', thing: 'missileFrigate', type:"ship", price: 3, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileFrigateTech',  terrain: [], sprite:[['missileFrigate',0,0,1]] } ,
+    {name: 'Missile Dest.', thing: 'missileDestroyer', type:"ship", price: 8, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip', tech: 'missileDestroyerTech',  terrain: [], sprite:[['missileDestroyer',0,0,1]] } ,
+    {name: '     Titan', thing: 'titanShip', type:"ship", price: 30, territoryState: 2, inhabitedPlanet: true, shipState: 'noShip',  tech: 'titanTech', terrain: [], sprite:[['titanShip',0,0,1]] } ,
 
 
 
