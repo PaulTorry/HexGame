@@ -122,4 +122,5 @@ let screenSettings = {
   techTreeOffset : new Vec(400,400),
   hexSize : 75,
   scale : 1,
+  showTrails:true,
 }

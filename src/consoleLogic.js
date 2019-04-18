@@ -7,14 +7,15 @@ drawScreen,
 debug:true,
 interactiveConsole,
 setup
-data
+data,
+screenSettings
 */
 
 /* eslint-disable no-unused-vars */
 
 function interactiveConsole (num = ""){
   console.log(num);
-  let ans = prompt("\n0. New Game,\n1. Save, \n2: Load, \n3:  Money,\n4:  Tech, \n5: Toggle Debug", num);
+  let ans = prompt("\n0. New Game,\n1. Save, \n2: Load, \n3:  Money,\n4:  Tech, \n5: Toggle Debug, \n6: Show Trails", num);
 
   if(ans === "0"){
     let ans2 = Number(prompt("Number of players", 4));
@@ -47,7 +48,9 @@ function interactiveConsole (num = ""){
   if(ans === "5"){
     debug = !debug;
   }
-
+  if(ans === "6"){
+    screenSettings.showTrails = !screenSettings.showTrails;
+  }
   drawScreen();
 }
 

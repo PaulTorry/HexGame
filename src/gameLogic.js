@@ -10,7 +10,8 @@ findPossibleAttacks, getShipOnHex, findPossibleMoves,
 buildShip,
 translateContextTo, getXYfromHex, drawMenu, getUpdatedViewMask
 data
-takeAIturn
+takeAIturn,
+subTurn
 */
 
 // techs,
@@ -38,8 +39,9 @@ function onHexClicked(clickHex){
         sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
       }
 
-      else if(sel.moves.find( e =>  e.compare(clickHex))) {
+      else if(sel.moves.find( e =>  e[0].compare(clickHex))) {
         sel.ship.hex = clickHex;
+        state.history[subTurn()].push({type:"move" , rand:Math.random(), path:sel.moves.find( e =>  e[0].compare(clickHex))})
         sel.ship.moved = true;
         sel.hex = clickHex;
 
@@ -58,6 +60,7 @@ function onHexClicked(clickHex){
         let target = getShipOnHex(clickHex);
         if(target){
           applyDamage(sel.ship, target, true, getTerrainDefVal(target, clickHex));
+          state.history[subTurn()].push({type:"attack" , rand:Math.random(), path:[clickHex, sel.ship.hex]})
           sel.ship.moved = true; sel.ship.attacked = true;
         }
         else { console.log("error in attacks"); }
@@ -184,15 +187,12 @@ function getTerrainDefVal(ship, hex){
 
   if(data.terrainInfo[state.tiles.get(hex.id).terrain].defenceTech &&
    state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].defenceTech]) {
-    console.log(ship, hex, "def1");
     return 1;
   }
 
   if(state.baseArray.find(b => b.hex.id === hex.id && b.owner === ship.owner)){
-    console.log(ship, hex, "def1 base");
     return 1;
   }
-  console.log(ship, hex, "def0");
   return 0;
 }
 
@@ -239,7 +239,6 @@ function applyDamage(attacker, ship, attacking = true, terrainDefence = 0){
 function getWeaponPower(ship, attacking = true){
   let {type, hull} = ship;
   let  {attack, retaliate} = data.shipHulls[type];
-  console.log(type, hull, attack, retaliate);
 
   if(attacking){ return attack * hull / data.shipHulls[type].hull; }
   else{ return retaliate * hull / data.shipHulls[type].hull; }
@@ -258,7 +257,10 @@ function nextTurn(){
     }
   }
   state.playerTurn = (state.playerTurn + 1) % state.numPlayers;
-  if (state.playerTurn === 0) state.turnNumber += 1;
+  if (state.playerTurn === 0) {
+    state.turnNumber += 1;
+  }
+  state.history.push([]);
   translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
   screenSettings.openTechTree = false;
   drawMenu(); drawScreen();

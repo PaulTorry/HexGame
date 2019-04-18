@@ -7,7 +7,6 @@
 /* eslint-disable no-unused-vars */
 
 function buildShip(type, owner, hex, moved=true, attacked=true){
-  console.log("building");
   let base = data.shipHulls[type];
   return ({type:base.type, hull:base.hull, shield:base.shield,
     attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
@@ -67,8 +66,23 @@ function findPossibleMoves(center, moveLeft = 2){
       .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
     ,terrainFunc
   );
-  return Object.values(temp).map(v => v.loc).filter(hex => {
-    return  (hex.mag <= state.boardSize) && !getShipOnHex(hex)
+
+  let temp2 = Object.values(temp).map(v => {
+    let history = []
+    let ff = v.loc
+    for(let i = 10; i > 0; i--) {
+      let f = Object.values(temp).find(vv => ff.compare(vv.loc))
+      if (f && f.from && !f.from.compare(new Hex())){
+        history.push(f.from)
+        ff =  f.from;
+      }
+      else break;
+    }
+    return [v.loc, ...history]
+  })
+
+  return temp2.filter(h => {
+    return  (h[0].mag <= state.boardSize) && !getShipOnHex(h[0])
   });
 }
 

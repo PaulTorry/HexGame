@@ -118,6 +118,24 @@ function drawScreen() {
     }
   }
 
+  if (screenSettings.showTrails){
+    for(let h = subTurn(); h >= Math.max(subTurn() - state.numPlayers +1,0); h--){
+      for(let {type, rand, path} of state.history[h]){
+        let randomOffset = new Vec(((rand*123432%1)-0.5)*screenSettings.hexSize/3,((rand*1232632%1)-0.5)*screenSettings.hexSize/3);
+        if(type === "move"){
+          for (let i = 0; i<path.length -1; i++){
+            if (path[i] && path[i+1] && (debug || viewMask[path[1].id] >1  || viewMask[path[1].id] > 1)) {
+              drawArrow(c, getXYfromHex(path[i]).add(randomOffset), getXYfromHex(path[i+1]).add(randomOffset), 6, "rgba(255,255,255,0.3)")
+            }
+          }
+        }
+        if(type === "attack" && (debug || viewMask[path[0].id] > 1  |5| viewMask[path[1].id] > 1)){
+          drawArrow(c, getXYfromHex(path[0]), getXYfromHex(path[1]), 2, "rgba(255,0,0,0.8)")
+        }
+      }
+    }
+  }
+
   for(let ship of state.shipArray){
     if(viewMask[ship.hex.id] === 2 || debug){
       let borderColour = "black";
@@ -140,9 +158,15 @@ function drawScreen() {
   }
 
   if(sel.hex){
-    for (let move of sel.moves){
+  //  console.log(sel.moves);
+    for (let [move,...hist] of sel.moves){
       if(getTerrainDamage(sel.ship, move) > 0) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(255,91,87)");
       else drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
+      // let past = move;
+      // for(let h of hist){
+      //   drawArrow(c, getXYfromHex(past), getXYfromHex(h),  3, getPlayerColour(state.playerTurn, 0.5));
+      //   past = h;
+      // }
     }
     for (let attack of sel.attacks){
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), ss.hexSize -5, 3 , "red");
@@ -159,6 +183,10 @@ function drawScreen() {
     drawText(c, `Click to Start`, playerLoc.add(new Vec(0,50)), 30, "white" )
   }
 
+  //console.log(state.history);
+
+
+
   drawMenu();
 }
 
@@ -173,13 +201,13 @@ function drawMenu(){
   c.strokeStyle = "white";
 
   if(sel.menu && sel.menu.length > 0 && !screenSettings.openTechTree){
-    console.log(sel.menu);
+    //    console.log(sel.menu);
     let menu = sel.menu;
     for(let i=0; i<menu.length; i++){
 
 
       let details = data.thingList.find(t => t.thing === menu[i]);
-      console.log(details);
+      //    console.log(details);
       if(details.sprite && gameSprites[details.sprite[0][0]] ) {
         drawFromData(c, gameSprites["roundedHex"], 110+70*i, 30, getColMap(state.playerTurn, 1) ,0.35)
         drawFromData(c, gameSprites["roundedHexOutline"], 110+70*i, 30,  x => "rgb(36,34,73)", 0.35)
@@ -246,7 +274,7 @@ function drawMenu(){
       }
 
 
-      if((true || draw || debug) && t.sprite) {
+      if(( draw || debug) && t.sprite) {
         t.sprite.forEach(s => {
           drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
         })
@@ -275,10 +303,10 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   c.beginPath();c.closePath();   // Hack to stop drawing after clear
 }
 
-function drawArrow(c, start, end, width = 3, color){
+function drawArrow(c, start, end, width = 3, color = "white"){
 //  console.log(start,end);
   let midpoint = start.add(end).scale(0.5);
-  //c.strokeStyle = sColor                          // keep col form last func
+  c.strokeStyle = color                          // keep col form last func
   c.lineWidth = width;
   c.beginPath();
   c.moveTo(start.x, start.y);

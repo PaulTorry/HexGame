@@ -64,8 +64,6 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     }
   }
 
-  console.log(alliesGrid);
-
   for(let i = 0; i < numPlayers; i++){
     let angle = 2*Math.PI*i/numPlayers
 
@@ -88,5 +86,9 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   //
   // }
 
-  return {boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid,}
+  return {boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]]}
+}
+
+function subTurn(){
+  return state.numPlayers * (state.turnNumber -1) + state.playerTurn;
 }
