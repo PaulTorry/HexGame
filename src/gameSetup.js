@@ -29,7 +29,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     else if(Math.random()<0.15){buildingHex.terrain = "asteroids"; buildingHex.resource = "icyAsteroids"}
     else if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
 
-    //   if(Math.random()<0.1){buildingHex.terrain = "planet"}
+    else if(Math.random()<0.1){buildingHex.terrain = "planet"}
     //   if(Math.random()<0.05){buildingHex.terrain = "star"}
     //   if(Math.random()<0.05){buildingHex.terrain = "blackHole"}
 
@@ -75,7 +75,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     playerData.push({type: playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
     shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
       "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})
-    tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null});
+    tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null, navBeacon:{owner: state.playerTurn}});
 
     let hexStar = hexloc.randomNeighbour;
     tiles.set(hexStar.id, {hex: hexStar, terrain:"star", station:null});

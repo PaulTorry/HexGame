@@ -134,6 +134,7 @@ function onMenuItemClicked(item, hex = sel.hex){
   if(item === "inhabitedPlanet"){
     ship.moved = true; ship.attacked = true;
     let existingBase = state.baseArray.find(b => b.hex.compare(tile.hex));
+    tile.navBeacon = {owner: state.playerTurn}
     if (existingBase){
       existingBase.owner = state.playerTurn;
       existingBase.territory.forEach(t => {

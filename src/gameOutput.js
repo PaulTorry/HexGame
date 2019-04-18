@@ -194,7 +194,7 @@ function drawMenu(){
         drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
         drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
       }
-      else (console.log("problem"));
+      else (console.log("problem",details));
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn);
