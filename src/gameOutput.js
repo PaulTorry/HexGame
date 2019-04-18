@@ -182,6 +182,7 @@ function drawMenu(){
       console.log(details);
       if(details.sprite && gameSprites[details.sprite[0][0]] ) {
         drawFromData(c, gameSprites["roundedHex"], 110+70*i, 30, getColMap(state.playerTurn, 1) ,0.35)
+        drawFromData(c, gameSprites["roundedHexOutline"], 110+70*i, 30,  x => "rgb(36,34,73)", 0.35)
         details.sprite.forEach(x=> {
           drawFromData(c, gameSprites[x[0]], 140+70*i+x[1], 60+x[2], getColMap(state.playerTurn, 1) ,0.5*x[3])
         });
