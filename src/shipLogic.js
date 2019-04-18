@@ -102,7 +102,7 @@ function makeTerrainCostMap(){
 
     let moveOff = data.terrainInfo[tile.terrain].moveCost / 2;
     let moveOn = data.terrainInfo[tile.terrain].moveCost / 2;
-    if(tile.navBeacon){moveOff = 0.25, moveOn = 0.25}
+    if(tile.navBeacon && state.alliesGrid[tile.navBeacon.owner][state.playerTurn]){moveOff = 0.25, moveOn = 0.25}
 
     for(let hex2 of tile.hex.neighbours){
       let ship = getShipOnHex(hex2)

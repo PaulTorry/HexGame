@@ -17,7 +17,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   let playerData = [];
   let baseArray = [];
   let shipArray = [];
-  let randomPicker = Hex.getRandomPicker(boardSize);
+  let randomPicker = Hex.getRandomPicker(boardSize-1);
 
 
   for(let hex of Hex.findWithin(boardSize)){
@@ -29,7 +29,9 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     else if(Math.random()<0.15){buildingHex.terrain = "asteroids"; buildingHex.resource = "icyAsteroids"}
     else if(Math.random()<0.05){buildingHex.terrain = "gasGiant"}
 
-    else if(Math.random()<0.1){buildingHex.terrain = "planet"}
+
+
+    //  else if(Math.random()<0.1){buildingHex.terrain = "planet"}
     //   if(Math.random()<0.05){buildingHex.terrain = "star"}
     //   if(Math.random()<0.05){buildingHex.terrain = "blackHole"}
 
@@ -38,7 +40,13 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   // console.log(randomPicker(0.5));
   // console.log(Hex.arrayToID(randomPicker(0.5)));
   // console.log(tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain);
-  tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain = "blackHole";
+
+
+
+
+  let blackHoleLoc = tiles.get(Hex.arrayToID(randomPicker(0.5)));
+  blackHoleLoc.terrain = "blackHole";
+  blackHoleLoc.resource = null;
   // console.log(tiles.get(Hex.arrayToID(randomPicker(0.5))).terrain);
 
   let playerlist = []
@@ -73,15 +81,26 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
     playerData.push({type: playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles)})
     shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
       "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})
-    tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null, navBeacon:{owner: state.playerTurn}});
+    tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null, navBeacon:{owner: i}});
 
     let hexStar = hexloc.randomNeighbour;
     tiles.set(hexStar.id, {hex: hexStar, terrain:"star", station:null});
 
   }
 
-
-
+  for(let i = 0; i < 100; i ++){
+    console.log(randomPicker(Math.random()));
+    let t = tiles.get(Hex.arrayToID(randomPicker(Math.random())));
+    console.log(t);
+    console.log(t.hex.secondNeighboursInclusive.filter(n => n.mag < boardSize));
+    if(!t.hex.secondNeighboursInclusive.filter(n => n.mag <= boardSize).find(tt => tiles.get(tt.id).terrain === "planet" ) ){
+      t.terrain = "planet"; t.resource = null;
+      if(!t.hex.secondNeighboursInclusive.filter(n => n.mag <= boardSize).find(tt => tiles.get(tt.id).terrain === "star" ) ){
+        let starMaybe = t.hex.neighbours.filter(n => n.mag <= boardSize).filter(n => n.mag < boardSize && tiles.get(n.id).terrain === "space")
+        if (starMaybe[0]) tiles.get(starMaybe[0].id).terrain  = "star";
+      }
+    }
+  }
   // for (let i = 0; i < 100; i++){
   //
   // }

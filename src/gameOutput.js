@@ -10,7 +10,7 @@ simpleShapes, getTerrainDamage
  Map,  makeNewViewMask, preturn,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
-data,
+data, subTurn
 
 */
 

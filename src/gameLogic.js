@@ -31,7 +31,8 @@ function onHexClicked(clickHex){
 
     if(sel.state === 2){
       if (clickHex.compare(sel.hex)) sel = {state:0,  moves:[], attacks:[], menu: []};
-      else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+      else sel = {state:0,  moves:[], attacks:[], menu: []};
+    //  else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
     }
 
     else if (sel.state === 1){
@@ -51,7 +52,8 @@ function onHexClicked(clickHex){
         if (possibleAttacks.length > 0) { sel.moves = []; sel.attacks = possibleAttacks}
         else{
           sel.ship.attacked = true;
-          sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+          sel = {state:0, moves:[], attacks:[], menu:[]}
+        //  sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
         }
         sel.menu = [];
       }
