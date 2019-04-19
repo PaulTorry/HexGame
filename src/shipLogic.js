@@ -106,7 +106,6 @@ function makeTerrainCostMap(){
 
     for(let hex2 of tile.hex.neighbours){
       let ship = getShipOnHex(hex2)
-      //  if(ship && (ship.owner !== state.playerTurn)) { moveOff = 9; }
       if(ship && (!state.alliesGrid[ship.owner][state.playerTurn])) { moveOff = 9; }
     }
 

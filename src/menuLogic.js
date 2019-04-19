@@ -13,7 +13,7 @@ function makeMenu(hex){
   let tile = state.tiles.get(hex.id);
   let ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
   // console.log("makeMenu",base, tile, ship, hex.id);
-  return data.thingList.filter(pos => {
+  return data.thingList.filter(pos => {                                        // make a map to include failure point
 
 
   //  console.log("pos ", pos);

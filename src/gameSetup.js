@@ -12,7 +12,7 @@ let sel = {state:0, attacks:[], menu:[], moves:[]}
 
 state = setup(5, 9, 2, false)
 
-function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogether = false){
+function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogether = false, gameName = "noName" ){
   let tiles = new Map();
   let playerData = [];
   let baseArray = [];
@@ -89,10 +89,9 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   }
 
   for(let i = 0; i < 100; i ++){
-    console.log(randomPicker(Math.random()));
+
     let t = tiles.get(Hex.arrayToID(randomPicker(Math.random())));
-    console.log(t);
-    console.log(t.hex.secondNeighboursInclusive.filter(n => n.mag < boardSize));
+
     if(!t.hex.secondNeighboursInclusive.filter(n => n.mag <= boardSize).find(tt => tiles.get(tt.id).terrain === "planet" ) ){
       t.terrain = "planet"; t.resource = null;
       if(!t.hex.secondNeighboursInclusive.filter(n => n.mag <= boardSize).find(tt => tiles.get(tt.id).terrain === "star" ) ){
@@ -105,7 +104,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   //
   // }
 
-  return {boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]]}
+  return {gameName:randomName(), boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]]}
 }
 
 function subTurn(){

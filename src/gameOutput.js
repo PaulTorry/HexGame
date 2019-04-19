@@ -67,9 +67,8 @@ function drawScreen() {
   c.lineWidth = 5
 
   let viewMask = getUpdatedViewMask(state)
-  if (preturn){
-    viewMask = makeNewViewMask(new Map());
-  }
+  if (preturn){  viewMask = makeNewViewMask(new Map());}
+
 
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug){
@@ -87,11 +86,8 @@ function drawScreen() {
       }
       if(tile.station){
         drawFromData(c, gameSprites[tile.station.type], x, y,  getColMap(tile.station.owner))
-        // if(tile.station.type === "asteroidMining"){drawFromData(c, curves["asteroidMining"], x, y, tile.station.owner)  }
-        // else drawPoly(c, baseShapes["asteroidMining"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
-      if(tile.navBeacon){    // @TODO   Remove baseshapes
-      //  drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
+      if(tile.navBeacon){
         drawFromData(c, gameSprites["navBeacon"], x, y, getColMap(tile.navBeacon.owner))
       }
       let base = state.baseArray.find(b => b.hex.compare(tile.hex));
@@ -147,26 +143,16 @@ function drawScreen() {
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
         drawFromData(c, gameSprites[ship.type], x, y, getColMap(ship.owner, transparency))
       }
-      // else if (baseShapes[ship.type]){
-      //   drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
-      // }
 
-      //drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
     }
   }
 
   if(sel.hex){
-  //  console.log(sel.moves);
     for (let [move,...hist] of sel.moves){
       if(getTerrainDamage(sel.ship, move) > 0) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(255,91,87)");
       else drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
-      // let past = move;
-      // for(let h of hist){
-      //   drawArrow(c, getXYfromHex(past), getXYfromHex(h),  3, getPlayerColour(state.playerTurn, 0.5));
-      //   past = h;
-      // }
     }
     for (let attack of sel.attacks){
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), ss.hexSize -5, 3 , "red");
@@ -175,17 +161,12 @@ function drawScreen() {
   }
 
   if (preturn){
-  //  viewMask = makeNewViewMask(new Map());
     let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
     let {x,y} = playerLoc;
-    drawFromData(c, gameSprites["logo"], x-20, y-230, (x)=>x , 0.3)
-    drawText(c, `Player ${state.playerTurn}`, playerLoc, 50, getPlayerColour(state.playerTurn) )
-    drawText(c, `Click to Start`, playerLoc.add(new Vec(0,50)), 30, "white" )
+    drawFromData(c, gameSprites["logo"], x-90, y-230, (x)=>x , 0.3)
+    drawText(c, `Player ${state.playerTurn}`, playerLoc.add(new Vec(-80,0)), 50, getPlayerColour(state.playerTurn) )
+    drawText(c, `Click to Start`, playerLoc.add(new Vec(-80,50)), 30, "white" )
   }
-
-  //console.log(state.history);
-
-
 
   drawMenu();
 }

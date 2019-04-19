@@ -11,7 +11,8 @@ buildShip,
 translateContextTo, getXYfromHex, drawMenu, getUpdatedViewMask
 data
 takeAIturn,
-subTurn
+subTurn,
+autoSave
 */
 
 // techs,
@@ -109,7 +110,7 @@ function onMenuItemClicked(item, hex = sel.hex){
   let tile = state.tiles.get(hex.id);
   let ship = getShipOnHex(hex);
   let thing = data.thingList.find(t => t.thing === item);
-  if (sel.state !== 2) console.log("sel.state !== 2");
+  // if (sel.state !== 2) console.log("sel.state !== 2");
 
   state.playerData[state.playerTurn].money -= thing.price;
 
@@ -128,14 +129,6 @@ function onMenuItemClicked(item, hex = sel.hex){
     tile.navBeacon = {owner: state.playerTurn}
   }
 
-  // if(item === "harvestGasGiant"){
-  //   tile.station = {type: "harvestGasGiant", owner: state.playerTurn}
-  // }
-  //
-  // if(item === "harvestProtostar"){
-  //   tile.station = {type: "harvestProtostar", owner: state.playerTurn}
-  // }
-
   if(item === "inhabitedPlanet"){
     ship.moved = true; ship.attacked = true;
     let existingBase = state.baseArray.find(b => b.hex.compare(tile.hex));
@@ -143,8 +136,9 @@ function onMenuItemClicked(item, hex = sel.hex){
     if (existingBase){
       existingBase.owner = state.playerTurn;
       existingBase.territory.forEach(t => {
-        console.log(t);
-        if(state.tiles.get(t.id).station){state.tiles.get(t.id).station = {type: "asteroidMining", owner: state.playerTurn}}
+        let station = state.tiles.get(t.id).station
+        //      console.log(t);
+        if(station) station = {type: station.type, owner: state.playerTurn}
       })
     }
     else {state.baseArray.push(
@@ -157,15 +151,6 @@ function onMenuItemClicked(item, hex = sel.hex){
   if(item === "destroy"){
     tile.navBeacon = null;
   }
-
-  // console.log("gamelogic in shiphulls", item, data.shipHulls)
-  // let inhulle = data.shipHulls[item];
-  // //console.log(inhulle);
-  // if(data.shipHulls[item]){state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))}
-
-
-
-
 
   sel = {state:0, attacks:[], menu:[], moves:[]}
   reSetIncomes();
@@ -249,6 +234,8 @@ function getWeaponPower(ship, attacking = true){
 
 
 function nextTurn(){
+  if (state.playerData[state.playerTurn].type === "human") autoSave();
+
   state.playerData[state.playerTurn].money += state.playerData[state.playerTurn].income;
 
   for (let ship of state.shipArray){
