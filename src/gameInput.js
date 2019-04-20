@@ -52,7 +52,7 @@ function translateContext (dif, contextName = "board") {
 
 function translateContextTo(loc, ctx = "board") {
   const c = document.getElementById(ctx).getContext("2d");
-  let dif = loc.subtract(screenSettings.screenOffset).subtract(screenSettings.screenCenter);
+  let dif = loc.subtract(screenSettings.screenOffset).subtract(screenSettings.screenCenter.scale(1/screenSettings.scale));
   screenSettings.screenOffset = screenSettings.screenOffset.add(dif)
   c.translate(-dif.x,-dif.y)
 }

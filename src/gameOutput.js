@@ -10,7 +10,7 @@ simpleShapes, getTerrainDamage
  Map,  makeNewViewMask, preturn,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
-data,
+data, subTurn
 
 */
 
@@ -67,9 +67,8 @@ function drawScreen() {
   c.lineWidth = 5
 
   let viewMask = getUpdatedViewMask(state)
-  if (preturn){
-    viewMask = makeNewViewMask(new Map());
-  }
+  if (preturn){  viewMask = makeNewViewMask(new Map());}
+
 
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug){
@@ -87,11 +86,8 @@ function drawScreen() {
       }
       if(tile.station){
         drawFromData(c, gameSprites[tile.station.type], x, y,  getColMap(tile.station.owner))
-        // if(tile.station.type === "asteroidMining"){drawFromData(c, curves["asteroidMining"], x, y, tile.station.owner)  }
-        // else drawPoly(c, baseShapes["asteroidMining"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.station.owner) );
       }
-      if(tile.navBeacon){    // @TODO   Remove baseshapes
-      //  drawPoly(c, baseShapes["navBeacon"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(tile.navBeacon.owner) );
+      if(tile.navBeacon){
         drawFromData(c, gameSprites["navBeacon"], x, y, getColMap(tile.navBeacon.owner))
       }
       let base = state.baseArray.find(b => b.hex.compare(tile.hex));
@@ -118,6 +114,24 @@ function drawScreen() {
     }
   }
 
+  if (screenSettings.showTrails){
+    for(let h = subTurn(); h >= Math.max(subTurn() - state.numPlayers +1,0); h--){
+      for(let {type, rand, path} of state.history[h]){
+        let randomOffset = new Vec(((rand*123432%1)-0.5)*screenSettings.hexSize/3,((rand*1232632%1)-0.5)*screenSettings.hexSize/3);
+        if(type === "move"){
+          for (let i = 0; i<path.length -1; i++){
+            if (path[i] && path[i+1] && (debug || viewMask[path[1].id] >1  || viewMask[path[1].id] > 1)) {
+              drawArrow(c, getXYfromHex(path[i]).add(randomOffset), getXYfromHex(path[i+1]).add(randomOffset), 6, "rgba(255,255,255,0.3)")
+            }
+          }
+        }
+        if(type === "attack" && (debug || viewMask[path[0].id] > 1  |5| viewMask[path[1].id] > 1)){
+          drawArrow(c, getXYfromHex(path[0]), getXYfromHex(path[1]), 2, "rgba(255,0,0,0.8)")
+        }
+      }
+    }
+  }
+
   for(let ship of state.shipArray){
     if(viewMask[ship.hex.id] === 2 || debug){
       let borderColour = "black";
@@ -129,18 +143,14 @@ function drawScreen() {
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
         drawFromData(c, gameSprites[ship.type], x, y, getColMap(ship.owner, transparency))
       }
-      // else if (baseShapes[ship.type]){
-      //   drawPoly(c, baseShapes[ship.type], getXYfromHex(ship.hex), 30,  2 , borderColour, getPlayerColour(ship.owner));
-      // }
 
-      //drawText(c, `${Math.round(ship.shield+ship.hull)}(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
     }
   }
 
   if(sel.hex){
-    for (let move of sel.moves){
+    for (let [move,...hist] of sel.moves){
       if(getTerrainDamage(sel.ship, move) > 0) drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(255,91,87)");
       else drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
     }
@@ -151,12 +161,11 @@ function drawScreen() {
   }
 
   if (preturn){
-  //  viewMask = makeNewViewMask(new Map());
     let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
     let {x,y} = playerLoc;
-    drawFromData(c, gameSprites["logo"], x-20, y-230, (x)=>x , 0.3)
-    drawText(c, `Player ${state.playerTurn}`, playerLoc, 50, getPlayerColour(state.playerTurn) )
-    drawText(c, `Click to Start`, playerLoc.add(new Vec(0,50)), 30, "white" )
+    drawFromData(c, gameSprites["logo"], x-90, y-230, (x)=>x , 0.3)
+    drawText(c, `Player ${state.playerTurn}`, playerLoc.add(new Vec(-80,0)), 50, getPlayerColour(state.playerTurn) )
+    drawText(c, `Click to Start`, playerLoc.add(new Vec(-80,50)), 30, "white" )
   }
 
   drawMenu();
@@ -173,13 +182,13 @@ function drawMenu(){
   c.strokeStyle = "white";
 
   if(sel.menu && sel.menu.length > 0 && !screenSettings.openTechTree){
-    console.log(sel.menu);
+    //    console.log(sel.menu);
     let menu = sel.menu;
     for(let i=0; i<menu.length; i++){
 
 
       let details = data.thingList.find(t => t.thing === menu[i]);
-      console.log(details);
+      //    console.log(details);
       if(details.sprite && gameSprites[details.sprite[0][0]] ) {
         drawFromData(c, gameSprites["roundedHex"], 110+70*i, 30, getColMap(state.playerTurn, 1) ,0.35)
         drawFromData(c, gameSprites["roundedHexOutline"], 110+70*i, 30,  x => "rgb(36,34,73)", 0.35)
@@ -195,7 +204,7 @@ function drawMenu(){
         drawText(c, `${details.price}`, new Vec(125+70*i, 40), 10, "white" )
         drawText(c, `${details.name}`, new Vec(115+70*i, 95), 10, "white" )
       }
-      else (console.log("problem"));
+      else (console.log("problem",details));
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn);
@@ -246,7 +255,7 @@ function drawMenu(){
       }
 
 
-      if((true || draw || debug) && t.sprite) {
+      if(( draw || debug) && t.sprite) {
         t.sprite.forEach(s => {
           drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
         })
@@ -275,10 +284,10 @@ function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor,
   c.beginPath();c.closePath();   // Hack to stop drawing after clear
 }
 
-function drawArrow(c, start, end, width = 3, color){
+function drawArrow(c, start, end, width = 3, color = "white"){
 //  console.log(start,end);
   let midpoint = start.add(end).scale(0.5);
-  //c.strokeStyle = sColor                          // keep col form last func
+  c.strokeStyle = color                          // keep col form last func
   c.lineWidth = width;
   c.beginPath();
   c.moveTo(start.x, start.y);

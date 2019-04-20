@@ -8,12 +8,12 @@ state, territoryState, shipState, getShipOnHex, data
 /* eslint-disable no-unused-vars */
 
 function makeMenu(hex){
-  console.log("makemenu");
+  // console.log("makemenu");
   let base = state.baseArray.find(b => b.hex.compare(hex));
   let tile = state.tiles.get(hex.id);
   let ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
   // console.log("makeMenu",base, tile, ship, hex.id);
-  return data.thingList.filter(pos => {
+  return data.thingList.filter(pos => {                                        // make a map to include failure point
 
 
   //  console.log("pos ", pos);
@@ -61,7 +61,7 @@ function makeMenu(hex){
     // console.log(" thingPresent  success");
     // Self check
 
-    if(pos.nextTo && !hex.neighbours.find((x)=> state.tiles.get(x.id).terrain === pos.nextTo)) return false;
+    if(pos.nextTo && !hex.neighbours.filter(x => x.mag < state.boardSize).find((x)=> state.tiles.get(x.id).terrain === pos.nextTo)) return false;
 
     if(pos.thing === "navBeacon"){if (tile.navBeacon && tile.navBeacon.owner === state.playerTurn) return false;}
 
