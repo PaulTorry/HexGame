@@ -105,6 +105,15 @@ function drawScreen() {
 
   }
 
+  // Draw on top
+
+  for(let [id , tile] of state.tiles){
+    let {x,y} = getXYfromHex(tile.hex)
+    if(tile.terrain === "blackHole" && (viewMask[id] || debug)){
+      if(gameSprites[tile.terrain]){ drawFromData(c, gameSprites[tile.terrain], x, y) }
+    }
+  }
+
   for(let [id , tile] of state.tiles){
     if(viewMask[id] || debug ){
       let planet = whichPlanetsTerritory(tile.hex);
@@ -145,7 +154,7 @@ function drawScreen() {
       }
 
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
-      drawText(c, `(${ship.hull})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
+      drawText(c, `(${Math.round(ship.hull)})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
     }
   }
 

@@ -42,7 +42,7 @@ function interactiveConsole (num = ""){
     saveAs(prompt("Type Save Name", state.gameName))
   }
   if(ans === "2"){
-    load(prompt("Type Save Name: (or \'a\' for autoSave or \'clear\')\n" + saveNames()))
+    load(prompt("Type Save Name: (or 'a' for autoSave or 'clear')\n" + saveNames()))
   }
   if(ans === "3"){
     state.playerData[state.playerTurn].money = 99;
