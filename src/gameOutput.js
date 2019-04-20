@@ -209,7 +209,7 @@ function drawMenu(){
   }
   c.strokeStyle = getPlayerColour(state.playerTurn);
   drawFromData(c, gameSprites["nextTurnButton"], 0, 0, getColMap(state.playerTurn, 1) ,0.15);
-  drawFromData(c, gameSprites["logo"], 650, 0, getColMap(state.playerTurn, 1), 0.08)
+  drawFromData(c, gameSprites["menuButton"], 650, 0, getColMap(state.playerTurn, 1), 0.08)
   drawFromData(c, gameSprites["techTreeButton"], 700, 0, getColMap(state.playerTurn, 1) ,0.15)
   //c.rect(655, 5, 45, 45);
   c.stroke();
