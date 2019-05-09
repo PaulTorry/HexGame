@@ -138,7 +138,7 @@ function onMenuItemClicked(item, hex = sel.hex){
       existingBase.territory.forEach(t => {
         let station = state.tiles.get(t.id).station
         //      console.log(t);
-        if(station) station = {type: station.type, owner: state.playerTurn}
+        if(station) state.tiles.get(t.id).station  = {type: station.type, owner: state.playerTurn}
       })
     }
     else {state.baseArray.push(
