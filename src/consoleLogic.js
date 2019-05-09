@@ -41,7 +41,7 @@ function interactiveConsole (num = ""){
     let ans3 = Number(prompt("Number of Humans ", 2));
     let ans4 = Number(prompt("Size of Board ", 8));
     let ans5 = prompt("Allied Humans y/n", "n")
-    let ans6 = prompt("Game Name", randomName)
+    let ans6 = prompt("Game Name", randomName())
     state.boardSize = ans4;
     if(ans5 === "y") state = setup(ans2, state.boardSize, ans3, true, ans6);
     if(ans5 === "n") state = setup(ans2, state.boardSize, ans3, false, ans6);
