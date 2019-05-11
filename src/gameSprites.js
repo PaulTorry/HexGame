@@ -26,6 +26,11 @@ const baseShapes = {"asteroidMining":simpleShapes["triangleVert"],  "inhabitedPl
 "destroy":simpleShapes["cross"],
 }
 
+function getNameFromData(data){
+  for(let s in gameSprites){
+    if(gameSprites[s]===data) return s;
+  }
+}
 
 const gameSprites = {
   asteroidMining : [["of",-55,-50],

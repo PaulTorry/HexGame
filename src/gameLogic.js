@@ -154,6 +154,7 @@ function onMenuItemClicked(item, hex = sel.hex){
 
   sel = {state:0, attacks:[], menu:[], moves:[]}
   reSetIncomes();
+  drawScreen();
   drawMenu();
 }
 

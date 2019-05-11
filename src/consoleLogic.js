@@ -29,15 +29,15 @@ function interactiveConsole (num = ""){
     0. New Game,
     1. Save,
     2: Load,
-    3:  Money,
-    4:  Tech,
+    3: Money,
+    4: Tech,
     5: Toggle Debug,
     6: Show Trails,
     7: Get game list from server
     9: Send game '${state.gameName}' to server`, num);
 
   if(ans === "0"){
-    let ans2 = Number(prompt("Number of players", 4));
+    let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
     let ans3 = Number(prompt("Number of Humans ", 2));
     let ans4 = Number(prompt("Size of Board ", 8));
     let ans5 = prompt("Allied Humans y/n", "n")
