@@ -298,6 +298,8 @@ function nextTurn(){
   screenSettings.openTechTree = false;
   drawMenu(); drawScreen();
 
+  state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
+
   sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu(); drawScreen();
   preturn = true;

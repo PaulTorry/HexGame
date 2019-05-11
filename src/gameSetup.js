@@ -1,6 +1,6 @@
 "use strict"
 
-/* global Hex, Map, Vec, makeNewViewMask     */
+/* global Hex, Map, Vec, makeNewViewMask, randomName     */
 /* eslint-disable no-unused-vars */
 
 
@@ -112,7 +112,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   //
   // }
 
-  return {gameName:randomName(), boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]]}
+  return {gameName:randomName(), boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]], log:[]}
 }
 
 function subTurn(){

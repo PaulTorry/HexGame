@@ -186,10 +186,19 @@ function drawScreen() {
     drawText(c, `Click to Start`, playerLoc.add(new Vec(-80,50)), 30, "white" )
   }
 
+
+  //drawlog();
   drawMenu();
 }
 
-
+function drawlog(){
+  let log = document.getElementById("log");
+  let current = "";
+  for(let l = Math.max(state.log.length - 10, 0); l < state.log.length; l++){
+    current = current +"<p>"+ state.log[l] + "</p>";
+  }
+  log.innerHTML = current;
+}
 
 function drawMenu(){
   let arrows = [];
