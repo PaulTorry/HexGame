@@ -34,7 +34,7 @@ function interactiveConsole (num = ""){
     5: Toggle Debug,
     6: Show Trails,
     7: Get game list from server
-    9: Send game '${state.gameName}' to server`, num);
+    8: Send game '${state.gameName}' to server`, num);
 
   if(ans === "0"){
     let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
@@ -86,6 +86,18 @@ function interactiveConsole (num = ""){
       then(response => {return response.json()}).
       then(response => {console.log(response)})
   }
+  if(ans === "9"){
+    console.log();
+    fetch("https://hexbackendtest.herokuapp.com/userSaves/", {
+      method: "PUT",
+      headers: {"Content-Type": "application/json",},
+      body:JSON.stringify({name: state.gameName, currentGame:packState()})
+    }).
+      then(response => {return response.json()}).
+      then(response => {console.log(response)})
+  }
+
+
   drawScreen();
 }
 
@@ -98,6 +110,8 @@ function getServerLoad(serverData){
   console.log(gameStateObj);
 
   state = unpackState(JSON.parse(gameStateObj.currentGame));
+
+  drawScreen();
 }
 
 function getTimestamp(){
