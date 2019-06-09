@@ -78,25 +78,25 @@ function drawScreen() {
 
       if(tile.terrain !== "space"){
         if(gameSprites[tile.terrain]){
-          drawFromData(c, gameSprites[tile.terrain], x, y)
+          conditionalDrawFromData(c, gameSprites[tile.terrain], x, y)
         }
         if(gameSprites[tile.resource]){
-          drawFromData(c, gameSprites[tile.resource], x, y)
+          conditionalDrawFromData(c, gameSprites[tile.resource], x, y)
         }
 
       }
       if(tile.station){
-        drawFromData(c, gameSprites[tile.station.type], x, y,  getColMap(tile.station.owner))
+        conditionalDrawFromData(c, gameSprites[tile.station.type], x, y,  getColMap(tile.station.owner))
       }
       if(tile.navBeacon){
-        drawFromData(c, gameSprites["navBeacon"], x, y, getColMap(tile.navBeacon.owner))
+        conditionalDrawFromData(c, gameSprites["navBeacon"], x, y, getColMap(tile.navBeacon.owner))
       }
       let base = state.baseArray.find(b => b.hex.compare(tile.hex));
       if(base){
         if(gameSprites["planetRing"]){
-          drawFromData(c, gameSprites["planetRing"], x, y, getColMap(base.owner))
+          conditionalDrawFromData(c, gameSprites["planetRing"], x, y, getColMap(base.owner))
         }
-        else drawPoly(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
+        else conditionalDrawFromData(c, baseShapes["inhabitedPlanet"], getXYfromHex(tile.hex), 10, 4 , getPlayerColour(base.owner) );
       }
       if(viewMask[id] === 1){
         drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex), ss.hexSize, 1,  "rgba(200,200,200,0.1)", "rgba(200,200,200,0.1)"  );
@@ -152,7 +152,7 @@ function drawScreen() {
         let {x,y} = getXYfromHex(ship.hex);
         let transparency = 1;
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) {transparency =  0.4}
-        drawFromData(c, gameSprites[ship.type], x, y, getColMap(ship.owner, transparency))
+        conditionalDrawFromData(c, gameSprites[ship.type], x, y, getColMap(ship.owner, transparency))
       }
 
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
@@ -164,10 +164,10 @@ function drawScreen() {
     for (let [move,...hist] of sel.moves){
       let {x,y} = getXYfromHex(move)
       if(getTerrainDamage(sel.ship, move)[0] > 0 && !getTerrainDamage(sel.ship, move)[1]) {
-        drawFromData(c, gameSprites["warningIconOrange"], x, y)
+        conditionalDrawFromData(c, gameSprites["warningIconOrange"], x, y)
       }
       else if(getTerrainDamage(sel.ship, move)[1]) {
-        drawFromData(c, gameSprites["warningIconGreen"], x, y)
+        conditionalDrawFromData(c, gameSprites["warningIconGreen"], x, y)
       }
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
     }
@@ -296,7 +296,7 @@ function drawMenu(){
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
   let {x:xx,y:yy} = center;
-  if(!isOnScreen(xx,yy)) return;
+//  if(!isOnScreen(xx,yy)) return;
   if(width){c.lineWidth = width}
   if(sColor){c.strokeStyle = sColor}
   if(fColor){c.fillStyle = fColor}
@@ -326,19 +326,19 @@ function drawArrow(c, start, end, width = 3, color = "white"){
   c.closePath();
 }
 
-function isOnScreen(xx=0, yy=0){
+function conditionalDrawFromData(c, data, xx=0, yy=0, colourMap = x=>x, scale = 1, rotation = 0, alwaysDraw = false){
+
   let border = screenSettings.hexSize*screenSettings.scale;
   let {x:minX, y:minY} = getRealXYfromScreenXY(new Vec(0-border, 0-border));
   let {x:maxX, y:maxY} = getRealXYfromScreenXY(new Vec(800+border, 800+border));
 
   if(xx < minX || xx > maxX) return false;
   if(yy < minY || yy > maxY) return false;
-  return true;
+
+  return drawFromData(c, data, xx, yy, colourMap, scale, rotation)
 }
 
-function drawFromData(c, data, xx=0, yy=0, colourMap = x=>x, scale = 1, rotation = 0, alwaysDraw = false){
-
-  if(!isOnScreen(xx,yy) && !alwaysDraw) return;
+function drawFromData(c, data, xx=0, yy=0, colourMap = x=>x, scale = 1, rotation = 0){
 
   let startTime = new Date();
   let add = (a, x, y) => a.map((v,i) => i%2 ? v*scale+y  : v*scale+x);

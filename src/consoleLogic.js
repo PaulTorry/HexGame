@@ -9,7 +9,7 @@ interactiveConsole,
 setup
 data,
 screenSettings,
-randomInt
+randomInt, sessionInfo
 */
 
 /* eslint-disable no-unused-vars */
@@ -26,42 +26,66 @@ function randomName(){
 function interactiveConsole (num = ""){
   console.log(num);
   let ans = prompt(`Current Game Name: ${state.gameName}
-    0. New Game,
-    1. Save,
-    2: Load,
-    3: Money,
-    4: Tech,
+    1. New Game,
+    2. Local Saves (load and save),
+    3: Network Saves (load and save),
+    4: Cheat,
     5: Toggle Debug,
     6: Show Trails,
     7: Get game list from server
     8: Send game '${state.gameName}' to server`, num);
 
-  if(ans === "0"){
-    let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
-    let ans3 = Number(prompt("Number of Humans ", 2));
-    let ans4 = Number(prompt("Size of Board ", 8));
-    let ans5 = prompt("Allied Humans y/n", "n")
-    let ans6 = prompt("Game Name", randomName())
-    state.boardSize = ans4;
-    if(ans5 === "y") state = setup(ans2, state.boardSize, ans3, true, ans6);
-    if(ans5 === "n") state = setup(ans2, state.boardSize, ans3, false, ans6);
-
-  }
-
   if(ans === "1"){
-    saveAs(prompt("Type Save Name", state.gameName))
+    if (prompt("Are you sure y/n","y")==="y"){
+      let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
+      let ans3 = Number(prompt("Number of Humans ", 2));
+      let ans4 = Number(prompt("Size of Board ", 8));
+      let ans5 = prompt("Allied Humans y/n", "n")
+      let ans6 = prompt("Game Name", randomName())
+      let ans7 = prompt("Multiplayer Game y/n", "n")
+      state.boardSize = ans4;
+      if(ans5 === "y") state = setup(ans2, state.boardSize, ans3, true, ans6);
+      if(ans5 === "n") state = setup(ans2, state.boardSize, ans3, false, ans6);
+      if(ans7 === "y") postToServer();
+    }
   }
+
   if(ans === "2"){
-    load(prompt("Type Save Name: (or 'a' for autoSave or 'clear')\n" + saveNames()))
+    let saveLoad = prompt("Load or Save\n 1: Load\n 2: Save", "1")
+    if(saveLoad === "1") load(prompt("Type Save Name: (or 'a' for autoSave or 'clear')\n" + saveNames()))
+    if(saveLoad === "2") saveAs(prompt("Type Save Name", state.gameName))
   }
   if(ans === "3"){
-    state.playerData[state.playerTurn].money = 99;
+    if(sessionInfo.currentGame){
+      let opt = prompt("Load or Save game with id: " + sessionInfo.currentGame + "\n 1: Load\n 2: Save", "1")
+      if(opt === "1"){
+        fetch("https://hexbackendtest.herokuapp.com/userSaves/" + sessionInfo.currentGame).
+          then(response => {return response.json()}).then(loadGameFromID)
+      }
+
+      if(opt === "2"){
+        console.log();
+        fetch("https://hexbackendtest.herokuapp.com/userSaves/" + sessionInfo.currentGame, {
+          method: "PUT", headers: {"Content-Type": "application/json",},
+          body:JSON.stringify({name: state.gameName, currentGame:packState()})
+        }).then(response => {return console.log(response.json())})
+      }
+    }
+    else alert("Start a new game (option1) or \nLoad a game from server (option7)or \nSave this game as a new server slot (option8) ")
+
   }
   if(ans === "4"){
-    data.techs.forEach(t => {
-      state.playerData[state.playerTurn].tech[t.tech] = true;
-    })
-
+    let cheat = prompt("How do you want to cheat\n 1: Money\n 2: Tech", "1")
+    if(cheat === "1"){
+      console.log("Cheating Money");
+      state.playerData[state.playerTurn].money = 99;
+    }
+    if(cheat === "2"){
+      console.log("Cheating Tech");
+      data.techs.forEach(t => {
+        state.playerData[state.playerTurn].tech[t.tech] = true;
+      })
+    }
   }
   if(ans === "5"){
     debug = !debug;
@@ -71,33 +95,26 @@ function interactiveConsole (num = ""){
   }
   if(ans === "7"){
     fetch("https://hexbackendtest.herokuapp.com/userSaves").
-      then(response => {return response.json()}).
-    //  then(response => {console.log(response.rows); return response.rows.map(r => r.name)}).
-    //  then(response => {console.log(response); return response}).
-      then(getServerLoad)
+      then(response => {return response.json()}).then(getServerLoad)
+  }
+  if(ans === "8"){  postToServer()  }
+  drawScreen();
+}
 
-  }
-  if(ans === "8"){
-    fetch("https://hexbackendtest.herokuapp.com/userSaves", {
-      method: "POST",
-      headers: {"Content-Type": "application/json",},
-      body:JSON.stringify({name: state.gameName, currentGame:packState()})
-    }).
-      then(response => {return response.json()}).
-      then(response => {console.log(response)})
-  }
-  if(ans === "9"){
-    console.log();
-    fetch("https://hexbackendtest.herokuapp.com/userSaves/", {
-      method: "PUT",
-      headers: {"Content-Type": "application/json",},
-      body:JSON.stringify({name: state.gameName, currentGame:packState()})
-    }).
-      then(response => {return response.json()}).
-      then(response => {console.log(response)})
-  }
+function postToServer(){
+  fetch("https://hexbackendtest.herokuapp.com/userSaves", {
+    method: "POST",
+    headers: {"Content-Type": "application/json",},
+    body:JSON.stringify({name: state.gameName, currentGame:packState()})
+  }).
+    then(r => {return (r.json())}).
+    then(r => {(sessionInfo.currentGame=r.id,r)})
+  console.log("new game ID: ", sessionInfo.currentGame);
+}
 
 
+function loadGameFromID(serverData){
+  state = unpackState(JSON.parse(serverData.currentGame));
   drawScreen();
 }
 
@@ -109,6 +126,7 @@ function getServerLoad(serverData){
   let gameStateObj = serverData.rows[Number(response) - 1]
   console.log(gameStateObj);
 
+  sessionInfo.currentGame = gameStateObj.id;
   state = unpackState(JSON.parse(gameStateObj.currentGame));
 
   drawScreen();

@@ -111,9 +111,15 @@ const data = {
   },
 }
 
-const navBeaconCost = 0.25;
+//const navBeaconCost = 0.25;
 
 let debug = false;
+
+let sessionInfo = {
+  userName: "nullUser",
+  currentGame: null,
+  allGames: [],
+}
 
 let screenSettings = {
   openTechTree : false,
