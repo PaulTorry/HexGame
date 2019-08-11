@@ -56,7 +56,7 @@ const data = {
     battleship:{type:'battleship',  hull:5, shield:10, maxMove:1, attack:8, retaliate:6, range:1, defence:2, view:1},
     armouredDestroyer:{type:'armouredDestroyer',  hull:5, shield:10, maxMove:1, attack:2, retaliate:10, range:1, defence:3, view:1},
     titanShip:{type:'titanShip',  hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
-    fastFrigate:{type:'fastFrigate',  hull:3, shield:7, maxMove:2, attack:6, retaliate:2, range:1, defence:1, view:1},
+    fastFrigate:{type:'fastFrigate',  hull:3, shield:7, maxMove:2, attack:6, retaliate:2, range:1, defence:1, view:1, special:{afterburner:true}},
     //devourer:{type:'devourer',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
     missileFrigate:{type:'missileFrigate',  hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:2, defence:1, view:1},
     missileDestroyer:{type:'missileDestroyer',  hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},

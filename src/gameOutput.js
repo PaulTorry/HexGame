@@ -296,7 +296,7 @@ function drawMenu(){
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
   let {x:xx,y:yy} = center;
-//  if(!isOnScreen(xx,yy)) return;
+  //  if(!isOnScreen(xx,yy)) return;
   if(width){c.lineWidth = width}
   if(sColor){c.strokeStyle = sColor}
   if(fColor){c.fillStyle = fColor}

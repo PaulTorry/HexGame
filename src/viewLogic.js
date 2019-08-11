@@ -1,6 +1,6 @@
 "use strict"
 
-/*global,  state , Hex, data  */
+/*global  Hex, data  */
 
 /* eslint-disable no-unused-vars */
 
