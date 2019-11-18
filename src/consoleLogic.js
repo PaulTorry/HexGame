@@ -14,6 +14,33 @@ randomInt, sessionInfo
 
 /* eslint-disable no-unused-vars */
 
+const serverPath = "https://hexbackendtest.herokuapp.com/userSaves"
+//"https://test1-a393.restdb.io/rest/coll";
+//"https://test1-a393.restdb.io/rest/savegames"
+//"https://hexbackendtest.herokuapp.com/userSaves"
+const apikey = "5dbdfb7064e7774913b6e80e";
+
+
+function makeRequest(callback = console.log, type = "GET"){
+  var xhr = new XMLHttpRequest();
+  //  xhr.withCredentials = true;
+
+  xhr.addEventListener("readystatechange", function () {
+    if (this.readyState === 4) {
+      console.log(this.responseText);
+    }
+  });
+
+  xhr.open(type, serverPath);
+  xhr.setRequestHeader("content-type", "application/json");
+  xhr.setRequestHeader("x-apikey", apikey);
+  xhr.setRequestHeader("cache-control", "no-cache");
+  //  xhr.setRequestHeader("samesite", "none");
+
+  xhr.send(data);
+}
+
+
 function randomName(){
   let names = [
     ["Sol","Sirius", "Vega", "Cassiopeia", "Leo", "Taurus" ],
@@ -59,14 +86,14 @@ function interactiveConsole (num = ""){
     if(sessionInfo.currentGame){
       let opt = prompt("Load or Save game with id: " + sessionInfo.currentGame + "\n 1: Load\n 2: Save", "1")
       if(opt === "1"){
-        fetch("https://hexbackendtest.herokuapp.com/userSaves/" + sessionInfo.currentGame).
+        fetch(serverPath + "/" + sessionInfo.currentGame).
           then(response => {return response.json()}).then(loadGameFromID)
       }
 
       if(opt === "2"){
         console.log();
-        fetch("https://hexbackendtest.herokuapp.com/userSaves/" + sessionInfo.currentGame, {
-          method: "PUT", headers: {"Content-Type": "application/json",},
+        fetch(serverPath + "/" + sessionInfo.currentGame, {
+          method: "PUT", headers: {"Content-Type": "application/json","x-apikey": apikey,},
           body:JSON.stringify({name: state.gameName, currentGame:packState()})
         }).then(response => {return console.log(response.json())})
       }
@@ -94,17 +121,21 @@ function interactiveConsole (num = ""){
     screenSettings.showTrails = !screenSettings.showTrails;
   }
   if(ans === "7"){
-    fetch("https://hexbackendtest.herokuapp.com/userSaves").
+    fetch(serverPath, {headers: {"Content-Type": "application/json", "x-apikey": apikey}}).
       then(response => {return response.json()}).then(getServerLoad)
   }
   if(ans === "8"){  postToServer()  }
+  if(ans === "9"){ makeRequest(); }
   drawScreen();
 }
 
+
+
+
 function postToServer(){
-  fetch("https://hexbackendtest.herokuapp.com/userSaves", {
+  fetch(serverPath, {
     method: "POST",
-    headers: {"Content-Type": "application/json",},
+    headers: {"Content-Type": "application/json", "x-apikey": apikey},
     body:JSON.stringify({name: state.gameName, currentGame:packState()})
   }).
     then(r => {return (r.json())}).
@@ -122,7 +153,11 @@ function getServerLoad(serverData){
   console.log("saveData", serverData);
   let gamelist = serverData.rows.map(r => r.name)
   console.log("gamelist", gamelist);
-  let response = prompt(gamelist.reduce( (a,c,i)  => { if(c){return" \n "+ (i+1) +  " " + c + a} else{return a}}," "))
+  let response = prompt(
+    "Type the number for the savegame you want to load" +
+    gamelist.reduce( (a,c,i)  => { if(c){return" \n "+ (i+1) +  " " + c + a} else{return a}}," ")
+  )
+  if(Number(response)/Number(response) !== 1){console.log("Type a Number in the prompt");}
   let gameStateObj = serverData.rows[Number(response) - 1]
   console.log(gameStateObj);
 
