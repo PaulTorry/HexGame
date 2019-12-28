@@ -14,16 +14,16 @@ randomInt, sessionInfo
 
 /* eslint-disable no-unused-vars */
 
-const serverPath = "https://hexbackendtest.herokuapp.com/userSaves"
+const serverPath = //"https://hexbackendtest.herokuapp.com/userSaves"
 //"https://test1-a393.restdb.io/rest/coll";
-//"https://test1-a393.restdb.io/rest/savegames"
+"https://test1-a393.restdb.io/rest/savegames"
 //"https://hexbackendtest.herokuapp.com/userSaves"
 const apikey = "5dbdfb7064e7774913b6e80e";
 
 
 function makeRequest(callback = console.log, type = "GET"){
   var xhr = new XMLHttpRequest();
-  //  xhr.withCredentials = true;
+  xhr.withCredentials = true;
 
   xhr.addEventListener("readystatechange", function () {
     if (this.readyState === 4) {
@@ -89,7 +89,6 @@ function interactiveConsole (num = ""){
         fetch(serverPath + "/" + sessionInfo.currentGame).
           then(response => {return response.json()}).then(loadGameFromID)
       }
-
       if(opt === "2"){
         console.log();
         fetch(serverPath + "/" + sessionInfo.currentGame, {
