@@ -12,7 +12,7 @@ let sel = {state:0, attacks:[], menu:[], moves:[]}
 
 state = setup(5, 9, 2, false, "default", generateID(20))
 
-function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogether = false, gameName = "noName", gameID ){
+function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogether = false, gameName = "noName", gameID, meta = {online:false}){
   if(gameID.length < 15) console.log("check game id length");
   let tiles = new Map();
   let playerData = [];
@@ -113,7 +113,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   //
   // }
 
-  return {gameID:gameID, gameName:randomName(), boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]], log:[]}
+  return {meta:meta, gameID:gameID, gameName:gameName, boardSize:boardSize, numPlayers:numPlayers, playerTurn:0, turnNumber:1, shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid, history:[[],[]], log:[]}
 }
 
 function subTurn(){

@@ -26,8 +26,21 @@ var firebaseConfig = {
   appId: "1:1074984974506:web:ab9e25568dfdc0ae9478d3",
   measurementId: "G-XWBNW49NG4"
 };
+
 firebase.initializeApp(firebaseConfig);
 
+let loggedInPlayer = null;
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    firebase.firestore().collection("handles").where("uid","==", user.uid).get()
+      .then(function(qs) {
+        loggedInPlayer = {uid:user.uid, handle:qs.docs[0].id};
+        console.log("loggedInPlayer:  ", loggedInPlayer)
+      })
+      .catch(function(error) {alert("new logged in handle failed"), console.log("gethandleserror new login") });
+  } else {console.log("signedout"); loggedInPlayer = null}
+});
 
 
 
@@ -42,6 +55,7 @@ function randomName(){
 
 function interactiveConsole (num = ""){
   console.log(num);
+  console.log("loggedInPlayer:  ", loggedInPlayer)
   let ans = prompt(`Current Game Name: ${state.gameName}
     1. New Game,
     2. Local Saves (load and save),
@@ -54,19 +68,7 @@ function interactiveConsole (num = ""){
     9: SignUp`, num);
 
   if(ans === "1"){
-    if (prompt("Are you sure y/n","y")==="y"){
-      let ans7 = prompt("Multiplayer Game y/n", "n")
-      if(ans7 === "n"){      setupGameViaPrompt();}
-      if(ans7 === "y") {
-        if (firebase.auth().currentUser){
-          setupGameViaPrompt(); saveToServer();
-        }
-        else {
-          console.log("not logged in");
-          loginViaPrompt()
-        }
-      }
-    }
+    setupGameViaPrompt()
   }
 
   if(ans === "2"){
@@ -105,20 +107,84 @@ function interactiveConsole (num = ""){
   if(ans === "8"){  console.log("logout"); firebase.auth().signOut()  }
   if(ans === "9"){ console.log("signup"); signupViaPrompt() }
   if(ans === "0"){getServerData()}
+//  if(ans === "a"){ getHandleList().then((x) => console.log("Option a: " + x)).then()}
   drawScreen();
 }
 
 
 
+
 function setupGameViaPrompt(){
+  let ans7 = prompt("Multiplayer Game y/n", "y")
+  if(ans7 === "n"){  state = setupStateViaPrompt({online: false});}
+  if(ans7 === "y") {
+    if (loggedInPlayer){ // firebase.auth().currentUser){
+      state = setupStateViaPrompt(setupMetaViaPrompt());
+      drawScreen();
+    }
+    else {
+      console.log("not logged in");
+      loginViaPrompt()
+    }
+  }
+}
+
+function setupMetaViaPrompt(){
+  let meta = {online:true, playergrid: [[loggedInPlayer.uid, loggedInPlayer.handle]]}
+  let handleList =  getHandleList()
+  meta.playergrid.concat(getAdditionalPlayers(handleList))
+  console.log(" 4 leaving while", meta);
+  return meta
+}
+
+
+
+function setupStateViaPrompt(meta){
   let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
   let ans3 = Number(prompt("Number of Humans ", 2));
   let ans4 = Number(prompt("Size of Board ", 8));
   let ans5 = prompt("Allied Humans y/n", "n")
   let ans6 = prompt("Game Name", randomName())
-  if(ans5 === "y") state = setup(ans2, ans4, ans3, true, ans6, generateID(20));
-  if(ans5 === "n") state = setup(ans2, ans4, ans3, false, ans6, generateID(20));
+  let together = false;
+  if (ans5 === "y") together = true;
+
+  console.log("2 in setupGameViaPrompt", meta);
+  let tempState = setup(ans2, ans4, ans3, together, ans6, generateID(20), meta);
+  console.log("2.1 in setupGameViaPrompt", tempState);
+  return tempState;
 }
+
+function getHandleList(){
+  return firebase.firestore().collection("handles").get()
+    .then(function(qs) {
+      let handles = [];
+      qs.forEach((doc) => {
+        handles.push([handles.length, doc.id, doc.data().uid])
+      })
+      return handles;
+    })
+    .catch(function(error) {alert("handlelisterror"), console.log("gethandleserror") });
+}
+
+function getAdditionalPlayers(handleList){
+  let additionalPlayergrid = [];
+  let finishedAddingPlayers = false;
+  while(!finishedAddingPlayers){
+    console.log(" 2.3  entering while");
+    let ans = prompt(JSON.stringify(handleList), "Press cancel to stop adding")
+    console.log("2.4 ");
+    if (ans === null) finishedAddingPlayers = true
+    else {
+      console.log(" 3 adding " + ans + " to playergrid");
+//      console.log("adding " + handleList[Number(ans)][2] + " to playergrid");
+      additionalPlayergrid.push([handleList[Number(ans)][2], handleList[Number(ans)][1]])
+    }
+  }
+  console.log(additionalPlayergrid);
+  return additionalPlayergrid
+}
+
+
 
 function loginViaPrompt(){
   let email = prompt("email", localStorage.getItem("lastname") || "MyEmail");
@@ -134,36 +200,49 @@ function signupViaPrompt(){
 
   firebase.firestore().collection("handles").doc(handle).get()
     .then(function(qs) {
-      console.log(qs);
-      console.log(qs.size);
-      console.log(qs.exists);
       if(qs.exists)alert("handle taken  " + handle) ;
       else(handleSignUp(email, pass, handle))
     })
     .catch(function(error) {alert("please try again gethandleserror"), console.log("gethandleserror") });
 }
 
-function saveToServer(){
-  console.log("SavingTOServer", state.gameID);
-  firebase.firestore().collection("gamestest").doc(state.gameID).set(
-    {
-      name: state.gameName,
-      users: [firebase.auth().currentUser.uid,],
-      turnNumber:state.turnNumber,
-      playerTurn:state.playerTurn,
-      when:getTimestamp(),
+function setDocData(){
+  let docData =  {
+    name: state.gameName,
+    users: [firebase.auth().currentUser.uid,],
+    turnNumber:state.turnNumber,
+    playerTurn:state.playerTurn,
+    when:getTimestamp(),
     //  currentGame: packState(),
-    }
-  )
-    .then(function(docRef) {console.log("Document written : ")})
+  }
+  console.log("online  ", state.meta.online);
+  if (state.meta.online){
+    state.meta.playergrid.forEach((arr) => {
+      //    console.log("playergrid");
+      if(docData.users.indexOf(arr[1]) === -1){
+        console.log(" 6 playergrid2");
+        docData.users.push(arr[1])
+      }
+    });
+  }
+  return docData
+}
+
+function  saveToServer(){
+  console.log("5 SavingTOServer", state.gameID);
+  firebase.firestore().collection("gamestest").doc(state.gameID).set( setDocData() )
+    .then(function(docRef) {console.log("7 Document written : ", state.gameID)})
     .catch(function(error) {console.error("Error adding document: ", error)  });
 
   firebase.firestore().collection("gamestest").doc(state.gameID).collection("state")
     .doc("current")
     .set({currentGame: packState()})
-    .then(function(docRef) {console.log("State  with ID: ")})
+  //  .then(function(docRef) {console.log("State  with ID: ")})
     .catch(function(error) {console.error("Error adding STate: ", error)  });
 }
+
+
+
 
 
 function getServerData(){
@@ -207,9 +286,6 @@ function replaceState(serverData){
 function getServerLoad(serverData){
 
   firebase.firestore().collection("gamestest").doc(state.gameID)
-
-
-
   console.log("saveData", serverData);
   let gamelist = serverData.rows.map(r => r.name)
   console.log("gamelist", gamelist);
@@ -239,7 +315,7 @@ function generateID(length){
   for (let i = 0; i < length; i++) {
     autoId += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  console.log(autoId);
+//  console.log(autoId);
   return autoId;
 }
 
@@ -271,9 +347,7 @@ function sendResetEmail(email) {
     catch(function(error) {    alert(error.message);   console.log(error);  });
 }
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {console.log(user)} else {console.log("signedout")}
-});
+
 
 
 // Helpers

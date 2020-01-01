@@ -245,6 +245,7 @@ function drawMenu(){
   drawText(c, `Turn: ${state.turnNumber}`, new Vec(180,20), 15, "white" )
   if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245,20), 15, "white" )
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
+  drawText(c, `Game: ${state.gameName}`, new Vec(420,40), 15, "white" )
 
   if (screenSettings.openTechTree){
     data.techs.forEach((t)=>{
