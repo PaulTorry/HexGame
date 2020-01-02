@@ -126,6 +126,8 @@ async function setupGameViaPrompt(){
   drawScreen();
 }
 
+
+
 async function setupMetaViaPrompt(){
   let meta = {online:true, playergrid: []}
   let handleList =  await getHandleList()
@@ -162,15 +164,13 @@ async function getHandleList(){
 }
 
 function getAdditionalPlayers(handleList, startingList){
-  let additionalPlayergrid = [];
+  let additionalPlayergrid = [startingList];
   let finishedAddingPlayers = false;
   while(!finishedAddingPlayers){
     let ans = prompt(JSON.stringify( handleList), "Press cancel to stop adding")
     if (ans === null) finishedAddingPlayers = true
     else {
       let newEntry = [handleList[Number(ans)][2], handleList[Number(ans)][1]]
-    //  console.log("additionalPlayergrid, newEntry: ", newEntry );
-  //    console.log(additionalPlayergrid  );
       if(additionalPlayergrid.findIndex(x => JSON.stringify(x) === JSON.stringify(newEntry)) === -1) {
         additionalPlayergrid.push(newEntry)
       }
@@ -214,8 +214,8 @@ function setDocData(){
   if (state.meta.online){
     state.meta.playergrid.forEach((arr) => {
       //    console.log("playergrid");
-      if(docData.users.indexOf(arr[1]) === -1){
-        console.log(" 6 playergrid2");
+      if(docData.users.indexOf(arr[0]) === -1){
+        console.log(" 6 playergrid2", docData.users,  );
         docData.users.push(arr[0])
       }
     });
@@ -234,7 +234,10 @@ function saveToServer(){  // Check order (make async await?)
     .set({currentGame: packState()})
   //  .then(function(docRef) {console.log("State  with ID: ")})
     .catch(function(error) {console.error("Error adding STate: ", error)  });
+
 }
+
+
 
 function getServerData(){
   var index = 0;

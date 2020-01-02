@@ -30,7 +30,7 @@ function addViewMasks(state, vm1, vm2){
 
 function getUpdatedViewMask(state, player = state.playerTurn){
 
-  let mask = state.playerData[state.playerTurn].viewMask
+  let mask = state.playerData[player].viewMask
   for(let i = 0; i < state.numPlayers; i++){
     if(i === player || state.alliesGrid[player][i]){
       mask = addViewMasks(state, mask, getOwnViewMask(state, i));
@@ -40,12 +40,12 @@ function getUpdatedViewMask(state, player = state.playerTurn){
 }
 
 function getOwnViewMask(state, player = state.playerTurn){
-  let mask = removeActiveViews(state.playerData[state.playerTurn].viewMask);
+  let mask = removeActiveViews(state.playerData[player].viewMask);
 
   let viewHex = n => {
     if(
       data.terrainInfo[state.tiles.get(n.id).terrain].viewTech
-       && !state.playerData[state.playerTurn].tech[data.terrainInfo[state.tiles.get(n.id).terrain].viewTech]
+       && !state.playerData[player].tech[data.terrainInfo[state.tiles.get(n.id).terrain].viewTech]
     ) { mask[n.id] = 1;}
     else{ mask[n.id] = 2; }
   };

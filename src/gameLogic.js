@@ -279,6 +279,22 @@ function repair(ship){
 }
 
 function nextTurn(){
+
+  if (!state.meta.online ) turnLogic();
+  else{
+
+    if (state.playerTurn === localGameInfo.player || debug){
+      turnLogic();
+      while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
+      alert("sending game");
+      saveToServer();
+    }
+  //  if (state.playerData[state.playerTurn].type === "AI") turnLogic();
+  }
+}
+
+
+function turnLogic(){
   if (state.playerData[state.playerTurn].type === "human") autoSave();
 
   state.playerData[state.playerTurn].money += state.playerData[state.playerTurn].income;

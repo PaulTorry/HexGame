@@ -188,7 +188,7 @@ function drawScreen() {
     let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
     let {x,y} = playerLoc;
     drawFromData(c, gameSprites["logo"], x-90, y-230, (x)=>x , 0.3)
-    drawText(c, `Player ${state.playerTurn}`, playerLoc.add(new Vec(-80,0)), 50, getPlayerColour(state.playerTurn) )
+    drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, playerLoc.add(new Vec(-80,0)), 50, getPlayerColour(state.playerTurn) )
     drawText(c, `Click to Start`, playerLoc.add(new Vec(-80,50)), 30, "white" )
   }
 
@@ -247,7 +247,7 @@ function drawMenu(){
   //c.rect(655, 5, 45, 45);
   c.stroke();
 
-  drawText(c, `Player: ${state.playerTurn}`, new Vec(100,20), 15, "white" )
+  drawText(c, `Player: ${state.playerTurn} . ${localGameInfo.player}`, new Vec(100,20), 15, "white" )
   drawText(c, `Turn: ${state.turnNumber}`, new Vec(180,20), 15, "white" )
   if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245,20), 15, "white" )
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )

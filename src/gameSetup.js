@@ -55,11 +55,13 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
   // TODO Fix this
 
   for(let i = 0; i < numPlayers; i++){  playerlist.push("AI")  }
-  if(playersTogether){
+  // if(playersTogether){
     for(let i = 0; i < numHumans; i++){ playerlist[i] = "human";  }
-  } else {
-    for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "human";  }
-  }
+  // } else {
+  //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "human";  }
+  // }
+
+// TODO make playerorder grid to space out players
 
   let alliesGrid = []
 
