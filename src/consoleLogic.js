@@ -30,6 +30,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 let loggedInPlayer = null;
+let localGameInfo = {};
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -70,7 +71,6 @@ function interactiveConsole (num = ""){
   if(ans === "1"){
     setupGameViaPrompt()
   }
-
   if(ans === "2"){
     let saveLoad = prompt("Load or Save\n 1: Load\n 2: Save", "1")
     if(saveLoad === "1") {load(prompt("Type Save Name: (or 'a' for autoSave or 'clear')\n" + JSON.parse(localStorage.getItem("#savenames"))))}
@@ -78,11 +78,8 @@ function interactiveConsole (num = ""){
   }
   if(ans === "3"){
     saveToServer()
-
     // if(firebase.auth().currentUser == null){console.log("please log in to load or save");}
     // else if(sessionInfo.currentGame){
-
-
   }
   if(ans === "4"){
     let cheat = prompt("How do you want to cheat\n 1: Money\n 2: Tech", "1")
@@ -107,80 +104,78 @@ function interactiveConsole (num = ""){
   if(ans === "8"){  console.log("logout"); firebase.auth().signOut()  }
   if(ans === "9"){ console.log("signup"); signupViaPrompt() }
   if(ans === "0"){getServerData()}
-//  if(ans === "a"){ getHandleList().then((x) => console.log("Option a: " + x)).then()}
+  if(ans === "a"){ getHandleList().then((x) => console.log("Option a: " + x)).then()}
+  if(ans === "b")setlocalGameInfo();
   drawScreen();
 }
 
 
-
-
-function setupGameViaPrompt(){
+async function setupGameViaPrompt(){
   let ans7 = prompt("Multiplayer Game y/n", "y")
   if(ans7 === "n"){  state = setupStateViaPrompt({online: false});}
   if(ans7 === "y") {
     if (loggedInPlayer){ // firebase.auth().currentUser){
-      state = setupStateViaPrompt(setupMetaViaPrompt());
-      drawScreen();
+      state = await setupStateViaPrompt(await setupMetaViaPrompt());
+      localGameInfo = setlocalGameInfo();
     }
     else {
       console.log("not logged in");
       loginViaPrompt()
     }
   }
+  drawScreen();
 }
 
-function setupMetaViaPrompt(){
-  let meta = {online:true, playergrid: [[loggedInPlayer.uid, loggedInPlayer.handle]]}
-  let handleList =  getHandleList()
-  meta.playergrid.concat(getAdditionalPlayers(handleList))
-  console.log(" 4 leaving while", meta);
+async function setupMetaViaPrompt(){
+  let meta = {online:true, playergrid: []}
+  let handleList =  await getHandleList()
+  let additionalPlayergrid =  await getAdditionalPlayers(handleList, [loggedInPlayer.uid, loggedInPlayer.handle])
+  meta.playergrid = additionalPlayergrid //meta.playergrid.concat(additionalPlayergrid)
   return meta
 }
 
-
-
-function setupStateViaPrompt(meta){
+async function setupStateViaPrompt(meta){
+  console.log("after");
   let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
-  let ans3 = Number(prompt("Number of Humans ", 2));
+  //  let ans3 = Number(prompt("Number of Humans ", 2));
+  let numHumans = meta.playergrid.length;
   let ans4 = Number(prompt("Size of Board ", 8));
   let ans5 = prompt("Allied Humans y/n", "n")
   let ans6 = prompt("Game Name", randomName())
   let together = false;
   if (ans5 === "y") together = true;
 
-  console.log("2 in setupGameViaPrompt", meta);
-  let tempState = setup(ans2, ans4, ans3, together, ans6, generateID(20), meta);
+  console.log("2 in setup state ViaPrompt", await meta);
+  let tempState = setup(ans2, ans4, numHumans, together, ans6, generateID(20), await meta);
   console.log("2.1 in setupGameViaPrompt", tempState);
   return tempState;
 }
 
-function getHandleList(){
-  return firebase.firestore().collection("handles").get()
+async function getHandleList(){
+  return await firebase.firestore().collection("handles").get()
     .then(function(qs) {
       let handles = [];
-      qs.forEach((doc) => {
-        handles.push([handles.length, doc.id, doc.data().uid])
-      })
+      qs.forEach((doc) => { handles.push([handles.length, doc.id, doc.data().uid]) })
       return handles;
     })
-    .catch(function(error) {alert("handlelisterror"), console.log("gethandleserror") });
+    .catch(function(error) {alert("handlelisterror"); console.log("gethandleserror"); return "fail getHandleList" });
 }
 
-function getAdditionalPlayers(handleList){
+function getAdditionalPlayers(handleList, startingList){
   let additionalPlayergrid = [];
   let finishedAddingPlayers = false;
   while(!finishedAddingPlayers){
-    console.log(" 2.3  entering while");
-    let ans = prompt(JSON.stringify(handleList), "Press cancel to stop adding")
-    console.log("2.4 ");
+    let ans = prompt(JSON.stringify( handleList), "Press cancel to stop adding")
     if (ans === null) finishedAddingPlayers = true
     else {
-      console.log(" 3 adding " + ans + " to playergrid");
-//      console.log("adding " + handleList[Number(ans)][2] + " to playergrid");
-      additionalPlayergrid.push([handleList[Number(ans)][2], handleList[Number(ans)][1]])
+      let newEntry = [handleList[Number(ans)][2], handleList[Number(ans)][1]]
+    //  console.log("additionalPlayergrid, newEntry: ", newEntry );
+  //    console.log(additionalPlayergrid  );
+      if(additionalPlayergrid.findIndex(x => JSON.stringify(x) === JSON.stringify(newEntry)) === -1) {
+        additionalPlayergrid.push(newEntry)
+      }
     }
   }
-  console.log(additionalPlayergrid);
   return additionalPlayergrid
 }
 
@@ -221,14 +216,14 @@ function setDocData(){
       //    console.log("playergrid");
       if(docData.users.indexOf(arr[1]) === -1){
         console.log(" 6 playergrid2");
-        docData.users.push(arr[1])
+        docData.users.push(arr[0])
       }
     });
   }
   return docData
 }
 
-function  saveToServer(){
+function saveToServer(){  // Check order (make async await?)
   console.log("5 SavingTOServer", state.gameID);
   firebase.firestore().collection("gamestest").doc(state.gameID).set( setDocData() )
     .then(function(docRef) {console.log("7 Document written : ", state.gameID)})
@@ -241,70 +236,41 @@ function  saveToServer(){
     .catch(function(error) {console.error("Error adding STate: ", error)  });
 }
 
-
-
-
-
 function getServerData(){
   var index = 0;
   var IDArray = [];
   firebase.firestore().collection("gamestest").where("users", "array-contains", firebase.auth().currentUser.uid)
     .get()
     .then(function(querySnapshot) {
-      let promptText = "hi ";
-      console.log(querySnapshot);
-      console.log(querySnapshot.empty);
+      let promptText = "select the number for your Game:  ";
       querySnapshot.forEach(function(doc) {
         let {name, users, turnNumber, playerTurn, when} = doc.data()
         promptText =  promptText + index + " => " + " Name: "+ name + " turn: "+ playerTurn + "\n";
         index += 1;
         IDArray.push(doc.id)
       });
-      //prompt(promptText)
-      console.log(promptText);
       console.log(IDArray);
-      loadGameFromID(IDArray[Number(prompt(promptText))])
-
-
+      const gameID = IDArray[Number(prompt(promptText))]
+      firebase.firestore().collection("gamestest").doc(gameID).collection("state").doc("current").get()
+        .then(function(qs) {
+          state = unpackState(JSON.parse(qs.data().currentGame));
+          localGameInfo = setlocalGameInfo()
+          drawScreen();
+        });
     })
     .catch(function(error) { console.log("Error getting documents: ", error); });
 }
 
-
-
-function loadGameFromID(gameID){
-  console.log(gameID);
-  firebase.firestore().collection("gamestest").doc(gameID).collection("state").doc("current").get()
-    .then(function(qs) {replaceState(qs.data())});
-
+function setlocalGameInfo(){
+  let players = state.meta.playergrid
+  console.log(state);
+  console.log(players);
+  let uidlist = players.map((a) => a[0])
+  console.log(uidlist);
+  let player = uidlist.indexOf(loggedInPlayer.uid)
+  console.log(player);
+  return {player:player}
 }
-function replaceState(serverData){
-  state = unpackState(JSON.parse(serverData.currentGame));
-  drawScreen();
-}
-
-function getServerLoad(serverData){
-
-  firebase.firestore().collection("gamestest").doc(state.gameID)
-  console.log("saveData", serverData);
-  let gamelist = serverData.rows.map(r => r.name)
-  console.log("gamelist", gamelist);
-  let response = prompt(
-    "Type the number for the savegame you want to load" +
-    gamelist.reduce( (a,c,i)  => { if(c){return" \n "+ (i+1) +  " " + c + a} else{return a}}," ")
-  )
-  if(Number(response)/Number(response) !== 1){console.log("Type a Number in the prompt");}
-  let gameStateObj = serverData.rows[Number(response) - 1]
-  console.log(gameStateObj);
-
-
-
-  sessionInfo.currentGame = gameStateObj.id;
-  state = unpackState(JSON.parse(gameStateObj.currentGame));
-
-  drawScreen();
-}
-
 
 
 // DB methods ------------------------------------------
@@ -315,7 +281,7 @@ function generateID(length){
   for (let i = 0; i < length; i++) {
     autoId += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-//  console.log(autoId);
+  //  console.log(autoId);
   return autoId;
 }
 

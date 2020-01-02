@@ -25,7 +25,7 @@ const data = {
     {name:'Asteroid Navigation', tech:'navAsteroid', colour:[50,47,73], requires:['asteroidMove', 'navBeacon'], hex:new Hex(-1,4), cost:6, sprite:[['asteroids',2,-12,0.75],['navBeaconCross',-17,-30,1]] },
     {name:'Navigation Beacons', tech:'navBeacon', colour:[50,47,73], requires:['scoutShipTech'], hex:new Hex(-3,4), cost:6, sprite:[['navBeaconCross',-17,-30,1]] },
     {name:'Nebula Navigation', tech:'navNebula', colour:[50,47,73], requires:['nebulaResearchPostTech', 'navBeacon'], hex:new Hex(-4,3), cost:6, sprite:[['nebula',1,-11,0.75],['navBeaconCross',-17,-30,1]]  },
-    {name:'Nebula Frigate', tech:'nebulaFrigateTech', colour:[51,49,50], requires:['nebulaVision'], hex:new Hex(-4,1), cost:99999, sprite:[['padlockIcon',-12,-15,1]] },
+    {name:'Nebula Frigate', tech:'nebulaFrigateTech' , colour:[51,49,50], requires:['nebulaVision'], hex:new Hex(-4,1), cost:99999, sprite:[['padlockIcon',-12,-15,1]] },
     {name:'Harvest Protostar', tech:'harvestProtostar', colour:[50,47,73], requires:['harvestHydrogen'], hex:new Hex(-3,-1), cost:6, sprite:[['protostar',1,-10,0.75],['harvestProtostar',0,-11,0.75]] },
     {name:'Radiation Shield', tech:'armouredDestroyerTech', colour:[50,47,73], requires:['asteroidIceMining'], hex:new Hex(-1,-3), cost:6, sprite:[['armouredDestroyer',0,-10,1]] },
     //3rd ring, clockwise from top

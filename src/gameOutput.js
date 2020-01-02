@@ -67,7 +67,13 @@ function drawScreen() {
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
 
-  let viewMask = getUpdatedViewMask(state)
+  let viewMask
+
+  if(!state.meta.online){ viewMask = getUpdatedViewMask(state)}
+  else{
+    viewMask = getUpdatedViewMask(state, localGameInfo.player)
+  }
+  //  let viewMask = getUpdatedViewMask(state, who)
   if (preturn){  viewMask = makeNewViewMask(new Map());}
 
 
