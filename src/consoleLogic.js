@@ -31,6 +31,7 @@ firebase.initializeApp(firebaseConfig);
 
 let loggedInPlayer = null;
 let localGameInfo = {};
+let lastSaved
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -105,7 +106,7 @@ function interactiveConsole (num = ""){
   if(ans === "9"){ console.log("signup"); signupViaPrompt() }
   if(ans === "0"){getServerData()}
   if(ans === "a"){ getHandleList().then((x) => console.log("Option a: " + x)).then()}
-  if(ans === "b")setlocalGameInfo();
+  if(ans === "b")console.log(lastSaved);
   drawScreen();
 }
 
@@ -226,7 +227,10 @@ function setDocData(){
 function saveToServer(){  // Check order (make async await?)
   console.log("5 SavingTOServer", state.gameID);
   firebase.firestore().collection("gamestest").doc(state.gameID).set( setDocData() )
-    .then(function(docRef) {console.log("7 Document written : ", state.gameID)})
+    .then(function(docRef) {
+      console.log("7 Document written : ", state.gameID);
+      lastSaved = {id:state.gameID, turnNumber:state.turnNumber, playerTurn:state.playerTurn,}
+    })
     .catch(function(error) {console.error("Error adding document: ", error)  });
 
   firebase.firestore().collection("gamestest").doc(state.gameID).collection("state")
@@ -235,9 +239,17 @@ function saveToServer(){  // Check order (make async await?)
   //  .then(function(docRef) {console.log("State  with ID: ")})
     .catch(function(error) {console.error("Error adding STate: ", error)  });
 
+
+
 }
 
-
+function checkForUpdatedServerGame(gameID){
+  firebase.firestore().collection("gamestest").doc(gameID)
+    .then(function(doc) {
+      let {name, users, turnNumber, playerTurn, when} = doc.data()
+    //  if(turnNumber >=  )
+    })
+}
 
 function getServerData(){
   var index = 0;

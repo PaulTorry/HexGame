@@ -278,16 +278,16 @@ function repair(ship){
 
 }
 
-function nextTurn(){
+async function nextTurn(){
 
-  if (!state.meta.online ) turnLogic();
+  if (!state.meta.online ) {turnLogic(); }
   else{
 
     if (state.playerTurn === localGameInfo.player || debug){
       turnLogic();
       while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
       alert("sending game");
-      saveToServer();
+      await  saveToServer();
     }
   //  if (state.playerData[state.playerTurn].type === "AI") turnLogic();
   }
