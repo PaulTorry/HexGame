@@ -62,12 +62,11 @@ function interactiveConsole (num = ""){
     1. New Game,
     2. Local Saves (load and save),
     3: Network Saves (load and save),
-    4: Cheat,
-    5: Toggle Debug,
-    6: Show Trails,
-    7: Login
-    8: Logout
-    9: SignUp`, num);
+    4: Cheat / Debug
+    5: Show Trails,
+    6: Login
+    7: Logout
+    8: SignUp`, num);
 
   if(ans === "1"){
     setupGameViaPrompt()
@@ -78,35 +77,30 @@ function interactiveConsole (num = ""){
     if(saveLoad === "2") saveAs(prompt("Type Save Name", state.gameName))
   }
   if(ans === "3"){
-    saveToServer()
-    // if(firebase.auth().currentUser == null){console.log("please log in to load or save");}
-    // else if(sessionInfo.currentGame){
+    let saveLoad = prompt("Load or Save\n 1: Load\n 2: Save", "1")
+    if(saveLoad === "1") {getServerData()}
+    else if(saveLoad === "2") {saveToServer()}
   }
   if(ans === "4"){
-    let cheat = prompt("How do you want to cheat\n 1: Money\n 2: Tech", "1")
+    let cheat = prompt("How do you want to cheat\n 1: Money\n 2: Tech\n 3: View and debug", "1")
     if(cheat === "1"){
-      console.log("Cheating Money");
       state.playerData[state.playerTurn].money = 99;
     }
     if(cheat === "2"){
-      console.log("Cheating Tech");
-      data.techs.forEach(t => {
-        state.playerData[state.playerTurn].tech[t.tech] = true;
-      })
+      data.techs.forEach(t => { state.playerData[state.playerTurn].tech[t.tech] = true; })
     }
+    if(ans === "3"){    debug = !debug;  }
   }
-  if(ans === "5"){
-    debug = !debug;
-  }
-  if(ans === "6"){
-    screenSettings.showTrails = !screenSettings.showTrails;
-  }
-  if(ans === "7"){  console.log("login"); loginViaPrompt()    }
-  if(ans === "8"){  console.log("logout"); firebase.auth().signOut()  }
-  if(ans === "9"){ console.log("signup"); signupViaPrompt() }
-  if(ans === "0"){getServerData()}
-  if(ans === "a"){ getHandleList().then((x) => console.log("Option a: " + x)).then()}
-  if(ans === "b")console.log(lastSaved);
+  if(ans === "5"){  screenSettings.showTrails = !screenSettings.showTrails;  }
+  if(ans === "6"){  console.log("login"); loginViaPrompt()    }
+  if(ans === "7"){  console.log("logout"); firebase.auth().signOut()  }
+  if(ans === "8"){ console.log("signup"); signupViaPrompt() }
+  if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
+    if(ans === "0"){
+      console.log("lastSaved  localGameInfo");
+       console.log(lastSaved)
+       console.log(localGameInfo)
+      }
   drawScreen();
 }
 
@@ -209,12 +203,10 @@ function setDocData(){
     turnNumber:state.turnNumber,
     playerTurn:state.playerTurn,
     when:getTimestamp(),
-    //  currentGame: packState(),
   }
   console.log("online  ", state.meta.online);
   if (state.meta.online){
     state.meta.playergrid.forEach((arr) => {
-      //    console.log("playergrid");
       if(docData.users.indexOf(arr[0]) === -1){
         console.log(" 6 playergrid2", docData.users,  );
         docData.users.push(arr[0])
@@ -238,16 +230,20 @@ function saveToServer(){  // Check order (make async await?)
     .set({currentGame: packState()})
   //  .then(function(docRef) {console.log("State  with ID: ")})
     .catch(function(error) {console.error("Error adding STate: ", error)  });
-
-
-
 }
 
-function checkForUpdatedServerGame(gameID){
-  firebase.firestore().collection("gamestest").doc(gameID)
+function checkForUpdatedServerGame(gameID = state.gameID){
+  return firebase.firestore().collection("gamestest").doc(gameID).get()
     .then(function(doc) {
-      let {name, users, turnNumber, playerTurn, when} = doc.data()
-    //  if(turnNumber >=  )
+      if (doc.data()){
+        let {name, users, turnNumber, playerTurn, when} = doc.data()
+
+        if(lastSaved.turnNumber <= turnNumber || lastSaved.playerTurn <=  playerTurn){
+          console.log("new game on server")
+        }
+
+    //    if(turnNumber >= localGameInfo )
+      }
     })
 }
 
