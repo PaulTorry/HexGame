@@ -69,8 +69,13 @@ function drawScreen() {
 
   let viewMask
 
-  if(!state.meta.online){ viewMask = getUpdatedViewMask(state)}
+  if(!state.meta || !state.meta.online){
+    viewMask = getUpdatedViewMask(state)
+  }
   else{
+    getUpdatedViewMask(state, localGameInfo.player)
+    //console.log("making viewmask om draw", localGameInfo.player );
+    
     viewMask = getUpdatedViewMask(state, localGameInfo.player)
   }
   //  let viewMask = getUpdatedViewMask(state, who)

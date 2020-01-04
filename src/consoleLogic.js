@@ -89,7 +89,7 @@ function interactiveConsole (num = ""){
     if(cheat === "2"){
       data.techs.forEach(t => { state.playerData[state.playerTurn].tech[t.tech] = true; })
     }
-    if(ans === "3"){    debug = !debug;  }
+    if(cheat === "3"){       debug = !debug;  }
   }
   if(ans === "5"){  screenSettings.showTrails = !screenSettings.showTrails;  }
   if(ans === "6"){  console.log("login"); loginViaPrompt()    }
@@ -107,7 +107,7 @@ function interactiveConsole (num = ""){
 
 async function setupGameViaPrompt(){
   let ans7 = prompt("Multiplayer Game y/n", "y")
-  if(ans7 === "n"){  state = setupStateViaPrompt({online: false});}
+  if(ans7 === "n"){  state = await setupStateViaPrompt({online: false});}
   if(ans7 === "y") {
     if (loggedInPlayer){ // firebase.auth().currentUser){
       state = await setupStateViaPrompt(await setupMetaViaPrompt());
@@ -128,22 +128,26 @@ async function setupMetaViaPrompt(){
   let handleList =  await getHandleList()
   let additionalPlayergrid =  await getAdditionalPlayers(handleList, [loggedInPlayer.uid, loggedInPlayer.handle])
   meta.playergrid = additionalPlayergrid //meta.playergrid.concat(additionalPlayergrid)
+  console.log("additionalPlayergrid");
+  console.log(additionalPlayergrid);
   return meta
 }
 
 async function setupStateViaPrompt(meta){
   console.log("after");
+  let numHumans
   let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
   //  let ans3 = Number(prompt("Number of Humans ", 2));
-  let numHumans = meta.playergrid.length;
+  if(meta.online) {numHumans = meta.playergrid.length;}
+  else numHumans = prompt("Number of Humans ", 2);
   let ans4 = Number(prompt("Size of Board ", 8));
-  let ans5 = prompt("Allied Humans y/n", "n")
+  let ans5 = prompt("Allied Humans y/n", "y")
   let ans6 = prompt("Game Name", randomName())
   let together = false;
   if (ans5 === "y") together = true;
 
   console.log("2 in setup state ViaPrompt", await meta);
-  let tempState = setup(ans2, ans4, numHumans, together, ans6, generateID(20), await meta);
+  let tempState = setup(ans2, ans4, numHumans, together, ans6, generateID(20),  meta);
   console.log("2.1 in setupGameViaPrompt", tempState);
   return tempState;
 }
@@ -168,6 +172,7 @@ function getAdditionalPlayers(handleList, startingList){
       let newEntry = [handleList[Number(ans)][2], handleList[Number(ans)][1]]
       if(additionalPlayergrid.findIndex(x => JSON.stringify(x) === JSON.stringify(newEntry)) === -1) {
         additionalPlayergrid.push(newEntry)
+        console.log(additionalPlayergrid);
       }
     }
   }
@@ -208,11 +213,12 @@ function setDocData(){
   if (state.meta.online){
     state.meta.playergrid.forEach((arr) => {
       if(docData.users.indexOf(arr[0]) === -1){
-        console.log(" 6 playergrid2", docData.users,  );
+    //    console.log(" 6 playergrid2", docData.users,  );
         docData.users.push(arr[0])
       }
     });
   }
+  console.log(docData);
   return docData
 }
 
@@ -242,7 +248,7 @@ function checkForUpdatedServerGame(gameID = state.gameID){
           console.log("new game on server")
         }
 
-    //    if(turnNumber >= localGameInfo )
+      //    if(turnNumber >= localGameInfo )
       }
     })
 }

@@ -4,9 +4,11 @@
 
 /* eslint-disable no-unused-vars */
 
-function makeNewViewMask(tiles){
+function makeNewViewMask(tiles, n=0){
+  //console.log(tiles);
+  
   let mask = {};
-  tiles.forEach( (a,id,b) => { mask[id] = 0 })
+  tiles.forEach( (a,id,b) => { mask[id] = n })
   return mask;
 }
 
@@ -30,16 +32,27 @@ function addViewMasks(state, vm1, vm2){
 
 function getUpdatedViewMask(state, player = state.playerTurn){
 
-  let mask = state.playerData[player].viewMask
+  // console.log(state);
+  // console.log(state.playerData);
+  // console.log("player, loggedInPlayer, state.playerTurn", player, loggedInPlayer, state.playerTurn);
+  //  console.log(loggedInPlayer);
+  //  console.log(state.playerTurn);
+   
+
+  let mask = makeNewViewMask(state.tiles)//state.playerData[player].viewMask
   for(let i = 0; i < state.numPlayers; i++){
     if(i === player || state.alliesGrid[player][i]){
+     // console.log("making viewmask player: " , player, " i: " , i);
       mask = addViewMasks(state, mask, getOwnViewMask(state, i));
     }
   }
+                                  mask = addViewMasks(state, mask, getOwnViewMask(state, player));
   return mask;
 }
 
 function getOwnViewMask(state, player = state.playerTurn){
+ // console.log("state.playerData[player].viewMask",state.playerData[player].viewMask);
+  
   let mask = removeActiveViews(state.playerData[player].viewMask);
 
   let viewHex = n => {
@@ -58,8 +71,13 @@ function getOwnViewMask(state, player = state.playerTurn){
     };
   }
 
+
+  //console.log("shiparrray",state.shipArray );
+  
   state.shipArray.forEach(s => {
     if(s.owner === player){
+     // console.log("doship", player);
+      
       mask[s.hex.id] = 2;
       s.hex.neighbours.filter(h => h.mag <= state.boardSize).forEach(viewHex)
       if(data.shipHulls[s.type].view>1){
