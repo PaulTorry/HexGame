@@ -91,16 +91,12 @@ function interactiveConsole (num = ""){
     }
     if(cheat === "3"){       debug = !debug;  }
   }
-  if(ans === "5"){  screenSettings.showTrails = !screenSettings.showTrails;  }
-  if(ans === "6"){  console.log("login"); loginViaPrompt()    }
-  if(ans === "7"){  console.log("logout"); firebase.auth().signOut()  }
+  if(ans === "5"){ screenSettings.showTrails = !screenSettings.showTrails;  }
+  if(ans === "6"){ console.log("login"); loginViaPrompt()    }
+  if(ans === "7"){ console.log("logout"); firebase.auth().signOut()  }
   if(ans === "8"){ console.log("signup"); signupViaPrompt() }
   if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
-    if(ans === "0"){
-      console.log("lastSaved  localGameInfo");
-       console.log(lastSaved)
-       console.log(localGameInfo)
-      }
+  if(ans === "0"){ console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);}
   drawScreen();
 }
 
@@ -137,7 +133,7 @@ async function setupStateViaPrompt(meta){
   console.log("after");
   let numHumans
   let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
-  //  let ans3 = Number(prompt("Number of Humans ", 2));
+  if(ans2 === null) break;
   if(meta.online) {numHumans = meta.playergrid.length;}
   else numHumans = prompt("Number of Humans ", 2);
   let ans4 = Number(prompt("Size of Board ", 8));
