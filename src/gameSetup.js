@@ -56,12 +56,12 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
 
   for(let i = 0; i < numPlayers; i++){  playerlist.push("AI")  }
   // if(playersTogether){
-    for(let i = 0; i < numHumans; i++){ playerlist[i] = "human";  }
+  for(let i = 0; i < numHumans; i++){ playerlist[i] = "human";  }
   // } else {
   //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "human";  }
   // }
 
-// TODO make playerorder grid to space out players
+  // TODO make playerorder grid to space out players
 
   let alliesGrid = []
 
@@ -82,7 +82,7 @@ function setup(numPlayers, boardSize = 8, numHumans = numPlayers, playersTogethe
 
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
     console.log("playerData", i,  tiles);
-    
+
     playerData.push({type: playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles, 0)})
     shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
       "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})

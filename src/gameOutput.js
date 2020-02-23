@@ -70,12 +70,13 @@ function drawScreen() {
   let viewMask
 
   if(!state.meta || !state.meta.online){
+    console.log("getting ofline viewmask", state.playerTurn);
     viewMask = getUpdatedViewMask(state)
   }
   else{
-    getUpdatedViewMask(state, localGameInfo.player)
-    //console.log("making viewmask om draw", localGameInfo.player );
-    
+  //  getUpdatedViewMask(state, localGameInfo.player)
+    console.log("making viewmask om draw", localGameInfo.player );
+
     viewMask = getUpdatedViewMask(state, localGameInfo.player)
   }
   //  let viewMask = getUpdatedViewMask(state, who)

@@ -40,7 +40,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         loggedInPlayer = {uid:user.uid, handle:qs.docs[0].id};
         console.log("loggedInPlayer:  ", loggedInPlayer)
       })
-      .catch(function(error) {alert("new logged in handle failed"), console.log("gethandleserror new login") });
+      .catch(function(error) {alert("new logged in handle failed"), console.log("gethandleserror new login",error) });
   } else {console.log("signedout"); loggedInPlayer = null}
 });
 

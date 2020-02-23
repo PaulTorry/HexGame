@@ -6,7 +6,7 @@
 
 function makeNewViewMask(tiles, n=0){
   //console.log(tiles);
-  
+
   let mask = {};
   tiles.forEach( (a,id,b) => { mask[id] = n })
   return mask;
@@ -17,16 +17,27 @@ function removeActiveViews(viewMask){
   let mask = {};
   for (let k of Object.keys(viewMask)){
     if (viewMask[k] === 2 || viewMask[k] === 1){mask[k] = 1}
+    else viewMask[k] = 0;
   }
   return mask;
+}
+
+function outputValuesViewmask(viewMask){
+  let values = [];
+  for (let k of Object.keys(viewMask)){
+    values.push(viewMask[k])
+  }
+  return values;
 }
 
 
 function addViewMasks(state, vm1, vm2){
   let mask = {};
   state.tiles.forEach(b => {
+//    console.log(vm1[b.hex.id], vm2[b.hex.id]);
     mask[b.hex.id] = Math.max(vm1[b.hex.id], vm2[b.hex.id]);
   })
+  console.log(outputValuesViewmask(mask));
   return mask;
 }
 
@@ -37,23 +48,25 @@ function getUpdatedViewMask(state, player = state.playerTurn){
   // console.log("player, loggedInPlayer, state.playerTurn", player, loggedInPlayer, state.playerTurn);
   //  console.log(loggedInPlayer);
   //  console.log(state.playerTurn);
-   
+
 
   let mask = makeNewViewMask(state.tiles)//state.playerData[player].viewMask
   for(let i = 0; i < state.numPlayers; i++){
     if(i === player || state.alliesGrid[player][i]){
-     // console.log("making viewmask player: " , player, " i: " , i);
+      console.log("adding " + i + " to " + player +" s grid");
+      // console.log("making viewmask player: " , player, " i: " , i);
       mask = addViewMasks(state, mask, getOwnViewMask(state, i));
     }
   }
-                                  mask = addViewMasks(state, mask, getOwnViewMask(state, player));
+  mask = addViewMasks(state, mask, getOwnViewMask(state, player));
   return mask;
 }
 
 function getOwnViewMask(state, player = state.playerTurn){
- // console.log("state.playerData[player].viewMask",state.playerData[player].viewMask);
-  
-  let mask = removeActiveViews(state.playerData[player].viewMask);
+  // console.log("state.playerData[player].viewMask",state.playerData[player].viewMask);
+
+//  let mask = makeNewViewMask(state.tiles)
+  let mask = addViewMasks(state, makeNewViewMask(state.tiles), removeActiveViews(state.playerData[player].viewMask));
 
   let viewHex = n => {
     if(
@@ -73,11 +86,11 @@ function getOwnViewMask(state, player = state.playerTurn){
 
 
   //console.log("shiparrray",state.shipArray );
-  
+
   state.shipArray.forEach(s => {
     if(s.owner === player){
      // console.log("doship", player);
-      
+
       mask[s.hex.id] = 2;
       s.hex.neighbours.filter(h => h.mag <= state.boardSize).forEach(viewHex)
       if(data.shipHulls[s.type].view>1){
