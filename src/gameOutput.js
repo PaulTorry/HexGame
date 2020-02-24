@@ -69,7 +69,9 @@ function drawScreen() {
 
   let viewMask
 
-  if(!state.meta || !state.meta.online){
+  if(
+  //  !state.meta ||
+     !state.meta.online){
     console.log("getting ofline viewmask", state.playerTurn);
     viewMask = getUpdatedViewMask(state)
   }

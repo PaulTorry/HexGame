@@ -34,10 +34,10 @@ function outputValuesViewmask(viewMask){
 function addViewMasks(state, vm1, vm2){
   let mask = {};
   state.tiles.forEach(b => {
-//    console.log(vm1[b.hex.id], vm2[b.hex.id]);
+    //    console.log(vm1[b.hex.id], vm2[b.hex.id]);
     mask[b.hex.id] = Math.max(vm1[b.hex.id], vm2[b.hex.id]);
   })
-  console.log(outputValuesViewmask(mask));
+  //console.log(outputValuesViewmask(mask));
   return mask;
 }
 
@@ -53,7 +53,7 @@ function getUpdatedViewMask(state, player = state.playerTurn){
   let mask = makeNewViewMask(state.tiles)//state.playerData[player].viewMask
   for(let i = 0; i < state.numPlayers; i++){
     if(i === player || state.alliesGrid[player][i]){
-      console.log("adding " + i + " to " + player +" s grid");
+      //console.log("adding " + i + " to " + player +" s grid");
       // console.log("making viewmask player: " , player, " i: " , i);
       mask = addViewMasks(state, mask, getOwnViewMask(state, i));
     }
@@ -89,7 +89,7 @@ function getOwnViewMask(state, player = state.playerTurn){
 
   state.shipArray.forEach(s => {
     if(s.owner === player){
-     // console.log("doship", player);
+      // console.log("doship", player);
 
       mask[s.hex.id] = 2;
       s.hex.neighbours.filter(h => h.mag <= state.boardSize).forEach(viewHex)

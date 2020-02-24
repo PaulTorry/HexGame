@@ -96,7 +96,10 @@ function interactiveConsole (num = ""){
   if(ans === "7"){ console.log("logout"); firebase.auth().signOut()  }
   if(ans === "8"){ console.log("signup"); signupViaPrompt() }
   if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
-  if(ans === "0"){ console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);}
+  if(ans === "0"){
+    console.log(getGameParamsViaPrompt());
+  //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
+  }
   drawScreen();
 }
 
@@ -106,7 +109,9 @@ async function setupGameViaPrompt(){
   if(ans7 === "n"){  state = await setupStateViaPrompt({online: false});}
   if(ans7 === "y") {
     if (loggedInPlayer){ // firebase.auth().currentUser){
-      state = await setupStateViaPrompt(await setupMetaViaPrompt());
+      let tempMeta = await setupMetaViaPrompt()
+      console.log("tempMeta",tempMeta);
+      state = await setupStateViaPrompt(tempMeta);
       localGameInfo = setlocalGameInfo();
     }
     else {
@@ -117,34 +122,49 @@ async function setupGameViaPrompt(){
   drawScreen();
 }
 
-
-
 async function setupMetaViaPrompt(){
   let meta = {online:true, playergrid: []}
   let handleList =  await getHandleList()
   let additionalPlayergrid =  await getAdditionalPlayers(handleList, [loggedInPlayer.uid, loggedInPlayer.handle])
-  meta.playergrid = additionalPlayergrid //meta.playergrid.concat(additionalPlayergrid)
-  console.log("additionalPlayergrid");
-  console.log(additionalPlayergrid);
+  meta.playergrid = additionalPlayergrid;
+  // console.log("additionalPlayergrid", additionalPlayergrid);
   return meta
 }
 
-async function setupStateViaPrompt(meta){
-  console.log("after");
-  let numHumans
-  let ans2 = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
-  if(ans2 === null) break;
-  if(meta.online) {numHumans = meta.playergrid.length;}
-  else numHumans = prompt("Number of Humans ", 2);
-  let ans4 = Number(prompt("Size of Board ", 8));
-  let ans5 = prompt("Allied Humans y/n", "y")
-  let ans6 = prompt("Game Name", randomName())
-  let together = false;
-  if (ans5 === "y") together = true;
+function getGameParamsViaPrompt(online=false, numHumansParam){
+  let config = {}
+  let numPlayers = Math.min(Number(prompt("Number of players (Max 6)", 4)),6);
+  if (numPlayers === null) return null;
+  else config.numPlayers = numPlayers
 
-  console.log("2 in setup state ViaPrompt", await meta);
-  let tempState = setup(ans2, ans4, numHumans, together, ans6, generateID(20),  meta);
-  console.log("2.1 in setupGameViaPrompt", tempState);
+  let numHumans;
+  if(online) {numHumans = numHumansParam;}
+  else numHumans = Number(prompt("Number of Humans ", 2));
+  if (numHumans === null) return null;
+  else config.numHumans = numHumans;
+
+  let boardSize = Number(prompt("Size of Board ", 8));
+  if (boardSize === null) return null;
+  else config.boardSize = boardSize;
+
+  let allied = prompt("Allied Humans y/n", "y")
+  if (allied === null) return null;
+  else {
+    if(allied === "y" || allied === "y") config.allied = true;
+    else config.allied = false;
+  }
+  let gameName = prompt("Game Name", randomName())
+  if (gameName === null) return null;
+  else config.gameName = gameName;
+  //console.log(config);
+  return config
+}
+
+async function setupStateViaPrompt(meta){
+  let players;
+  if (meta.playergrid) players = meta.playergrid.length;
+  let tempState = setupNew(getGameParamsViaPrompt(meta.online, players), meta)
+  //console.log(tempState);
   return tempState;
 }
 
@@ -275,13 +295,10 @@ function getServerData(){
 }
 
 function setlocalGameInfo(){
-  let players = state.meta.playergrid
-  console.log(state);
-  console.log(players);
-  let uidlist = players.map((a) => a[0])
-  console.log(uidlist);
-  let player = uidlist.indexOf(loggedInPlayer.uid)
-  console.log(player);
+  let players = state.meta.playergrid;
+  let uidlist = players.map((a) => a[0]);
+  let player = uidlist.indexOf(loggedInPlayer.uid);
+  console.log("state, players, uidlist, player", state, players, uidlist, player );
   return {player:player}
 }
 
