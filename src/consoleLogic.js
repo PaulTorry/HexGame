@@ -106,12 +106,20 @@ function interactiveConsole (num = ""){
 
 async function setupGameViaPrompt(){
   let ans7 = prompt("Multiplayer Game y/n", "y")
-  if(ans7 === "n"){  state = await setupStateViaPrompt({online: false});}
+  if(ans7 === "n"){
+    state = setupNew(getGameParamsViaPrompt(false, ), {online: false})
+
+  }
   if(ans7 === "y") {
     if (loggedInPlayer){ // firebase.auth().currentUser){
-      let tempMeta = await setupMetaViaPrompt()
-      console.log("tempMeta",tempMeta);
-      state = await setupStateViaPrompt(tempMeta);
+      let meta = await setupMetaViaPrompt()
+      console.log("meta",meta);
+      //  state = await setupStateViaPrompt(tempMeta);
+      let players;
+      if (meta.playergrid) players = meta.playergrid.length;
+      state = setupNew(getGameParamsViaPrompt(meta.online, players), meta)
+
+
       localGameInfo = setlocalGameInfo();
     }
     else {

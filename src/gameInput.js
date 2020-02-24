@@ -92,7 +92,7 @@ function drag(event){
 }
 
 
-function menuClick(event){
+function topPanelClick(event){
 
   event.preventDefault();
   if(event.offsetX < 90 && event.offsetY < 100){nextTurn()}

@@ -203,6 +203,7 @@ function drawScreen() {
 
   //drawlog();
   drawMenu();
+  
 }
 
 function drawlog(){
@@ -217,8 +218,8 @@ function drawlog(){
 function drawMenu(){
   let arrows = [];
   let ss = screenSettings;
-  var c = document.getElementById("menu").getContext("2d");
-  document.getElementById("menu").height = 100 + 700 * ss.openTechTree;
+  let c = document.getElementById("topPanel").getContext("2d");
+  document.getElementById("topPanel").height = 100 + 700 * ss.openTechTree;
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
 
@@ -261,7 +262,13 @@ function drawMenu(){
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
   drawText(c, `Game: ${state.gameName}`, new Vec(420,40), 15, "white" )
 
-  if (screenSettings.openTechTree){
+
+  if (screenSettings.openTechTree){drawTechTree()}
+
+
+
+  function drawTechTree(){
+    let c = document.getElementById("techTree").getContext("2d");
     data.techs.forEach((t)=>{
       if (t.requires){ t.requires.forEach(r => {
         arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
@@ -296,8 +303,6 @@ function drawMenu(){
         drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(159,216,206)" ,0.55,0,true)
       }
 
-
-
       if(( draw || debug) && t.sprite) {
         t.sprite.forEach(s => {
           drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
@@ -307,6 +312,11 @@ function drawMenu(){
       if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40,+6)) , 12, "rgb(159,216,206)" )
     })
   }
+
+
+
+
+
 }
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
