@@ -312,7 +312,7 @@ function turnLogic(){
   }
   state.history.push([]);
   translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
-  screenSettings.openTechTree = false;
+  toggleTechTree(false);
   drawMenu(); drawScreen();
 
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)

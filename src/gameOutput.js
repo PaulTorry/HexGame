@@ -55,11 +55,15 @@ const selectedColour = ["white", "purple", "blue", "orange"];
 
 function getXYfromHex(hexCoord, size=screenSettings.hexSize){return Hex.getXYfromUnitHex(hexCoord).scale(size)}
 
-
-
-
 function drawScreen() {
+  //drawlog();
+  drawBoard();
+  drawMenu();
+  drawTechTree();
+  //  if (screenSettings.openTechTree){drawTechTree()}
+}
 
+function drawBoard(){
   let ss = screenSettings;
   var c = document.getElementById("board").getContext("2d");
   c.clearRect(-99999,-99999,199999,199999);                            // FIX THIS @TODO
@@ -69,9 +73,7 @@ function drawScreen() {
 
   let viewMask
 
-  if(
-  //  !state.meta ||
-     !state.meta.online){
+  if(!state.meta.online){
     console.log("getting ofline viewmask", state.playerTurn);
     viewMask = getUpdatedViewMask(state)
   }
@@ -83,6 +85,7 @@ function drawScreen() {
   }
   //  let viewMask = getUpdatedViewMask(state, who)
   if (preturn){  viewMask = makeNewViewMask(new Map());}
+
 
 
   for(let [id , tile] of state.tiles){
@@ -200,11 +203,6 @@ function drawScreen() {
     drawText(c, `Click to Start`, playerLoc.add(new Vec(-80,50)), 30, "white" )
   }
 
-
-  //drawlog();
-  drawMenu();
-  drawTechTree();
-  //  if (screenSettings.openTechTree){drawTechTree()}
 }
 
 function drawlog(){
@@ -219,7 +217,7 @@ function drawlog(){
 function drawMenu(){
   let ss = screenSettings;
   let c = document.getElementById("topPanel").getContext("2d");
-  document.getElementById("topPanel").height = 100 + 700 * ss.openTechTree;
+  document.getElementById("topPanel").height = 100 //+ 700 * ss.openTechTree;
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
 
@@ -263,8 +261,6 @@ function drawMenu(){
   drawText(c, `Game: ${state.gameName}`, new Vec(420,40), 15, "white" )
 
 }
-
-
 
 function drawTechTree(){
   let arrows = [];

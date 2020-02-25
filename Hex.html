@@ -29,8 +29,8 @@
   <script src="./src/viewLogic.js"></script>
   <script src="./src/gameSprites.js"></script>
   <script src="./src/gameOutput.js"></script>
+  <script src="./src/dataBaseLogic.js"></script>
   <script src="./src/gameSetup.js"></script>
-
 
 
 </head>
@@ -44,6 +44,7 @@
 <canvas id="newGameMenu" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
 <canvas id="loadGameMenu" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
 <canvas id="techTree" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
+<canvas id="nextTurnScreen" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
 
 
 
@@ -59,7 +60,7 @@ document.body.querySelector("#mainMenu").addEventListener("click", mainMenuClick
 document.body.querySelector("#newGameMenu").addEventListener("click", newGameMenuClick);
 document.body.querySelector("#loadGameMenu").addEventListener("click", loadGameMenuClick);
 document.body.querySelector("#techTree").addEventListener("click", techTreeClick);
-
+document.body.querySelector("#nextTurnScreen").addEventListener("click", nextTurnScreenClick);
 
 
 document.body.querySelector("#board").addEventListener("touchstart", touchstart);

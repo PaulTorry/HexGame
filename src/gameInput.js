@@ -97,7 +97,8 @@ function topPanelClick(event){
   event.preventDefault();
   if(event.offsetX < 90 && event.offsetY < 100){nextTurn()}
   else if (event.offsetY < 90 && event.offsetX > 710) {
-    if(!preturn)screenSettings.openTechTree = !screenSettings.openTechTree;
+  //  if(!preturn) screenSettings.openTechTree = !screenSettings.openTechTree;
+    if(!preturn) toggleTechTree();
   }
   else if ( event.offsetX > 655 && event.offsetX < 700 && event.offsetY > 5 && event.offsetY < 50 ) {
     interactiveConsole();
@@ -119,6 +120,17 @@ function topPanelClick(event){
   drawScreen();
   drawMenu();
 }
+
+function toggleTechTree(newState){
+  //console.log(newState);
+  if (newState === undefined) newState = !screenSettings.openTechTree;
+  screenSettings.openTechTree = newState;
+  //console.log("screenSettings.openTechTree", screenSettings.openTechTree);
+  if(newState) changeCanvas("techTree");
+  else{changeCanvas("board")}
+}
+
+
 
 function techTreeClick(event) {
   let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/35))
@@ -147,6 +159,10 @@ function newGameMenuClick(event) {
 
 function loadGameMenuClick(event) {
   console.log("loadGameMenuClick");
+}
+
+function nextTurnScreenClick(event) {
+  console.log("nextTurnScreenClick");
 }
 
 
