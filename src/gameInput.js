@@ -163,6 +163,8 @@ function loadGameMenuClick(event) {
 
 function nextTurnScreenClick(event) {
   console.log("nextTurnScreenClick");
+  changeCanvas("board");
+  preturn = false;
 }
 
 
@@ -172,6 +174,7 @@ function changeCanvas(canvas){
   document.body.querySelector("#mainMenu").style.display= "none";
   document.body.querySelector("#newGameMenu").style.display= "none";
   document.body.querySelector("#loadGameMenu").style.display= "none";
+  document.body.querySelector("#nextTurnScreen").style.display= "none";
   document.body.querySelector(`#${canvas}`).style.display= "block";
 }
 

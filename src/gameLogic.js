@@ -21,7 +21,7 @@ autoSave
 
 
 function onHexClicked(clickHex){
-  if(preturn){preturn = false; return }
+//  if(preturn){preturn = false; return }
   let viewMask = getUpdatedViewMask(state);
 
   let possibleAttacks = [], possibleMoves = [];
@@ -320,6 +320,7 @@ function turnLogic(){
   sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu(); drawScreen();
   preturn = true;
+  changeCanvas("nextTurnScreen")
 
   if(state.playerData[state.playerTurn].type === "AI"){
     takeAIturn();

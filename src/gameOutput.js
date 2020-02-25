@@ -1,7 +1,5 @@
 "use strict"
 
-
-
 /*global
 screenSettings, Vec, Hex,
 drawScreen,  sel, state,
@@ -11,17 +9,13 @@ simpleShapes, getTerrainDamage
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
 data, subTurn,
+localGameInfo,
 getRealXYfromScreenXY
-
 */
 
 
 /* eslint-disable no-unused-vars */
-
-
 //  document.getElementById("menu").height = 500;
-
-
 
 function getPlayerColour(player = state.playerTurn, opacity = 1, mid = false, dark = false){
   const playerColours = ["green", "red", "lightblue", "orange", "purple", "brown"];
@@ -49,18 +43,33 @@ function getColMap(player, transparency = 1){
   return (v) =>  mapColours(v, player, transparency)
 }
 
-
 const selectedColour = ["white", "purple", "blue", "orange"];
-
 
 function getXYfromHex(hexCoord, size=screenSettings.hexSize){return Hex.getXYfromUnitHex(hexCoord).scale(size)}
 
 function drawScreen() {
   //drawlog();
+  drawNextTurnScreen()
   drawBoard();
   drawMenu();
   drawTechTree();
   //  if (screenSettings.openTechTree){drawTechTree()}
+}
+
+function drawNextTurnScreen(){
+  let ss = screenSettings;
+  let c = document.getElementById("nextTurnScreen").getContext("2d");
+  c.clearRect(-99999,-99999,199999,199999);
+  c.fillStyle = "white";
+
+  let center = new Vec(0,0).add(ss.techTreeOffset);
+  let {x,y} = center;
+  // let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
+  // let {x,y} = playerLoc;
+  let logoSize = 0.3
+  drawFromData(c, gameSprites["logo"], 400 - 300*logoSize, 200 - 300 * logoSize, (x)=>x , logoSize)
+  drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, center.add(new Vec(-80,0)), 50, getPlayerColour(state.playerTurn) )
+  drawText(c, `Click to Start`, center.add(new Vec(-80,50)), 30, "white" )
 }
 
 function drawBoard(){
@@ -71,20 +80,20 @@ function drawBoard(){
   c.strokeStyle = '#ff00ff';
   c.lineWidth = 5
 
-  let viewMask
+  let viewMask = getUpdatedViewMask(state)
 
-  if(!state.meta.online){
-    console.log("getting ofline viewmask", state.playerTurn);
-    viewMask = getUpdatedViewMask(state)
-  }
-  else{
-  //  getUpdatedViewMask(state, localGameInfo.player)
-    console.log("making viewmask om draw", localGameInfo.player );
-
-    viewMask = getUpdatedViewMask(state, localGameInfo.player)
-  }
-  //  let viewMask = getUpdatedViewMask(state, who)
-  if (preturn){  viewMask = makeNewViewMask(new Map());}
+  // if(!state.meta.online){
+  //   console.log("getting ofline viewmask", state.playerTurn);
+  //   viewMask = getUpdatedViewMask(state)
+  // }
+  // else{
+  // //  getUpdatedViewMask(state, localGameInfo.player)
+  //   console.log("making viewmask om draw", localGameInfo.player );
+  //
+  //   viewMask = getUpdatedViewMask(state, localGameInfo.player)
+  // }
+  // //  let viewMask = getUpdatedViewMask(state, who)
+  // if (preturn){  viewMask = makeNewViewMask(new Map());}
 
 
 
@@ -195,13 +204,7 @@ function drawBoard(){
   }
 
 
-  if (preturn){
-    let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
-    let {x,y} = playerLoc;
-    drawFromData(c, gameSprites["logo"], x-90, y-230, (x)=>x , 0.3)
-    drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, playerLoc.add(new Vec(-80,0)), 50, getPlayerColour(state.playerTurn) )
-    drawText(c, `Click to Start`, playerLoc.add(new Vec(-80,50)), 30, "white" )
-  }
+
 
 }
 
