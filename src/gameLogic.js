@@ -280,18 +280,29 @@ function repair(ship){
 
 async function nextTurn(){
 
-  if (!state.meta.online ) {turnLogic(); }
-  else{
+  if (!preturn || debug) {turnLogic()}
+  while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
 
-    if (state.playerTurn === localGameInfo.player || debug){
-      turnLogic();
-      while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
-      alert("sending game");
-      await  saveToServer();
-    }
-  //  if (state.playerData[state.playerTurn].type === "AI") turnLogic();
+  if (state.meta.online ){
+    alert("sending game");
+    await  saveToServer();
   }
 }
+  // if (!state.meta.online ) {turnLogic(); }
+  // else{
+  //
+  //   if (state.playerTurn === localGameInfo.player || debug){
+  //     turnLogic();
+  //     while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
+  //     alert("sending game");
+  //     await  saveToServer();
+  //   }
+
+
+
+  //  if (state.playerData[state.playerTurn].type === "AI") turnLogic();
+//   }
+// }
 
 
 function turnLogic(){
@@ -311,21 +322,23 @@ function turnLogic(){
     state.turnNumber += 1;
   }
   state.history.push([]);
+  state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
   translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
+
   toggleTechTree(false);
-  drawMenu(); drawScreen();
+  preturn = true;
+  changeCanvas("nextTurnScreen");
 
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
 
   sel = {state:0, attacks:[], menu:[], moves:[]}
   drawMenu(); drawScreen();
-  preturn = true;
-  changeCanvas("nextTurnScreen")
-
-  if(state.playerData[state.playerTurn].type === "AI"){
-    takeAIturn();
-    nextTurn()
-  }
+  //
+  //
+  // if(state.playerData[state.playerTurn].type === "AI"){
+  //   takeAIturn();
+  //   nextTurn()
+  // }
 }
 
 function reSetIncomes(){

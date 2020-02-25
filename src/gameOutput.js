@@ -220,6 +220,7 @@ function drawlog(){
 function drawMenu(){
   let ss = screenSettings;
   let c = document.getElementById("topPanel").getContext("2d");
+  document.getElementById("topPanel").style.borderColor = getPlayerColour(state.playerTurn);
   document.getElementById("topPanel").height = 100 //+ 700 * ss.openTechTree;
   c.clearRect(-99999,-99999,199999,199999);
   c.strokeStyle = "white";
