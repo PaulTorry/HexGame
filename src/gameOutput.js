@@ -203,7 +203,8 @@ function drawScreen() {
 
   //drawlog();
   drawMenu();
-  
+  drawTechTree();
+  //  if (screenSettings.openTechTree){drawTechTree()}
 }
 
 function drawlog(){
@@ -216,7 +217,6 @@ function drawlog(){
 }
 
 function drawMenu(){
-  let arrows = [];
   let ss = screenSettings;
   let c = document.getElementById("topPanel").getContext("2d");
   document.getElementById("topPanel").height = 100 + 700 * ss.openTechTree;
@@ -262,62 +262,63 @@ function drawMenu(){
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
   drawText(c, `Game: ${state.gameName}`, new Vec(420,40), 15, "white" )
 
-
-  if (screenSettings.openTechTree){drawTechTree()}
-
-
-
-  function drawTechTree(){
-    let c = document.getElementById("techTree").getContext("2d");
-    data.techs.forEach((t)=>{
-      if (t.requires){ t.requires.forEach(r => {
-        arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
-      })}
-    })
-
-    arrows.forEach(a => {
-      drawArrow(c, getXYfromHex(a[1],35).add(ss.techTreeOffset),getXYfromHex(a[0],35).add(ss.techTreeOffset));
-    })
-
-    data.techs.forEach((t)=>{
-      let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
-      let {x,y} = center;
-      let draw = t.cost < 99;
-      //let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
-
-      if (t.cost > 99){
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(30,30,30)" ,0.55,0,true);
-      }
-
-      else if (state.playerData[state.playerTurn].tech[t.tech]) {
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55,0,true)
-        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, getColMap(state.playerTurn, 1) ,0.55,0,true)
-
-      } else if ( t.cost > 99 || (t.requires &&
-        t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
-      )) {
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55,0,true)
-        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(36,34,73)" ,0.55,0,true)
-      } else {// if (draw){
-        drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55,0,true)
-        drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(159,216,206)" ,0.55,0,true)
-      }
-
-      if(( draw || debug) && t.sprite) {
-        t.sprite.forEach(s => {
-          drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
-        })
-      }
-      if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
-      if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40,+6)) , 12, "rgb(159,216,206)" )
-    })
-  }
-
-
-
-
-
 }
+
+
+
+function drawTechTree(){
+  let arrows = [];
+  let ss = screenSettings;
+  let c = document.getElementById("techTree").getContext("2d");
+  data.techs.forEach((t)=>{
+    if (t.requires){ t.requires.forEach(r => {
+      arrows.push([t.hex, data.techs.filter(tt => tt.tech === r)[0].hex]);
+    })}
+  })
+
+  arrows.forEach(a => {
+    drawArrow(c, getXYfromHex(a[1],35).add(ss.techTreeOffset),getXYfromHex(a[0],35).add(ss.techTreeOffset));
+  })
+
+  data.techs.forEach((t)=>{
+    let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
+    let {x,y} = center;
+    let draw = t.cost < 99;
+    //let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
+
+    if (t.cost > 99){
+      drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(30,30,30)" ,0.55,0,true);
+    }
+
+    else if (state.playerData[state.playerTurn].tech[t.tech]) {
+      drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55,0,true)
+      drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, getColMap(state.playerTurn, 1) ,0.55,0,true)
+
+    } else if ( t.cost > 99 || (t.requires &&
+      t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
+    )) {
+      drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55,0,true)
+      drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(36,34,73)" ,0.55,0,true)
+    } else {// if (draw){
+      drawFromData(c, gameSprites["roundedHex"], x - 48, y - 43, x => "rgb(18,15,34)" ,0.55,0,true)
+      drawFromData(c, gameSprites["roundedHexOutline"], x - 48, y - 43, x => "rgb(159,216,206)" ,0.55,0,true)
+    }
+
+    if(( draw || debug) && t.sprite) {
+      t.sprite.forEach(s => {
+        drawFromData(c, gameSprites[s[0]], x+s[1] , y+s[2] , getColMap(state.playerTurn, 1) ,0.55*s[3])
+      })
+    }
+    if(draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+    if(draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40,+6)) , 12, "rgb(159,216,206)" )
+  })
+}
+
+
+
+
+
+
 
 function drawPoly(c, pointVec, center = new Vec(0,0), scale = 50, width, sColor, fColor){
   let {x:xx,y:yy} = center;

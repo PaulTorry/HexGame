@@ -40,7 +40,11 @@
 </p>
 <canvas id="topPanel" width="800" height="100" style="border:1px solid #d3d3d3;"></canvas>
 <canvas id="board" width="800" height="800" style="border:1px solid #d3d3d3;"></canvas>
-<canvas id="menu1" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
+<canvas id="mainMenu" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
+<canvas id="newGameMenu" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
+<canvas id="loadGameMenu" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
+<canvas id="techTree" width="800" height="800" style="display: block; border:1px  solid #d3d3d3;"></canvas>
+
 
 
 </div>
@@ -51,7 +55,12 @@ document.body.querySelector("#board").addEventListener("click", boardClick) ;
 document.body.querySelector("#board").addEventListener("mousedown", mousedown);
 document.body.querySelector("#board").addEventListener("wheel", mouseWheel);
 document.body.querySelector("#topPanel").addEventListener("click", topPanelClick);
-//document.body.querySelector("#menu1").addEventListener("click", menu1Click);
+document.body.querySelector("#mainMenu").addEventListener("click", mainMenuClick);
+document.body.querySelector("#newGameMenu").addEventListener("click", newGameMenuClick);
+document.body.querySelector("#loadGameMenu").addEventListener("click", loadGameMenuClick);
+document.body.querySelector("#techTree").addEventListener("click", techTreeClick);
+
+
 
 document.body.querySelector("#board").addEventListener("touchstart", touchstart);
 document.body.addEventListener("keydown", keyHandle);
@@ -62,6 +71,7 @@ window.onload = () => {
   console.log("Hi");
   translateContext(new Vec(-400,-400));
   scaleContext(0.6);
+  changeCanvas("board");
   drawScreen();
 }
 

@@ -97,7 +97,8 @@ function interactiveConsole (num = ""){
   if(ans === "8"){ console.log("signup"); signupViaPrompt() }
   if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
   if(ans === "0"){
-    console.log(getGameParamsViaPrompt());
+    changeCanvas();
+  //  console.log(getGameParamsViaPrompt());
   //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
   }
   drawScreen();
@@ -185,6 +186,12 @@ async function getHandleList(){
     })
     .catch(function(error) {alert("handlelisterror"); console.log("gethandleserror"); return "fail getHandleList" });
 }
+
+async function refresh(){
+     getHandleList
+
+}
+
 
 function getAdditionalPlayers(handleList, startingList){
   let additionalPlayergrid = [startingList];

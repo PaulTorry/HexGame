@@ -112,10 +112,18 @@ function topPanelClick(event){
       onMenuItemClicked(sel.menu[num-1]);
     }
   }
-  else{
-    let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/35))
-    onTechHexClicked(clickHex);
-  }
+  // else{
+  //   let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/35))
+  //   onTechHexClicked(clickHex);
+  // }
+  drawScreen();
+  drawMenu();
+}
+
+function techTreeClick(event) {
+  let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/35))
+  onTechHexClicked(clickHex);
+
   drawScreen();
   drawMenu();
 }
@@ -129,6 +137,27 @@ function boardClick(event) {
   drawScreen();
 }
 
+function mainMenuClick(event) {
+  console.log("mainMenuClick");
+}
+
+function newGameMenuClick(event) {
+  console.log("newGameMenuClick");
+}
+
+function loadGameMenuClick(event) {
+  console.log("loadGameMenuClick");
+}
+
+
+function changeCanvas(canvas){
+  document.body.querySelector("#board").style.display= "none";
+  document.body.querySelector("#techTree").style.display= "none";
+  document.body.querySelector("#mainMenu").style.display= "none";
+  document.body.querySelector("#newGameMenu").style.display= "none";
+  document.body.querySelector("#loadGameMenu").style.display= "none";
+  document.body.querySelector(`#${canvas}`).style.display= "block";
+}
 
 function touchstart(event) {
   let {pageX,pageY} = event.touches[0];
