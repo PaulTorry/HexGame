@@ -5,6 +5,18 @@
 
 const data = {
 
+  mainMenu : [
+    {name:'Quick Setup', colour:[50,47,73], hex:new Hex(-3,0), sprite:[['titanShip',0,-10,1]] },
+    {name:'Setup', colour:[50,47,73], hex:new Hex(-3,2), sprite:[['titanShip',0,-10,1]] },
+    {name:'Load', colour:[50,47,73], hex:new Hex(0,0), sprite:[['titanShip',0,-10,1]] },
+  ],
+
+  newGameMenu : [
+    {name:'GameName', colour:[50,47,73], hex:new Hex(-3,-2), sprite:[['titanShip',0,-10,1]] },
+    {name:'BoardSize', colour:[50,47,73], hex:new Hex(-1,-3), sprite:[['titanShip',0,-10,1]] },
+    {name:'Make', colour:[150,147,173], hex:new Hex(1,-4), sprite:[['titanShip',0,-10,1]] },
+  ],
+
   techs : [
     //centre
     {name:'Antimatter Extraction', tech:'titanTech', colour:[50,47,73], requires:['battleshipTech', 'missileDestroyerTech', 'defShieldTech'], hex:new Hex(0,0), cost:10, sprite:[['titanShip',0,-10,1]] },

@@ -71,11 +71,18 @@ function interactiveConsole (num = ""){
   if(ans === "8"){ console.log("signup"); signupViaPrompt() }
   if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
   if(ans === "0"){
-    changeCanvas();
   //  console.log(getGameParamsViaPrompt());
   //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
   }
   drawScreen();
+}
+
+
+function quickSetup(){
+  let config =  {numPlayers: 4, boardSize: 8, numHumans: 2, playersTogether:false}
+  config.gameName = randomName();
+
+  state = setupNew( config, {online: false})
 }
 
 

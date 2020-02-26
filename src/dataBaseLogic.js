@@ -1,15 +1,8 @@
 
 
 /*global
-Hex, Map
 state:true
 drawScreen,
-debug:true,
-interactiveConsole,
-setup
-data,
-screenSettings,
-randomInt, sessionInfo,
 firebase
 */
 

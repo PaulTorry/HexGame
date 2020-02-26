@@ -7,12 +7,12 @@ state, territoryState, shipState, getShipOnHex, data
 
 /* eslint-disable no-unused-vars */
 
-function makeMenu(hex){
+function makeBuildBar(hex){
   // console.log("makemenu");
   let base = state.baseArray.find(b => b.hex.compare(hex));
   let tile = state.tiles.get(hex.id);
   let ship =  getShipOnHex(hex); //shipArray.find(e => e.location.compare(hex));
-  // console.log("makeMenu",base, tile, ship, hex.id);
+  // console.log("makeBuildBar",base, tile, ship, hex.id);
   return data.thingList.filter(pos => {                                        // make a map to include failure point
 
 

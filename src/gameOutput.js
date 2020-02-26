@@ -51,7 +51,9 @@ function drawScreen() {
   //drawlog();
   drawNextTurnScreen()
   drawBoard();
+  drawTopPanel();
   drawMenu();
+  drawNewGameMenu();
   drawTechTree();
   //  if (screenSettings.openTechTree){drawTechTree()}
 }
@@ -217,7 +219,7 @@ function drawlog(){
   log.innerHTML = current;
 }
 
-function drawMenu(){
+function drawTopPanel(){
   let ss = screenSettings;
   let c = document.getElementById("topPanel").getContext("2d");
   document.getElementById("topPanel").style.borderColor = getPlayerColour(state.playerTurn);
@@ -266,6 +268,41 @@ function drawMenu(){
 
 }
 
+
+function drawMenu(){
+  let ss = screenSettings;
+  let c = document.getElementById("mainMenu").getContext("2d");
+
+  for(let [id , tile] of state.tiles){
+    let {x,y} = getXYfromHex(tile.hex)//.subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
+    drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
+  }
+
+  data.mainMenu.forEach((t)=>{
+    let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
+    let {x,y} = center;
+    drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+    drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+  })
+}
+
+function drawNewGameMenu(){
+  let ss = screenSettings;
+  let c = document.getElementById("newGameMenu").getContext("2d");
+
+  for(let [id , tile] of state.tiles){
+    let {x,y} = getXYfromHex(tile.hex)//.subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
+    drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
+  }
+
+  data.newGameMenu.forEach((t)=>{
+    let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
+    let {x,y} = center;
+    drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+    drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+  })
+}
+
 function drawTechTree(){
   let arrows = [];
   let ss = screenSettings;
@@ -281,6 +318,7 @@ function drawTechTree(){
   })
 
   data.techs.forEach((t)=>{
+
     let center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset);
     let {x,y} = center;
     let draw = t.cost < 99;

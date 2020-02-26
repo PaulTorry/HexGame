@@ -1,16 +1,15 @@
 "use strict"
 
 /*global
-drawScreen, sel:true, screenSettings,
+drawScreen, sel:true,
 nextTurn,
 state,
 onMenuItemClicked,
-preturn:true, makeMenu,
+preturn:true, makeBuildBar,
 findPossibleAttacks, getShipOnHex, findPossibleMoves,
 buildShip,
 translateContextTo, getXYfromHex, drawMenu, getUpdatedViewMask
 data
-takeAIturn,
 subTurn,
 autoSave
 */
@@ -33,12 +32,12 @@ function onHexClicked(clickHex){
     if(sel.state === 2){
       if (clickHex.compare(sel.hex)) sel = {state:0,  moves:[], attacks:[], menu: []};
       else sel = {state:0,  moves:[], attacks:[], menu: []};
-    //  else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+    //  else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
     }
 
     else if (sel.state === 1){
       if (clickHex.compare(sel.hex)) {
-        sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+        sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
       }
 
       else if(sel.moves.find( e =>  e[0].compare(clickHex))) {
@@ -54,7 +53,7 @@ function onHexClicked(clickHex){
         else{
           sel.ship.attacked = true;
           sel = {state:0, moves:[], attacks:[], menu:[]}
-        //  sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+        //  sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
         }
         sel.menu = [];
       }
@@ -85,10 +84,10 @@ function onHexClicked(clickHex){
         if(possibleMoves.length || possibleAttacks.length){
           sel = {state:1, hex:clickHex, ship:currentShip, moves:possibleMoves, attacks: possibleAttacks}
         }
-        else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+        else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
       }
       else{
-        sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeMenu(clickHex)};
+        sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
       }
     }
   } else  sel = {state:0,  moves:[], attacks:[], menu: []};
@@ -171,6 +170,25 @@ function onTechHexClicked (hex){
   }
 }
 
+
+function onMenuHexClicked (hex){
+  let opt = data.mainMenu.find(t => t.hex.compare(hex));
+  let action = opt.name;
+
+  switch(action){
+    case "Quick Setup":
+      quickSetup();
+      break;
+    case "Setup":
+        changeCanvas("newGameMenu");
+      break;
+
+
+  }
+
+
+  console.log(opt);
+}
 
 function getTerrainDefVal(ship, hex){
 
