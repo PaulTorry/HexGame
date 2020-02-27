@@ -159,9 +159,13 @@ function mainMenuClick(event) {
   drawScreen();
 }
 
-function newGameMenuClick(event) {
-  console.log("newGameMenuClick");
-}
+// function newGameMenuClick(event) {
+//   console.log("newGameMenuClick");
+//   let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/45))
+//   onNewGameMenuHexClicked(clickHex);
+//
+//   drawScreen();
+// }
 
 function loadGameMenuClick(event) {
   console.log("loadGameMenuClick");
@@ -169,8 +173,10 @@ function loadGameMenuClick(event) {
 
 function nextTurnScreenClick(event) {
   console.log("nextTurnScreenClick");
+  translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
   changeCanvas("board");
   preturn = false;
+  drawScreen();
 }
 
 

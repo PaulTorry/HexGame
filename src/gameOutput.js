@@ -278,12 +278,26 @@ function drawMenu(){
     drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
   }
 
-  data.mainMenu.forEach((t)=>{
-    let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
-    let {x,y} = center;
-    drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
-    drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
-  })
+  if(menuData.Screen === "MainMenu"){
+    data.mainMenu.forEach((t)=>{
+      let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
+      let {x,y} = center;
+      drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+      drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+    })
+  }
+  console.log("igfqigf 1");
+  if(menuData.Screen === "NewGame"){
+    console.log("igfqigf 2");
+    data.newGameMenu.forEach((t)=>{
+      let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
+      let {x,y} = center;
+      drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+
+      drawText(c, `${menuData.NewGameData[t.name] || ""}`, center.add(new Vec(-30,5)) , 14, "rgb(159,216,206)" )
+      drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+    })
+  }
 }
 
 function drawNewGameMenu(){
@@ -299,6 +313,8 @@ function drawNewGameMenu(){
     let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
     let {x,y} = center;
     drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+
+    drawText(c, `${menuData.NewGameData[t.name] || ""}`, center.add(new Vec(-30,5)) , 14, "rgb(159,216,206)" )
     drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
   })
 }

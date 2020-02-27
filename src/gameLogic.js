@@ -158,38 +158,6 @@ function onMenuItemClicked(item, hex = sel.hex){
   drawMenu();
 }
 
-function onTechHexClicked (hex){
-  let tech = data.techs.find(t => t.hex.compare(hex));
-  let player = state.playerData[state.playerTurn];
-
-  if(!player.tech[tech.tech] && player.money >= tech.cost){
-    if(!tech.requires || tech.requires.filter(r => !player.tech[r]).length === 0){
-      player.tech[tech.tech] = true;
-      player.money -= tech.cost;
-    }
-  }
-}
-
-
-function onMenuHexClicked (hex){
-  let opt = data.mainMenu.find(t => t.hex.compare(hex));
-  let action = opt.name;
-
-  switch(action){
-    case "Quick Setup":
-      quickSetup();
-      break;
-    case "Setup":
-        changeCanvas("newGameMenu");
-      break;
-
-
-  }
-
-
-  console.log(opt);
-}
-
 function getTerrainDefVal(ship, hex){
 
   if(data.terrainInfo[state.tiles.get(hex.id).terrain].defenceTech &&
@@ -341,7 +309,7 @@ function turnLogic(){
   }
   state.history.push([]);
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
-  translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
+  // translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
 
   toggleTechTree(false);
   preturn = true;
