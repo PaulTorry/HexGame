@@ -15,6 +15,14 @@ const data = {
     {name:'GameName', colour:[50,47,73], hex:new Hex(-3,-2), sprite:[['titanShip',0,-10,1]] },
     {name:'BoardSize', colour:[50,47,73], hex:new Hex(-1,-3), sprite:[['titanShip',0,-10,1]] },
     {name:'Make', colour:[150,147,173], hex:new Hex(1,-4), sprite:[['titanShip',0,-10,1]] },
+
+    {name:'PlayerType', num: 1, colour:[150,147,173], hex:new Hex(-3,0), sprite:[['titanShip',0,-10,1]] },
+    {name:'PlayerType', num: 2, colour:[150,147,173], hex:new Hex(-3,2), sprite:[['titanShip',0,-10,1]] },
+    {name:'PlayerType', num: 3, colour:[150,147,173], hex:new Hex(-3,4), sprite:[['titanShip',0,-10,1]] },
+    {name:'Alliance', num: 1, colour:[150,147,173], hex:new Hex(-1,-1), sprite:[['titanShip',0,-10,1]] },
+    {name:'Alliance', num: 2, colour:[150,147,173], hex:new Hex(-1,1), sprite:[['titanShip',0,-10,1]] },
+    {name:'Alliance', num: 3, colour:[150,147,173], hex:new Hex(-1,3), sprite:[['titanShip',0,-10,1]] },
+
   ],
 
   techs : [

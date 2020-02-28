@@ -43,18 +43,9 @@ function addViewMasks(state, vm1, vm2){
 
 function getUpdatedViewMask(state, player = state.playerTurn){
 
-  // console.log(state);
-  // console.log(state.playerData);
-  // console.log("player, loggedInPlayer, state.playerTurn", player, loggedInPlayer, state.playerTurn);
-  //  console.log(loggedInPlayer);
-  //  console.log(state.playerTurn);
-
-
   let mask = makeNewViewMask(state.tiles)//state.playerData[player].viewMask
   for(let i = 0; i < state.numPlayers; i++){
     if(i === player || state.alliesGrid[player][i]){
-      //console.log("adding " + i + " to " + player +" s grid");
-      // console.log("making viewmask player: " , player, " i: " , i);
       mask = addViewMasks(state, mask, getOwnViewMask(state, i));
     }
   }
@@ -64,7 +55,6 @@ function getUpdatedViewMask(state, player = state.playerTurn){
 
 function getOwnViewMask(state, player = state.playerTurn){
   // console.log("state.playerData[player].viewMask",state.playerData[player].viewMask);
-
 //  let mask = makeNewViewMask(state.tiles)
   let mask = addViewMasks(state, makeNewViewMask(state.tiles), removeActiveViews(state.playerData[player].viewMask));
 

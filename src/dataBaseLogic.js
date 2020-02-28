@@ -26,12 +26,17 @@ let loggedInPlayer = null;
 let localGameInfo = {};
 let lastSaved
 
+let localHandleList = []
+
+
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     firebase.firestore().collection("handles").where("uid","==", user.uid).get()
       .then(function(qs) {
         loggedInPlayer = {uid:user.uid, handle:qs.docs[0].id};
         console.log("loggedInPlayer:  ", loggedInPlayer)
+        refreshHandleList();
+
       })
       .catch(function(error) {alert("new logged in handle failed"), console.log("gethandleserror new login",error) });
   } else {console.log("signedout"); loggedInPlayer = null}
@@ -42,33 +47,20 @@ async function getHandleList(){
     .then(function(qs) {
       let handles = [];
       qs.forEach((doc) => { handles.push([handles.length, doc.id, doc.data().uid]) })
+      console.log("handles updated", handles);
       return handles;
     })
     .catch(function(error) {alert("handlelisterror"); console.log("gethandleserror"); return "fail getHandleList" });
 }
 
-async function refresh(){
-     getHandleList
+async function refreshHandleList(){
 
-}
-
-
-function getAdditionalPlayers(handleList, startingList){
-  let additionalPlayergrid = [startingList];
-  let finishedAddingPlayers = false;
-  while(!finishedAddingPlayers){
-    let ans = prompt(JSON.stringify( handleList), "Press cancel to stop adding")
-    if (ans === null) finishedAddingPlayers = true
-    else {
-      let newEntry = [handleList[Number(ans)][2], handleList[Number(ans)][1]]
-      if(additionalPlayergrid.findIndex(x => JSON.stringify(x) === JSON.stringify(newEntry)) === -1) {
-        additionalPlayergrid.push(newEntry)
-        console.log(additionalPlayergrid);
-      }
-    }
+   localHandleList = await getHandleList();
+     console.log("refreshHandleList", localHandleList);
   }
-  return additionalPlayergrid
-}
+
+
+
 
 
 
@@ -143,6 +135,8 @@ function checkForUpdatedServerGame(gameID = state.gameID){
       }
     })
 }
+
+
 
 function getServerData(){
   var index = 0;

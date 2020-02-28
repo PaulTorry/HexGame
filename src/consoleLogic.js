@@ -71,6 +71,8 @@ function interactiveConsole (num = ""){
   if(ans === "8"){ console.log("signup"); signupViaPrompt() }
   if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
   if(ans === "0"){
+    console.log("state.playerData",state.playerData);
+    console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
   //  console.log(getGameParamsViaPrompt());
   //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
   }
@@ -114,8 +116,8 @@ async function setupGameViaPrompt(){
 
 async function setupMetaViaPrompt(){
   let meta = {online:true, playergrid: []}
-  let handleList =  await getHandleList()
-  let additionalPlayergrid =  await getAdditionalPlayers(handleList, [loggedInPlayer.uid, loggedInPlayer.handle])
+  //let handleList =  await getHandleList()
+  let additionalPlayergrid =  await getAdditionalPlayers(localHandleList, [loggedInPlayer.uid, loggedInPlayer.handle])
   meta.playergrid = additionalPlayergrid;
   // console.log("additionalPlayergrid", additionalPlayergrid);
   return meta
@@ -167,7 +169,23 @@ function setlocalGameInfo(){
   return {player:player}
 }
 
-
+function getAdditionalPlayers(handleList, startingList){
+  console.log("getAdditionalPlayers handleList", handleList);
+  let additionalPlayergrid = [startingList];
+  let finishedAddingPlayers = false;
+  while(!finishedAddingPlayers){
+    let ans = prompt(JSON.stringify( handleList), "Press cancel to stop adding")
+    if (ans === null) finishedAddingPlayers = true
+    else {
+      let newEntry = [handleList[Number(ans)][2], handleList[Number(ans)][1]]
+      if(additionalPlayergrid.findIndex(x => JSON.stringify(x) === JSON.stringify(newEntry)) === -1) {
+        additionalPlayergrid.push(newEntry)
+        console.log(additionalPlayergrid);
+      }
+    }
+  }
+  return additionalPlayergrid
+}
 
 
 // Helpers

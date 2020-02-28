@@ -292,7 +292,7 @@ async function nextTurn(){
 
 
 function turnLogic(){
-  if (state.playerData[state.playerTurn].type === "human") autoSave();
+  if (state.playerData[state.playerTurn].type === "Human") autoSave();
 
   state.playerData[state.playerTurn].money += state.playerData[state.playerTurn].income;
 

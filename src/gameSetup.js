@@ -25,7 +25,37 @@ function setup(numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTog
   return setupNew(config, meta);
 }
 
-function setupNew(config, meta = {online:false}){
+function makePlayerListConsole(config){
+  let playerlist = []
+
+  // TODO Fix this
+  for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
+  // if(playersTogether){
+  for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "Human";  }
+  // } else {
+  //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "Human";  }
+  // }
+  // TODO make playerorder grid to space out players
+  return playerlist;
+}
+
+function makeAlliesGridConsole(config, playerlist){
+  let alliesGrid = []
+
+  for(let i = 0; i < config.numPlayers; i++){
+    if(config.allied){
+      alliesGrid[i] = [];
+      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
+    } else {
+      alliesGrid[i] = [];
+      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
+    }
+  }
+  return alliesGrid;
+}
+
+
+function setupNew(config,  meta = {online:false}, playerlist = makePlayerListConsole(config), alliesGrid = makeAlliesGridConsole(config, playerlist )){
   let gameID = generateID(20);
 
   if(gameID.length < 15) console.log("check game id length");
@@ -48,28 +78,28 @@ function setupNew(config, meta = {online:false}){
     tiles.set(hex.id, buildingHex);
   }
 
-  let playerlist = []
+  // let playerlist = []
+  //
+  // // TODO Fix this
+  // for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
+  // // if(playersTogether){
+  // for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "Human";  }
+  // // } else {
+  // //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "Human";  }
+  // // }
+  // // TODO make playerorder grid to space out players
 
-  // TODO Fix this
-  for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
-  // if(playersTogether){
-  for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "human";  }
-  // } else {
-  //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "human";  }
+  // let alliesGrid = []
+  //
+  // for(let i = 0; i < config.numPlayers; i++){
+  //   if(config.allied){
+  //     alliesGrid[i] = [];
+  //     for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
+  //   } else {
+  //     alliesGrid[i] = [];
+  //     for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
+  //   }
   // }
-  // TODO make playerorder grid to space out players
-
-  let alliesGrid = []
-
-  for(let i = 0; i < config.numPlayers; i++){
-    if(config.allied){
-      alliesGrid[i] = [];
-      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
-    } else {
-      alliesGrid[i] = [];
-      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
-    }
-  }
 
   for(let i = 0; i < config.numPlayers; i++){
     let angle = 2*Math.PI*i/config.numPlayers
