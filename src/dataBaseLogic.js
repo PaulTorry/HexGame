@@ -2,7 +2,7 @@
 
 /*global
 state:true
-drawScreen,
+replaceState, unpackState, packState, getTimestamp,
 firebase
 */
 
@@ -20,27 +20,29 @@ var firebaseConfig = {
   measurementId: "G-XWBNW49NG4"
 };
 
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
+// firebase.auth().onAuthStateChanged(authStateChangeHandler);
 
 let loggedInPlayer = null;
 let localGameInfo = {};
-let lastSaved
+let lastSaved;
 
-let localHandleList = []
+let cacheHandleList = [];
+let cacheGameList = [];
 
-
-firebase.auth().onAuthStateChanged(function(user) {
+function authStateChangeHandler(user) {
   if (user) {
     firebase.firestore().collection("handles").where("uid","==", user.uid).get()
       .then(function(qs) {
         loggedInPlayer = {uid:user.uid, handle:qs.docs[0].id};
         console.log("loggedInPlayer:  ", loggedInPlayer)
-        refreshHandleList();
+        refreshHandleList(); updateCacheGameList();
 
       })
       .catch(function(error) {alert("new logged in handle failed"), console.log("gethandleserror new login",error) });
   } else {console.log("signedout"); loggedInPlayer = null}
-});
+}
+
 
 async function getHandleList(){
   return await firebase.firestore().collection("handles").get()
@@ -54,10 +56,9 @@ async function getHandleList(){
 }
 
 async function refreshHandleList(){
-
-   localHandleList = await getHandleList();
-     console.log("refreshHandleList", localHandleList);
-  }
+  cacheHandleList = await getHandleList();
+  console.log("refreshHandleList", cacheHandleList);
+}
 
 
 
@@ -96,7 +97,7 @@ function setDocData(){
   if (state.meta.online){
     state.meta.playergrid.forEach((arr) => {
       if(docData.users.indexOf(arr[0]) === -1){
-    //    console.log(" 6 playergrid2", docData.users,  );
+      //    console.log(" 6 playergrid2", docData.users,  );
         docData.users.push(arr[0])
       }
     });
@@ -137,31 +138,31 @@ function checkForUpdatedServerGame(gameID = state.gameID){
 }
 
 
-
-function getServerData(){
-  var index = 0;
-  var IDArray = [];
+async function makeLocalGameList(){
+  let gameList = []
   firebase.firestore().collection("gamestest").where("users", "array-contains", firebase.auth().currentUser.uid)
-    .get()
-    .then(function(querySnapshot) {
-      let promptText = "select the number for your Game:  ";
-      querySnapshot.forEach(function(doc) {
-        let {name, users, turnNumber, playerTurn, when} = doc.data()
-        promptText =  promptText + index + " => " + " Name: "+ name + " turn: "+ playerTurn + "\n";
-        index += 1;
-        IDArray.push(doc.id)
-      });
-      console.log(IDArray);
-      const gameID = IDArray[Number(prompt(promptText))]
-      firebase.firestore().collection("gamestest").doc(gameID).collection("state").doc("current").get()
-        .then(function(qs) {
-          state = unpackState(JSON.parse(qs.data().currentGame));
-          localGameInfo = setlocalGameInfo()
-          drawScreen();
-        });
+    .get().then(function(qs) {
+      qs.forEach(doc => gameList.push([doc.id, doc.data()]))
     })
-    .catch(function(error) { console.log("Error getting documents: ", error); });
+  return gameList;
 }
+
+async function updateCacheGameList(){
+  cacheGameList = await makeLocalGameList();
+  console.log("cacheGameList", cacheGameList);
+}
+
+async function loadGameFromID(gameID){
+  firebase.firestore().collection("gamestest").doc(gameID).collection("state").doc("current").get()
+    .then(function(qs) {1
+      replaceState( unpackState(JSON.parse(qs.data().currentGame)));
+      // localGameInfo = setlocalGameInfo()
+      // drawScreen();
+    });
+}
+
+
+
 
 
 // DB methods ------------------------------------------

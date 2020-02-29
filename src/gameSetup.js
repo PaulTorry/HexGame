@@ -1,6 +1,7 @@
 "use strict"
 
-/* global Hex, Map, Vec, makeNewViewMask, randomName, generateID     */
+/* global Hex, Map, Vec, makeNewViewMask, generateID
+setlocalGameInfo, changeCanvas, drawScreen  */
 /* eslint-disable no-unused-vars */
 
 
@@ -10,7 +11,7 @@ let state = {};
 
 let sel = {state:0, attacks:[], menu:[], moves:[]}
 
-state = setup(5, 9, 2, false, "default", generateID(20))
+// replaceState( setup(5, 9, 2, false, "default", generateID(20)))
 
 
 
@@ -54,6 +55,15 @@ function makeAlliesGridConsole(config, playerlist){
   return alliesGrid;
 }
 
+function replaceState(newState){
+  console.log("replaceState", newState);
+  state = newState
+  if (state.meta.online) setlocalGameInfo(); //localGameInfo = setlocalGameInfo();
+  changeCanvas("nextTurnScreen");
+  drawScreen();
+}
+
+
 
 function setupNew(config,  meta = {online:false}, playerlist = makePlayerListConsole(config), alliesGrid = makeAlliesGridConsole(config, playerlist )){
   let gameID = generateID(20);
@@ -77,29 +87,6 @@ function setupNew(config,  meta = {online:false}, playerlist = makePlayerListCon
 
     tiles.set(hex.id, buildingHex);
   }
-
-  // let playerlist = []
-  //
-  // // TODO Fix this
-  // for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
-  // // if(playersTogether){
-  // for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "Human";  }
-  // // } else {
-  // //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "Human";  }
-  // // }
-  // // TODO make playerorder grid to space out players
-
-  // let alliesGrid = []
-  //
-  // for(let i = 0; i < config.numPlayers; i++){
-  //   if(config.allied){
-  //     alliesGrid[i] = [];
-  //     for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
-  //   } else {
-  //     alliesGrid[i] = [];
-  //     for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
-  //   }
-  // }
 
   for(let i = 0; i < config.numPlayers; i++){
     let angle = 2*Math.PI*i/config.numPlayers

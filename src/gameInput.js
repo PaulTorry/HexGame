@@ -2,12 +2,13 @@
 
 /* global
 Vec, Hex, sel:true,
+getXYfromHex, 
 
 state,
 
 drawScreen, drawMenu, screenSettings, interactiveConsole
-nextTurn,  onMenuItemClicked,  onTechHexClicked, onMenuHexClicked, onHexClicked,
-preturn,
+nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onHexClicked,
+preturn:true,
 */
 
 /* eslint-disable no-unused-vars, one-var, */
@@ -72,7 +73,7 @@ function removeMousemove(event){
 
 
 function mouseWheel(event){
-  console.log(event);
+  //console.log(event);
   event.preventDefault();
   if (event.deltaY>0){    scaleContext(1/1.1);  }
   if (event.deltaY<0){    scaleContext(1.1);  }
@@ -116,7 +117,7 @@ function topPanelClick(event){
     console.log(num);
     if (num && sel.menu[num-1]){
       console.log(sel, sel.menu, sel.menu[num-1]);
-      onMenuItemClicked(sel.menu[num-1]);
+      onTopPanelItemClicked(sel.menu[num-1]);
     }
   }
 

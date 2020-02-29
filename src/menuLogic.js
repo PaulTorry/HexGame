@@ -2,6 +2,7 @@
 /*global
 state, data, quickSetup, changeCanvas, randomName,
 drawScreen,
+replaceState,  setupNew,
 */
 /* eslint-disable no-unused-vars */
 
@@ -16,34 +17,48 @@ function makeConfigFromMenu(){
   return config
 }
 
-function makePlayerListFromMenu(){
-
+function makeOfflinePlayerListFromMenu(){
+  let playerList = menuData.OfflinePlayers.map(x => x.PlayerType).filter(x=> x.PlayerType !== "None")
 }
 
+
+
 function makeAlliesGridMenu(config, playerlist){
+  let alliance = menuData.OfflinePlayers.map(x => x.Alliance).filter(x=> x.PlayerType !== "None")
+  console.log("alliance", alliance);
   let alliesGrid = []
 
-  // for(let i = 0; i < config.numPlayers; i++){
-  //   if(config.allied){
-  //     alliesGrid[i] = [];
-  //     for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
-  //   } else {
-  //     alliesGrid[i] = [];
-  //     for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
-  //   }
-  // }
+  for(let i = 0; i < config.numPlayers; i++){
+    if(config.allied){
+      alliesGrid[i] = [];
+      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = alliance[i] === alliance[j] }
+    } else {
+      alliesGrid[i] = [];
+      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
+    }
+  }
   return alliesGrid;
 }
 
 let menuData = {
   Screen:"MainMenu",
-  NewGameData:{GameName:"DefaultName", BoardSize: 8},
+
+  NewGameData:{Online:false, GameName:"DefaultName", BoardSize: 8},
   OfflinePlayers:[
     {PlayerType:"Human", Alliance:1},
-    {PlayerType:"Human", Alliance:1},
     {PlayerType:"Human", Alliance:2},
+    {PlayerType:"Human", Alliance:3},
+    {PlayerType:"AI", Alliance:4},
+    {PlayerType:"AI", Alliance:5},
+    {PlayerType:"AI", Alliance:6},
+  ],
+  OnlinePlayers:[
+    {PlayerType:"AI", Alliance:1},
     {PlayerType:"AI", Alliance:2},
-
+    {PlayerType:"AI", Alliance:3},
+    {PlayerType:"AI", Alliance:4},
+    {PlayerType:"AI", Alliance:5},
+    {PlayerType:"AI", Alliance:6},
   ]
 }
 
@@ -90,6 +105,10 @@ function onMenuHexClicked (hex){
     console.log(opt);
 
     switch(action){
+    case 'Online':
+      console.log("online clicked");
+      menuData.NewGameData.Online = !menuData.NewGameData.Online;
+      break
     case "GameName":
       menuData.NewGameData.GameName = randomName();
       drawScreen();
@@ -99,13 +118,16 @@ function onMenuHexClicked (hex){
       break;
     case "Make":
       console.log("Make ");
-      makeConfig();
-//      setupNew({
+      replaceState(
+        setupNew(makeConfigFromMenu(),  {online:false}, makeOfflinePlayerListFromMenu(), makeAlliesGridMenu(makeConfigFromMenu(), makeOfflinePlayerListFromMenu()))
+      );
+
       break;
     case "PlayerType":
       menuData.OfflinePlayers[opt.num].PlayerType
-      if (menuData.OfflinePlayers[opt.num].PlayerType === "AI") menuData.OfflinePlayers[opt.num].PlayerType = "Human";
+      if (menuData.OfflinePlayers[opt.num].PlayerType === "None") menuData.OfflinePlayers[opt.num].PlayerType = "Human";
       else if (menuData.OfflinePlayers[opt.num].PlayerType === "Human") menuData.OfflinePlayers[opt.num].PlayerType = "AI";
+      else if (menuData.OfflinePlayers[opt.num].PlayerType === "AI") menuData.OfflinePlayers[opt.num].PlayerType = "None";
       break;
     case "Alliance":
       menuData.OfflinePlayers[opt.num].Alliance = menuData.OfflinePlayers[opt.num].Alliance % 6 + 1;
@@ -113,6 +135,14 @@ function onMenuHexClicked (hex){
     }
   }
   drawScreen();
+}
+
+
+function quickSetup(){
+  let config =  {numPlayers: 4, boardSize: 8, numHumans: 2, playersTogether:false}
+  config.gameName = randomName();
+
+  replaceState(setupNew( config, {online: false}));
 }
 
 // function onNewGameMenuHexClicked (hex){

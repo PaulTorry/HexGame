@@ -4,14 +4,15 @@
 drawScreen, sel:true,
 nextTurn,
 state,
-onMenuItemClicked,
+onTopPanelItemClicked,
 preturn:true, makeBuildBar,
 findPossibleAttacks, getShipOnHex, findPossibleMoves,
 buildShip,
-translateContextTo, getXYfromHex, drawMenu, getUpdatedViewMask
+drawMenu, getUpdatedViewMask
 data
 subTurn,
-autoSave
+autoSave, changeCanvas, toggleTechTree,
+saveToServer, debug, takeAIturn,
 */
 
 // techs,
@@ -106,7 +107,7 @@ function territoryState(hex){
 }
 
 
-function onMenuItemClicked(item, hex = sel.hex){
+function onTopPanelItemClicked(item, hex = sel.hex){
   let tile = state.tiles.get(hex.id);
   let ship = getShipOnHex(hex);
   let thing = data.thingList.find(t => t.thing === item);
@@ -264,32 +265,18 @@ function repair(ship){
 
 }
 
+
+
 async function nextTurn(){
 
   if (!preturn || debug) {turnLogic()}
-  while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
+  while (state.playerData[state.playerTurn].type === "AI") {takeAIturn(),turnLogic()}
 
   if (state.meta.online ){
     alert("sending game");
     await  saveToServer();
   }
 }
-  // if (!state.meta.online ) {turnLogic(); }
-  // else{
-  //
-  //   if (state.playerTurn === localGameInfo.player || debug){
-  //     turnLogic();
-  //     while (state.playerData[state.playerTurn].type === "AI") {turnLogic()}
-  //     alert("sending game");
-  //     await  saveToServer();
-  //   }
-
-
-
-  //  if (state.playerData[state.playerTurn].type === "AI") turnLogic();
-//   }
-// }
-
 
 function turnLogic(){
   if (state.playerData[state.playerTurn].type === "Human") autoSave();

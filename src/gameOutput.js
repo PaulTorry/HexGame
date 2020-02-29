@@ -4,8 +4,8 @@
 screenSettings, Vec, Hex,
 drawScreen,  sel, state,
 getUpdatedViewMask,
-simpleShapes, getTerrainDamage
- Map,  makeNewViewMask, preturn,
+simpleShapes, getTerrainDamage,
+ preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
 data, subTurn,
@@ -295,7 +295,7 @@ function drawMenu(){
       drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
 
       let valueToOutput = menuData.NewGameData[t.name] || "";
-      if (t.num)  valueToOutput = menuData.OfflinePlayers[t.num][t.name]
+      if (t.num || t.num === 0)  valueToOutput = menuData.OfflinePlayers[t.num][t.name]
       drawText(c, `${valueToOutput}`, center.add(new Vec(-30,5)) , 14, "rgb(159,216,206)" )
       drawText(c, `${t.name} ${[t.num] || "1"}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
     })

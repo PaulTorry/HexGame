@@ -83,11 +83,14 @@ window.onload = () => {
   console.log("Hi");
   translateContext(new Vec(-400,-400));
   scaleContext(0.6);
-  changeCanvas("nextTurnScreen");
+  //changeCanvas("nextTurnScreen");
+  firebase.initializeApp(firebaseConfig);
+  firebase.auth().onAuthStateChanged(authStateChangeHandler);
+  replaceState( setup(5, 9, 2, false, "default", generateID(20)))
   drawScreen();
 }
 
-drawScreen();
+//drawScreen();
 
 
 </script>

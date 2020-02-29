@@ -6,11 +6,14 @@ state:true
 drawScreen,
 debug:true,
 interactiveConsole,
-setup
 data,
 screenSettings,
-randomInt, sessionInfo,
-firebase
+randomInt,
+firebase, loggedInPlayer, signupViaPrompt, checkForUpdatedServerGame, makeAlliesGridMenu,
+loginViaPrompt,
+replaceState, setupNew, cacheHandleList, cacheGameList, loadGameFromID
+saveToServer,
+
 */
 
 /* eslint-disable no-unused-vars */
@@ -38,9 +41,8 @@ function interactiveConsole (num = ""){
     3: Network Saves (load and save),
     4: Cheat / Debug
     5: Show Trails,
-    6: Login
-    7: Logout
-    8: SignUp`, num);
+    6: Login Logout SignUp
+    `, num);
 
   if(ans === "1"){
     setupGameViaPrompt()
@@ -52,7 +54,7 @@ function interactiveConsole (num = ""){
   }
   if(ans === "3"){
     let saveLoad = prompt("Load or Save\n 1: Load\n 2: Save", "1")
-    if(saveLoad === "1") {getServerData()}
+    if(saveLoad === "1") {loadNetworkGameConsole()}
     else if(saveLoad === "2") {saveToServer()}
   }
   if(ans === "4"){
@@ -66,13 +68,17 @@ function interactiveConsole (num = ""){
     if(cheat === "3"){       debug = !debug;  }
   }
   if(ans === "5"){ screenSettings.showTrails = !screenSettings.showTrails;  }
-  if(ans === "6"){ console.log("login"); loginViaPrompt()    }
-  if(ans === "7"){ console.log("logout"); firebase.auth().signOut()  }
-  if(ans === "8"){ console.log("signup"); signupViaPrompt() }
-  if(ans === "9"){ console.log(checkForUpdatedServerGame()) }
-  if(ans === "0"){
-    console.log("state.playerData",state.playerData);
-    console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
+  if(ans === "6"){
+    let log = prompt("1: Login \n2: Logout \n 3: Signup ", "")
+    if(log === "1"){ console.log("login"); loginViaPrompt()    }
+    if(log === "2"){ console.log("logout"); firebase.auth().signOut()  }
+    if(log === "3"){ console.log("signup"); signupViaPrompt() }
+  }
+  if(ans === "7"){ console.log(checkForUpdatedServerGame()) }
+  if(ans === "9"){
+    console.log(makeAlliesGridMenu());
+    // console.log("state.playerData",state.playerData);
+    // console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
   //  console.log(getGameParamsViaPrompt());
   //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
   }
@@ -80,18 +86,12 @@ function interactiveConsole (num = ""){
 }
 
 
-function quickSetup(){
-  let config =  {numPlayers: 4, boardSize: 8, numHumans: 2, playersTogether:false}
-  config.gameName = randomName();
-
-  state = setupNew( config, {online: false})
-}
 
 
 async function setupGameViaPrompt(){
   let ans7 = prompt("Multiplayer Game y/n", "y")
   if(ans7 === "n"){
-    state = setupNew(getGameParamsViaPrompt(false, ), {online: false})
+    replaceState(setupNew(getGameParamsViaPrompt(false, ), {online: false}))
 
   }
   if(ans7 === "y") {
@@ -101,10 +101,8 @@ async function setupGameViaPrompt(){
       //  state = await setupStateViaPrompt(tempMeta);
       let players;
       if (meta.playergrid) players = meta.playergrid.length;
-      state = setupNew(getGameParamsViaPrompt(meta.online, players), meta)
-
-
-      localGameInfo = setlocalGameInfo();
+      replaceState( setupNew(getGameParamsViaPrompt(meta.online, players), meta));
+    //  localGameInfo = setlocalGameInfo();
     }
     else {
       console.log("not logged in");
@@ -117,7 +115,7 @@ async function setupGameViaPrompt(){
 async function setupMetaViaPrompt(){
   let meta = {online:true, playergrid: []}
   //let handleList =  await getHandleList()
-  let additionalPlayergrid =  await getAdditionalPlayers(localHandleList, [loggedInPlayer.uid, loggedInPlayer.handle])
+  let additionalPlayergrid =  await getAdditionalPlayers(cacheHandleList, [loggedInPlayer.uid, loggedInPlayer.handle])
   meta.playergrid = additionalPlayergrid;
   // console.log("additionalPlayergrid", additionalPlayergrid);
   return meta
@@ -187,6 +185,25 @@ function getAdditionalPlayers(handleList, startingList){
   return additionalPlayergrid
 }
 
+function loadNetworkGameConsole(){
+  var index = 0;
+  var IDArray = [];
+
+  let promptText = "select the number for your Game:  ";
+  console.log("blah 1 ", cacheGameList);
+  cacheGameList.forEach(function(doc) {
+    console.log("blah ", doc[1]);
+    let {name, users, turnNumber, playerTurn, when} = doc[1]
+    promptText =  promptText + index + " => " + " Name: "+ name + " turn: "+ playerTurn + "\n";
+    index += 1;
+    IDArray.push(doc[0])
+  })
+
+  console.log("IDArray cacheGameList" , IDArray, cacheGameList);
+  const gameID = IDArray[Number(prompt(promptText))]
+  loadGameFromID(gameID)
+}
+
 
 // Helpers
 
@@ -250,6 +267,6 @@ function load(savename = "quicksave"){
   else{
     let newState = JSON.parse(localStorage.getItem(savename));
     console.log(newState);
-    state = unpackState(newState);
+    replaceState(unpackState(newState))
   }
 }
