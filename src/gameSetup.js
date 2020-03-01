@@ -54,6 +54,7 @@ function replaceState(newState){
   console.log("replaceState", newState);
   state = newState
   if (state.meta.online) setlocalGameInfo(); //localGameInfo = setlocalGameInfo();
+  preturn = true;
   changeCanvas("nextTurnScreen");
   drawScreen();
 }

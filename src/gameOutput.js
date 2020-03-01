@@ -286,6 +286,27 @@ function drawMenu(){
       drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
     })
   }
+
+  if(menuData.Screen === "loadGameMenu"){
+    data.loadGameMenu.forEach((t)=>{
+      let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
+      let {x,y} = center;
+      drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+
+      let valueToOutput = menuData.LoadGameOptions[t.name] || "";
+      if (t.num || t.num === 0){
+        let numm =  t.num + (menuData.LoadGameOptions.PageSize * (menuData.LoadGameOptions.Page-1))
+        if( cacheGameList[numm] ) {
+          valueToOutput = cacheGameList[numm][1].name;
+        }
+      }
+      //   else valueToOutput = menuData.OfflinePlayers[t.num][t.name]
+      // }
+      drawText(c, `${valueToOutput}`, center.add(new Vec(-30,5)) , 14, "rgb(159,216,206)" )
+      drawText(c, `${t.name} ${[t.num] || "1"}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
+    })
+  }
+
   // console.log("igfqigf 1");
   if(menuData.Screen === "NewGame"){
     // console.log("igfqigf 2");

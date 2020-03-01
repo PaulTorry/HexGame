@@ -7,8 +7,10 @@ const data = {
 
   mainMenu : [
     {name:'Quick Setup', colour:[50,47,73], hex:new Hex(-3,0), sprite:[['titanShip',0,-10,1]] },
+    {name:'Login/Signup', colour:[50,47,73], hex:new Hex(0, -2), sprite:[['titanShip',0,-10,1]] },
     {name:'Setup', colour:[50,47,73], hex:new Hex(-3,2), sprite:[['titanShip',0,-10,1]] },
     {name:'Load', colour:[50,47,73], hex:new Hex(0,0), sprite:[['titanShip',0,-10,1]] },
+
   ],
 
   newGameMenu : [
@@ -32,6 +34,17 @@ const data = {
     {name:'Alliance', num: 4, colour:[150,147,173], hex:new Hex(-2,4), sprite:[['titanShip',0,-10,1]] },
     {name:'Alliance', num: 5, colour:[150,147,173], hex:new Hex(-1,5), sprite:[['titanShip',0,-10,1]] },
   ],
+
+  loadGameMenu : [
+    {name:'Refresh', colour:[50,47,73], hex:new Hex(4,-6), sprite:[['titanShip',0,-10,1]] },
+    {name:'Online', colour:[50,47,73], hex:new Hex(2,-4), sprite:[['titanShip',0,-10,1]] },
+    {name:'Page', colour:[50,47,73], hex:new Hex(0,-3), sprite:[['titanShip',0,-10,1]] },
+    {name:'Load', num: 0, colour:[50,47,73], hex:new Hex(-4,-1), sprite:[['titanShip',0,-10,1]] },
+    {name:'Load', num: 1, colour:[50,47,73], hex:new Hex(-3,0), sprite:[['titanShip',0,-10,1]] },
+    {name:'Load', num: 2, colour:[50,47,73], hex:new Hex(-4,2), sprite:[['titanShip',0,-10,1]] },
+    {name:'Load', num: 3, colour:[50,47,73], hex:new Hex(-3,3), sprite:[['titanShip',0,-10,1]] },
+  ],
+
 
   techs : [
     //centre

@@ -4,6 +4,7 @@ state, data, quickSetup, changeCanvas, randomName,
 drawScreen,
 replaceState,  setupNew,
       updateHandleList, updateCacheGameList,
+      loginSignupConsole,
 */
 /* eslint-disable no-unused-vars */
 
@@ -101,6 +102,8 @@ function makeMetaFromMenu(){
 let menuData = {
   Screen:"MainMenu",
 
+  LoadGameOptions:{Online:true, Page:1, PageSize:4},
+
   NewGameData:{Online:false, GameName:"DefaultName", BoardSize: 8},
   OfflineOptions:["None", "AI", "Human"],
   OfflinePlayers:[
@@ -149,6 +152,13 @@ function onMenuHexClicked (hex){
     console.log(opt);
 
     switch(action){
+    case "Login/Signup":
+      loginSignupConsole();
+      break;
+    case "Load":
+      menuData.Screen = "loadGameMenu";
+      console.log(menuData.Screen);
+      break;
     case "Quick Setup":
       quickSetup();
       changeCanvas("nextTurnScreen");
@@ -160,6 +170,33 @@ function onMenuHexClicked (hex){
       break;
     }
   }
+
+  else if(menuData.Screen === "loadGameMenu"){
+    let opt = data.loadGameMenu.find(t => t.hex.compare(hex));
+    let action = opt.name;
+    console.log(opt);
+
+    switch(action){
+    case 'Refresh':
+      updateHandleList(); updateCacheGameList();
+      break;
+    case 'Online':
+      console.log("online clicked");
+      menuData.LoadGameOptions.Online = !menuData.LoadGameOptions.Online;
+      break;
+    case 'Page':
+      menuData.LoadGameOptions.Page = ((menuData.LoadGameOptions.Page) % (cacheGameList.length/menuData.LoadGameOptions.PageSize)) +1
+      console.log(menuData.LoadGameOptions.Page);
+      break;
+    case 'Load':
+      console.log("loading", opt.num + (menuData.LoadGameOptions.PageSize * (menuData.LoadGameOptions.Page -1)) );
+      loadGameFromID(cacheGameList[opt.num + (menuData.LoadGameOptions.PageSize * (menuData.LoadGameOptions.Page -1))][0])
+      //  loadGameFromID()
+      break;
+    }
+  }
+
+
   else if(menuData.Screen === "NewGame"){
     let opt = data.newGameMenu.find(t => t.hex.compare(hex));
     let action = opt.name;
@@ -217,7 +254,13 @@ function cycleArray(array, current, step){
 function quickSetup(){
   let config =  {numPlayers: 4, boardSize: 8, numHumans: 2, playersTogether:false}
   config.gameName = randomName();
-
+  config.playerlist = ["Human", "Human", "AI","AI"];
+  config.alliesGrid = [
+    [true,false,false,false],
+    [false,true,false,false],
+    [false,false,true,false],
+    [false,false,false,true],
+  ]
   replaceState(setupNew( config, {online: false}));
 }
 

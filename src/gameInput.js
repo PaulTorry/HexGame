@@ -2,7 +2,7 @@
 
 /* global
 Vec, Hex, sel:true,
-getXYfromHex, 
+getXYfromHex,
 
 state,
 
@@ -108,6 +108,7 @@ function topPanelClick(event){
       else changeCanvas("board")
     }
     else changeCanvas("mainMenu")
+    menuData.Screen = "MainMenu";
     // interactiveConsole();
   }
   else if(event.offsetY < 90 && event.offsetY > 10 && !screenSettings.openTechTree){

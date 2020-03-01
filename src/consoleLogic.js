@@ -68,12 +68,8 @@ function interactiveConsole (num = ""){
     if(cheat === "3"){       debug = !debug;  }
   }
   if(ans === "5"){ screenSettings.showTrails = !screenSettings.showTrails;  }
-  if(ans === "6"){
-    let log = prompt("1: Login \n2: Logout \n 3: Signup ", "")
-    if(log === "1"){ console.log("login"); loginViaPrompt()    }
-    if(log === "2"){ console.log("logout"); firebase.auth().signOut()  }
-    if(log === "3"){ console.log("signup"); signupViaPrompt() }
-  }
+  if(ans === "6"){loginSignupConsole()}
+
   if(ans === "7"){ console.log(checkForUpdatedServerGame()) }
   if(ans === "9"){
     makeMetaFromMenu()
@@ -85,7 +81,12 @@ function interactiveConsole (num = ""){
   drawScreen();
 }
 
-
+function loginSignupConsole(){
+  let log = prompt("1: Login \n2: Logout \n 3: Signup ", "")
+  if(log === "1"){ console.log("login"); loginViaPrompt()    }
+  if(log === "2"){ console.log("logout"); firebase.auth().signOut()  }
+  if(log === "3"){ console.log("signup"); signupViaPrompt() }
+}
 
 
 async function setupGameViaPrompt(){

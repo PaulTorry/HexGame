@@ -176,8 +176,10 @@ function generateID(length){
 }
 
 function handleSignIn(email, password) {
+  console.log("signing in");
   firebase.auth().signInWithEmailAndPassword(email, password).
-    catch(function(error) { alert(error.message); console.log(error);});
+    catch(function(error) { alert(error.message); console.log(error);}).
+    on()
 }
 
 function handleSignUp(email, password, handle) {
