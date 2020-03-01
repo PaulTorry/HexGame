@@ -118,15 +118,18 @@ function saveToServer(){  // Check order (make async await?)
     .catch(function(error) {console.error("Error adding STate: ", error)  });
 }
 
+
+
 function checkForUpdatedServerGame(gameID = state.gameID){
   return firebase.firestore().collection("gamestest").doc(gameID).get()
     .then(function(doc) {
       if (doc.data()){
         let {name, users, turnNumber, playerTurn, when} = doc.data()
 
-        if(lastSaved.turnNumber <= turnNumber || lastSaved.playerTurn <=  playerTurn){
-          console.log("new game on server")
-        }
+        if(lastSaved.turnNumber < turnNumber || lastSaved.playerTurn <  playerTurn){
+          console.log("new game on server");
+          return true;
+        } else {return false}
 
       //    if(turnNumber >= localGameInfo )
       }
@@ -157,7 +160,14 @@ async function loadGameFromID(gameID){
     });
 }
 
-
+// async function checkTimestamp(gameID){
+//   firebase.firestore().collection("gamestest").doc(gameID).collection("state").doc("current").get()
+//     .then(function(qs) {1
+//       replaceState( unpackState(JSON.parse(qs.data().currentGame)));
+//       // localGameInfo = setlocalGameInfo()
+//       // drawScreen();
+//     });
+// }
 
 
 

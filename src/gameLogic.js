@@ -269,12 +269,17 @@ function repair(ship){
 
 async function nextTurn(){
 
-  if (!preturn || debug) {turnLogic()}
-  while (state.playerData[state.playerTurn].type === "AI") {takeAIturn(),turnLogic()}
+  if (!preturn || debug) {
+    turnLogic()
+    while (state.playerData[state.playerTurn].type === "AI") {takeAIturn(),turnLogic()}
 
-  if (state.meta.online ){
-    alert("sending game");
-    await  saveToServer();
+    if (state.meta.online ){
+      alert("sending game");
+      await  saveToServer();
+    }
+  }
+  else if(state.meta.online){
+    if (checkForUpdatedServerGame()) loadGameFromID(state.gameID)
   }
 }
 

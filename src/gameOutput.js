@@ -260,11 +260,15 @@ function drawTopPanel(){
   //c.rect(655, 5, 45, 45);
   c.stroke();
 
-  drawText(c, `Player: ${state.playerTurn} . ${localGameInfo.player}`, new Vec(100,20), 15, "white" )
+  drawText(c, `Player: ${state.playerTurn}`, new Vec(100,20), 15, "white" )
+  if(state.meta.online && state.playerData[state.playerTurn].type === "Human"){
+     drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, new Vec(100,35), 15, "white" )
+   }
   drawText(c, `Turn: ${state.turnNumber}`, new Vec(180,20), 15, "white" )
   if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245,20), 15, "white" )
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
   drawText(c, `Game: ${state.gameName}`, new Vec(420,40), 15, "white" )
+  if(loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, new Vec(420,60), 15, "white" )
 
 }
 
