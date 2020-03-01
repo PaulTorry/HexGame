@@ -1,7 +1,7 @@
 "use strict";
 
 /* global
-Vec, Hex, sel:true,
+Vec, Hex, sel:true, menuData
 getXYfromHex,
 
 state,
@@ -127,23 +127,17 @@ function topPanelClick(event){
 }
 
 function toggleTechTree(newState){
-  //console.log(newState);
   if (newState === undefined) newState = !screenSettings.openTechTree;
   screenSettings.openTechTree = newState;
-  //console.log("screenSettings.openTechTree", screenSettings.openTechTree);
   if(newState) changeCanvas("techTree");
   else{changeCanvas("board")}
 }
 
-
-
 function techTreeClick(event) {
   let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/35))
   onTechHexClicked(clickHex);
-
   drawScreen();
 }
-
 
 function boardClick(event) {
   let clickHex = Hex.getUnitHexFromXY(getRealXYfromScreenXY(new Vec(event.offsetX,  event.offsetY))
@@ -161,13 +155,6 @@ function mainMenuClick(event) {
   drawScreen();
 }
 
-// function newGameMenuClick(event) {
-//   console.log("newGameMenuClick");
-//   let clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX,  event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1/45))
-//   onNewGameMenuHexClicked(clickHex);
-//
-//   drawScreen();
-// }
 
 function loadGameMenuClick(event) {
   console.log("loadGameMenuClick");
@@ -175,10 +162,13 @@ function loadGameMenuClick(event) {
 
 function nextTurnScreenClick(event) {
   console.log("nextTurnScreenClick");
-  translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
-  changeCanvas("board");
-  preturn = false;
+  if(!state.meta.online || true){
+    translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
+    changeCanvas("board");
+    preturn = false;
+  }
   drawScreen();
+
 }
 
 

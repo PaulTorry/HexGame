@@ -262,8 +262,8 @@ function drawTopPanel(){
 
   drawText(c, `Player: ${state.playerTurn}`, new Vec(100,20), 15, "white" )
   if(state.meta.online && state.playerData[state.playerTurn].type === "Human"){
-     drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, new Vec(100,35), 15, "white" )
-   }
+    drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, new Vec(100,35), 15, "white" )
+  }
   drawText(c, `Turn: ${state.turnNumber}`, new Vec(180,20), 15, "white" )
   if(!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245,20), 15, "white" )
   if(!preturn) drawText(c, `City Points: **`, new Vec(360,20), 15, "white" )
@@ -329,25 +329,6 @@ function drawMenu(){
     })
   }
 }
-
-// function drawNewGameMenu(){
-//   let ss = screenSettings;
-//   let c = document.getElementById("newGameMenu").getContext("2d");
-//
-//   for(let [id , tile] of state.tiles){
-//     let {x,y} = getXYfromHex(tile.hex)//.subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
-//     drawPoly(c, simpleShapes["hexVert"], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1,  "rgb(37,32,45)", "rgb(18,15,34)"  );
-//   }
-//
-//   data.newGameMenu.forEach((t)=>{
-//     let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
-//     let {x,y} = center;
-//     drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
-//
-//     drawText(c, `${menuData.NewGameData[t.name] || ""} `, center.add(new Vec(-30,5)) , 14, "rgb(159,216,206)" )
-//     drawText(c, `1${t.name} ${[t.num] || "1"}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
-//   })
-// }
 
 function drawTechTree(){
   let arrows = [];

@@ -65,7 +65,7 @@ function onHexClicked(clickHex){
           applyDamage(sel.ship, target, true, getTerrainDefVal(target, clickHex));
           state.history[subTurn()].push({type:"attack" , rand:Math.random(), path:[clickHex, sel.ship.hex]})
           sel.ship.moved = true; sel.ship.attacked = true;
-          if(sel.ship.special.afterburner){sel.ship.moved = false;}
+          if(sel.ship.special && sel.ship.special.afterburner){sel.ship.moved = false;}
         }
         else { console.log("error in attacks"); }
 
