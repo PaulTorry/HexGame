@@ -36,7 +36,7 @@ function authStateChangeHandler(user) {
       .then(function(qs) {
         loggedInPlayer = {uid:user.uid, handle:qs.docs[0].id};
         console.log("loggedInPlayer:  ", loggedInPlayer)
-        refreshHandleList(); updateCacheGameList();
+        updateHandleList(); updateCacheGameList();
 
       })
       .catch(function(error) {alert("new logged in handle failed"), console.log("gethandleserror new login",error) });
@@ -55,14 +55,10 @@ async function getHandleList(){
     .catch(function(error) {alert("handlelisterror"); console.log("gethandleserror"); return "fail getHandleList" });
 }
 
-async function refreshHandleList(){
+async function updateHandleList(){
   cacheHandleList = await getHandleList();
   console.log("refreshHandleList", cacheHandleList);
 }
-
-
-
-
 
 
 function loginViaPrompt(){
@@ -96,9 +92,9 @@ function setDocData(){
   console.log("online  ", state.meta.online);
   if (state.meta.online){
     state.meta.playergrid.forEach((arr) => {
-      if(docData.users.indexOf(arr[0]) === -1){
+      if(docData.users.indexOf(arr[2]) === -1){
       //    console.log(" 6 playergrid2", docData.users,  );
-        docData.users.push(arr[0])
+        docData.users.push(arr[2])
       }
     });
   }

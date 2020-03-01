@@ -16,6 +16,7 @@ const data = {
     {name:'GameName', colour:[50,47,73], hex:new Hex(-3,-3), sprite:[['titanShip',0,-10,1]] },
     {name:'BoardSize', colour:[50,47,73], hex:new Hex(-1,-4), sprite:[['titanShip',0,-10,1]] },
     {name:'Make', colour:[150,147,173], hex:new Hex(1,-5), sprite:[['titanShip',0,-10,1]] },
+    {name:'Refresh Friends', colour:[150,147,173], hex:new Hex(4,-6), sprite:[['titanShip',0,-10,1]] },
 
     {name:'PlayerType', num: 0, colour:[150,147,173], hex:new Hex(-4,-1), sprite:[['titanShip',0,-10,1]] },
     {name:'PlayerType', num: 1, colour:[150,147,173], hex:new Hex(-3,0), sprite:[['titanShip',0,-10,1]] },

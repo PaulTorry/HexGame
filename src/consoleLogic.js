@@ -76,7 +76,7 @@ function interactiveConsole (num = ""){
   }
   if(ans === "7"){ console.log(checkForUpdatedServerGame()) }
   if(ans === "9"){
-    console.log(makeAlliesGridMenu());
+    makeMetaFromMenu()
     // console.log("state.playerData",state.playerData);
     // console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
   //  console.log(getGameParamsViaPrompt());
@@ -115,7 +115,7 @@ async function setupGameViaPrompt(){
 async function setupMetaViaPrompt(){
   let meta = {online:true, playergrid: []}
   //let handleList =  await getHandleList()
-  let additionalPlayergrid =  await getAdditionalPlayers(cacheHandleList, [loggedInPlayer.uid, loggedInPlayer.handle])
+  let additionalPlayergrid =  await getAdditionalPlayers(cacheHandleList, [0, loggedInPlayer.uid, loggedInPlayer.handle])
   meta.playergrid = additionalPlayergrid;
   // console.log("additionalPlayergrid", additionalPlayergrid);
   return meta
@@ -147,7 +147,31 @@ function getGameParamsViaPrompt(online=false, numHumansParam){
   if (gameName === null) return null;
   else config.gameName = gameName;
   //console.log(config);
+
+  config.playerlist = makePlayerListConsole(config)
+  config.alliesGrid = makeAlliesGridConsole(config)
   return config
+}
+
+function makePlayerListConsole(config){
+  let playerlist = []
+  for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
+  for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "Human";  }
+  return playerlist;
+}
+
+function makeAlliesGridConsole(config){
+  let alliesGrid = []
+  for(let i = 0; i < config.numPlayers; i++){
+    if(config.allied){
+      alliesGrid[i] = [];
+      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = config.playerlist[i] === config.playerlist[j] }
+    } else {
+      alliesGrid[i] = [];
+      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
+    }
+  }
+  return alliesGrid;
 }
 
 async function setupStateViaPrompt(meta){
@@ -168,6 +192,7 @@ function setlocalGameInfo(){
 }
 
 function getAdditionalPlayers(handleList, startingList){
+  var index = 1;
   console.log("getAdditionalPlayers handleList", handleList);
   let additionalPlayergrid = [startingList];
   let finishedAddingPlayers = false;
@@ -175,9 +200,10 @@ function getAdditionalPlayers(handleList, startingList){
     let ans = prompt(JSON.stringify( handleList), "Press cancel to stop adding")
     if (ans === null) finishedAddingPlayers = true
     else {
-      let newEntry = [handleList[Number(ans)][2], handleList[Number(ans)][1]]
-      if(additionalPlayergrid.findIndex(x => JSON.stringify(x) === JSON.stringify(newEntry)) === -1) {
+      let newEntry = [index, handleList[Number(ans)][2], handleList[Number(ans)][1]]
+      if(additionalPlayergrid.findIndex(x => JSON.stringify(x[1]) === JSON.stringify(newEntry[1])) === -1) {
         additionalPlayergrid.push(newEntry)
+        index++
         console.log(additionalPlayergrid);
       }
     }

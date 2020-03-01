@@ -22,38 +22,33 @@ function setup(numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTog
   config.boardSize = boardSizeP;
   config.allied = playersTogetherP;
   config.gameName = gameNameP;
+  config.playerlist = makePlayerListConsole(config)
+  config.alliesGrid = makeAlliesGridConsole(config)
+
 
   return setupNew(config, meta);
 }
 
-function makePlayerListConsole(config){
-  let playerlist = []
-
-  // TODO Fix this
-  for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
-  // if(playersTogether){
-  for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "Human";  }
-  // } else {
-  //   for(let i = 0; i < numHumans; i++){ playerlist[Math.floor(i*numPlayers/numHumans)] = "Human";  }
-  // }
-  // TODO make playerorder grid to space out players
-  return playerlist;
-}
-
-function makeAlliesGridConsole(config, playerlist){
-  let alliesGrid = []
-
-  for(let i = 0; i < config.numPlayers; i++){
-    if(config.allied){
-      alliesGrid[i] = [];
-      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
-    } else {
-      alliesGrid[i] = [];
-      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
-    }
-  }
-  return alliesGrid;
-}
+// function makePlayerListConsole(config){
+//   let playerlist = []
+//   for(let i = 0; i < config.numPlayers; i++){  playerlist.push("AI")  }
+//   for(let i = 0; i < config.numHumans; i++){ playerlist[i] = "Human";  }
+//   return playerlist;
+// }
+//
+// function makeAlliesGridConsole(config, playerlist){
+//   let alliesGrid = []
+//   for(let i = 0; i < config.numPlayers; i++){
+//     if(config.allied){
+//       alliesGrid[i] = [];
+//       for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = playerlist[i] === playerlist[j] }
+//     } else {
+//       alliesGrid[i] = [];
+//       for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
+//     }
+//   }
+//   return alliesGrid;
+// }
 
 function replaceState(newState){
   console.log("replaceState", newState);
@@ -65,9 +60,10 @@ function replaceState(newState){
 
 
 
-function setupNew(config,  meta = {online:false}, playerlist = makePlayerListConsole(config), alliesGrid = makeAlliesGridConsole(config, playerlist )){
+function setupNew(config,  meta = {online:false} ){
+  //playerlist = makePlayerListConsole(config), alliesGrid = makeAlliesGridConsole(config, playerlist )){
   let gameID = generateID(20);
-
+ console.log(config);
   if(gameID.length < 15) console.log("check game id length");
   let tiles = new Map();
   let playerData = [];
@@ -93,7 +89,7 @@ function setupNew(config,  meta = {online:false}, playerlist = makePlayerListCon
     let hexloc = Hex.getUnitHexFromXY(new Vec(Math.sin(angle), Math.cos(angle)).scale(config.boardSize/1)).randomNeighbour
 
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
-    playerData.push({type: playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles, 0)})
+    playerData.push({type: config.playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles, 0)})
     shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
       "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})
     tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null, navBeacon:{owner: i}});
@@ -126,7 +122,7 @@ function setupNew(config,  meta = {online:false}, playerlist = makePlayerListCon
   return {
     meta:meta, gameID:gameID, gameName:config.gameName, boardSize:config.boardSize, numPlayers:config.numPlayers,
     playerTurn:0, turnNumber:1,
-    shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:alliesGrid,
+    shipArray:shipArray, tiles:tiles, playerData:playerData, baseArray:baseArray, alliesGrid:config.alliesGrid,
     history:[[],[]],       log:[]}
 }
 

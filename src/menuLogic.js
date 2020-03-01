@@ -3,47 +3,106 @@
 state, data, quickSetup, changeCanvas, randomName,
 drawScreen,
 replaceState,  setupNew,
+      updateHandleList, updateCacheGameList,
 */
 /* eslint-disable no-unused-vars */
 
 function makeConfigFromMenu(){
+  let online = menuData.NewGameData.Online;
   let config = {}
-  config.numHumans = menuData.OfflinePlayers.filter(x => x.PlayerType === "Human").length
-  config.numPlayers = menuData.OfflinePlayers.filter(x => x.PlayerType === "AI").length + config.numHumans
+
   config.boardSize = menuData.NewGameData.BoardSize;
   config.allied = true;
   config.gameName = menuData.NewGameData.GameName;
+
+
+  if (online){
+
+    let tempPlayerlist = menuData.OnlinePlayers.map(x => {
+      if(x.PlayerType === "None" || x.PlayerType === "AI"){return x}
+      else{return {PlayerType:"Human", Alliance:x.Alliance}}
+    })
+    console.log("tempPlayerlist", tempPlayerlist);
+    config.numHumans = tempPlayerlist.filter(x => x.PlayerType === "Human").length;
+    config.numPlayers = tempPlayerlist.filter(x => x.PlayerType === "AI").length + config.numHumans;
+    config.playerlist = tempPlayerlist.filter(x=> x.PlayerType !== "None").map(x => x.PlayerType);
+
+  } else{
+    config.numHumans = menuData.OfflinePlayers.filter(x => x.PlayerType === "Human").length;
+    config.numPlayers = menuData.OfflinePlayers.filter(x => x.PlayerType === "AI").length + config.numHumans;
+    config.playerlist = menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.PlayerType);
+  }
+  // config.numHumans = menuData.OfflinePlayers.filter(x => x.PlayerType === "Human").length;
+  // config.numPlayers = menuData.OfflinePlayers.filter(x => x.PlayerType === "AI").length + config.numHumans;
+
+  config.alliesGrid = makePlayerAlianceArrayFromMenu(config, online)
+
   console.log("config", config);
   return config
 }
 
-function makeOfflinePlayerListFromMenu(){
-  let playerList = menuData.OfflinePlayers.map(x => x.PlayerType).filter(x=> x.PlayerType !== "None")
-}
+function makePlayerAlianceArrayFromMenu(config, online){
+//  let playerlist; //= menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.PlayerType)
+  let alliance; //= menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.Alliance)
+
+  if (online){
+    alliance = menuData.OnlinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.Alliance);
+  } else{
+    //playerlist = menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.PlayerType);
+    alliance = menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.Alliance);
+  }
 
 
-
-function makeAlliesGridMenu(config, playerlist){
-  let alliance = menuData.OfflinePlayers.map(x => x.Alliance).filter(x=> x.PlayerType !== "None")
-  console.log("alliance", alliance);
   let alliesGrid = []
 
   for(let i = 0; i < config.numPlayers; i++){
-    if(config.allied){
-      alliesGrid[i] = [];
-      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = alliance[i] === alliance[j] }
-    } else {
-      alliesGrid[i] = [];
-      for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
-    }
+    alliesGrid[i] = [];
+    for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = alliance[i] === alliance[j] }
   }
-  return alliesGrid;
+  console.log("playerlist, alliesGrid",  alliesGrid);
+  return  alliesGrid;
 }
+
+function makeMetaFromMenu(){
+  let meta = {online:true, playergrid: []};
+  let tempPlayergrid =  menuData.OnlinePlayers.filter(x=> !(x.PlayerType === "None"))
+  tempPlayergrid = tempPlayergrid.map( (x,i) => [i,x.PlayerType])
+  tempPlayergrid =  tempPlayergrid.filter(x=> !(x[1] === "AI"));
+  tempPlayergrid =  tempPlayergrid.map(x => [...x, cacheHandleList.find(y => y[1] === x[1] )[2] ]);
+//  console.log("tempPlayergrid", tempPlayergrid);
+  meta.playergrid = tempPlayergrid;
+  console.log("meta", meta);
+  return meta;
+}
+// function makeOfflinePlayerListFromMenu(){
+//   return menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.PlayerType)
+// }
+
+
+
+// function makeAlliesGridMenu(config, playerlist){
+//   let alliance = menuData.OfflinePlayers.filter(x=> x.PlayerType !== "None").map(x => x.Alliance)
+//   console.log("alliance", alliance);
+//   let alliesGrid = []
+//
+//   for(let i = 0; i < config.numPlayers; i++){
+//     if(config.allied){
+//       alliesGrid[i] = [];
+//       for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = alliance[i] === alliance[j] }
+//     } else {
+//       alliesGrid[i] = [];
+//       for(let j = 0; j < config.numPlayers; j++){ alliesGrid[i][j] = i === j }
+//     }
+//   }
+//   console.log(alliesGrid);
+//   return alliesGrid;
+// }
 
 let menuData = {
   Screen:"MainMenu",
 
   NewGameData:{Online:false, GameName:"DefaultName", BoardSize: 8},
+  OfflineOptions:["None", "AI", "Human"],
   OfflinePlayers:[
     {PlayerType:"Human", Alliance:1},
     {PlayerType:"Human", Alliance:2},
@@ -52,6 +111,8 @@ let menuData = {
     {PlayerType:"AI", Alliance:5},
     {PlayerType:"AI", Alliance:6},
   ],
+  OnlineDefaultOptions:["None", "AI", ],
+  OnlineOptions:["None", "AI", ],
   OnlinePlayers:[
     {PlayerType:"AI", Alliance:1},
     {PlayerType:"AI", Alliance:2},
@@ -118,24 +179,39 @@ function onMenuHexClicked (hex){
       break;
     case "Make":
       console.log("Make ");
-      replaceState(
-        setupNew(makeConfigFromMenu(),  {online:false}, makeOfflinePlayerListFromMenu(), makeAlliesGridMenu(makeConfigFromMenu(), makeOfflinePlayerListFromMenu()))
-      );
-
+      if(menuData.NewGameData.Online){
+        replaceState(setupNew(makeConfigFromMenu(),  makeMetaFromMenu())      );
+      }
+      else{replaceState(setupNew(makeConfigFromMenu(),  {online:false})      );}
+      break;
+    case "Refresh Friends":
+      updateHandleList(); updateCacheGameList();
+      menuData.OnlineOptions = menuData.OnlineDefaultOptions.concat(cacheHandleList.map(x=> x[1]))
+      console.log(menuData.OnlineOptions);
       break;
     case "PlayerType":
-      menuData.OfflinePlayers[opt.num].PlayerType
-      if (menuData.OfflinePlayers[opt.num].PlayerType === "None") menuData.OfflinePlayers[opt.num].PlayerType = "Human";
-      else if (menuData.OfflinePlayers[opt.num].PlayerType === "Human") menuData.OfflinePlayers[opt.num].PlayerType = "AI";
-      else if (menuData.OfflinePlayers[opt.num].PlayerType === "AI") menuData.OfflinePlayers[opt.num].PlayerType = "None";
+      if(menuData.NewGameData.Online){
+        menuData.OnlinePlayers[opt.num].PlayerType = cycleArray(menuData.OnlineOptions, menuData.OnlinePlayers[opt.num].PlayerType, 1)
+      }
+      else{
+        menuData.OfflinePlayers[opt.num].PlayerType = cycleArray(menuData.OfflineOptions, menuData.OfflinePlayers[opt.num].PlayerType, 1)
+      }
       break;
     case "Alliance":
-      menuData.OfflinePlayers[opt.num].Alliance = menuData.OfflinePlayers[opt.num].Alliance % 6 + 1;
+      if(menuData.NewGameData.Online){menuData.OnlinePlayers[opt.num].Alliance = menuData.OnlinePlayers[opt.num].Alliance % 6 + 1;}
+      else{menuData.OfflinePlayers[opt.num].Alliance = menuData.OfflinePlayers[opt.num].Alliance % 6 + 1;}
       break;
     }
   }
   drawScreen();
 }
+
+function cycleArray(array, current, step){
+  let index = array.indexOf(current)
+  if (index === -1) return array[0]
+  else return array[(index + step + array.length) % (array.length)]
+}
+
 
 
 function quickSetup(){
