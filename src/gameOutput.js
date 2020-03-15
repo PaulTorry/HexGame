@@ -39,6 +39,8 @@ function mapColours(string, player, transparency = 1){
   else return string;
 }
 
+// let colour = (x) => { return (y) => `rgb(${x[0]},${x[1]},${x[2]})` }
+
 function getColMap(player, transparency = 1){
   return (v) =>  mapColours(v, player, transparency)
 }
@@ -185,6 +187,7 @@ function drawBoard(){
 
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `(${Math.round(ship.hull)})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
+      drawText(c, `${ship.hulltype.movelist}`, getXYfromHex(ship.hex).add(new Vec(-40,25)), 15, "white")
     }
   }
 
@@ -272,7 +275,6 @@ function drawTopPanel(){
 
 }
 
-
 function drawMenu(){
   let ss = screenSettings;
   let c = document.getElementById("mainMenu").getContext("2d");
@@ -286,16 +288,22 @@ function drawMenu(){
     data.mainMenu.forEach((t)=>{
       let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
       let {x,y} = center;
-      drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+
+
+
+      drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53,  x => "rgb(30,30,30)" ,0.65,0,true);
       drawText(c, `${t.name}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
     })
   }
+
+
 
   if(menuData.Screen === "loadGameMenu"){
     data.loadGameMenu.forEach((t)=>{
       let center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset);
       let {x,y} = center;
       drawFromData(c, gameSprites["roundedHex"], x - 58, y - 53, x => "rgb(30,30,30)" ,0.65,0,true);
+
 
       let valueToOutput = menuData.LoadGameOptions[t.name] || "";
       if (t.num || t.num === 0){
@@ -306,7 +314,7 @@ function drawMenu(){
       }
       //   else valueToOutput = menuData.OfflinePlayers[t.num][t.name]
       // }
-      drawText(c, `${valueToOutput}`, center.add(new Vec(-30,5)) , 14, "rgb(159,216,206)" )
+      drawText(c, `     ${valueToOutput}`, center.add(new Vec(-40,5)) , 14, "rgb(159,216,206)" )
       drawText(c, `${t.name} ${[t.num] || "1"}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
     })
   }
@@ -328,6 +336,8 @@ function drawMenu(){
       drawText(c, `${t.name} ${[t.num] || "1"}`, center.add(new Vec(-30,25)) , 12, "rgb(159,216,206)" )
     })
   }
+
+
 }
 
 function drawTechTree(){

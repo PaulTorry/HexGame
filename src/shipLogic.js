@@ -8,10 +8,16 @@
 
 function buildShip(type, owner, hex, moved=true, attacked=true){
   let base = data.shipHulls[type];
-  return ({type:base.type, hull:base.hull, shield:base.shield,
-    attack: base.attack, retaliate:base.retaliate, maxMove: base.maxMove,
-    range: base.range, view:base.view,
-    moved:moved, attacked:attacked, hex:hex, owner:owner
+  return ({
+    type:base.type,
+    hulltype: base,
+
+    hull:base.hull, shield:base.shield,
+    moved:moved, attacked:attacked, hex:hex, owner:owner,
+
+    //attack: base.attack, retaliate:base.retaliate,     maxMove: base.maxMove,
+    // range: base.range, view:base.view,
+
   })
 }
 

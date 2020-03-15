@@ -92,15 +92,15 @@ const data = {
 
 
   shipHulls : {
-    scoutShip:{type:'scoutShip',  hull:2, shield:3, maxMove:4, attack:2, retaliate:0, range:1, defence:0, view:2},
-    basicFrigate:{type:'basicFrigate',  hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:1, defence:2, view:1},
-    battleship:{type:'battleship',  hull:5, shield:10, maxMove:1, attack:8, retaliate:6, range:1, defence:2, view:1},
-    armouredDestroyer:{type:'armouredDestroyer',  hull:5, shield:10, maxMove:1, attack:2, retaliate:10, range:1, defence:3, view:1},
-    titanShip:{type:'titanShip',  hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
-    fastFrigate:{type:'fastFrigate',  hull:3, shield:7, maxMove:2, attack:6, retaliate:2, range:1, defence:1, view:1, special:{afterburner:true}},
+    scoutShip:{type:'scoutShip', movelist: ['m','m','a','m',],  hull:2, shield:3, maxMove:4, attack:2, retaliate:0, range:1, defence:0, view:2},
+    basicFrigate:{type:'basicFrigate',  movelist: ['m','a'], hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:1, defence:2, view:1},
+    battleship:{type:'battleship',  movelist: ['m','a','a'], hull:5, shield:10, maxMove:1, attack:8, retaliate:6, range:1, defence:2, view:1},
+    armouredDestroyer:{type:'armouredDestroyer', movelist: ['m','a'], hull:5, shield:10, maxMove:1, attack:2, retaliate:10, range:1, defence:3, view:1},
+    titanShip:{type:'titanShip', movelist: ['m','a'], hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
+    fastFrigate:{type:'fastFrigate', movelist: ['m','a','m','a',], hull:3, shield:7, maxMove:2, attack:6, retaliate:2, range:1, defence:1, view:1, special:{afterburner:true}},
     //devourer:{type:'devourer',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
-    missileFrigate:{type:'missileFrigate',  hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:2, defence:1, view:1},
-    missileDestroyer:{type:'missileDestroyer',  hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
+    missileFrigate:{type:'missileFrigate', movelist: ['a','m'], hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:2, defence:1, view:1},
+    missileDestroyer:{type:'missileDestroyer', movelist: ['a','m'], hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
   },
 
   thingList : [
@@ -110,17 +110,13 @@ const data = {
     {name: 'Nav. Beacon', thing: 'navNebula',  type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navNebula',  terrain: [ 'nebula', ], sprite:[['nebula',1,-2,0.75],['navBeaconCross',-15,-18,1]] } ,
     {name: 'Nav. Beacon', thing: 'navProto',  type:"nav", price: 2, territoryState: 1,  shipState: 'ownPresent', tech: 'navNebula',  terrain: [ 'protostar', ], sprite:[['nebula',1,-2,0.75],['navBeaconCross',-15,-18,1]] } ,
 
-
     {name: 'Ast. Mining', thing: 'asteroidMining', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidMining',  terrain: ['asteroids', ], sprite:[['asteroids',0,-2,0.75],['asteroidMining',0,-2,0.75]] } ,
     {name: 'Gas Extraction', thing: 'harvestGasGiant', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestGasGiant',  terrain: ['gasGiant', ], sprite:[['gasGiant',0,0,1],['harvestGasGiant',0,0,1]] } ,
     {name: 'Harvest Protostar', thing: 'harvestProtostar', type:"industry", price: 2, income: 2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestProtostar',  terrain: ['protostar', ], sprite:[['protostar',1,-1,0.75],['harvestProtostar',1,-1,0.75]] } ,
     {name: 'Solar Panel', thing: 'solarSail', type:"industry", price: 2, income: 1, territoryState: 2,  shipState: 'noEnemy',  terrain: ['space', ], nextTo:"star" , sprite:[['solarSail',0,0,1]]} ,
 
-
-
     {name: 'Ice Collection', thing: 'icyAsteroids', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'asteroidIceMining',  terrain: ['asteroids', ] , resource:"icyAsteroids", sprite:[['icyAsteroids',0,-2,0.75]] } ,
     {name: 'Hydrogen. Collection', thing: 'hydrogen', type:"resource", price: -2, territoryState: 2,  shipState: 'noEnemy', tech: 'harvestHydrogen',  terrain: ['nebula', ] , resource:"hydrogen", sprite:[['nebula',1,-2,0.75],['hydrogen',0,0,1]] } ,
-
 
     {name: 'Conquer Planet', thing: 'inhabitedPlanet', price: 0,   shipState: 'ownPresentUnmoved',   terrain: ['planet', ], sprite:[['planet',0,0,0.75],['planetRing',0,0,0.75]] } ,
 

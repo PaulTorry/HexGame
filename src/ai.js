@@ -15,8 +15,8 @@ function takeAIturn(){
   let viewHexes = Object.entries(getUpdatedViewMask(state)).filter(([k,v]) => v > 1).map(([k,v]) => Hex.getFromID(k))
 
   ships.forEach( ship => {
-    let possibleMoves = findPossibleMoves(ship.hex, ship.maxMove);
-    let possibleAttacks = findPossibleAttacks(ship.hex,  data.shipHulls[ship.type].range);
+    let possibleMoves = findPossibleMoves(ship.hex, ship.hulltype.maxMove);
+    let possibleAttacks = findPossibleAttacks(ship.hex,  ship.hulltype.range);
 
     if (possibleAttacks.length && Math.random() > 0.5){               // CHANGE TO 0.5
       let attack = possibleAttacks[Math.floor(Math.random() * possibleAttacks.length)];

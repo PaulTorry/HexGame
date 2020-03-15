@@ -49,7 +49,7 @@ function onHexClicked(clickHex){
 
         applyTerrainDamage(sel.ship, getTerrainDamage(sel.ship, clickHex));
 
-        possibleAttacks = findPossibleAttacks(clickHex, data.shipHulls[sel.ship.type].range);
+        possibleAttacks = findPossibleAttacks(clickHex, sel.ship.hulltype.range);
         if (possibleAttacks.length > 0) { sel.moves = []; sel.attacks = possibleAttacks}
         else{
           sel.ship.attacked = true;
@@ -79,8 +79,8 @@ function onHexClicked(clickHex){
       let currentShip = getShipOnHex(clickHex);
 
       if(currentShip && currentShip.owner === state.playerTurn){
-        if (!currentShip.moved)  possibleMoves = findPossibleMoves(clickHex, currentShip.maxMove);
-        if (!currentShip.attacked)  possibleAttacks = findPossibleAttacks(clickHex, currentShip.range);
+        if (!currentShip.moved)  possibleMoves = findPossibleMoves(clickHex, currentShip.hulltype.maxMove);
+        if (!currentShip.attacked)  possibleAttacks = findPossibleAttacks(clickHex, currentShip.hulltype.range);
 
         if(possibleMoves.length || possibleAttacks.length){
           sel = {state:1, hex:clickHex, ship:currentShip, moves:possibleMoves, attacks: possibleAttacks}
@@ -177,7 +177,7 @@ function getTerrainDamage(ship, hex){
 
   if (data.terrainInfo[state.tiles.get(hex.id).terrain].damTech && !state.tiles.get(hex.id).navBeacon){
     let hasTech = state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].damTech];
-    if (!hasTech || data.shipHulls[ship.type].maxMove < 2){
+    if (!hasTech || ship.hulltype.maxMove < 2){
       return [1,hasTech]
     }
   }
@@ -197,11 +197,11 @@ function applyTerrainDamage(ship, damType){
 }
 
 function applyDamage(attacker, ship, attacking = true, terrainDefence = 0){
-  let {type, hull, shield} = ship;
-  let defence = data.shipHulls[type].defence + terrainDefence;
+  let {hull, shield} = ship;
+  let defence = ship.hulltype.defence + terrainDefence;
   let dammage = Math.max(getWeaponPower(attacker, attacking) -defence,0);
   let range = attacker.hex.distance(ship.hex);
-  if ( attacker.range < range ){ dammage = 0}
+  if ( attacker.hulltype.range < range ){ dammage = 0}
 
   let shipKilled = applyDamageToShieldAndHull(ship, dammage)
 

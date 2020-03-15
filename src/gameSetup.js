@@ -1,6 +1,6 @@
 "use strict"
 
-/* global Hex, Map, Vec, makeNewViewMask, generateID
+/* global Hex, Map, Vec, makeNewViewMask, generateID, buildShip
 setlocalGameInfo, changeCanvas, drawScreen  */
 /* eslint-disable no-unused-vars */
 
@@ -91,8 +91,8 @@ function setupNew(config,  meta = {online:false} ){
 
     baseArray.push({type:"planet", owner:i, hex: hexloc, territory:hexloc.secondNeighboursInclusive});
     playerData.push({type: config.playerlist[i], money:5, income:1, tech:{}, capital:hexloc, viewMask:makeNewViewMask(tiles, 0)})
-    shipArray.push({"type":"scoutShip","hull":2,"shield":3,"moved":false,"attacked":false, hex:hexloc, "owner":i,
-      "attack":2,"retaliate":1, view:2, "maxMove":4, range:1})
+    shipArray.push(buildShip("scoutShip", i, hexloc, false, false))
+    console.log(shipArray);
     tiles.set(hexloc.id, {hex: hexloc, terrain:"planet", station:null, navBeacon:{owner: i}});
 
     let hexStar = hexloc.randomNeighbour;
