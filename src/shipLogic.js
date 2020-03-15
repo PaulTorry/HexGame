@@ -55,7 +55,7 @@ function findPossibleMoves(center, moveLeft = 2){
 
     newfrontier = current.loc.neighbours
       .filter(n => n.mag <= state.boardSize)
-      .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:current.loc}})
+      .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:[current.loc, ...current.from]}})
       .filter(({loc:hex, cost, from} ) => {
         return hex.mag <= state.boardSize && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= 0
       })
@@ -64,29 +64,30 @@ function findPossibleMoves(center, moveLeft = 2){
 
     return findPossibleMovesFunctional(newfrontier, visited, terrainFunc)
   }
-
-  let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:new Hex()}], //{}
+console.log("new");
+  let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:[]}], //{}
+    // []
     center.neighbours
       .filter(n => n.mag <= state.boardSize && terrainFunc(center.id, n.id) < 20)
-      .map(n => {return{loc:n, cost:0, from:center}})
+      .map(n => {return{loc:n, cost:0, from:[center]}})
       .reduce((acc, c) => {acc[c.loc.id] = c; return acc}, {})
     ,terrainFunc
   );
 
   let temp2 = Object.values(temp).map(v => {
-    let history = []
-    let ff = v.loc
-    for(let i = 10; i > 0; i--) {
-      let f = Object.values(temp).find(vv => ff.compare(vv.loc))
-      if (f && f.from && !f.from.compare(new Hex())){
-        history.push(f.from)
-        ff =  f.from;
-      }
-      else break;
-    }
-    return [v.loc, ...history]
+    // let history = []
+    // let ff = v.loc
+    // for(let i = 10; i > 0; i--) {
+    //   let f = Object.values(temp).find(vv => ff.compare(vv.loc))
+    //   if (f && f.from && !f.from.compare(new Hex())){
+    //     history.push(f.from)
+    //     ff =  f.from;
+    //   }
+    //   else break;
+    // }
+    return [v.loc, ...v.from]
   })
-
+console.log(temp2);
   return temp2.filter(h => {
     return  (h[0].mag <= state.boardSize) && !getShipOnHex(h[0])
   });
