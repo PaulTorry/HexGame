@@ -39,10 +39,16 @@ class Hex{
     else {return []}
   }
 
+  spikyNeightbours(spikes){
+    if (spikes) return this.neighbours.concat(this.neighboursSpiky)
+    else return this.neighbours.concat()
+  }
+
   get mag(){return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2}
   get id () {return  `${this.p},${this.q}`}
 
   get neighbours() {return Hex.neighbours().map(n => n.add(this))}
+  get neighboursSpiky() {return Hex.neighboursSpiky().map(n => n.add(this))}
   get secondNeighbours() {return Hex.secondNeighbours().map(n => n.add(this))}
   get thirdNeighbours() {return Hex.thirdNeighbours().map(n => n.add(this))}
 
@@ -50,6 +56,8 @@ class Hex{
 
   get secondNeighboursInclusive() {return this.neighbours.concat(this.secondNeighbours)}
   get thirdNeighboursInclusive() {return this.secondNeighboursInclusive.concat(this.thirdNeighbours)}
+
+
 
   static getFromPQR(obj){
     if(obj.p + obj.q + obj.r !== 0)console.log("problem getFromPQR");
@@ -102,10 +110,14 @@ class Hex{
 
   static neighbours() {return [new Hex(1,0), new Hex(0,-1), new Hex(-1,0), new Hex(-1,1), new Hex(0,1), new Hex(1,-1)]}
 
+  static neighboursSpiky() {return [new Hex(2,0), new Hex(0,-2), new Hex(-2,0), new Hex(-2,2), new Hex(0,2), new Hex(2,-2)]}
+
   static secondNeighbours () { return [
     new Hex(2,0), new Hex(2,-2), new Hex(2,-1), new Hex(-2,0), new Hex(-2,2), new Hex(-2,1),
     new Hex(1,-2), new Hex(1,1), new Hex(-1,2), new Hex(-1,-1), new Hex(0,2), new Hex(0,-2)
   ]}
+
+
 
   static secondNeighboursDependants () { return {
     "2,0":[new Hex(1,0)], "2,-2":[new Hex(1,-1)],  "-2,0":[new Hex(-1,0)],
