@@ -192,7 +192,7 @@ function drawBoard(){
   }
 
   if(sel.hex){
-    for (let [move,...hist] of sel.moves){
+    for (let [move,...hist] of sel.actions.moves){
       let {x,y} = getXYfromHex(move)
       if(getTerrainDamage(sel.ship, move)[0] > 0 && !getTerrainDamage(sel.ship, move)[1]) {
         conditionalDrawFromData(c, gameSprites["warningIconOrange"], x, y)
@@ -202,7 +202,7 @@ function drawBoard(){
       }
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(move), ss.hexSize -5, 3 , "rgb(166,191,187)");
     }
-    for (let attack of sel.attacks){
+    for (let attack of sel.actions.attacks){
       drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(attack), ss.hexSize -5, 3 , "red");
     }
     drawPoly(c,  simpleShapes["hexVert"], getXYfromHex(sel.hex), ss.hexSize -5, 3 , selectedColour[sel.state]);

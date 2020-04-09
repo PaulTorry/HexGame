@@ -92,15 +92,15 @@ const data = {
 
 
   shipHulls : {
-    scoutShip:{type:'scoutShip', movelist: ['mm','mm','a','m',],  hull:2, shield:3, maxMove:1.15, attack:2, retaliate:0, range:1, defence:0, view:2},
-    basicFrigate:{type:'basicFrigate',  movelist: ['m','a'], hull:3, shield:7, maxMove:0.6, attack:6, retaliate:4, range:1, defence:2, view:1},
-    battleship:{type:'battleship',  movelist: ['m','a','a'], hull:5, shield:10, maxMove:1, attack:8, retaliate:6, range:1, defence:2, view:1},
-    armouredDestroyer:{type:'armouredDestroyer', movelist: ['m','a'], hull:5, shield:10, maxMove:1, attack:2, retaliate:10, range:1, defence:3, view:1},
-    titanShip:{type:'titanShip', movelist: ['m','a'], hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
-    fastFrigate:{type:'fastFrigate', movelist: ['mm','a','m','a',], hull:3, shield:7, maxMove:1.15, attack:6, retaliate:2, range:1, defence:1, view:1, special:{afterburner:true}},
+    scoutShip:{type:'scoutShip', actionList: ['mm','mm','a','m',],  hull:2, shield:3, maxMove:1.15, attack:2, retaliate:0, range:1, defence:0, view:2},
+    basicFrigate:{type:'basicFrigate',  actionList: ['m','a'], hull:3, shield:7, maxMove:0.6, attack:6, retaliate:4, range:1, defence:2, view:1},
+    battleship:{type:'battleship',  actionList: ['m','a','a'], hull:5, shield:10, maxMove:1, attack:8, retaliate:6, range:1, defence:2, view:1},
+    armouredDestroyer:{type:'armouredDestroyer', actionList: ['m','a'], hull:5, shield:10, maxMove:1, attack:2, retaliate:10, range:1, defence:3, view:1},
+    titanShip:{type:'titanShip', actionList: ['m','a'], hull:15, shield:25, maxMove:1, attack:10, retaliate:10, range:1, defence:3, view:1},
+    fastFrigate:{type:'fastFrigate', actionList: ['mm','a','m','a',], hull:3, shield:7, maxMove:1.15, attack:6, retaliate:2, range:1, defence:1, view:1, special:{afterburner:true}},
     //devourer:{type:'devourer',  hull:5, shield:10, maxMove:3, attack:10, retaliate:1, range:1, defence:1, view:1},
-    missileFrigate:{type:'missileFrigate', movelist: ['a','m'], hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:2, defence:1, view:1},
-    missileDestroyer:{type:'missileDestroyer', movelist: ['a','m'], hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
+    missileFrigate:{type:'missileFrigate', actionList: ['a','m'], hull:3, shield:7, maxMove:1, attack:6, retaliate:4, range:2, defence:1, view:1},
+    missileDestroyer:{type:'missileDestroyer', actionList: ['a','m'], hull:2, shield:3, maxMove:1, attack:10, retaliate:0, range:3, defence:0, view:1},
   },
 
   thingList : [
