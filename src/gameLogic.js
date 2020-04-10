@@ -61,17 +61,10 @@ function onHexClicked(clickHex){
         sel.ship.hex = clickHex;
         state.history[subTurn()].push({type:"move" , rand:Math.random(), path:sel.actions.moves.find( e =>  e[0].compare(clickHex))})
         let ar = sel.ship.actionsRemaining;
-        console.log("AR",ar);
-
         sel.ship.actionsRemaining = ar.slice(PaulsMath.lowestArrayIndex(ar.indexOf("m"),ar.indexOf("mm") )+1);
-        console.log("SSsel.ship.actionsRemaining",sel.ship.actionsRemaining);
-        sel.ship.moved = true;
         sel.hex = clickHex;
 
         applyTerrainDamage(sel.ship, getTerrainDamage(sel.ship, clickHex));
-
-        // possibleAttacks = findPossibleAttacks(clickHex, sel.ship.hulltype.range);
-
         setShipActions(clickHex, sel.ship);
       }
 
@@ -92,19 +85,16 @@ function onHexClicked(clickHex){
     }
 
     else if (sel.state === 0){
-      console.log("State 0");
       let currentShip = getShipOnHex(clickHex);
 
       if(currentShip && currentShip.owner === state.playerTurn){
         setShipActions(clickHex, currentShip)
-      //  else sel = {state:2, hex:clickHex, actions:{moves:[], attacks:[]}, menu: makeBuildBar(clickHex)};
       }
       else{
         sel = {state:2, hex:clickHex, actions:{moves:[], attacks:[]}, menu: makeBuildBar(clickHex)};
       }
     }
   } else  sel = {state:0,  actions:{moves:[], attacks:[]}, menu: []};
-  console.log("sel", sel);
 }
 
 
@@ -114,19 +104,14 @@ function findPossibleActions(clickHex, ship){
 
   let movesLeft = ship.actionsRemaining.filter( x=> x === "m" || x === "mm")
   let attacksLeft = ship.actionsRemaining.filter( x=> x === "a")
-  console.log("moveDistance[movesLeft[0]]",moveDistance[movesLeft[0]]);
+
   let moves = []
   if (movesLeft.length) moves = findPossibleMoves(clickHex, moveDistance[movesLeft[0]])
 
   let attacks = []
   if (attacksLeft.length) attacks = findPossibleAttacks(clickHex, ship.hulltype.range);
 
-  let actions = {moves: moves, attacks: attacks}
-
-  console.log("movesLeft", movesLeft);
-  console.log("attacksLeft", attacksLeft);
-  console.log("actions",actions);
-  return actions
+  return {moves: moves, attacks: attacks}
 }
 
 
