@@ -187,7 +187,8 @@ function drawBoard(){
 
       drawText(c, `${Math.round(ship.shield+ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20,45)), 20, "white")
       drawText(c, `(${Math.round(ship.hull)})`, getXYfromHex(ship.hex).add(new Vec(10,45)), 15, "orange")
-      drawText(c, `${ship.hulltype.movelist}`, getXYfromHex(ship.hex).add(new Vec(-40,25)), 15, "white")
+      drawText(c, `${ship.hulltype.actionList}`, getXYfromHex(ship.hex).add(new Vec(-40,25)), 15, "gray")
+      drawText(c, `${ship.actionsRemaining}`, getXYfromHex(ship.hex).add(new Vec(-40,5)), 15, "white")
     }
   }
 

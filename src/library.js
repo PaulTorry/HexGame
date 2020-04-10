@@ -183,3 +183,12 @@ var clone = function() {
 };
 
 Object.defineProperty( Object.prototype, "clone", {value: clone, enumerable: false});
+
+let PaulsMath = {
+  lowestArrayIndex : function(a,b) {
+    if (a === -1 && b === -1) return 0;
+    else if (a === -1) return b
+    else if (b === -1) return a
+    else return (Math.min(a,b))
+  }
+}

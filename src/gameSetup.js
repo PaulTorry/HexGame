@@ -9,7 +9,7 @@ let preturn = true;
 
 let state = {};
 
-let sel = {state:0, attacks:[], menu:[], moves:[]}
+let sel = {state:0, actions:{attacks:[], menu:[]}, moves:[]}
 
 // replaceState( setup(5, 9, 2, false, "default", generateID(20)))
 

@@ -82,7 +82,7 @@ function mouseWheel(event){
 
 function drag(event){
   if (mouseDownLocationABS.scale(-1).add(new Vec(event.offsetX,  event.offsetY)).scale(-1/(screenSettings.scale)).mag > 20){
-    sel = {state:0, attacks:[], menu:[], moves:[]}
+    sel = {state:0, actions:{attacks:[], menu:[]}, moves:[]}
   }
   event.preventDefault();
   event.stopPropagation();
@@ -199,7 +199,7 @@ function removeTouchmove(event){
 
 function touchdrag(event){
 
-  sel = {state:0, attacks:[], menu:[], moves:[]}
+  sel = {state:0, actions:{attacks:[], menu:[]}, moves:[]}
 
   event.preventDefault();
   event.stopPropagation();

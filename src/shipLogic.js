@@ -45,7 +45,8 @@ function findPossibleAttacks(center, range = 1){
 }
 
 
-function findPossibleMoves(center, moveLeft = 2){
+function findPossibleMoves(center, moveLeft){
+  if(!moveLeft) return [];
   let terrainFunc = getTerrainMapFunction(makeTerrainCostMap());
 
   function findPossibleMovesFunctional(frontier, visited, terrainFunc){

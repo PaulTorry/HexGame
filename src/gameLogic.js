@@ -24,16 +24,32 @@ function onHexClicked(clickHex){
 //  if(preturn){preturn = false; return }
   let viewMask = getUpdatedViewMask(state);
 
-  let possibleAttacks = [], possibleMoves = [];
-
+  //let possibleAttacks = [], possibleMoves = [];
+  let possibleActions = {moves:[], attacks:[]};
   sel.menu = [];
+
+  function setShipActions(clickHex, ship){
+    possibleActions = findPossibleActions(clickHex, ship);
+    if (possibleActions.attacks.length || possibleActions.moves.length) {
+      sel.state = 1;
+      sel.hex = clickHex;
+      sel.actions = possibleActions;
+      sel.menu = [];
+      sel.ship = ship;
+    }
+    else{
+      ship.attacked = true;
+      sel = {state:0, actions:{moves:[], attacks:[]}, menu:[]}
+    }
+  }
+
+
 
   if (viewMask[clickHex.id] === 2){
 
     if(sel.state === 2){
-      if (clickHex.compare(sel.hex)) sel = {state:0,  actions:{moves:[], attacks:[]}, menu: []};
-      else sel = {state:0,  actions:{moves:[], attacks:[]}, menu: []};
-    //  else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
+      sel = {state:0,  actions:{moves:[], attacks:[]}, menu: []};
+      // else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
     }
 
     else if (sel.state === 1){
@@ -44,21 +60,19 @@ function onHexClicked(clickHex){
       else if(sel.actions.moves.find( e =>  e[0].compare(clickHex))) {
         sel.ship.hex = clickHex;
         state.history[subTurn()].push({type:"move" , rand:Math.random(), path:sel.actions.moves.find( e =>  e[0].compare(clickHex))})
+        let ar = sel.ship.actionsRemaining;
+        console.log("AR",ar);
+
+        sel.ship.actionsRemaining = ar.slice(PaulsMath.lowestArrayIndex(ar.indexOf("m"),ar.indexOf("mm") )+1);
+        console.log("SSsel.ship.actionsRemaining",sel.ship.actionsRemaining);
         sel.ship.moved = true;
         sel.hex = clickHex;
 
         applyTerrainDamage(sel.ship, getTerrainDamage(sel.ship, clickHex));
 
-        possibleAttacks = findPossibleAttacks(clickHex, sel.ship.hulltype.range);
+        // possibleAttacks = findPossibleAttacks(clickHex, sel.ship.hulltype.range);
 
-        findPossibleActions(clickHex, sel.ship);
-        if (possibleAttacks.length > 0) { sel.actions = {moves: [], attacks: possibleAttacks}}
-        else{
-          sel.ship.attacked = true;
-          sel = {state:0, actions:{moves:[], attacks:[]}, menu:[]}
-
-        }
-        sel.menu = [];
+        setShipActions(clickHex, sel.ship);
       }
 
       else if(sel.actions.attacks.find(e =>  e.compare(clickHex))) {
@@ -66,11 +80,11 @@ function onHexClicked(clickHex){
         if(target){
           applyDamage(sel.ship, target, true, getTerrainDefVal(target, clickHex));
           state.history[subTurn()].push({type:"attack" , rand:Math.random(), path:[clickHex, sel.ship.hex]})
-          sel.ship.moved = true; sel.ship.attacked = true;
-
+          let ar = sel.ship.actionsRemaining;
+          sel.ship.actionsRemaining = ar.slice(ar.indexOf("a")+1);
+          setShipActions(clickHex, sel.ship);
         }
         else { console.log("error in attacks"); }
-
         sel = {state:0, actions:{moves:[], attacks:[]}, menu:[]}
       }
       else sel = {state:0, actions:{moves:[], attacks:[]}, menu:[]}
@@ -78,36 +92,34 @@ function onHexClicked(clickHex){
     }
 
     else if (sel.state === 0){
+      console.log("State 0");
       let currentShip = getShipOnHex(clickHex);
 
       if(currentShip && currentShip.owner === state.playerTurn){
-        findPossibleActions(clickHex, currentShip);
-        if (!currentShip.moved)  possibleMoves = findPossibleMoves(clickHex, currentShip.hulltype.maxMove);
-        if (!currentShip.attacked)  possibleAttacks = findPossibleAttacks(clickHex, currentShip.hulltype.range);
-
-        if(possibleMoves.length || possibleAttacks.length){
-          sel = {state:1, hex:clickHex, ship:currentShip, actions:{moves:possibleMoves, attacks: possibleAttacks}}
-        }
-        else sel = {state:2, hex:clickHex, actions:{moves:[], attacks:[]}, menu: makeBuildBar(clickHex)};
+        setShipActions(clickHex, currentShip)
+      //  else sel = {state:2, hex:clickHex, actions:{moves:[], attacks:[]}, menu: makeBuildBar(clickHex)};
       }
       else{
         sel = {state:2, hex:clickHex, actions:{moves:[], attacks:[]}, menu: makeBuildBar(clickHex)};
       }
     }
   } else  sel = {state:0,  actions:{moves:[], attacks:[]}, menu: []};
+  console.log("sel", sel);
 }
+
+
 
 function findPossibleActions(clickHex, ship){
   let moveDistance = {m:0.6, mm:1.15}
 
   let movesLeft = ship.actionsRemaining.filter( x=> x === "m" || x === "mm")
   let attacksLeft = ship.actionsRemaining.filter( x=> x === "a")
-
+  console.log("moveDistance[movesLeft[0]]",moveDistance[movesLeft[0]]);
   let moves = []
-  if (movesLeft) moves = findPossibleMoves(clickHex, moveDistance[movesLeft[0]])
+  if (movesLeft.length) moves = findPossibleMoves(clickHex, moveDistance[movesLeft[0]])
 
   let attacks = []
-  if (attacksLeft) attacks = findPossibleAttacks(clickHex, ship.hulltype.range)
+  if (attacksLeft.length) attacks = findPossibleAttacks(clickHex, ship.hulltype.range);
 
   let actions = {moves: moves, attacks: attacks}
 
@@ -119,10 +131,11 @@ function findPossibleActions(clickHex, ship){
 
 
 
-
 function whichPlanetsTerritory(hex){
   return state.baseArray.find(b => b.hex.compare(hex) || b.territory.find(t => t.compare(hex)));
 }
+
+
 
 function territoryState(hex){
   if (whichPlanetsTerritory(hex) === undefined){ return 1}
@@ -177,7 +190,7 @@ function onTopPanelItemClicked(item, hex = sel.hex){
     tile.navBeacon = null;
   }
 
-  sel = {state:0, attacks:[], menu:[], moves:[]}
+  sel = {state:0, actions:{attacks:[], menu:[]}, moves:[]}
   reSetIncomes();
   drawScreen();
   drawMenu();
@@ -314,9 +327,12 @@ function turnLogic(){
 
   for (let ship of state.shipArray){
     if (ship.owner === state.playerTurn){
-      if (!ship.moved && !ship.attacked) repair(ship)
+      console.log(ship);
+      if (JSON.stringify(ship.actionsRemaining) === JSON.stringify(ship.hulltype.actionList)) repair(ship);
+      ship.actionsRemaining = [...ship.hulltype.actionList];
       ship.moved = false;
       ship.attacked = false;
+
     }
   }
   state.playerTurn = (state.playerTurn + 1) % state.numPlayers;
@@ -333,7 +349,7 @@ function turnLogic(){
 
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
 
-  sel = {state:0, attacks:[], menu:[], moves:[]}
+  sel = {state:0, actions:{attacks:[], menu:[]}, moves:[]}
   drawMenu(); drawScreen();
   //
   //
