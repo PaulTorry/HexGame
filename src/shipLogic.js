@@ -1,114 +1,108 @@
-"use strict"
+'use strict'
 
-/*global
-Hex, getUpdatedViewMask, state, data
+/* global
+getUpdatedViewMask, state, data
 */
 
 /* eslint-disable no-unused-vars */
 
-function buildShip(type, owner, hex, moved=true, attacked=true){
-  let base = data.shipHulls[type];
+function buildShip (type, owner, hex, moved = true, attacked = true) {
+  const base = data.shipHulls[type]
   return ({
-    type:base.type,
+    type: base.type,
     hulltype: base,
+    hull: base.hull,
+    shield: base.shield,
+    moved: moved,
+    attacked: attacked,
+    actionsRemaining: base.actionList,
+    hex: hex,
+    owner: owner
 
-    hull:base.hull, shield:base.shield,
-    moved:moved, attacked:attacked,
-    actionsRemaining:base.actionList, hex:hex, owner:owner,
-
-    //attack: base.attack, retaliate:base.retaliate,     maxMove: base.maxMove,
+    // attack: base.attack, retaliate:base.retaliate,     maxMove: base.maxMove,
     // range: base.range, view:base.view,
 
   })
 }
 
-function getShipOnHex(hex){
-  return state.shipArray.find(e => e.hex.compare(hex));
+function getShipOnHex (hex) {
+  return state.shipArray.find(e => e.hex.compare(hex))
 }
 
-function shipState(hex){
-  if (getShipOnHex(hex) === undefined){ return 1}
-  else if (getShipOnHex(hex).owner === state.playerTurn){ return 2}
-  else return 0;
+function shipState (hex) {
+  if (getShipOnHex(hex) === undefined) { return 1 } else if (getShipOnHex(hex).owner === state.playerTurn) { return 2 } else return 0
 }
 
-function findPossibleAttacks(center, range = 1){
-  let viewMask = getUpdatedViewMask(state)
-  let possibleAttacksInt = [];
-  for(let hex of center.within(range)){
-    let ship = getShipOnHex(hex);
-    if(viewMask[hex.id] === 2 && ship &&  !state.alliesGrid[ship.owner][state.playerTurn]) {
-      possibleAttacksInt.push(hex);
+function findPossibleAttacks (center, range = 1) {
+  const viewMask = getUpdatedViewMask(state)
+  const possibleAttacksInt = []
+  for (const hex of center.within(range)) {
+    const ship = getShipOnHex(hex)
+    if (viewMask[hex.id] === 2 && ship && !state.alliesGrid[ship.owner][state.playerTurn]) {
+      possibleAttacksInt.push(hex)
     }
   }
-  return possibleAttacksInt;
+  return possibleAttacksInt
 }
 
+function findPossibleMoves (center, moveLeft) {
+  if (!moveLeft) return []
+  const terrainFunc = getTerrainMapFunction(makeTerrainCostMap())
 
-function findPossibleMoves(center, moveLeft){
-  if(!moveLeft) return [];
-  let terrainFunc = getTerrainMapFunction(makeTerrainCostMap());
+  function findPossibleMovesFunctional (frontier, visited, terrainFunc) {
+    if (!frontier.length) return visited
+    let [current, ...newfrontier] = frontier
+    visited[current.loc.id] = current
 
-  function findPossibleMovesFunctional(frontier, visited, terrainFunc){
-
-    if (!frontier.length) return visited;
-    let [current, ...newfrontier] = frontier;
-    visited[current.loc.id] = current;
-
-    if(current.cost > 0){
+    if (current.cost > 0) {
       newfrontier = current.loc.neighbours
         .filter(n => n.mag <= state.boardSize)
-        .map(n => {return{loc:n, cost:current.cost - terrainFunc(current.loc.id, n.id), from:[current.loc, ...current.from]}})
-        .filter(({loc:hex, cost, from} ) => {
-          return (hex.mag <= state.boardSize) && !(visited[hex.id] && cost < visited[hex.id].cost)  && cost >= -30
+        .map(n => { return { loc: n, cost: current.cost - terrainFunc(current.loc.id, n.id), from: [current.loc, ...current.from] } })
+        .filter(({ loc: hex, cost, from }) => {
+          return (hex.mag <= state.boardSize) && !(visited[hex.id] && cost < visited[hex.id].cost) && cost >= -30
         })
         .concat(newfrontier)
-        .sort((a,b) => a.cost - b.cost)
+        .sort((a, b) => a.cost - b.cost)
     }
     return findPossibleMovesFunctional(newfrontier, visited, terrainFunc)
   }
 
-  let temp =  findPossibleMovesFunctional([{loc:center, cost:moveLeft, from:[]}], [] ,terrainFunc );
+  const temp = findPossibleMovesFunctional([{ loc: center, cost: moveLeft, from: [] }], [], terrainFunc)
 
-  return Object.values(temp).map(v => {return [v.loc, ...v.from]})
-    .filter(h => {return  (h[0].mag <= state.boardSize) && !getShipOnHex(h[0])});
+  return Object.values(temp).map(v => { return [v.loc, ...v.from] })
+    .filter(h => { return (h[0].mag <= state.boardSize) && !getShipOnHex(h[0]) })
 }
 
-
-function getTerrainMapFunction(terrainCostMap){
-  return function(off,on){
-    return terrainCostMap[off].moveOff + terrainCostMap[on].moveOn;
+function getTerrainMapFunction (terrainCostMap) {
+  return function (off, on) {
+    return terrainCostMap[off].moveOff + terrainCostMap[on].moveOn
   }
 }
 
+function makeTerrainCostMap () {
+  const terrainCostMap = {}
+  const viewMask = getUpdatedViewMask(state)
+  for (const [, tile] of state.tiles) {
+    let moveOff = data.terrainInfo[tile.terrain].moveCost / 2
+    let moveOn = data.terrainInfo[tile.terrain].moveCost / 2
+    if (tile.navBeacon && state.alliesGrid[tile.navBeacon.owner][state.playerTurn]) { moveOff = 0.25; moveOn = 0.25 }
 
-
-function makeTerrainCostMap(){
-  let terrainCostMap = {};
-  let viewMask = getUpdatedViewMask(state)
-  for(let [ ,tile] of state.tiles){
-
-    let moveOff = data.terrainInfo[tile.terrain].moveCost / 2;
-    let moveOn = data.terrainInfo[tile.terrain].moveCost / 2;
-    if(tile.navBeacon && state.alliesGrid[tile.navBeacon.owner][state.playerTurn]){moveOff = 0.25, moveOn = 0.25}
-
-    for(let hex2 of tile.hex.neighbours){
-      let ship = getShipOnHex(hex2)
-      if(ship && (!state.alliesGrid[ship.owner][state.playerTurn])) { moveOff = 9; }
+    for (const hex2 of tile.hex.neighbours) {
+      const ship = getShipOnHex(hex2)
+      if (ship && (!state.alliesGrid[ship.owner][state.playerTurn])) { moveOff = 9 }
     }
 
-    let moveTech = data.terrainInfo[tile.terrain].moveTech;
-    if(moveTech && !state.playerData[state.playerTurn].tech[moveTech]){
-      moveOff += 77; moveOn += 77;
+    const moveTech = data.terrainInfo[tile.terrain].moveTech
+    if (moveTech && !state.playerData[state.playerTurn].tech[moveTech]) {
+      moveOff += 77; moveOn += 77
     }
 
-    if(viewMask[tile.hex.id] !== 2 ){moveOff += 77; moveOn += 77;}
+    if (viewMask[tile.hex.id] !== 2) { moveOff += 77; moveOn += 77 }
 
-    terrainCostMap[tile.hex.id]={hex:tile.hex, "moveOff": moveOff, "moveOn": moveOn};
+    terrainCostMap[tile.hex.id] = { hex: tile.hex, moveOff: moveOff, moveOn: moveOn }
   }
-  return terrainCostMap;
+  return terrainCostMap
 }
-
 
 //
 // function findPossibleMoves(center, moveLeft = 2){
