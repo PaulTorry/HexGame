@@ -2,7 +2,7 @@
 
 /* global
 Hex, state, getShipOnHex, getUpdatedViewMask, data,
-findPossibleMoves, findPossibleAttacks, applyDamage,
+findPossibleActions, applyDamage,
 makeBuildBar, onTopPanelItemClicked,
 getTerrainDefVal, subTurn,
 applyTerrainDamage, getTerrainDamage
@@ -15,19 +15,19 @@ function takeAIturn () {
   const viewHexes = Object.entries(getUpdatedViewMask(state)).filter(([k, v]) => v > 1).map(([k, v]) => Hex.getFromID(k))
 
   ships.forEach(ship => {
-    const possibleMoves = findPossibleMoves(ship.hex, ship.hulltype.maxMove)
-    const possibleAttacks = findPossibleAttacks(ship.hex, ship.hulltype.range)
-
-    if (possibleAttacks.length && Math.random() > 0.5) { // CHANGE TO 0.5
-      const attack = possibleAttacks[Math.floor(Math.random() * possibleAttacks.length)]
-      applyDamage(ship, getShipOnHex(attack), true, getTerrainDefVal(getShipOnHex(attack), attack))
-      state.history[subTurn()].push({ type: 'attack', rand: Math.random(), path: [attack, ship.hex] })
-    } else if (possibleMoves.length && Math.random() > 0.5) {
-      const [move, ...hist] = possibleMoves[Math.floor(Math.random() * possibleMoves.length)]
-      if (!getTerrainDamage(ship, move) || Math.random() > 0.5) {
-        ship.hex = move
-        applyTerrainDamage(ship, getTerrainDamage(ship, move))
-        state.history[subTurn()].push({ type: 'move', rand: Math.random(), path: [move, ...hist] })
+    for (let i = 0; i < 5; i++) {
+      const { attacks, moves } = findPossibleActions(ship.hex, ship)
+      if (attacks.length && Math.random() > 0.5) { // CHANGE TO 0.5
+        const attack = attacks[Math.floor(Math.random() * attacks.length)]
+        applyDamage(ship, getShipOnHex(attack), true, getTerrainDefVal(getShipOnHex(attack), attack))
+        state.history[subTurn()].push({ type: 'attack', rand: Math.random(), path: [attack, ship.hex] })
+      } else if (moves.length && Math.random() > 0.5) {
+        const [move, ...hist] = moves[Math.floor(Math.random() * moves.length)]
+        if (!getTerrainDamage(ship, move) || Math.random() > 0.5) {
+          ship.hex = move
+          applyTerrainDamage(ship, getTerrainDamage(ship, move))
+          state.history[subTurn()].push({ type: 'move', rand: Math.random(), path: [move, ...hist] })
+        }
       }
     }
   })

@@ -146,7 +146,7 @@ const data = {
 
 // const navBeaconCost = 0.25;
 
-const debug = false
+let debug = false //  eslint-disable-line prefer-const
 
 const sessionInfo = {
   userName: 'nullUser',

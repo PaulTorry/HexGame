@@ -10,7 +10,7 @@ let preturn = true
 
 let state = {}
 
-let sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+let sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } // eslint-disable-line prefer-const
 
 // replaceState( setup(5, 9, 2, false, "default", generateID(20)))
 
@@ -81,7 +81,7 @@ function setupNew (config, meta = { online: false }) {
 
     baseArray.push({ type: 'planet', owner: i, hex: hexloc, territory: hexloc.secondNeighboursInclusive })
     playerData.push({ type: config.playerlist[i], money: 5, income: 1, tech: {}, capital: hexloc, viewMask: makeNewViewMask(tiles, 0) })
-    shipArray.push(buildShip('scoutShip', i, hexloc, false, false))
+    shipArray.push(buildShip('scoutShip', i, hexloc, false))
     console.log(shipArray)
     tiles.set(hexloc.id, { hex: hexloc, terrain: 'planet', station: null, navBeacon: { owner: i } })
 
@@ -122,7 +122,7 @@ function setupNew (config, meta = { online: false }) {
     playerData: playerData,
     baseArray: baseArray,
     alliesGrid: config.alliesGrid,
-    history: [[], []],
+    history: [[]],
     log: []
   }
 }

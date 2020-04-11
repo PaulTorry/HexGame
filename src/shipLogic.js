@@ -6,16 +6,16 @@ getUpdatedViewMask, state, data
 
 /* eslint-disable no-unused-vars */
 
-function buildShip (type, owner, hex, moved = true, attacked = true) {
+function buildShip (type, owner, hex, acted = true) {
   const base = data.shipHulls[type]
   return ({
     type: base.type,
     hulltype: base,
     hull: base.hull,
     shield: base.shield,
-    moved: moved,
-    attacked: attacked,
-    actionsRemaining: base.actionList,
+    // moved: moved,
+    // attacked: attacked,
+    actionsRemaining: acted ? [] : base.actionList,
     hex: hex,
     owner: owner
 

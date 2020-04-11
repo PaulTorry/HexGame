@@ -173,6 +173,18 @@ var clone = function () {
   return newObj
 }
 
+function cloneFunc (ob) {
+  var newObj = (ob instanceof Array) ? [] : {}
+  for (var i in ob) {
+    if (ob[i] && typeof ob[i] === 'object') {
+      newObj[i] = ob[i].clone()
+    } else {
+      newObj[i] = ob[i]
+    }
+  }
+  return newObj
+}
+
 Object.defineProperty(Object.prototype, 'clone', { value: clone, enumerable: false })
 
 const PaulsMath = {

@@ -40,7 +40,7 @@ function authStateChangeHandler (user) {
 }
 
 async function getHandleList () {
-  return await firebase.firestore().collection('handles').get()
+  return firebase.firestore().collection('handles').get()
     .then(function (qs) {
       const handles = []
       qs.forEach((doc) => { handles.push([handles.length, doc.id, doc.data().uid]) })
