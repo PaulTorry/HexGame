@@ -11,7 +11,7 @@ randomInt,
 firebase, loggedInPlayer, signupViaPrompt, checkForUpdatedServerGame,
 loginViaPrompt, localStorage,
 replaceState, setupNew, cacheHandleList, cacheGameList, loadGameFromID
-saveToServer, makeMetaFromMenu,
+saveToServer,
 prompt
 */
 
@@ -64,13 +64,14 @@ function interactiveConsole (num = '') {
   if (ans === '6') { loginSignupConsole() }
 
   if (ans === '7') { console.log(checkForUpdatedServerGame()) }
-  if (ans === '9') {
-    makeMetaFromMenu()
-    // console.log("state.playerData",state.playerData);
-    // console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
+  if (ans === '9') { console.log(state) }
+
+  // makeMetaFromMenu()
+  // console.log("state.playerData",state.playerData);
+  // console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
   //  console.log(getGameParamsViaPrompt());
   //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
-  }
+  // }
   drawScreen()
 }
 
