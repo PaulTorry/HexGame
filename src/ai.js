@@ -17,7 +17,7 @@ function takeAIturn () {
   ships.forEach(ship => {
     for (let i = 0; i < 5; i++) {
       const { attacks, moves } = findPossibleActions(ship.hex, ship)
-      if (attacks.length && Math.random() > 0.5) { // CHANGE TO 0.5
+      if (attacks.length && Math.random() > 0.5) {
         const attack = attacks[Math.floor(Math.random() * attacks.length)]
         applyDamage(ship, getShipOnHex(attack), true, getTerrainDefVal(getShipOnHex(attack), attack))
         state.history[subTurn()].push({ type: 'attack', rand: Math.random(), path: [attack, ship.hex] })

@@ -66,12 +66,6 @@ function interactiveConsole (num = '') {
   if (ans === '7') { console.log(checkForUpdatedServerGame()) }
   if (ans === '9') { console.log(state) }
 
-  // makeMetaFromMenu()
-  // console.log("state.playerData",state.playerData);
-  // console.log(menuData.OfflinePlayers.filter(x => x.PlayerType === "Human"));
-  //  console.log(getGameParamsViaPrompt());
-  //  console.log("lastSaved  localGameInfo", lastSaved, localGameInfo);
-  // }
   drawScreen()
 }
 
@@ -88,14 +82,12 @@ async function setupGameViaPrompt () {
     replaceState(setupNew(getGameParamsViaPrompt(false), { online: false }))
   }
   if (ans7 === 'y') {
-    if (loggedInPlayer) { // firebase.auth().currentUser){
+    if (loggedInPlayer) {
       const meta = await setupMetaViaPrompt()
       console.log('meta', meta)
-      //  state = await setupStateViaPrompt(tempMeta);
       let players
       if (meta.playergrid) players = meta.playergrid.length
       replaceState(setupNew(getGameParamsViaPrompt(meta.online, players), meta))
-    //  localGameInfo = setlocalGameInfo();
     } else {
       console.log('not logged in')
       loginViaPrompt()
@@ -106,10 +98,8 @@ async function setupGameViaPrompt () {
 
 async function setupMetaViaPrompt () {
   const meta = { online: true, playergrid: [] }
-  // let handleList =  await getHandleList()
   const additionalPlayergrid = await getAdditionalPlayers(cacheHandleList, [0, loggedInPlayer.uid, loggedInPlayer.handle])
   meta.playergrid = additionalPlayergrid
-  // console.log("additionalPlayergrid", additionalPlayergrid);
   return meta
 }
 
@@ -137,7 +127,6 @@ function getGameParamsViaPrompt (online = false, numHumansParam) {
   const gameName = prompt('Game Name', randomName())
   if (gameName === null) return null
   else config.gameName = gameName
-  // console.log(config);
 
   config.playerlist = makePlayerListConsole(config)
   config.alliesGrid = makeAlliesGridConsole(config)
@@ -169,7 +158,6 @@ async function setupStateViaPrompt (meta) {
   let players
   if (meta.playergrid) players = meta.playergrid.length
   const tempState = setupNew(getGameParamsViaPrompt(meta.online, players), meta)
-  // console.log(tempState);
   return tempState
 }
 

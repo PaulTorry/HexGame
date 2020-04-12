@@ -4,7 +4,7 @@
 Vec, Hex, sel:true, menuData
 getXYfromHex,
 
-state, debug
+state, debug, loggedInPlayer
 
 drawScreen, drawMenu, screenSettings, interactiveConsole
 nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onHexClicked,
@@ -151,9 +151,14 @@ function loadGameMenuClick (event) {
   console.log('loadGameMenuClick')
 }
 
+function checkPlayerTurn () {
+  const playerNum = state.meta.playergrid.filter((x) => x[1] === loggedInPlayer.handle)[0][0]
+  return playerNum === state.playerTurn
+}
+
 function nextTurnScreenClick (event) {
   console.log('nextTurnScreenClick')
-  if (!state.meta.online || debug) {
+  if (!state.meta.online || debug || checkPlayerTurn()) {
     translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital))
     changeCanvas('board')
     preturn = false

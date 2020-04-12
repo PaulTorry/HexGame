@@ -15,10 +15,20 @@ class Vec {
   invert () { return this.scale(-1) }
   get mag () { return Math.sqrt((this.x * this.x) + (this.y * this.y)) }
 
-  static getArray (input, Vecs) {
-    const [xx, yy, ...rest] = input
-    if (xx === null || yy === null) { return Vecs } else { return Vec.getArray(rest, Vecs.concat(new Vec(xx, yy))) }
+  static fromID (id) {
+    const vals = id.split(',')
+
+    return new Vec(...(id.split(',')).map(parseFloat))
   }
+
+  static fromIdArray (idArray) {
+    return idArray.map(Vec.fromID)
+  }
+
+  // static getArray (input, Vecs) {
+  //   const [xx, yy, ...rest] = input
+  //   if (xx === null || yy === null) { return Vecs } else { return Vec.getArray(rest, Vecs.concat(new Vec(xx, yy))) }
+  // }
 }
 
 class Hex {
@@ -61,10 +71,14 @@ class Hex {
     return new Hex(...coords)
   }
 
-  static getArray (input, Hexes) {
-    const [pp, qq, rr, ...rest] = input
-    if (pp === null || qq === null || rr === null) { return Hexes } else { return Hex.getArray(rest, Hexes.concat(new Hex(pp, qq, rr))) }
+  static fromIdArray (idArray) {
+    return idArray.map(Vec.getFromID)
   }
+
+  // static getArray (input, Hexes) {
+  //   const [pp, qq, rr, ...rest] = input
+  //   if (pp === null || qq === null || rr === null) { return Hexes } else { return Hex.getArray(rest, Hexes.concat(new Hex(pp, qq, rr))) }
+  // }
 
   static findWithin (n) {
     const list = []

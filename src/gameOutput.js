@@ -179,8 +179,15 @@ function drawBoard () {
 
       drawText(c, `${Math.round(ship.shield + ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20, 45)), 20, 'white')
       drawText(c, `(${Math.round(ship.hull)})`, getXYfromHex(ship.hex).add(new Vec(10, 45)), 15, 'orange')
-      drawText(c, `${ship.hulltype.actionList}`, getXYfromHex(ship.hex).add(new Vec(-40, 25)), 15, 'gray')
-      drawText(c, `${ship.actionsRemaining}`, getXYfromHex(ship.hex).add(new Vec(-40, 5)), 15, 'white')
+      // drawText(c, `${ship.hulltype.actionList}`, getXYfromHex(ship.hex).add(new Vec(-40, 25)), 15, 'gray')
+      // drawText(c, `${ship.actionsRemaining}`, getXYfromHex(ship.hex).add(new Vec(-40, 5)), 15, 'white')
+
+      let actionIconColour = 'blue'
+      for (const a in ship.hulltype.actionList) {
+        if (Number(a) + ship.actionsRemaining.length >= ship.hulltype.actionList.length) actionIconColour = 'white'
+        const { x, y } = getXYfromHex(ship.hex)
+        drawPoly(c, iconShapes[ship.hulltype.actionList[a]], { x: x -40 + 20 * a, y: y -25 }, 10, 0.5, actionIconColour)
+      }
     }
   }
 
@@ -296,9 +303,7 @@ function drawMenu () {
     })
   }
 
-  // console.log("igfqigf 1");
   if (menuData.Screen === 'NewGame') {
-    // console.log("igfqigf 2");
     data.newGameMenu.forEach((t) => {
       const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
       const { x, y } = center
