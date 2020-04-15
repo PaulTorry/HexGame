@@ -103,7 +103,15 @@ function drawBoard () {
       drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
 
       if (tile.terrain !== 'space') {
-        const angle = tile.variant
+        let angle = 0
+        switch (tile.terrain) {
+          case 'planet':
+          case 'asteroids':
+            angle = tile.variant
+            break
+          case 'gasGiant':
+            angle = -tile.variant / 6
+        }
         if (gameSprites[tile.terrain]) {
           conditionalDrawFromData(c, gameSprites[tile.terrain], x, y, undefined, undefined, angle)
         }
@@ -116,7 +124,7 @@ function drawBoard () {
       }
       if (tile.navBeacon) {
         tile.hex.neighbours.forEach((v, i) => {
-          if(state.tiles.get(v.id).navBeacon)    conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
+          if (state.tiles.get(v.id).navBeacon) conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
         })
       }
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
@@ -416,21 +424,9 @@ function conditionalDrawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, s
 function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
   const startTime = new Date()
 
-  // const rotate = ([a, b]) =>
-
-  // const add = (a,x,y) =>
-
-  // const pack2 = (ac,cv,ix,arr) => ix % 2 ? ac.concat([[arr[ix-1],arr[ix]]]) : ac
-  // let rotate = (x, y, t) => [x * Math.cos(t) + y * Math.sin(t), x *  - Math.sin(t) + y * Math.cos(t)]
-  // const getRotator = (t) => (a) => rotate(...a, t)
-  // let t = 6.3/4;
-  // console.log(v.reduce( pack2 ,[] ).map(getRotator(t)).flat() )
-
   const pack2 = (ac, cv, ix, arr) => ix % 2 ? ac.concat([[arr[ix - 1], arr[ix]]]) : ac
   const rotateMath = (x, y, th) => [x * Math.cos(th) + y * Math.sin(th), x * -Math.sin(th) + y * Math.cos(th)]
-  const makeRotator = (th) => (a) => rotateMath(...a, th)
-
-  const rotate = (a, th) => a.reduce(pack2, []).map(makeRotator(th)).flat()
+  const rotate = (a, th) => a.reduce(pack2, []).map((a) => rotateMath(...a, th)).flat()
 
   const add = (a, x, y, s = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s + x)
 
@@ -457,14 +453,12 @@ function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, r
     else if (t === 'lw') c.lineWidth = v[0]
     else if (t === 'cp') c.closePath()
     else if (t === 'fs') {
-      if (v && v[0]) { c.fillStyle = colourMap(v[0]) }
-      else if (gradient) { c.fillStyle = gradient }
-    } else if (t === 'ss') { if (v) { c.strokeStyle = colourMap(v[0]) } }
-    else if (t === 'fl') c.fill()
+      if (v && v[0]) { c.fillStyle = colourMap(v[0]) } else if (gradient) { c.fillStyle = gradient }
+    } else if (t === 'ss') { if (v) { c.strokeStyle = colourMap(v[0]) } } else if (t === 'fl') c.fill()
     else if (t === 'ct') c.bezierCurveTo(...transform(v, x, y, th))
     else if (t === 're') c.restore()
     else if (t === 'st') c.stroke()
-    // else if(t === "tr") c.transform(...v)
+    else if (t === 'tr') c.transform(...v)
     else if (t === 'xrg') {
       gradient = c.createRadialGradient(...transform([v[0], v[1]], x, y, th), v[2] * scale, ...transform([v[3], v[4]], x, y, th), v[5] * scale)
       // gradient = c.createRadialGradient(v[0] * scale + x + xx, v[1] * scale + y + yy, v[2] * scale, v[3] * scale + x + xx, v[4] * scale + y + yy, v[5] * scale)

@@ -146,7 +146,7 @@ const data = {
 
 // const navBeaconCost = 0.25;
 
-let theta = 0
+// let theta = 0
 
 let debug = false //  eslint-disable-line prefer-const
 
