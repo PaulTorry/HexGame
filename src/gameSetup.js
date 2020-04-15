@@ -14,7 +14,7 @@ let sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } // eslint-
 
 // replaceState( setup(5, 9, 2, false, "default", generateID(20)))
 
-function setup (numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTogetherP = false, gameNameP = 'noName', gameID = generateID(20), meta = { online: false }) {
+function setup (numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTogetherP = false, gameNameP = 'noName', meta = { online: false }) {
   const config = {}
   config.numPlayers = numPlayersP
   config.numHumans = numHumansP
@@ -108,6 +108,8 @@ function setupNew (config, meta = { online: false }) {
     tiles.get(s.id).terrain = 'space'
     tiles.get(s.id).resource = null
   })
+
+  tiles.forEach((_v, k) => { tiles.get(k).variant = Math.random() })
 
   return {
     meta: meta,

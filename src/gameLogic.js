@@ -115,7 +115,6 @@ function onTopPanelItemClicked (item, hex = sel.hex) {
 
   if (thing.type && thing.type === 'ship') {
     state.shipArray.push(buildShip(item, state.playerTurn, tile.hex))
-    // tile.station = {type: item, owner: state.playerTurn}
   }
 
   if (thing.type && thing.type === 'nav') {
@@ -130,7 +129,6 @@ function onTopPanelItemClicked (item, hex = sel.hex) {
       existingBase.owner = state.playerTurn
       existingBase.territory.forEach(t => {
         const station = state.tiles.get(t.id).station
-        //      console.log(t);
         if (station) state.tiles.get(t.id).station = { type: station.type, owner: state.playerTurn }
       })
     } else {
@@ -163,7 +161,6 @@ function getTerrainDefVal (ship, hex) {
 }
 
 function getTerrainDamage (ship, hex) {
-//  console.log(ship, hex, state.tiles.get(hex.id));
 
   if (data.terrainInfo[state.tiles.get(hex.id).terrain].damTech && !state.tiles.get(hex.id).navBeacon) {
     const hasTech = state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].damTech]
@@ -290,12 +287,6 @@ function turnLogic () {
 
   sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
   drawMenu(); drawScreen()
-  //
-  //
-  // if(state.playerData[state.playerTurn].type === "AI"){
-  //   takeAIturn();
-  //   nextTurn()
-  // }
 }
 
 function reSetIncomes () {

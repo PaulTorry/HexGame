@@ -10,7 +10,7 @@ gameSprites, debug, territoryState,  whichPlanetsTerritory,
 baseShapes,
 data, subTurn,
 localGameInfo, loggedInPlayer,
-getRealXYfromScreenXY,
+getRealXYfromScreenXY, iconShapes,
 cacheGameList
 */
 
@@ -103,18 +103,21 @@ function drawBoard () {
       drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
 
       if (tile.terrain !== 'space') {
+        const angle = tile.variant
         if (gameSprites[tile.terrain]) {
-          conditionalDrawFromData(c, gameSprites[tile.terrain], x, y)
+          conditionalDrawFromData(c, gameSprites[tile.terrain], x, y, undefined, undefined, angle)
         }
         if (gameSprites[tile.resource]) {
-          conditionalDrawFromData(c, gameSprites[tile.resource], x, y)
+          conditionalDrawFromData(c, gameSprites[tile.resource], x, y, undefined, undefined, angle)
         }
       }
       if (tile.station) {
         conditionalDrawFromData(c, gameSprites[tile.station.type], x, y, getColMap(tile.station.owner))
       }
       if (tile.navBeacon) {
-        conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner))
+        tile.hex.neighbours.forEach((v, i) => {
+          if(state.tiles.get(v.id).navBeacon)    conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
+        })
       }
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
       if (base) {
@@ -186,7 +189,7 @@ function drawBoard () {
       for (const a in ship.hulltype.actionList) {
         if (Number(a) + ship.actionsRemaining.length >= ship.hulltype.actionList.length) actionIconColour = 'white'
         const { x, y } = getXYfromHex(ship.hex)
-        drawPoly(c, iconShapes[ship.hulltype.actionList[a]], { x: x -40 + 20 * a, y: y -25 }, 10, 0.5, actionIconColour)
+        drawPoly(c, iconShapes[ship.hulltype.actionList[a]], { x: x - 40 + 20 * a, y: y - 25 }, 10, 0.5, actionIconColour)
       }
     }
   }
@@ -412,10 +415,31 @@ function conditionalDrawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, s
 
 function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
   const startTime = new Date()
-  const add = (a, x, y) => a.map((v, i) => i % 2 ? v * scale + y : v * scale + x)
+
+  // const rotate = ([a, b]) =>
+
+  // const add = (a,x,y) =>
+
+  // const pack2 = (ac,cv,ix,arr) => ix % 2 ? ac.concat([[arr[ix-1],arr[ix]]]) : ac
+  // let rotate = (x, y, t) => [x * Math.cos(t) + y * Math.sin(t), x *  - Math.sin(t) + y * Math.cos(t)]
+  // const getRotator = (t) => (a) => rotate(...a, t)
+  // let t = 6.3/4;
+  // console.log(v.reduce( pack2 ,[] ).map(getRotator(t)).flat() )
+
+  const pack2 = (ac, cv, ix, arr) => ix % 2 ? ac.concat([[arr[ix - 1], arr[ix]]]) : ac
+  const rotateMath = (x, y, th) => [x * Math.cos(th) + y * Math.sin(th), x * -Math.sin(th) + y * Math.cos(th)]
+  const makeRotator = (th) => (a) => rotateMath(...a, th)
+
+  const rotate = (a, th) => a.reduce(pack2, []).map(makeRotator(th)).flat()
+
+  const add = (a, x, y, s = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s + x)
+
+  const transform = (a, x, y, t) => add(rotate(add(a, x, y), t), xx, yy, scale)
+
   let gradient
-  let x = xx
-  let y = yy
+  let x = 0
+  let y = 0
+  const th = rotation * 2 * 3.1425
 
   // c.save();
   // c.shadowColor = "rgba(0, 0, 0, 0.35)";
@@ -424,22 +448,28 @@ function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, r
 
   data.forEach(([t, ...v]) => {
     if (t === 'sv') c.save()
-    else if (t === 'sc') { scale *= v[0] } else if (t === 'of') { x = xx + v[0] * scale; y = yy + v[1] * scale } else if (t === 'bp') c.beginPath()
-    else if (t === 'mt') c.moveTo(...add(v, x, y))
-    else if (t === 'lt') c.lineTo(...add(v, x, y))
+    else if (t === 'sc') scale *= v[0]
+    else if (t === 'of') {
+      x = v[0] * scale; y = v[1] * scale
+    } else if (t === 'bp') c.beginPath()
+    else if (t === 'mt') c.moveTo(...transform(v, x, y, th))
+    else if (t === 'lt') c.lineTo(...transform(v, x, y, th))
     else if (t === 'lw') c.lineWidth = v[0]
     else if (t === 'cp') c.closePath()
     else if (t === 'fs') {
-      if (v && v[0]) { c.fillStyle = colourMap(v[0]) } else if (gradient) { c.fillStyle = gradient }
-    } else if (t === 'ss') { if (v) { c.strokeStyle = colourMap(v[0]) } } else if (t === 'fl') c.fill()
-    else if (t === 'ct') c.bezierCurveTo(...add(v, x, y))
+      if (v && v[0]) { c.fillStyle = colourMap(v[0]) }
+      else if (gradient) { c.fillStyle = gradient }
+    } else if (t === 'ss') { if (v) { c.strokeStyle = colourMap(v[0]) } }
+    else if (t === 'fl') c.fill()
+    else if (t === 'ct') c.bezierCurveTo(...transform(v, x, y, th))
     else if (t === 're') c.restore()
     else if (t === 'st') c.stroke()
     // else if(t === "tr") c.transform(...v)
     else if (t === 'xrg') {
-      gradient = c.createRadialGradient(v[0] * scale + x, v[1] * scale + y, v[2] * scale, v[3] * scale + x, v[4] * scale + y, v[5] * scale)
+      gradient = c.createRadialGradient(...transform([v[0], v[1]], x, y, th), v[2] * scale, ...transform([v[3], v[4]], x, y, th), v[5] * scale)
+      // gradient = c.createRadialGradient(v[0] * scale + x + xx, v[1] * scale + y + yy, v[2] * scale, v[3] * scale + x + xx, v[4] * scale + y + yy, v[5] * scale)
     } else if (t === 'xlg') {
-      gradient = c.createLinearGradient(...add(v, x, y))
+      gradient = c.createLinearGradient(...transform(v, x, y, th))
     } else if (t === 'xcs') { gradient.addColorStop(v[0], colourMap(v[1])) }
   })
   c.shadowOffsetX = 0; c.shadowOffsetY = 0; c.shadowBlur = 0.0

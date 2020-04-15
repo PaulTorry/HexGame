@@ -215,7 +215,11 @@ function touchdrag (event) {
 }
 
 function keyHandle (e) {
-//  console.log(e);
+//  console.log(e); 
   if (e.code === 'Tab') interactiveConsole()
   if (Number(e.key)) interactiveConsole(Number(e.key))
+  if (e.key === 'ArrowRight') theta += 0.1
+  if (e.key === 'ArrowLeft') theta -= 0.1
+
+  drawScreen()
 }

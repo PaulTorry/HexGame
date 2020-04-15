@@ -17,9 +17,6 @@ var firebaseConfig = {
   measurementId: 'G-XWBNW49NG4'
 }
 
-// firebase.initializeApp(firebaseConfig);
-// firebase.auth().onAuthStateChanged(authStateChangeHandler);
-
 let loggedInPlayer = null
 const localGameInfo = {}
 let lastSaved
@@ -122,8 +119,6 @@ function checkForUpdatedServerGame (gameID = state.gameID) {
           console.log('new game on server')
           return true
         } else { return false }
-
-      //    if(turnNumber >= localGameInfo )
       }
     })
 }
@@ -146,8 +141,6 @@ async function loadGameFromID (gameID) {
   firebase.firestore().collection('gamestest').doc(gameID).collection('state').doc('current').get()
     .then(function (qs) {
       replaceState(unpackState(JSON.parse(qs.data().currentGame)))
-      // localGameInfo = setlocalGameInfo()
-      // drawScreen();
     })
 }
 

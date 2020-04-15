@@ -13,15 +13,9 @@ function buildShip (type, owner, hex, acted = true) {
     hulltype: base,
     hull: base.hull,
     shield: base.shield,
-    // moved: moved,
-    // attacked: attacked,
     actionsRemaining: acted ? [] : base.actionList,
     hex: hex,
     owner: owner
-
-    // attack: base.attack, retaliate:base.retaliate,     maxMove: base.maxMove,
-    // range: base.range, view:base.view,
-
   })
 }
 

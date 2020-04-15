@@ -113,7 +113,8 @@ class Hex {
     return Hex.getNfromWeightedList(n - head[2], tail)
   }
 
-  static neighbours () { return [new Hex(1, 0), new Hex(0, -1), new Hex(-1, 0), new Hex(-1, 1), new Hex(0, 1), new Hex(1, -1)] }
+  // static neighbours () { return [new Hex(1, 0), new Hex(0, -1), new Hex(-1, 0), new Hex(-1, 1), new Hex(0, 1), new Hex(1, -1)] }
+  static neighbours () { return [new Hex(0, 1), new Hex(-1, 1), new Hex(-1, 0), new Hex(0, -1), new Hex(1, -1), new Hex(1, 0)] }
 
   static neighboursSpiky () { return [new Hex(2, 0), new Hex(0, -2), new Hex(-2, 0), new Hex(-2, 2), new Hex(0, 2), new Hex(2, -2)] }
 
