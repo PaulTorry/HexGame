@@ -161,7 +161,6 @@ function getTerrainDefVal (ship, hex) {
 }
 
 function getTerrainDamage (ship, hex) {
-
   if (data.terrainInfo[state.tiles.get(hex.id).terrain].damTech && !state.tiles.get(hex.id).navBeacon) {
     const hasTech = state.playerData[ship.owner].tech[data.terrainInfo[state.tiles.get(hex.id).terrain].damTech]
     if (!hasTech || ship.hulltype.maxMove < 2) {

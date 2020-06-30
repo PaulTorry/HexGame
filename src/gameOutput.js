@@ -124,7 +124,7 @@ function drawBoard () {
       }
       if (tile.navBeacon) {
         tile.hex.neighbours.forEach((v, i) => {
-          if (state.tiles.get(v.id).navBeacon) conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
+          if (state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon) conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
         })
       }
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
