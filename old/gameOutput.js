@@ -97,14 +97,6 @@ function drawBoard () {
   // //  let viewMask = getUpdatedViewMask(state, who)
   // if (preturn){  viewMask = makeNewViewMask(new Map());}
 
-    
-
-
-
-
-
-
-
   for (const [id, tile] of state.tiles) {
     if (viewMask[id] || debug) {
       const { x, y } = getXYfromHex(tile.hex)// .subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
@@ -429,7 +421,58 @@ function conditionalDrawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, s
   return drawFromData(c, data, xx, yy, colourMap, scale, rotation)
 }
 
+function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
+  const startTime = new Date()
 
+  const pack2 = (ac, cv, ix, arr) => ix % 2 ? ac.concat([[arr[ix - 1], arr[ix]]]) : ac
+  const rotateMath = (x, y, th) => [x * Math.cos(th) + y * Math.sin(th), x * -Math.sin(th) + y * Math.cos(th)]
+  const rotate = (a, th) => a.reduce(pack2, []).map((a) => rotateMath(...a, th)).flat()
+
+  const add = (a, x, y, s = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s + x)
+
+  const transform = (a, x, y, t) => add(rotate(add(a, x, y), t), xx, yy, scale)
+
+  let gradient
+  let x = 0
+  let y = 0
+  const th = rotation * 2 * 3.1425
+
+  // c.save();
+  // c.shadowColor = "rgba(0, 0, 0, 0.35)";
+  // c.shadowOffsetX = 3.0; c.shadowOffsetY = 3.0;
+  // c.shadowBlur = 10.0;
+
+  data.forEach(([t, ...v]) => {
+    if (t === 'sv') c.save()
+    else if (t === 'sc') scale *= v[0]
+    else if (t === 'of') {
+      x = v[0] * scale; y = v[1] * scale
+    } else if (t === 'bp') c.beginPath()
+    else if (t === 'mt') c.moveTo(...transform(v, x, y, th))
+    else if (t === 'lt') c.lineTo(...transform(v, x, y, th))
+    else if (t === 'lw') c.lineWidth = v[0]
+    else if (t === 'cp') c.closePath()
+    else if (t === 'fs') {
+      if (v && v[0]) { c.fillStyle = colourMap(v[0]) } else if (gradient) { c.fillStyle = gradient }
+    } else if (t === 'ss') { if (v) { c.strokeStyle = colourMap(v[0]) } } else if (t === 'fl') c.fill()
+    else if (t === 'ct') c.bezierCurveTo(...transform(v, x, y, th))
+    else if (t === 're') c.restore()
+    else if (t === 'st') c.stroke()
+    else if (t === 'tr') c.transform(...v)
+    else if (t === 'xrg') {
+      gradient = c.createRadialGradient(...transform([v[0], v[1]], x, y, th), v[2] * scale, ...transform([v[3], v[4]], x, y, th), v[5] * scale)
+      // gradient = c.createRadialGradient(v[0] * scale + x + xx, v[1] * scale + y + yy, v[2] * scale, v[3] * scale + x + xx, v[4] * scale + y + yy, v[5] * scale)
+    } else if (t === 'xlg') {
+      gradient = c.createLinearGradient(...transform(v, x, y, th))
+    } else if (t === 'xcs') { gradient.addColorStop(v[0], colourMap(v[1])) }
+  })
+  c.shadowOffsetX = 0; c.shadowOffsetY = 0; c.shadowBlur = 0.0
+  c.restore(); c.beginPath(); c.closePath() // Hack to stop drawing after clear
+
+  //  if(new Date() - startTime >=1) console.log("Draw > 2", getNameFromData(data));
+
+  if (c.data) return c.data
+}
 
 function drawText (c, text, center = new Vec(0, 0), size = 28, color = 'blue', font = 'Helvetica') {
   const { x, y } = center

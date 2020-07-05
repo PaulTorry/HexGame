@@ -50,6 +50,7 @@ class Hex {
 
   get mag () { return (Math.abs(this.p) + Math.abs(this.q) + Math.abs(this.r)) / 2 }
   get id () { return `${this.p},${this.q}` }
+  get xy () { return Hex.getXYfromUnitHex(this) }
 
   get neighbours () { return Hex.neighbours().map(n => n.add(this)) }
   get neighboursSpiky () { return Hex.neighboursSpiky().map(n => n.add(this)) }

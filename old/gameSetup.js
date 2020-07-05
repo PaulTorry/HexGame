@@ -48,36 +48,13 @@ function setup (numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTo
 //   return alliesGrid;
 // }
 
-function replaceState (newState, cont) {
+function replaceState (newState) {
   console.log('replaceState', newState)
   state = newState
   if (state.meta.online) setlocalGameInfo() // localGameInfo = setlocalGameInfo();
   preturn = true
-
-  state.tiles.forEach((_v, k) => {
-    const tile = state.tiles.get(k)
-    const sprite = makeSprite(makeTileTextureList(tile), tile.hex)
-    state.tiles.get(k).sprite = sprite
-    cont.addChild(sprite)
-    sprite.interactive = true
-    sprite.gameObj = state.tiles.get(k)
-  })
-}
-
-function makeTileTextureList (tile) {
-  let textureList = []
-  
-  if (tile.terrain) textureList.push([tile.terrain, 1.5])
-  if (tile.resource) textureList.push([tile.resource, 1.5])
-  if (tile.navBeacon) textureList.push(["navBeacon", 1.5])
-  
-  const base = state.baseArray.find(b => b.hex.compare(tile.hex))
-  if (base) textureList.push(['planetRing', 1.5])
-
-  console.log(tile)
-  console.log(textureList)
-  
-  return textureList
+  changeCanvas('nextTurnScreen')
+  drawScreen()
 }
 
 function setupNew (config, meta = { online: false }) {
@@ -132,9 +109,7 @@ function setupNew (config, meta = { online: false }) {
     tiles.get(s.id).resource = null
   })
 
-  tiles.forEach((_v, k) => {
-    tiles.get(k).variant = Math.random()
-  })
+  tiles.forEach((_v, k) => { tiles.get(k).variant = Math.random() })
 
   return {
     meta: meta,
