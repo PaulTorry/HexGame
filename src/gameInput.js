@@ -79,7 +79,7 @@ function touchdrag (event) {
 
   event.preventDefault()
   event.stopPropagation()
-  var c = document.getElementById('wrap').getContext('2d')
+  //var c = document.getElementById('wrap').getContext('2d')
   const { pageX, pageY } = event.touches[0]
   if (event.touches[1]) {
     const { pageX: x2, pageY: y2 } = event.touches[1]
@@ -87,12 +87,12 @@ function touchdrag (event) {
     const fingerDistanceNew = Math.sqrt((pageX - x2) * (pageX - x2) + (pageY - y2) * (pageY - y2))
     //  console.log(fingerDistanceNew + "fingerDistanceNew");
     if (fingerDistance) {
-      scaleContext(fingerDistanceNew / fingerDistance)
+      scaleSpaceContainer(fingerDistanceNew / fingerDistance)
     }
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
   const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
-  translateContext(dif)
+  moveSpaceContainer(dif)
   mouseDownLocation = new Vec(pageX, pageY)
   //drawScreen()
 }
