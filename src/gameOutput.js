@@ -48,6 +48,8 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
+console.log(screenSettings.scale);
+
   window.requestAnimationFrame((t) => {
   // drawlog();
   drawNextTurnScreen()
@@ -58,10 +60,16 @@ function drawScreen () {
   drawTechTree()
   //  if (screenSettings.openTechTree){drawTechTree()}
 
-  let cover = document.body.querySelector("#board").getContext('2d')
-  cover.drawImage(document.getElementById('board'),500,500)
-  //cover.setTranslate(1.1, 1, 1, 1.1,0,0)
+  let cover = document.body.querySelector("#cover").getContext('2d')
+  cover.drawImage(document.getElementById('board'),0,0)
+  //cover.setTranslate(1.1, 0, 0, 1.1,0,0)
+
+  cover.setTransform(2,0,0,2,0,0)
+
   })
+
+
+
 
 
 }
