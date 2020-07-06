@@ -60,7 +60,7 @@ function drawScreen () {
 
   let cover = document.body.querySelector("#board").getContext('2d')
   cover.drawImage(document.getElementById('board'),500,500)
-  cover.scale(1.1, 1.1)
+  //cover.setTranslate(1.1, 1, 1, 1.1,0,0)
   })
 
 
