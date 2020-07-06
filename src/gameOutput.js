@@ -48,6 +48,7 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
+  window.requestAnimationFrame((t) => {
   // drawlog();
   drawNextTurnScreen()
   drawBoard()
@@ -56,6 +57,13 @@ function drawScreen () {
   // drawNewGameMenu();
   drawTechTree()
   //  if (screenSettings.openTechTree){drawTechTree()}
+
+  let cover = document.body.querySelector("#board").getContext('2d')
+  cover.drawImage(document.getElementById('board'),500,500)
+  cover.scale(1.1, 1.1)
+  })
+
+
 }
 
 function drawNextTurnScreen () {
