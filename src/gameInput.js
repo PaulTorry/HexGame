@@ -195,11 +195,13 @@ function touchdrag (event) {
     const fingerDistanceNew = Math.sqrt((pageX - x2) * (pageX - x2) + (pageY - y2) * (pageY - y2))
     //  console.log(fingerDistanceNew + "fingerDistanceNew");
     if (fingerDistance) {
-      scaleView(fingerDistanceNew / fingerDistance)
+      scaleView(fingerDistance / fingerDistanceNew)
     }
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
-  const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
+  //const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
+  const dif = mouseDownLocation.subtract(new Vec(pageX, pageY)).scale(screenSettings.scale)
+
   translateView(dif)
   mouseDownLocation = new Vec(pageX, pageY)
   drawScreen()
