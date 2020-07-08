@@ -48,7 +48,7 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
-  window.requestAnimationFrame((t) => {
+  //window.requestAnimationFrame((t) => {
   // drawlog();
     drawTopPanel()
     switch (screenSettings.currentCanvas) {
@@ -62,7 +62,7 @@ function drawScreen () {
         break
       default: console.log('drawfail')
     }
-  })
+  //})
 }
 
 function drawBuffer () {
@@ -97,7 +97,7 @@ function drawNextTurnScreen () {
   // let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
   // let {x,y} = playerLoc;
   const logoSize = 0.3
-  drawFromData(c, gameSprites['logo'], 400 - 300 * logoSize, 200 - 300 * logoSize, (x) => x, logoSize)
+  drawFromData(c, 'logo', 400 - 300 * logoSize, 200 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, center.add(new Vec(-80, 0)), 50, getPlayerColour(state.playerTurn))
   drawText(c, 'Click to Start', center.add(new Vec(-80, 50)), 30, 'white')
 }
@@ -129,36 +129,36 @@ function drawBoard (c) {
       const { x, y } = getXYfromHex(tile.hex)
 
       if (gameSprites[tile.terrain]) {
-        conditionalDrawFromData(c, gameSprites[tile.terrain], x, y, undefined, undefined, getAngleFromVariant(tile))
+        drawFromData(c, tile.terrain, x, y, undefined, undefined, getAngleFromVariant(tile))
       }
       if (gameSprites[tile.resource]) {
-        conditionalDrawFromData(c, gameSprites[tile.resource], x, y, undefined, undefined, getAngleFromVariant(tile))
+        drawFromData(c, tile.resource, x, y, undefined, undefined, getAngleFromVariant(tile))
       }
 
       if (tile.station) {
-        conditionalDrawFromData(c, gameSprites[tile.station.type], x, y, getColMap(tile.station.owner))
+        drawFromData(c, tile.station.type, x, y, getColMap(tile.station.owner))
       }
       if (tile.navBeacon) {
         tile.hex.neighbours.forEach((v, i) => {
-          if (state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon) conditionalDrawFromData(c, gameSprites['navBeacon'], x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
+          if (state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon) drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
         })
       }
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
       if (base) {
-        conditionalDrawFromData(c, gameSprites['planetRing'], x, y, getColMap(base.owner))
+        drawFromData(c, 'planetRing', x, y, getColMap(base.owner))
       }
       if (viewMask[id] === 1) {
         //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
-        conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
+        drawFromData(c,'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
     }
-    conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
+    drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
   }
 
   for (const [id, tile] of state.tiles) {
     const { x, y } = getXYfromHex(tile.hex)
     if (tile.terrain === 'blackHole' && (viewMask[id] || debug)) {
-      drawFromData(c, gameSprites['blackHole'], x, y, x => x, 1, 0, true)
+      drawFromData(c, 'blackHole', x, y, x => x, 1, 0, true)
       //  if (gameSprites[tile.terrain]) { drawFromData(c, gameSprites[tile.terrain], x, y, x => x, 1, 0, true) }
     }
   }
@@ -166,7 +166,7 @@ function drawBoard (c) {
   for (const [id, tile] of state.tiles) {
     if (viewMask[id] || debug) {
       const planet = whichPlanetsTerritory(tile.hex)
-      if (planet) conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => getPlayerColour(planet.owner, 0.5))
+      if (planet) drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => getPlayerColour(planet.owner, 0.5))
       if (debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
       if (debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-40, +40)), 14, 'grey')
     }
@@ -199,7 +199,7 @@ function drawBoard (c) {
         const { x, y } = getXYfromHex(ship.hex)
         let transparency = 1
         if (ship.owner === state.playerTurn && (ship.moved && ship.attacked)) { transparency = 0.4 }
-        conditionalDrawFromData(c, gameSprites[ship.type], x, y, getColMap(ship.owner, transparency))
+        drawFromData(c, ship.type, x, y, getColMap(ship.owner, transparency))
       }
 
       drawText(c, `${Math.round(ship.shield + ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20, 45)), 20, 'white')
@@ -211,7 +211,7 @@ function drawBoard (c) {
       for (const a in ship.hulltype.actionList) {
         if (Number(a) + ship.actionsRemaining.length >= ship.hulltype.actionList.length) actionIconColour = 'white'
         const { x, y } = getXYfromHex(ship.hex)
-        conditionalDrawFromData(c, gameSprites[ship.hulltype.actionList[a]], x - 40 + 20 * a, y - 25, () => actionIconColour)
+        drawFromData(c, ship.hulltype.actionList[a], x - 40 + 20 * a, y - 25, () => actionIconColour)
       }
     }
   }
@@ -220,17 +220,17 @@ function drawBoard (c) {
     for (const [move, ...hist] of sel.actions.moves) {
       const { x, y } = getXYfromHex(move)
       if (getTerrainDamage(sel.ship, move)[0] > 0 && !getTerrainDamage(sel.ship, move)[1]) {
-        conditionalDrawFromData(c, gameSprites['warningIconOrange'], x, y)
+        drawFromData(c, 'warningIconOrange', x, y)
       } else if (getTerrainDamage(sel.ship, move)[1]) {
-        conditionalDrawFromData(c, gameSprites['warningIconGreen'], x, y)
+        drawFromData(c, 'warningIconGreen', x, y)
       }
-      conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(move), () => 'rgb(166,191,187)', 0.90)
+      drawFromData(c, 'hexVert', ...getXYfromHex(move), () => 'rgb(166,191,187)', 0.90)
       //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(move), ss.hexSize - 5, 3, 'rgb(166,191,187)')
     } for (const attack of sel.actions.attacks) {
-      conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(attack), () => 'red', 0.90)
+      drawFromData(c, 'hexVert', ...getXYfromHex(attack), () => 'red', 0.90)
    //   drawPoly(c, simpleShapes['hexVert'], getXYfromHex(attack), ss.hexSize - 5, 3, 'red')
     }
-    conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
+    drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
     //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
   }
 }
@@ -258,26 +258,26 @@ function drawTopPanel () {
     for (let i = 0; i < menu.length; i++) {
       const details = data.thingList.find(t => t.thing === menu[i])
       //    console.log(details);
-      if (details.sprite && gameSprites[details.sprite[0][0]]) {
-        drawFromData(c, gameSprites['roundedHex'], 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
-        drawFromData(c, gameSprites['roundedHexOutline'], 110 + 70 * i, 30, x => 'rgb(36,34,73)', 0.35)
+      if (details.sprite && details.sprite[0][0]) {
+        drawFromData(c, 'roundedHex', 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
+        drawFromData(c, 'roundedHexOutline', 110 + 70 * i, 30, x => 'rgb(36,34,73)', 0.35)
         details.sprite.forEach(x => {
-          drawFromData(c, gameSprites[x[0]], 140 + 70 * i + x[1], 60 + x[2], getColMap(state.playerTurn, 1), 0.5 * x[3])
+          drawFromData(c, x[0], 140 + 70 * i + x[1], 60 + x[2], getColMap(state.playerTurn, 1), 0.5 * x[3])
         })
         drawText(c, `${details.price}`, new Vec(125 + 70 * i, 40), 10, 'white')
         drawText(c, `${details.name}`, new Vec(115 + 70 * i, 95), 10, 'white')
       } else if (gameSprites[menu[i]]) {
-        drawFromData(c, gameSprites['roundedHex'], 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
-        drawFromData(c, gameSprites[menu[i]], 140 + 70 * i, 60, getColMap(state.playerTurn, 1), 0.5)
+        drawFromData(c, 'roundedHex', 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
+        drawFromData(c, menu[i], 140 + 70 * i, 60, getColMap(state.playerTurn, 1), 0.5)
         drawText(c, `${details.price}`, new Vec(125 + 70 * i, 40), 10, 'white')
         drawText(c, `${details.name}`, new Vec(115 + 70 * i, 95), 10, 'white')
       } else (console.log('problem', details))
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn)
-  drawFromData(c, gameSprites['nextTurnButton'], 0, 0, getColMap(state.playerTurn, 1), 0.15, 0, true)
-  drawFromData(c, gameSprites['menuButton'], 650, 0, getColMap(state.playerTurn, 1), 0.08, 0, true)
-  drawFromData(c, gameSprites['techTreeButton'], 700, 0, getColMap(state.playerTurn, 1), 0.15, 0, true)
+  drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.15, 0, true)
+  drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.08, 0, true)
+  drawFromData(c, 'techTreeButton', 700, 0, getColMap(state.playerTurn, 1), 0.15, 0, true)
   // c.rect(655, 5, 45, 45);
   c.stroke()
 
@@ -298,7 +298,8 @@ function drawMenu () {
 
   for (const [id, tile] of state.tiles) {
     const { x, y } = getXYfromHex(tile.hex)// .subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
-    drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
+    drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), ()=> 'rgba(37,32,45, 0.5)', 0.5)
+    //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
   }
 
   if (menuData.Screen === 'MainMenu') {
@@ -306,7 +307,7 @@ function drawMenu () {
       const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
       const { x, y } = center
 
-      drawFromData(c, gameSprites['roundedHex'], x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
       drawText(c, `${t.name}`, center.add(new Vec(-30, 25)), 12, 'rgb(159,216,206)')
     })
   }
@@ -315,7 +316,7 @@ function drawMenu () {
     data.loadGameMenu.forEach((t) => {
       const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
       const { x, y } = center
-      drawFromData(c, gameSprites['roundedHex'], x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
 
       let valueToOutput = menuData.LoadGameOptions[t.name] || ''
       if (t.num || t.num === 0) {
@@ -335,7 +336,7 @@ function drawMenu () {
     data.newGameMenu.forEach((t) => {
       const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
       const { x, y } = center
-      drawFromData(c, gameSprites['roundedHex'], x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
 
       let valueToOutput = menuData.NewGameData[t.name] || ''
       if (t.num || t.num === 0) {
@@ -371,23 +372,23 @@ function drawTechTree () {
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
     if (t.cost > 99) {
-      drawFromData(c, gameSprites['roundedHex'], x - 48, y - 43, x => 'rgb(30,30,30)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(30,30,30)', 0.55, 0, true)
     } else if (state.playerData[state.playerTurn].tech[t.tech]) {
-      drawFromData(c, gameSprites['roundedHex'], x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, gameSprites['roundedHexOutline'], x - 48, y - 43, getColMap(state.playerTurn, 1), 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
+      drawFromData(c,'roundedHexOutline', x - 48, y - 43, getColMap(state.playerTurn, 1), 0.55, 0, true)
     } else if (t.cost > 99 || (t.requires &&
       t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
     )) {
-      drawFromData(c, gameSprites['roundedHex'], x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, gameSprites['roundedHexOutline'], x - 48, y - 43, x => 'rgb(36,34,73)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
+      drawFromData(c, 'roundedHexOutline', x - 48, y - 43, x => 'rgb(36,34,73)', 0.55, 0, true)
     } else { // if (draw){
-      drawFromData(c, gameSprites['roundedHex'], x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, gameSprites['roundedHexOutline'], x - 48, y - 43, x => 'rgb(159,216,206)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
+      drawFromData(c, 'roundedHexOutline', x - 48, y - 43, x => 'rgb(159,216,206)', 0.55, 0, true)
     }
 
     if ((draw || debug) && t.sprite) {
       t.sprite.forEach(s => {
-        drawFromData(c, gameSprites[s[0]], x + s[1], y + s[2], getColMap(state.playerTurn, 1), 0.55 * s[3])
+        drawFromData(c, s[0], x + s[1], y + s[2], getColMap(state.playerTurn, 1), 0.55 * s[3])
       })
     }
     if (draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30, 25)), 12, 'rgb(159,216,206)')
@@ -427,18 +428,9 @@ function drawArrow (c, start, end, width = 3, color = 'white') {
   c.closePath()
 }
 
-function conditionalDrawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0, alwaysDraw = false) {
-  // const border = screenSettings.hexSize * screenSettings.scale
-  // const { x: minX, y: minY } = getRealXYfromScreenXY(new Vec(0 - border, 0 - border))
-  // const { x: maxX, y: maxY } = getRealXYfromScreenXY(new Vec(800 + border, 800 + border))
-
-  // if (xx < minX || xx > maxX) return false
-  // if (yy < minY || yy > maxY) return false
-
-  return drawFromData(c, data, xx, yy, colourMap, scale, rotation)
-}
-
-function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
+function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
+  //const scale = scaleFactor * screenSettings.resolutionLevel
+  const data = gameSprites[sprite]
   const startTime = new Date()
 
   const pack2 = (ac, cv, ix, arr) => ix % 2 ? ac.concat([[arr[ix - 1], arr[ix]]]) : ac

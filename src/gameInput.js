@@ -54,20 +54,21 @@ function mouseWheel (event) {
   event.preventDefault()
   if (event.deltaY < 0) { scaleView(1 / 1.1) }
   if (event.deltaY > 0) { scaleView(1.1) }
-  drawScreen()
+  drawView()
 }
 
 function drag (e) {
   const offset = new Vec(e.offsetX, e.offsetY)
   if (mouseDownLocationABS.scale(-1).add(offset).scale(-1 / (screenSettings.scale)).mag > 20) {
     sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+  //  drawScreen()
   }
   e.preventDefault()
   e.stopPropagation()
   const dif = mouseDownLocation.subtract(offset)
   translateView(dif.scale(screenSettings.scale))
   mouseDownLocation = offset
-  drawScreen()
+  drawView()
 }
 
 function topPanelClick (event) {

@@ -89,6 +89,10 @@ window.onload = () => {
   firebase.auth().onAuthStateChanged(authStateChangeHandler);
   replaceState( setup(5, 9, 2, false, "default", generateID(20)))
   drawScreen();
+
+  // const animate = (t) => {drawView(t); requestAnimationFrame(animate)}
+  // requestAnimationFrame(animate)
+  
 }
 
 //drawScreen();

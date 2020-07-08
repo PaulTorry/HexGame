@@ -157,6 +157,7 @@ const sessionInfo = {
 }
 
 const screenSettings = {
+  resolutionLevel: 5,
   openTechTree: false,
   screenSize: 800,
   screenCenter: new Vec(400, 400),
