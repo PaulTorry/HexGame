@@ -107,6 +107,7 @@ function toggleTechTree (newState) {
 }
 
 function techTreeClick (event) {
+  if (event.offsetX > 720 && event.offsetY > 720) interactiveConsole()
   const offset = new Vec(event.offsetX, event.offsetY)
   const clickHex = Hex.getUnitHexFromXY((offset.add(screenSettings.techTreeOffset.invert())).scale(1 / 35))
   onTechHexClicked(clickHex)
