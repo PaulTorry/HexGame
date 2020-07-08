@@ -148,7 +148,8 @@ function drawBoard (c) {
         conditionalDrawFromData(c, gameSprites['planetRing'], x, y, getColMap(base.owner))
       }
       if (viewMask[id] === 1) {
-        drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
+        //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
+        conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
     }
     conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
@@ -394,25 +395,25 @@ function drawTechTree () {
   })
 }
 
-function drawPoly (c, pointVec, center = new Vec(0, 0), scale = 50, width, sColor, fColor) {
-  const { x: xx, y: yy } = center
-  //  if(!isOnScreen(xx,yy)) return;
-  if (width) { c.lineWidth = width }
-  if (sColor) { c.strokeStyle = sColor }
-  if (fColor) { c.fillStyle = fColor }
+// function drawPoly (c, pointVec, center = new Vec(0, 0), scale = 50, width, sColor, fColor) {
+//   const { x: xx, y: yy } = center
+//   //  if(!isOnScreen(xx,yy)) return;
+//   if (width) { c.lineWidth = width }
+//   if (sColor) { c.strokeStyle = sColor }
+//   if (fColor) { c.fillStyle = fColor }
 
-  c.lineWidth = 3
-  c.moveTo(pointVec[0].x, pointVec[0].y)
-  c.beginPath()
-  for (const point of pointVec) {
-    const { x, y } = point.scale(scale).add(center)
-    c.lineTo(x, y)
-  }
-  c.closePath()
-  c.stroke()
-  if (fColor) { c.fill() }
-  c.beginPath(); c.closePath() // Hack to stop drawing after clear
-}
+//   c.lineWidth = 3
+//   c.moveTo(pointVec[0].x, pointVec[0].y)
+//   c.beginPath()
+//   for (const point of pointVec) {
+//     const { x, y } = point.scale(scale).add(center)
+//     c.lineTo(x, y)
+//   }
+//   c.closePath()
+//   c.stroke()
+//   if (fColor) { c.fill() }
+//   c.beginPath(); c.closePath() // Hack to stop drawing after clear
+// }
 
 function drawArrow (c, start, end, width = 3, color = 'white') {
 //  console.log(start,end);
