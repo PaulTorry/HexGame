@@ -48,30 +48,42 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
-console.log(screenSettings.scale);
-
   window.requestAnimationFrame((t) => {
   // drawlog();
-  drawNextTurnScreen()
-  drawBoard()
-  drawTopPanel()
-  drawMenu()
-  // drawNewGameMenu();
-  drawTechTree()
-  //  if (screenSettings.openTechTree){drawTechTree()}
-
-  let cover = document.body.querySelector("#cover").getContext('2d')
-  cover.drawImage(document.getElementById('board'),0,0)
-  //cover.setTranslate(1.1, 0, 0, 1.1,0,0)
-
-  cover.setTransform(2,0,0,2,0,0)
-
+    drawTopPanel()
+    switch (screenSettings.currentCanvas) {
+      case 'nextTurnScreen': drawNextTurnScreen()
+        break
+      case 'mainMenu': drawMenu()
+        break
+      case 'board': drawBuffer(); drawView()
+        break
+      case 'techTree': drawTechTree()
+        break
+      default: console.log('drawfail')
+    }
   })
+}
 
+function drawBuffer () {
+  const b = document.body.querySelector('#buffer').getContext('2d')
+  b.translate(...screenSettings.bufferCenter)
+  drawBoard(b)
+  b.translate(...screenSettings.bufferCenter.scale(-1))
+}
 
-
-
-
+function drawView () {
+  const cover = document.body.querySelector('#board').getContext('2d')
+  const ss = screenSettings
+  //const { x, y } = screenSettings.viewOffset
+  cover.clearRect(-99999, -99999, 199999, 199999)
+  cover.drawImage(
+    document.getElementById('buffer'),
+    ...ss.screenCenter.scale(1 - ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
+    ...ss.screenCenter.scale(ss.scale * 2),
+    ...Vec.zero,
+    ...Vec.unit.scale(ss.screenSize)
+  )
 }
 
 function drawNextTurnScreen () {
@@ -80,7 +92,7 @@ function drawNextTurnScreen () {
   c.clearRect(-99999, -99999, 199999, 199999)
   c.fillStyle = 'white'
 
-  const center = new Vec(0, 0).add(ss.techTreeOffset)
+  const center = ss.techTreeOffset
   const { x, y } = center
   // let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
   // let {x,y} = playerLoc;
@@ -90,9 +102,21 @@ function drawNextTurnScreen () {
   drawText(c, 'Click to Start', center.add(new Vec(-80, 50)), 30, 'white')
 }
 
-function drawBoard () {
+function getAngleFromVariant (tile) {
+  let angle = 0
+  switch (tile.terrain) {
+    case 'planet':
+    case 'asteroids':
+      angle = tile.variant
+      break
+    case 'gasGiant':
+      angle = -tile.variant / 6
+  }
+  return angle
+}
+
+function drawBoard (c) {
   const ss = screenSettings
-  const c = document.getElementById('board').getContext('2d')
   c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
   c.fillStyle = '#ff0000'
   c.strokeStyle = '#ff00ff'
@@ -100,41 +124,17 @@ function drawBoard () {
 
   const viewMask = getUpdatedViewMask(state)
 
-  // if(!state.meta.online){
-  //   console.log("getting ofline viewmask", state.playerTurn);
-  //   viewMask = getUpdatedViewMask(state)
-  // }
-  // else{
-  // //  getUpdatedViewMask(state, localGameInfo.player)
-  //   console.log("making viewmask om draw", localGameInfo.player );
-  //
-  //   viewMask = getUpdatedViewMask(state, localGameInfo.player)
-  // }
-  // //  let viewMask = getUpdatedViewMask(state, who)
-  // if (preturn){  viewMask = makeNewViewMask(new Map());}
-
   for (const [id, tile] of state.tiles) {
     if (viewMask[id] || debug) {
-      const { x, y } = getXYfromHex(tile.hex)// .subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
-      drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
+      const { x, y } = getXYfromHex(tile.hex)
 
-      if (tile.terrain !== 'space') {
-        let angle = 0
-        switch (tile.terrain) {
-          case 'planet':
-          case 'asteroids':
-            angle = tile.variant
-            break
-          case 'gasGiant':
-            angle = -tile.variant / 6
-        }
-        if (gameSprites[tile.terrain]) {
-          conditionalDrawFromData(c, gameSprites[tile.terrain], x, y, undefined, undefined, angle)
-        }
-        if (gameSprites[tile.resource]) {
-          conditionalDrawFromData(c, gameSprites[tile.resource], x, y, undefined, undefined, angle)
-        }
+      if (gameSprites[tile.terrain]) {
+        conditionalDrawFromData(c, gameSprites[tile.terrain], x, y, undefined, undefined, getAngleFromVariant(tile))
       }
+      if (gameSprites[tile.resource]) {
+        conditionalDrawFromData(c, gameSprites[tile.resource], x, y, undefined, undefined, getAngleFromVariant(tile))
+      }
+
       if (tile.station) {
         conditionalDrawFromData(c, gameSprites[tile.station.type], x, y, getColMap(tile.station.owner))
       }
@@ -145,30 +145,27 @@ function drawBoard () {
       }
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
       if (base) {
-        if (gameSprites['planetRing']) {
-          conditionalDrawFromData(c, gameSprites['planetRing'], x, y, getColMap(base.owner))
-        } else conditionalDrawFromData(c, baseShapes['inhabitedPlanet'], getXYfromHex(tile.hex), 10, 4, getPlayerColour(base.owner))
+        conditionalDrawFromData(c, gameSprites['planetRing'], x, y, getColMap(base.owner))
       }
       if (viewMask[id] === 1) {
         drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
       }
     }
-    drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 2, 'rgb(37,32,45)')
+    conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
   }
-
-  // Draw on top
 
   for (const [id, tile] of state.tiles) {
     const { x, y } = getXYfromHex(tile.hex)
     if (tile.terrain === 'blackHole' && (viewMask[id] || debug)) {
-      if (gameSprites[tile.terrain]) { drawFromData(c, gameSprites[tile.terrain], x, y, x => x, 1, 0, true) }
+      drawFromData(c, gameSprites['blackHole'], x, y, x => x, 1, 0, true)
+      //  if (gameSprites[tile.terrain]) { drawFromData(c, gameSprites[tile.terrain], x, y, x => x, 1, 0, true) }
     }
   }
 
   for (const [id, tile] of state.tiles) {
     if (viewMask[id] || debug) {
       const planet = whichPlanetsTerritory(tile.hex)
-      if (planet) drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, getPlayerColour(planet.owner, 1, 0, 1))
+      if (planet) conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(tile.hex), () => getPlayerColour(planet.owner, 0.5))
       if (debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
       if (debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-40, +40)), 14, 'grey')
     }
@@ -213,7 +210,7 @@ function drawBoard () {
       for (const a in ship.hulltype.actionList) {
         if (Number(a) + ship.actionsRemaining.length >= ship.hulltype.actionList.length) actionIconColour = 'white'
         const { x, y } = getXYfromHex(ship.hex)
-        drawPoly(c, iconShapes[ship.hulltype.actionList[a]], { x: x - 40 + 20 * a, y: y - 25 }, 10, 0.5, actionIconColour)
+        conditionalDrawFromData(c, gameSprites[ship.hulltype.actionList[a]], x - 40 + 20 * a, y - 25, () => actionIconColour)
       }
     }
   }
@@ -226,11 +223,14 @@ function drawBoard () {
       } else if (getTerrainDamage(sel.ship, move)[1]) {
         conditionalDrawFromData(c, gameSprites['warningIconGreen'], x, y)
       }
-      drawPoly(c, simpleShapes['hexVert'], getXYfromHex(move), ss.hexSize - 5, 3, 'rgb(166,191,187)')
+      conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(move), () => 'rgb(166,191,187)', 0.90)
+      //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(move), ss.hexSize - 5, 3, 'rgb(166,191,187)')
     } for (const attack of sel.actions.attacks) {
-      drawPoly(c, simpleShapes['hexVert'], getXYfromHex(attack), ss.hexSize - 5, 3, 'red')
+      conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(attack), () => 'red', 0.90)
+   //   drawPoly(c, simpleShapes['hexVert'], getXYfromHex(attack), ss.hexSize - 5, 3, 'red')
     }
-    drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
+    conditionalDrawFromData(c, gameSprites['hexVert'], ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
+    //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
   }
 }
 
@@ -427,12 +427,12 @@ function drawArrow (c, start, end, width = 3, color = 'white') {
 }
 
 function conditionalDrawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0, alwaysDraw = false) {
-  const border = screenSettings.hexSize * screenSettings.scale
-  const { x: minX, y: minY } = getRealXYfromScreenXY(new Vec(0 - border, 0 - border))
-  const { x: maxX, y: maxY } = getRealXYfromScreenXY(new Vec(800 + border, 800 + border))
+  // const border = screenSettings.hexSize * screenSettings.scale
+  // const { x: minX, y: minY } = getRealXYfromScreenXY(new Vec(0 - border, 0 - border))
+  // const { x: maxX, y: maxY } = getRealXYfromScreenXY(new Vec(800 + border, 800 + border))
 
-  if (xx < minX || xx > maxX) return false
-  if (yy < minY || yy > maxY) return false
+  // if (xx < minX || xx > maxX) return false
+  // if (yy < minY || yy > maxY) return false
 
   return drawFromData(c, data, xx, yy, colourMap, scale, rotation)
 }
@@ -462,7 +462,7 @@ function drawFromData (c, data, xx = 0, yy = 0, colourMap = x => x, scale = 1, r
     if (t === 'sv') c.save()
     else if (t === 'sc') scale *= v[0]
     else if (t === 'of') {
-      x = v[0] * scale; y = v[1] * scale
+      x = v[0] ; y = v[1]//x = v[0] * scale; y = v[1] * scale
     } else if (t === 'bp') c.beginPath()
     else if (t === 'mt') c.moveTo(...transform(v, x, y, th))
     else if (t === 'lt') c.lineTo(...transform(v, x, y, th))

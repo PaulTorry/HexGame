@@ -160,9 +160,12 @@ const screenSettings = {
   openTechTree: false,
   screenSize: 800,
   screenCenter: new Vec(400, 400),
-  screenOffset: new Vec(0, 0),
+  bufferSize: 3200,
+  bufferCenter: new Vec(1600, 1600),
+  viewOffset: new Vec(0, 0),
   techTreeOffset: new Vec(400, 400),
   hexSize: 75,
   scale: 1,
-  showTrails: true
+  showTrails: true,
+  currentCanvas: "nextTurnScreen"
 }
