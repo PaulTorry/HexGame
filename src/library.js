@@ -7,6 +7,11 @@ function json (a) { return JSON.stringify(a) }
 class Vec {
   constructor (x = 0, y = 0) { this.x = x; this.y = y }
 
+  * [Symbol.iterator] () {
+    yield this.x
+    yield this.y
+  }
+
   add (b) { return new Vec(this.x + b.x, this.y + b.y) }
   addXY (x, y) { return new Vec(this.x + x, this.y + y) }
   subtract (b) { return new Vec(this.x - b.x, this.y - b.y) }
@@ -25,6 +30,8 @@ class Vec {
     return idArray.map(Vec.fromID)
   }
 
+  static zero = new Vec(0, 0) 
+  static unit = new Vec(1, 1) 
   // static getArray (input, Vecs) {
   //   const [xx, yy, ...rest] = input
   //   if (xx === null || yy === null) { return Vecs } else { return Vec.getArray(rest, Vecs.concat(new Vec(xx, yy))) }
