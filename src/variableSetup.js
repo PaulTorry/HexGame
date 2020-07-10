@@ -103,10 +103,10 @@ const data = {
 
   thingList: [
 
-    { name: 'Nav. Beacon', thing: 'navBeacon', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navBeacon', terrain: ['space'], sprite: [['navBeaconCross', -15, -18, 1]] },
-    { name: 'Nav. Beacon', thing: 'navAsteroid', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navAsteroid', terrain: ['asteroids'], sprite: [['asteroids', 0, -2, 0.75], ['navBeaconCross', -15, -18, 1]] },
-    { name: 'Nav. Beacon', thing: 'navNebula', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navNebula', terrain: ['nebula'], sprite: [['nebula', 1, -2, 0.75], ['navBeaconCross', -15, -18, 1]] },
-    { name: 'Nav. Beacon', thing: 'navProto', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navNebula', terrain: ['protostar'], sprite: [['nebula', 1, -2, 0.75], ['navBeaconCross', -15, -18, 1]] },
+    { name: 'Nav. Beacon', thing: 'navBeacon', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navBeacon', terrain: ['space'], sprite: [['navBeaconCross', 0, 0, 1]] },
+    { name: 'Nav. Beacon', thing: 'navAsteroid', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navAsteroid', terrain: ['asteroids'], sprite: [['asteroids', 0, -2, 0.75], ['navBeaconCross', 0, 0, 1]] },
+    { name: 'Nav. Beacon', thing: 'navNebula', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navNebula', terrain: ['nebula'], sprite: [['nebula', 1, -2, 0.75], ['navBeaconCross', 0, 0, 1]] },
+    { name: 'Nav. Beacon', thing: 'navProto', type: 'nav', price: 2, territoryState: 1, shipState: 'ownPresent', tech: 'navNebula', terrain: ['protostar'], sprite: [['nebula', 1, -2, 0.75], ['navBeaconCross', 0, 0, 1]] },
 
     { name: 'Ast. Mining', thing: 'asteroidMining', type: 'industry', price: 2, income: 2, territoryState: 2, shipState: 'noEnemy', tech: 'asteroidMining', terrain: ['asteroids'], sprite: [['asteroids', 0, -2, 0.75], ['asteroidMining', 0, -2, 0.75]] },
     { name: 'Gas Extraction', thing: 'harvestGasGiant', type: 'industry', price: 2, income: 2, territoryState: 2, shipState: 'noEnemy', tech: 'harvestGasGiant', terrain: ['gasGiant'], sprite: [['gasGiant', 0, 0, 1], ['harvestGasGiant', 0, 0, 1]] },
@@ -157,10 +157,11 @@ const sessionInfo = {
 }
 
 const screenSettings = {
-  resolutionLevel: 5,
+  lowRes: false,
   openTechTree: false,
   screenSize: 800,
   screenCenter: new Vec(400, 400),
+  intermediateCenter: new Vec(800, 800),
   bufferSize: 3200,
   bufferCenter: new Vec(1600, 1600),
   viewOffset: new Vec(0, 0),

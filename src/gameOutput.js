@@ -48,21 +48,21 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
-  //window.requestAnimationFrame((t) => {
+  // window.requestAnimationFrame((t) => {
   // drawlog();
-    drawTopPanel()
-    switch (screenSettings.currentCanvas) {
-      case 'nextTurnScreen': drawNextTurnScreen()
-        break
-      case 'mainMenu': drawMenu()
-        break
-      case 'board': drawBuffer(); drawView()
-        break
-      case 'techTree': drawTechTree()
-        break
-      default: console.log('drawfail')
-    }
-  //})
+  drawTopPanel()
+  switch (screenSettings.currentCanvas) {
+    case 'nextTurnScreen': drawNextTurnScreen()
+      break
+    case 'mainMenu': drawMenu()
+      break
+    case 'board': drawBuffer(); drawView()
+      break
+    case 'techTree': drawTechTree()
+      break
+    default: console.log('drawfail')
+  }
+  // })
 }
 
 function drawBuffer () {
@@ -70,20 +70,40 @@ function drawBuffer () {
   b.translate(...screenSettings.bufferCenter)
   drawBoard(b)
   b.translate(...screenSettings.bufferCenter.scale(-1))
+  if (screenSettings.lowRes) {
+    const i = document.getElementById('intermediate').getContext('2d')
+
+    i.clearRect(-99999, -99999, 199999, 199999)
+    i.drawImage(
+      document.getElementById('buffer'),
+      0, 0, 3200, 3200, 0, 0, 1600, 1600
+    )
+  }
 }
 
 function drawView () {
   const cover = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
-  //const { x, y } = screenSettings.viewOffset
+  // const { x, y } = screenSettings.viewOffset
   cover.clearRect(-99999, -99999, 199999, 199999)
-  cover.drawImage(
-    document.getElementById('buffer'),
-    ...ss.screenCenter.scale(1 - ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
-    ...ss.screenCenter.scale(ss.scale * 2),
-    ...Vec.zero,
-    ...Vec.unit.scale(ss.screenSize)
-  )
+
+  if (!ss.lowRes) {
+    cover.drawImage(
+      document.getElementById('buffer'),
+      ...ss.screenCenter.scale(1 - ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
+      ...ss.screenCenter.scale(ss.scale * 2),
+      ...Vec.zero,
+      ...Vec.unit.scale(ss.screenSize)
+    )
+  } else {
+    cover.drawImage(
+      document.getElementById('intermediate'),
+      ...ss.screenCenter.scale(1 - ss.scale).add(ss.viewOffset).scale(1 / 2).add(ss.intermediateCenter),
+      ...ss.screenCenter.scale(ss.scale * 2 * 1 / 2),
+      ...Vec.zero,
+      ...Vec.unit.scale(ss.screenSize)
+    )
+  }
 }
 
 function drawNextTurnScreen () {
@@ -128,6 +148,8 @@ function drawBoard (c) {
     if (viewMask[id] || debug) {
       const { x, y } = getXYfromHex(tile.hex)
 
+      drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
+
       if (gameSprites[tile.terrain]) {
         drawFromData(c, tile.terrain, x, y, undefined, undefined, getAngleFromVariant(tile))
       }
@@ -139,17 +161,26 @@ function drawBoard (c) {
         drawFromData(c, tile.station.type, x, y, getColMap(tile.station.owner))
       }
       if (tile.navBeacon) {
-        tile.hex.neighbours.forEach((v, i) => {
-          if (state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon) drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
-        })
+        const nt = tile.hex.neighbours.map((v, i) => [state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon, i]).filter(([t, i]) => t)
+        console.log(nt, nt.length, nt.len);
+
+        if (nt.length) nt.forEach(([v, i]) => drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6))
+        else drawFromData(c, 'navBeaconCross', x, y, getColMap(tile.navBeacon.owner))
       }
+      // if (tile.navBeacon) {
+      //   tile.hex.neighbours.forEach((v, i) => {
+      //     if (state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon) {
+      //       drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
+      //     }
+      //   })
+      // }
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
       if (base) {
         drawFromData(c, 'planetRing', x, y, getColMap(base.owner))
       }
       if (viewMask[id] === 1) {
-        //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
-        drawFromData(c,'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
+        // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
+        drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
     }
     drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
@@ -225,13 +256,13 @@ function drawBoard (c) {
         drawFromData(c, 'warningIconGreen', x, y)
       }
       drawFromData(c, 'hexVert', ...getXYfromHex(move), () => 'rgb(166,191,187)', 0.90)
-      //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(move), ss.hexSize - 5, 3, 'rgb(166,191,187)')
+      // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(move), ss.hexSize - 5, 3, 'rgb(166,191,187)')
     } for (const attack of sel.actions.attacks) {
       drawFromData(c, 'hexVert', ...getXYfromHex(attack), () => 'red', 0.90)
-   //   drawPoly(c, simpleShapes['hexVert'], getXYfromHex(attack), ss.hexSize - 5, 3, 'red')
+      //   drawPoly(c, simpleShapes['hexVert'], getXYfromHex(attack), ss.hexSize - 5, 3, 'red')
     }
     drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
-    //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
+    // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
   }
 }
 
@@ -298,8 +329,8 @@ function drawMenu () {
 
   for (const [id, tile] of state.tiles) {
     const { x, y } = getXYfromHex(tile.hex)// .subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
-    drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), ()=> 'rgba(37,32,45, 0.5)', 0.5)
-    //drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
+    drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), () => 'rgba(37,32,45, 0.5)', 0.5)
+    // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
   }
 
   if (menuData.Screen === 'MainMenu') {
@@ -375,7 +406,7 @@ function drawTechTree () {
       drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(30,30,30)', 0.55, 0, true)
     } else if (state.playerData[state.playerTurn].tech[t.tech]) {
       drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c,'roundedHexOutline', x - 48, y - 43, getColMap(state.playerTurn, 1), 0.55, 0, true)
+      drawFromData(c, 'roundedHexOutline', x - 48, y - 43, getColMap(state.playerTurn, 1), 0.55, 0, true)
     } else if (t.cost > 99 || (t.requires &&
       t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
     )) {
@@ -429,8 +460,8 @@ function drawArrow (c, start, end, width = 3, color = 'white') {
 }
 
 function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
-  //const scale = scaleFactor * screenSettings.resolutionLevel
-  const data = gameSprites[sprite]
+  // const scale = scaleFactor * screenSettings.resolutionLevel
+  const data = gameSprites[sprite] //|| []
   const startTime = new Date()
 
   const pack2 = (ac, cv, ix, arr) => ix % 2 ? ac.concat([[arr[ix - 1], arr[ix]]]) : ac
@@ -439,23 +470,28 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1,
 
   const add = (a, x, y, s = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s + x)
 
-  const transform = (a, x, y, t) => add(rotate(add(a, x, y), t), xx, yy, scale)
+  const transform = (a, x, y, t) => {
+    if (t) return add(rotate(add(a, x, y), t), xx, yy, scale)
+    else return add(add(a, x, y), xx, yy, scale)
+  }
 
   let gradient
   let x = 0
   let y = 0
   const th = rotation * 2 * 3.1425
 
-  // c.save();
-  // c.shadowColor = "rgba(0, 0, 0, 0.35)";
-  // c.shadowOffsetX = 3.0; c.shadowOffsetY = 3.0;
-  // c.shadowBlur = 10.0;
+  const ds = () => {
+    c.save()
+    c.shadowColor = "rgba(0, 0, 0, 0.35)"
+    c.shadowOffsetX = 3.0; c.shadowOffsetY = 3.0; c.shadowBlur = 10.0
+  }
 
   data.forEach(([t, ...v]) => {
     if (t === 'sv') c.save()
+    else if (t === 'ds') ds()
     else if (t === 'sc') scale *= v[0]
     else if (t === 'of') {
-      x = v[0] ; y = v[1]//x = v[0] * scale; y = v[1] * scale
+      x = v[0]; y = v[1]// x = v[0] * scale; y = v[1] * scale
     } else if (t === 'bp') c.beginPath()
     else if (t === 'mt') c.moveTo(...transform(v, x, y, th))
     else if (t === 'lt') c.lineTo(...transform(v, x, y, th))
@@ -463,7 +499,9 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1,
     else if (t === 'cp') c.closePath()
     else if (t === 'fs') {
       if (v && v[0]) { c.fillStyle = colourMap(v[0]) } else if (gradient) { c.fillStyle = gradient }
-    } else if (t === 'ss') { if (v) { c.strokeStyle = colourMap(v[0]) } } else if (t === 'fl') c.fill()
+    } else if (t === 'ss') {
+      if (v) c.strokeStyle = colourMap(v[0])
+    } else if (t === 'fl') c.fill()
     else if (t === 'ct') c.bezierCurveTo(...transform(v, x, y, th))
     else if (t === 're') c.restore()
     else if (t === 'st') c.stroke()
