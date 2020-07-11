@@ -32,7 +32,7 @@ function translateView (dif) {
   console.log(screenSettings.viewOffset)
   screenSettings.viewOffset = screenSettings.viewOffset.bounds(screenSettings.bufferCenter)
   console.log(screenSettings.viewOffset)
-    // @TODO bounds method on Vec
+  // @TODO bounds method on Vec
 }
 
 function translateViewTo (loc) {
@@ -122,17 +122,34 @@ function getBufferXYfromViewXY (pt) {
   return pt.subtract(ss.screenCenter).scale(ss.scale).add(ss.viewOffset)
 }
 
-function boardClick (event) {
-  const offset = new Vec(event.offsetX, event.offsetY)
-
-  const bxy = getBufferXYfromViewXY(offset)
-  const uxy = bxy.scale(1 / screenSettings.hexSize)
-  const hex = Hex.getUnitHexFromXY(uxy)
-
-  console.log(offset, bxy, uxy, hex)
-
-  onHexClicked(hex)
+function nextTurnScreenClick (event) {
+  console.log('nextTurnScreenClick')
+  if (!state.meta.online || debug || checkPlayerTurn()) {
+    translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
+    changeCanvas('board')
+    preturn = false
+  }
   drawScreen()
+}
+
+function boardClick (event) {
+  if (screenSettings.currentView === 'nextTurnScreen') {
+    console.log('nextTurnScreenClick')
+    if (!state.meta.online || debug || checkPlayerTurn()) {
+      translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
+      screenSettings.currentView = 'board'  //changeCanvas('board')
+      preturn = false
+    }
+    drawScreen()
+  } else {
+    const offset = new Vec(event.offsetX, event.offsetY)
+    const bxy = getBufferXYfromViewXY(offset)
+    const uxy = bxy.scale(1 / screenSettings.hexSize)
+    const hex = Hex.getUnitHexFromXY(uxy)
+    console.log(offset, bxy, uxy, hex)
+    onHexClicked(hex)
+    drawScreen()
+  }
 }
 
 function mainMenuClick (event) {
@@ -150,16 +167,6 @@ function loadGameMenuClick (event) {
 function checkPlayerTurn () {
   const playerNum = state.meta.playergrid.filter((x) => x[1] === loggedInPlayer.handle)[0][0]
   return playerNum === state.playerTurn
-}
-
-function nextTurnScreenClick (event) {
-  console.log('nextTurnScreenClick')
-  if (!state.meta.online || debug || checkPlayerTurn()) {
-    translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
-    changeCanvas('board')
-    preturn = false
-  }
-  drawScreen()
 }
 
 function changeCanvas (canvas) {
@@ -204,7 +211,7 @@ function touchdrag (event) {
     }
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
-  //const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
+  // const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
   const dif = mouseDownLocation.subtract(new Vec(pageX, pageY)).scale(screenSettings.scale)
 
   translateView(dif)

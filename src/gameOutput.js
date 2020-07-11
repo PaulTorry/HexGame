@@ -66,45 +66,57 @@ function drawScreen () {
 }
 
 function drawBuffer () {
-  const b = document.body.querySelector('#buffer').getContext('2d')
+  const ss = screenSettings
+  const b = canvases.buffer.getContext('2d')// document.body.querySelector('#buffer').getContext('2d')
+  b.canvas.height = ss.bufferCenter.y * 2
+  b.canvas.width = ss.bufferCenter.x * 2
   b.translate(...screenSettings.bufferCenter)
   drawBoard(b)
   b.translate(...screenSettings.bufferCenter.scale(-1))
-  b.beginPath();
-  b.rect(20, 20, screenSettings.bufferCenter.x * 2 - 40, screenSettings.bufferCenter.y * 2 - 40)
-  b.stroke();
+  // b.beginPath();
+  // b.rect(20, 20, screenSettings.bufferCenter.x * 2 - 40, screenSettings.bufferCenter.y * 2 - 40)
+  // b.stroke();
+
   if (screenSettings.lowRes) {
     const i = document.getElementById('intermediate').getContext('2d')
 
-    i.clearRect(-99999, -99999, 199999, 199999)
+    i.clearRect(0, 0, 999, 999)// ...ss.intermediateCenter.scale(2))
     i.drawImage(
-      document.getElementById('buffer'),
-      0, 0, 3200, 3200, 0, 0, 1600, 1600
+      canvases.buffer, // document.getElementById('buffer'),
+      0, 0, ...ss.bufferCenter.scale(2), 0, 0, ...ss.intermediateCenter.scale(2)
     )
   }
 }
 
 function drawView () {
+  const ss = screenSettings
+  if (ss.currentView === 'nextTurnScreen') {
+    const cover = document.body.querySelector('#board').getContext('2d')
+    //const c = document.body.querySelector('#nextTurnScreen').getContext('2d')
+    cover.drawImage(
+      document.body.querySelector('#nextTurnScreen'),
+      ...Vec.zero,
+      ...ss.screenCenter.scale(2),
+      ...Vec.zero,
+      ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
+    )
+  } else {
+    drawViewfromBuffer()
+  }
+}
+
+function drawViewfromBuffer () {
   const cover = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   // const { x, y } = screenSettings.viewOffset
-  cover.clearRect(-99999, -99999, 199999, 199999)
-
+  cover.clearRect(0, 0, ...ss.bufferCenter.scale(0.5))
   if (!ss.lowRes) {
     cover.drawImage(
-      document.getElementById('buffer'),
-      ...ss.screenCenter.scale( - ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
+      canvases.buffer, // document.getElementById('buffer'),
+      ...ss.screenCenter.scale(-ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
       ...ss.screenCenter.scale(ss.scale * 2),
       ...Vec.zero,
-      ...Vec.unit.scale(ss.screenSize)
-    )
-  } else {
-    cover.drawImage(
-      document.getElementById('intermediate'),
-      ...ss.screenCenter.scale(1 - ss.scale).add(ss.viewOffset).scale(1 / 2).add(ss.intermediateCenter),
-      ...ss.screenCenter.scale(ss.scale * 2 * 1 / 2),
-      ...Vec.zero,
-      ...Vec.unit.scale(ss.screenSize)
+      ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
     )
   }
 }
@@ -165,7 +177,7 @@ function drawBoard (c) {
       }
       if (tile.navBeacon) {
         const nt = tile.hex.neighbours.map((v, i) => [state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon, i]).filter(([t, i]) => t)
-        //console.log(nt, nt.length, nt.len);
+        // console.log(nt, nt.length, nt.len);
 
         if (nt.length) nt.forEach(([v, i]) => drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6))
         else drawFromData(c, 'navBeaconCross', x, y, getColMap(tile.navBeacon.owner))
@@ -329,6 +341,7 @@ function drawTopPanel () {
 function drawMenu () {
   const ss = screenSettings
   const c = document.getElementById('mainMenu').getContext('2d')
+  c.clearRect(0, 0, 800, 800)
 
   for (const [id, tile] of state.tiles) {
     const { x, y } = getXYfromHex(tile.hex)// .subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
@@ -464,7 +477,7 @@ function drawArrow (c, start, end, width = 3, color = 'white') {
 
 function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
   // const scale = scaleFactor * screenSettings.resolutionLevel
-  const data = gameSprites[sprite] //|| []
+  const data = gameSprites[sprite] // || []
   const startTime = new Date()
 
   const pack2 = (ac, cv, ix, arr) => ix % 2 ? ac.concat([[arr[ix - 1], arr[ix]]]) : ac
@@ -485,7 +498,7 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1,
 
   const ds = () => {
     c.save()
-    c.shadowColor = "rgba(0, 0, 0, 0.35)"
+    c.shadowColor = 'rgba(0, 0, 0, 0.35)'
     c.shadowOffsetX = 3.0; c.shadowOffsetY = 3.0; c.shadowBlur = 10.0
   }
 
