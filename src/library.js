@@ -18,6 +18,12 @@ class Vec {
   scale (m) { return new Vec(this.x * m, this.y * m) }
   dot (b) { return this.x * b.x + this.y * b.y }
   invert () { return this.scale(-1) }
+  bounds (b1, b2 = b1.invert()) {
+    const x = Math.max(b2.x, Math.min(b1.x, this.x))
+    const y = Math.max(b2.y, Math.min(b1.y, this.y))
+    return new Vec(x, y)
+    }
+  
   get mag () { return Math.sqrt((this.x * this.x) + (this.y * this.y)) }
 
   static fromID (id) {

@@ -70,6 +70,9 @@ function drawBuffer () {
   b.translate(...screenSettings.bufferCenter)
   drawBoard(b)
   b.translate(...screenSettings.bufferCenter.scale(-1))
+  b.beginPath();
+  b.rect(20, 20, screenSettings.bufferCenter.x * 2 - 40, screenSettings.bufferCenter.y * 2 - 40)
+  b.stroke();
   if (screenSettings.lowRes) {
     const i = document.getElementById('intermediate').getContext('2d')
 
@@ -90,7 +93,7 @@ function drawView () {
   if (!ss.lowRes) {
     cover.drawImage(
       document.getElementById('buffer'),
-      ...ss.screenCenter.scale(1 - ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
+      ...ss.screenCenter.scale( - ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
       ...ss.screenCenter.scale(ss.scale * 2),
       ...Vec.zero,
       ...Vec.unit.scale(ss.screenSize)
@@ -162,7 +165,7 @@ function drawBoard (c) {
       }
       if (tile.navBeacon) {
         const nt = tile.hex.neighbours.map((v, i) => [state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon, i]).filter(([t, i]) => t)
-        console.log(nt, nt.length, nt.len);
+        //console.log(nt, nt.length, nt.len);
 
         if (nt.length) nt.forEach(([v, i]) => drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6))
         else drawFromData(c, 'navBeaconCross', x, y, getColMap(tile.navBeacon.owner))

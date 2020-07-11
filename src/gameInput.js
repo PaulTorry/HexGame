@@ -29,7 +29,10 @@ function scaleView (sc) {
 
 function translateView (dif) {
   screenSettings.viewOffset = screenSettings.viewOffset.add(dif)
-  // @TODO bounds method on Vec
+  console.log(screenSettings.viewOffset)
+  screenSettings.viewOffset = screenSettings.viewOffset.bounds(screenSettings.bufferCenter)
+  console.log(screenSettings.viewOffset)
+    // @TODO bounds method on Vec
 }
 
 function translateViewTo (loc) {
@@ -116,7 +119,7 @@ function techTreeClick (event) {
 
 function getBufferXYfromViewXY (pt) {
   const ss = screenSettings
-  return pt.subtract(ss.screenCenter).scale(ss.scale).add(ss.screenCenter).add(ss.viewOffset)
+  return pt.subtract(ss.screenCenter).scale(ss.scale).add(ss.viewOffset)
 }
 
 function boardClick (event) {
@@ -152,7 +155,7 @@ function checkPlayerTurn () {
 function nextTurnScreenClick (event) {
   console.log('nextTurnScreenClick')
   if (!state.meta.online || debug || checkPlayerTurn()) {
-    translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital).subtract(screenSettings.screenCenter))
+    translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
     changeCanvas('board')
     preturn = false
   }
