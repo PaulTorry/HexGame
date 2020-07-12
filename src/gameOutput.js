@@ -65,30 +65,30 @@ function drawScreen () {
   // })
 }
 
-function drawBuffer () {
+function drawBuffer (view = views.space) {
   const ss = screenSettings
-  const b = canvases.buffer.getContext('2d')// document.body.querySelector('#buffer').getContext('2d')
-  b.canvas.height = ss.bufferCenter.y * 2
-  b.canvas.width = ss.bufferCenter.x * 2
-  b.translate(...screenSettings.bufferCenter)
+  const b = view.buffer.getContext('2d')// document.body.querySelector('#buffer').getContext('2d')
+  b.canvas.height = view.center.y * 2
+  b.canvas.width = view.center.x * 2
+  b.translate(...view.center)
   drawBoard(b)
-  b.translate(...screenSettings.bufferCenter.scale(-1))
+  b.translate(...view.center.scale(-1))
   // b.beginPath();
   // b.rect(20, 20, screenSettings.bufferCenter.x * 2 - 40, screenSettings.bufferCenter.y * 2 - 40)
   // b.stroke();
 
-  if (screenSettings.lowRes) {
-    const i = document.getElementById('intermediate').getContext('2d')
+  // if (screenSettings.lowRes) {
+  //   const i = document.getElementById('intermediate').getContext('2d')
 
-    i.clearRect(0, 0, 999, 999)// ...ss.intermediateCenter.scale(2))
-    i.drawImage(
-      canvases.buffer, // document.getElementById('buffer'),
-      0, 0, ...ss.bufferCenter.scale(2), 0, 0, ...ss.intermediateCenter.scale(2)
-    )
-  }
+  //   i.clearRect(0, 0, 999, 999)// ...ss.intermediateCenter.scale(2))
+  //   i.drawImage(
+  //     view.buffer, // document.getElementById('buffer'),
+  //     0, 0, ...view.center.scale(2), 0, 0, ...ss.intermediateCenter.scale(2)
+  //   )
+  // }
 }
 
-function drawView () {
+function drawView (view = views.space) {
   const ss = screenSettings
   if (ss.currentView === 'nextTurnScreen') {
     const cover = document.body.querySelector('#board').getContext('2d')
@@ -105,16 +105,16 @@ function drawView () {
   }
 }
 
-function drawViewfromBuffer () {
+function drawViewfromBuffer (view = views.space) {
   const cover = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   // const { x, y } = screenSettings.viewOffset
-  cover.clearRect(0, 0, ...ss.bufferCenter.scale(0.5))
+  cover.clearRect(0, 0, ...view.center.scale(0.5))
   if (!ss.lowRes) {
     cover.drawImage(
-      canvases.buffer, // document.getElementById('buffer'),
-      ...ss.screenCenter.scale(-ss.scale).add(ss.viewOffset).add(ss.bufferCenter),
-      ...ss.screenCenter.scale(ss.scale * 2),
+      view.buffer, // document.getElementById('buffer'),
+      ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+      ...ss.screenCenter.scale(view.zoom * 2),
       ...Vec.zero,
       ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
     )
@@ -475,7 +475,7 @@ function drawArrow (c, start, end, width = 3, color = 'white') {
   c.closePath()
 }
 
-function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1, rotation = 0) {
+function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scaleFactor = 1, rotation = 0) {
   // const scale = scaleFactor * screenSettings.resolutionLevel
   const data = gameSprites[sprite] // || []
   const startTime = new Date()
@@ -487,8 +487,8 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1,
   const add = (a, x, y, s = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s + x)
 
   const transform = (a, x, y, t) => {
-    if (t) return add(rotate(add(a, x, y), t), xx, yy, scale)
-    else return add(add(a, x, y), xx, yy, scale)
+    if (t) return add(rotate(add(a, x, y), t), xx, yy, scaleFactor)
+    else return add(add(a, x, y), xx, yy, scaleFactor)
   }
 
   let gradient
@@ -505,7 +505,7 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1,
   data.forEach(([t, ...v]) => {
     if (t === 'sv') c.save()
     else if (t === 'ds') ds()
-    else if (t === 'sc') scale *= v[0]
+    else if (t === 'sc') scaleFactor *= v[0]
     else if (t === 'of') {
       x = v[0]; y = v[1]// x = v[0] * scale; y = v[1] * scale
     } else if (t === 'bp') c.beginPath()
@@ -523,7 +523,7 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scale = 1,
     else if (t === 'st') c.stroke()
     else if (t === 'tr') c.transform(...v)
     else if (t === 'xrg') {
-      gradient = c.createRadialGradient(...transform([v[0], v[1]], x, y, th), v[2] * scale, ...transform([v[3], v[4]], x, y, th), v[5] * scale)
+      gradient = c.createRadialGradient(...transform([v[0], v[1]], x, y, th), v[2] * scaleFactor, ...transform([v[3], v[4]], x, y, th), v[5] * scaleFactor)
       // gradient = c.createRadialGradient(v[0] * scale + x + xx, v[1] * scale + y + yy, v[2] * scale, v[3] * scale + x + xx, v[4] * scale + y + yy, v[5] * scale)
     } else if (t === 'xlg') {
       gradient = c.createLinearGradient(...transform(v, x, y, th))

@@ -22,21 +22,22 @@ let fingerDistance = null
 //   return pt.scale(1 / screenSettings.scale).add(screenSettings.viewOffset).add(screenSettings.bufferCenter).add(screenSettings.screenCenter)
 // }
 
-function scaleView (sc) {
-  const newScale = screenSettings.scale * sc
-  screenSettings.scale = Math.max(0.2, Math.min(5, newScale))
+function scaleView (sc, view = views.space) {
+  const newZoom = view.zoom * sc
+  view.zoom = Math.max(0.2, Math.min(5, newZoom))
 }
 
-function translateView (dif) {
-  screenSettings.viewOffset = screenSettings.viewOffset.add(dif)
-  console.log(screenSettings.viewOffset)
-  screenSettings.viewOffset = screenSettings.viewOffset.bounds(screenSettings.bufferCenter)
-  console.log(screenSettings.viewOffset)
-  // @TODO bounds method on Vec
+function translateView (dif, view = views.space) {
+  const newOffset = view.offset.add(dif.scale(view.zoom))
+  view.offset = newOffset.bounds(view.center)
+  // console.log(view.offset)
 }
 
-function translateViewTo (loc) {
-  screenSettings.viewOffset = loc
+
+
+
+function translateViewTo (loc, view = views.space) {
+  view.offset = loc
   // @TODO bounds method on Vec
 }
 
@@ -60,16 +61,16 @@ function mouseWheel (event) {
   drawView()
 }
 
-function drag (e) {
+function drag (e, view = views.space) {
   const offset = new Vec(e.offsetX, e.offsetY)
-  if (mouseDownLocationABS.scale(-1).add(offset).scale(-1 / (screenSettings.scale)).mag > 20) {
+  if (mouseDownLocationABS.scale(-1).add(offset).scale(-1 / (view.zoom)).mag > 20) {
     sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
   //  drawScreen()
   }
   e.preventDefault()
   e.stopPropagation()
   const dif = mouseDownLocation.subtract(offset)
-  translateView(dif.scale(screenSettings.scale))
+  translateView(dif)
   mouseDownLocation = offset
   drawView()
 }
@@ -117,9 +118,9 @@ function techTreeClick (event) {
   drawScreen()
 }
 
-function getBufferXYfromViewXY (pt) {
+function getBufferXYfromViewXY (pt, view = views.space) {
   const ss = screenSettings
-  return pt.subtract(ss.screenCenter).scale(ss.scale).add(ss.viewOffset)
+  return pt.subtract(ss.screenCenter).scale(view.zoom).add(view.offset)
 }
 
 function nextTurnScreenClick (event) {
@@ -194,7 +195,7 @@ function removeTouchmove (event) {
   document.getElementById('board').removeEventListener('touchend', removeTouchmove)
 }
 
-function touchdrag (event) {
+function touchdrag (event, view = views.space) {
   sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
 
   event.preventDefault()
@@ -212,7 +213,7 @@ function touchdrag (event) {
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
   // const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
-  const dif = mouseDownLocation.subtract(new Vec(pageX, pageY)).scale(screenSettings.scale)
+  const dif = mouseDownLocation.subtract(new Vec(pageX, pageY))
 
   translateView(dif)
   mouseDownLocation = new Vec(pageX, pageY)

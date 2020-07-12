@@ -22,21 +22,21 @@ function getRealXYfromScreenXY (pt) {
   return pt.scale(1 / screenSettings.scale).add(screenSettings.screenOffset)
 }
 
-function scaleContext (sc) {
-  // console.log(sc,screenSettings.scale);
-  const ctx = document.getElementById('board').getContext('2d')
+// function scaleContext (sc) {
+//   // console.log(sc,screenSettings.scale);
+//   const ctx = document.getElementById('board').getContext('2d')
 
-  if (screenSettings.scale * sc < 0.2) sc = 1
-  if (screenSettings.scale * sc > 2) sc = 1
+//   if (screenSettings.scale * sc < 0.2) sc = 1
+//   if (screenSettings.scale * sc > 2) sc = 1
 
-  const viewCentre = getRealXYfromScreenXY(new Vec(400, 400))
-  screenSettings.scale *= sc
-  ctx.scale(sc, sc)
-  screenSettings.screenOffset = screenSettings.screenOffset.scale(1 / sc)
-  const newViewCentre = getRealXYfromScreenXY(new Vec(400, 400))
+//   const viewCentre = getRealXYfromScreenXY(new Vec(400, 400))
+//   screenSettings.scale *= sc
+//   ctx.scale(sc, sc)
+//   screenSettings.screenOffset = screenSettings.screenOffset.scale(1 / sc)
+//   const newViewCentre = getRealXYfromScreenXY(new Vec(400, 400))
 
-  translateContext((newViewCentre.subtract(viewCentre)).scale(-1)) //     screenSettings.scale));
-}
+//   translateContext((newViewCentre.subtract(viewCentre)).scale(-1)) //     screenSettings.scale));
+// }
 
 function translateContext (dif, contextName = 'board') {
   const ctx = document.getElementById(contextName).getContext('2d')
