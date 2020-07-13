@@ -145,7 +145,6 @@ function onTopPanelItemClicked (item, hex = sel.hex) {
   sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
   reSetIncomes()
   drawScreen()
-  drawMenu()
 }
 
 function getTerrainDefVal (ship, hex) {
@@ -285,7 +284,8 @@ function turnLogic () {
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
 
   sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-  drawMenu(); drawScreen()
+  //drawMenu();
+   drawScreen()
 }
 
 function reSetIncomes () {

@@ -179,21 +179,21 @@ const views = {
     center: new Vec(400, 400),
     buffer: document.createElement('canvas'),
     hexSize: 35,
-    offset: new Vec(400, 400),
+    offset: new Vec(0, 0),
     zoom: 1
   },
   menu: {
     center: new Vec(400, 400),
     buffer: document.createElement('canvas'),
     hexSize: 45,
-    offset: new Vec(400, 400),
+    offset: new Vec(0, 0),
     zoom: 1
   },
   nextTurn: {
     center: new Vec(400, 400),
     buffer: document.createElement('canvas'),
     hexSize: 75,
-    offset: new Vec(400, 400),
+    offset: new Vec(0, 0),
     zoom: 1
   }
 }

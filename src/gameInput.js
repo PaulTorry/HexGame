@@ -3,9 +3,9 @@
 /* global
 Vec, Hex, sel:true, menuData
 getXYfromHex,
-
+drawViewfromBuffer,
 state, debug, loggedInPlayer
-
+views,
 drawScreen, drawMenu, screenSettings, interactiveConsole
 nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onHexClicked,
 preturn:true,
@@ -17,11 +17,6 @@ let mouseDownLocation = new Vec()
 let mouseDownLocationABS = new Vec()
 let fingerDistance = null
 
-// function getRealXYfromScreenXY (pt) {
-//   const ss = screenSettings
-//   return pt.scale(1 / screenSettings.scale).add(screenSettings.viewOffset).add(screenSettings.bufferCenter).add(screenSettings.screenCenter)
-// }
-
 function scaleView (sc, view = views.space) {
   const newZoom = view.zoom * sc
   view.zoom = Math.max(0.2, Math.min(5, newZoom))
@@ -32,9 +27,6 @@ function translateView (dif, view = views.space) {
   view.offset = newOffset.bounds(view.center)
   // console.log(view.offset)
 }
-
-
-
 
 function translateViewTo (loc, view = views.space) {
   view.offset = loc
@@ -58,7 +50,7 @@ function mouseWheel (event) {
   event.preventDefault()
   if (event.deltaY < 0) { scaleView(1 / 1.1) }
   if (event.deltaY > 0) { scaleView(1.1) }
-  drawView()
+  drawViewfromBuffer()
 }
 
 function drag (e, view = views.space) {
@@ -72,7 +64,7 @@ function drag (e, view = views.space) {
   const dif = mouseDownLocation.subtract(offset)
   translateView(dif)
   mouseDownLocation = offset
-  drawView()
+  drawViewfromBuffer()
 }
 
 function topPanelClick (event) {
@@ -100,7 +92,7 @@ function topPanelClick (event) {
   }
 
   drawScreen()
-  drawMenu()
+  //drawMenu()
 }
 
 function toggleTechTree (newState) {
@@ -119,8 +111,7 @@ function techTreeClick (event) {
 }
 
 function getBufferXYfromViewXY (pt, view = views.space) {
-  const ss = screenSettings
-  return pt.subtract(ss.screenCenter).scale(view.zoom).add(view.offset)
+  return pt.subtract(screenSettings.screenCenter).scale(view.zoom).add(view.offset)
 }
 
 function nextTurnScreenClick (event) {
@@ -134,18 +125,18 @@ function nextTurnScreenClick (event) {
 }
 
 function boardClick (event) {
-  if (screenSettings.currentView === 'nextTurnScreen') {
+  if (screenSettings.currentCanvas === 'nextTurnScreen') {
     console.log('nextTurnScreenClick')
     if (!state.meta.online || debug || checkPlayerTurn()) {
       translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
-      screenSettings.currentView = 'board'  //changeCanvas('board')
+      changeCanvas('board')
       preturn = false
     }
     drawScreen()
   } else {
     const offset = new Vec(event.offsetX, event.offsetY)
     const bxy = getBufferXYfromViewXY(offset)
-    const uxy = bxy.scale(1 / screenSettings.hexSize)
+    const uxy = bxy.scale(1 / views.space.hexSize)
     const hex = Hex.getUnitHexFromXY(uxy)
     console.log(offset, bxy, uxy, hex)
     onHexClicked(hex)
@@ -171,15 +162,17 @@ function checkPlayerTurn () {
 }
 
 function changeCanvas (canvas) {
-  document.body.querySelector('#board').style.display = 'none'
-  document.body.querySelector('#techTree').style.display = 'none'
-  document.body.querySelector('#mainMenu').style.display = 'none'
-  document.body.querySelector('#newGameMenu').style.display = 'none'
-  document.body.querySelector('#loadGameMenu').style.display = 'none'
-  document.body.querySelector('#nextTurnScreen').style.display = 'none'
-  if (canvas === 'board' && preturn) console.log('Ooops skipping nextTurnScreen')
-  document.body.querySelector(`#${canvas}`).style.display = 'block'
   screenSettings.currentCanvas = canvas
+
+  //document.body.querySelector('#board').style.display = 'none'
+  // document.body.querySelector('#techTree').style.display = 'none'
+  // document.body.querySelector('#mainMenu').style.display = 'none'
+  // document.body.querySelector('#newGameMenu').style.display = 'none'
+  // document.body.querySelector('#loadGameMenu').style.display = 'none'
+  // document.body.querySelector('#nextTurnScreen').style.display = 'none'
+  // if (canvas === 'board' && preturn) console.log('Ooops skipping nextTurnScreen')
+  //document.body.querySelector(`#${canvas}`).style.display = 'block'
+ // screenSettings.currentCanvas = canvas
 }
 
 function touchstart (event) {
@@ -212,12 +205,11 @@ function touchdrag (event, view = views.space) {
     }
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
-  // const dif = mouseDownLocation.scale(-1).add(new Vec(pageX, pageY)).scale(-1 / (screenSettings.scale))
   const dif = mouseDownLocation.subtract(new Vec(pageX, pageY))
 
   translateView(dif)
   mouseDownLocation = new Vec(pageX, pageY)
-  drawView()
+  drawViewfromBuffer()
 }
 
 function keyHandle (e) {

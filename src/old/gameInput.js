@@ -115,7 +115,7 @@ function topPanelClick (event) {
   }
 
   drawScreen()
-  drawMenu()
+ // drawMenu()
 }
 
 function toggleTechTree (newState) {

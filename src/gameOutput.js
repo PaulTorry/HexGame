@@ -4,13 +4,11 @@
 screenSettings, Vec, Hex,
 sel, state,
 getUpdatedViewMask,
-simpleShapes, getTerrainDamage,
+getTerrainDamage, views,
  preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
-baseShapes,
 data, subTurn,
 localGameInfo, loggedInPlayer,
-getRealXYfromScreenXY, iconShapes,
 cacheGameList
 */
 
@@ -48,56 +46,41 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
-  // window.requestAnimationFrame((t) => {
-  // drawlog();
   drawTopPanel()
   switch (screenSettings.currentCanvas) {
-    case 'nextTurnScreen': drawNextTurnScreen()
+    case 'nextTurnScreen': drawBuffer(views.nextTurn, drawNextTurnScreen); drawViewfromBuffer(views.nextTurn)
       break
-    case 'mainMenu': drawMenu()
+    case 'mainMenu': drawBuffer(views.menu, drawMenu); drawViewfromBuffer(views.menu)
       break
-    case 'board': drawBuffer(); drawView()
+    case 'board': drawBuffer(views.space, drawBoard); drawViewfromBuffer(views.space)
       break
-    case 'techTree': drawTechTree()
+    case 'techTree': drawBuffer(views.techTree, drawTechTree); drawViewfromBuffer(views.techTree)
       break
     default: console.log('drawfail')
   }
-  // })
 }
 
-function drawBuffer (view = views.space) {
+function drawBuffer (view = views.space, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
   const ss = screenSettings
-  const b = view.buffer.getContext('2d')// document.body.querySelector('#buffer').getContext('2d')
-  b.canvas.height = view.center.y * 2
-  b.canvas.width = view.center.x * 2
-  b.translate(...view.center)
-  drawBoard(b)
-  b.translate(...view.center.scale(-1))
-  // b.beginPath();
-  // b.rect(20, 20, screenSettings.bufferCenter.x * 2 - 40, screenSettings.bufferCenter.y * 2 - 40)
-  // b.stroke();
-
-  // if (screenSettings.lowRes) {
-  //   const i = document.getElementById('intermediate').getContext('2d')
-
-  //   i.clearRect(0, 0, 999, 999)// ...ss.intermediateCenter.scale(2))
-  //   i.drawImage(
-  //     view.buffer, // document.getElementById('buffer'),
-  //     0, 0, ...view.center.scale(2), 0, 0, ...ss.intermediateCenter.scale(2)
-  //   )
-  // }
+  const b = view.buffer
+  const c = b.getContext('2d')
+  b.height = view.center.y * 2
+  b.width = view.center.x * 2
+  c.translate(...view.center)
+  drawfunc(b)
+  c.translate(...view.center.scale(-1))
 }
 
 function drawView (view = views.space) {
   const ss = screenSettings
-  if (ss.currentView === 'nextTurnScreen') {
+  if (ss.currentCanvas === 'nextTurnScreen') {
     const cover = document.body.querySelector('#board').getContext('2d')
     cover.drawImage(
       document.body.querySelector('#nextTurnScreen'),
       ...Vec.zero,
       ...ss.screenCenter.scale(2),
       ...Vec.zero,
-      ...ss.screenCenter.scale(2) 
+      ...ss.screenCenter.scale(2)
     )
   } else {
     drawViewfromBuffer()
@@ -105,33 +88,41 @@ function drawView (view = views.space) {
 }
 
 function drawViewfromBuffer (view = views.space) {
-  const cover = document.body.querySelector('#board').getContext('2d')
+  const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
-  // const { x, y } = screenSettings.viewOffset
-  cover.clearRect(0, 0, ...view.center.scale(0.5))
-  if (!ss.lowRes) {
-    cover.drawImage(
-      view.buffer, // document.getElementById('buffer'),
-      ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
-      ...ss.screenCenter.scale(view.zoom * 2),
-      ...Vec.zero,
-      ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
-    )
-  }
+  screen.clearRect(0, 0, ...view.center.scale(2))
+
+  screen.drawImage(
+    view.buffer, // document.getElementById('buffer'),
+    ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+    ...ss.screenCenter.scale(view.zoom * 2),
+    ...Vec.zero,
+    ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
+  )
 }
 
-function drawNextTurnScreen () {
-  const ss = screenSettings
-  const c = document.getElementById('nextTurnScreen').getContext('2d')
-  c.clearRect(-99999, -99999, 199999, 199999)
-  c.fillStyle = 'white'
+function drawSpace (c) {
 
-  const center = ss.techTreeOffset
-  const { x, y } = center
+}
+
+function drawNextTurnScreen (b) {
+  const ss = screenSettings
+  const c = b.getContext('2d')
+ 
+  //c.translate(...views.nextTurn.center.scale(-1))
+  console.log(b);
+  c.clearRect(-99999, -99999, 199999, 199999)
+  //c.fillStyle = 'white'
+  //c.fillRect(-99999, -99999, 199999, 199999)
+
+  //const center = ss.techTreeOffset
   const logoSize = 0.3
-  drawFromData(c, 'logo', 400 - 300 * logoSize, 200 - 300 * logoSize, (x) => x, logoSize)
-  drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, x - 80, y + 10, 50, getPlayerColour(state.playerTurn))
-  drawText(c, 'Click to Start', x - 80, y - 50, 30, 'white')
+  drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
+  drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
+  drawText(c, 'Click to Start', -80, 50, 30, 'white')
+
+  //c.translate(...views.nextTurn.center)
+ 
 }
 
 function getAngleFromVariant (tile) {
@@ -147,8 +138,9 @@ function getAngleFromVariant (tile) {
   return angle
 }
 
-function drawBoard (c) {
+function drawBoard (b) {
   const ss = screenSettings
+  const c = b.getContext('2d')
   c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
   c.fillStyle = '#ff0000'
   c.strokeStyle = '#ff00ff'
@@ -335,11 +327,15 @@ function drawTopPanel () {
   if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, 420, 60, 15, 'white')
 }
 
-function drawMenu (view = views.menu) {
-  const xy = (h) => getXYfromHex(h, 45).add(view.offset)
-
+function drawMenu (b) {
   const ss = screenSettings
-  const c = document.getElementById('mainMenu').getContext('2d')
+  const c = b.getContext('2d')
+
+  const view = views.menu
+  const xy = (h) => getXYfromHex(h, 45)//.add(view.offset)
+
+  //const ss = screenSettings
+  //const c = document.getElementById('mainMenu').getContext('2d')
   c.clearRect(0, 0, 800, 800)
 
   for (const a of Hex.findWithin(Math.floor(view.center.x / view.hexSize))) {
@@ -387,12 +383,12 @@ function drawMenu (view = views.menu) {
   }
 }
 
-function drawTechTree (view = views.techTree) {
-  const xy = (h) => getXYfromHex(h, view.hexSize).add(view.offset)
+function drawTechTree (b) {
+  const c = b.getContext('2d')
+  const view = views.techTree
+  const xy = (h) => getXYfromHex(h, view.hexSize)
 
   const arrows = []
-  const ss = screenSettings
-  const c = document.getElementById('techTree').getContext('2d')
   data.techs.forEach((t) => {
     if (t.requires) {
       t.requires.forEach(r => {
@@ -400,13 +396,10 @@ function drawTechTree (view = views.techTree) {
       })
     }
   })
-
-  arrows.forEach(a => {
-    drawArrow(c, xy(a[1]), xy(a[0]))
-  })
+  arrows.forEach(a => { drawArrow(c, xy(a[1]), xy(a[0])) })
 
   data.techs.forEach((t) => {
-   // const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
+    // const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
     const { x, y } = xy(t.hex)
     const draw = t.cost < 99
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
