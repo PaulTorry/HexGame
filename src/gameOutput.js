@@ -67,7 +67,7 @@ function drawBuffer (view = views.space, drawfunc = (b) => b.getContext('2d').fi
   b.height = view.center.y * 2
   b.width = view.center.x * 2
   c.translate(...view.center)
-  drawfunc(b)
+  drawfunc(view)
   c.translate(...view.center.scale(-1))
 }
 
@@ -85,9 +85,9 @@ function drawViewfromBuffer (view = views.space) {
   )
 }
 
-function drawNextTurnScreen (b) {
+function drawNextTurnScreen (v) {
   const ss = screenSettings
-  const c = b.getContext('2d')
+  const c = v.buffer.getContext('2d')
   c.clearRect(-99999, -99999, 199999, 199999)
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
@@ -108,9 +108,9 @@ function getAngleFromVariant (tile) {
   return angle
 }
 
-function drawBoard (b) {
+function drawBoard (v) {
   const ss = screenSettings
-  const c = b.getContext('2d')
+  const c = v.buffer.getContext('2d')
   c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
   c.fillStyle = '#ff0000'
   c.strokeStyle = '#ff00ff'
@@ -297,15 +297,13 @@ function drawTopPanel () {
   if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, 420, 60, 15, 'white')
 }
 
-function drawMenu (b) {
+function drawMenu (v) {
   const ss = screenSettings
-  const c = b.getContext('2d')
-
-  const view = views.menu
-  const xy = (h) => getXYfromHex(h, 45)
+  const c = v.buffer.getContext('2d')
+  const xy = (h) => getXYfromHex(h, v.hexSize)
   c.clearRect(0, 0, 800, 800)
 
-  for (const a of Hex.findWithin(Math.floor(view.center.x / view.hexSize))) {
+  for (const a of Hex.findWithin(Math.floor(v.center.x / v.hexSize))) {
     drawFromData(c, 'hexVert', ...xy(a), () => 'rgba(137,132,145, 0.3)', 0.5)
   }
 
@@ -350,10 +348,10 @@ function drawMenu (b) {
   }
 }
 
-function drawTechTree (b) {
-  const c = b.getContext('2d')
-  const view = views.techTree
-  const xy = (h) => getXYfromHex(h, view.hexSize)
+function drawTechTree (v) {
+  const c = v.buffer.getContext('2d')
+  //const view = views.techTree
+  const xy = (h) => getXYfromHex(h, v.hexSize)
 
   const arrows = []
   data.techs.forEach((t) => {
