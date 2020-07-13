@@ -71,58 +71,28 @@ function drawBuffer (view = views.space, drawfunc = (b) => b.getContext('2d').fi
   c.translate(...view.center.scale(-1))
 }
 
-function drawView (view = views.space) {
-  const ss = screenSettings
-  if (ss.currentCanvas === 'nextTurnScreen') {
-    const cover = document.body.querySelector('#board').getContext('2d')
-    cover.drawImage(
-      document.body.querySelector('#nextTurnScreen'),
-      ...Vec.zero,
-      ...ss.screenCenter.scale(2),
-      ...Vec.zero,
-      ...ss.screenCenter.scale(2)
-    )
-  } else {
-    drawViewfromBuffer()
-  }
-}
-
 function drawViewfromBuffer (view = views.space) {
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   screen.clearRect(0, 0, ...view.center.scale(2))
 
   screen.drawImage(
-    view.buffer, // document.getElementById('buffer'),
+    view.buffer,
     ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
     ...ss.screenCenter.scale(view.zoom * 2),
     ...Vec.zero,
-    ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
+    ...ss.screenCenter.scale(2)
   )
-}
-
-function drawSpace (c) {
-
 }
 
 function drawNextTurnScreen (b) {
   const ss = screenSettings
   const c = b.getContext('2d')
- 
-  //c.translate(...views.nextTurn.center.scale(-1))
-  console.log(b);
   c.clearRect(-99999, -99999, 199999, 199999)
-  //c.fillStyle = 'white'
-  //c.fillRect(-99999, -99999, 199999, 199999)
-
-  //const center = ss.techTreeOffset
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
   drawText(c, 'Click to Start', -80, 50, 30, 'white')
-
-  //c.translate(...views.nextTurn.center)
- 
 }
 
 function getAngleFromVariant (tile) {
@@ -332,10 +302,7 @@ function drawMenu (b) {
   const c = b.getContext('2d')
 
   const view = views.menu
-  const xy = (h) => getXYfromHex(h, 45)//.add(view.offset)
-
-  //const ss = screenSettings
-  //const c = document.getElementById('mainMenu').getContext('2d')
+  const xy = (h) => getXYfromHex(h, 45)
   c.clearRect(0, 0, 800, 800)
 
   for (const a of Hex.findWithin(Math.floor(view.center.x / view.hexSize))) {
