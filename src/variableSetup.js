@@ -158,33 +158,42 @@ const sessionInfo = {
 
 const screenSettings = {
   lowRes: false,
-  openTechTree: false,   // to depreciate
-  //screenSize: 800,
+  openTechTree: false, // to depreciate
   screenCenter: new Vec(400, 400),
-  //intermediateCenter: new Vec(800, 800),
-  //bufferCenter: new Vec(1600, 1600),
-  //viewOffset: new Vec(0, 0),
   techTreeOffset: new Vec(400, 400),
   hexSize: 75,
-  //scale: 1,
   showTrails: true,
   currentCanvas: 'nextTurnScreen',
   currentView: 'nextTurnScreen'
 }
 
-// const canvases = {
-//   buffer: document.createElement('canvas'),
-//   //hexMenu: document.createElement('canvas')
-// }
-
 const views = {
   space: {
     center: new Vec(1600, 1600),
     buffer: document.createElement('canvas'),
+    hexSize: 75,
     offset: new Vec(0, 0),
     zoom: 1
   },
   techTree: {
-
+    center: new Vec(400, 400),
+    buffer: document.createElement('canvas'),
+    hexSize: 35,
+    offset: new Vec(400, 400),
+    zoom: 1
+  },
+  menu: {
+    center: new Vec(400, 400),
+    buffer: document.createElement('canvas'),
+    hexSize: 45,
+    offset: new Vec(400, 400),
+    zoom: 1
+  },
+  nextTurn: {
+    center: new Vec(400, 400),
+    buffer: document.createElement('canvas'),
+    hexSize: 75,
+    offset: new Vec(400, 400),
+    zoom: 1
   }
 }

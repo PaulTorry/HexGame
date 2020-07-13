@@ -92,13 +92,12 @@ function drawView (view = views.space) {
   const ss = screenSettings
   if (ss.currentView === 'nextTurnScreen') {
     const cover = document.body.querySelector('#board').getContext('2d')
-    //const c = document.body.querySelector('#nextTurnScreen').getContext('2d')
     cover.drawImage(
       document.body.querySelector('#nextTurnScreen'),
       ...Vec.zero,
       ...ss.screenCenter.scale(2),
       ...Vec.zero,
-      ...ss.screenCenter.scale(2) // Vec.unit.scale(ss.screenSize)
+      ...ss.screenCenter.scale(2) 
     )
   } else {
     drawViewfromBuffer()
@@ -129,12 +128,10 @@ function drawNextTurnScreen () {
 
   const center = ss.techTreeOffset
   const { x, y } = center
-  // let playerLoc = getXYfromHex(state.playerData[state.playerTurn].capital);
-  // let {x,y} = playerLoc;
   const logoSize = 0.3
   drawFromData(c, 'logo', 400 - 300 * logoSize, 200 - 300 * logoSize, (x) => x, logoSize)
-  drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, center.add(new Vec(-80, 0)), 50, getPlayerColour(state.playerTurn))
-  drawText(c, 'Click to Start', center.add(new Vec(-80, 50)), 30, 'white')
+  drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, x - 80, y + 10, 50, getPlayerColour(state.playerTurn))
+  drawText(c, 'Click to Start', x - 80, y - 50, 30, 'white')
 }
 
 function getAngleFromVariant (tile) {
@@ -213,8 +210,8 @@ function drawBoard (c) {
     if (viewMask[id] || debug) {
       const planet = whichPlanetsTerritory(tile.hex)
       if (planet) drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => getPlayerColour(planet.owner, 0.5))
-      if (debug) drawText(c, `${territoryState(tile.hex)}`, getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
-      if (debug) drawText(c, `${tile.hex.id}`, getXYfromHex(tile.hex).add(new Vec(-40, +40)), 14, 'grey')
+      if (debug) drawText(c, `${territoryState(tile.hex)}`, ...getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
+      if (debug) drawText(c, `${tile.hex.id}`, ...getXYfromHex(tile.hex).add(new Vec(-40, +40)), 14, 'grey')
     }
   }
 
@@ -248,8 +245,8 @@ function drawBoard (c) {
         drawFromData(c, ship.type, x, y, getColMap(ship.owner, transparency))
       }
 
-      drawText(c, `${Math.round(ship.shield + ship.hull)}`, getXYfromHex(ship.hex).add(new Vec(-20, 45)), 20, 'white')
-      drawText(c, `(${Math.round(ship.hull)})`, getXYfromHex(ship.hex).add(new Vec(10, 45)), 15, 'orange')
+      drawText(c, `${Math.round(ship.shield + ship.hull)}`, ...getXYfromHex(ship.hex).add(new Vec(-20, 45)), 20, 'white')
+      drawText(c, `(${Math.round(ship.hull)})`, ...getXYfromHex(ship.hex).add(new Vec(10, 45)), 15, 'orange')
       // drawText(c, `${ship.hulltype.actionList}`, getXYfromHex(ship.hex).add(new Vec(-40, 25)), 15, 'gray')
       // drawText(c, `${ship.actionsRemaining}`, getXYfromHex(ship.hex).add(new Vec(-40, 5)), 15, 'white')
 
@@ -310,13 +307,13 @@ function drawTopPanel () {
         details.sprite.forEach(x => {
           drawFromData(c, x[0], 140 + 70 * i + x[1], 60 + x[2], getColMap(state.playerTurn, 1), 0.5 * x[3])
         })
-        drawText(c, `${details.price}`, new Vec(125 + 70 * i, 40), 10, 'white')
-        drawText(c, `${details.name}`, new Vec(115 + 70 * i, 95), 10, 'white')
+        drawText(c, `${details.price}`, 125 + 70 * i, 40, 10, 'white')
+        drawText(c, `${details.name}`, 115 + 70 * i, 95, 10, 'white')
       } else if (gameSprites[menu[i]]) {
         drawFromData(c, 'roundedHex', 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
         drawFromData(c, menu[i], 140 + 70 * i, 60, getColMap(state.playerTurn, 1), 0.5)
-        drawText(c, `${details.price}`, new Vec(125 + 70 * i, 40), 10, 'white')
-        drawText(c, `${details.name}`, new Vec(115 + 70 * i, 95), 10, 'white')
+        drawText(c, `${details.price}`, 125 + 70 * i, 40, 10, 'white')
+        drawText(c, `${details.name}`, 115 + 70 * i, 95, 10, 'white')
       } else (console.log('problem', details))
     }
   }
@@ -327,42 +324,39 @@ function drawTopPanel () {
   // c.rect(655, 5, 45, 45);
   c.stroke()
 
-  drawText(c, `Player: ${state.playerTurn}`, new Vec(100, 20), 15, 'white')
+  drawText(c, `Player: ${state.playerTurn}`, 100, 20, 15, 'white')
   if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
-    drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, new Vec(100, 35), 15, 'white')
+    drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, 100, 35, 15, 'white')
   }
-  drawText(c, `Turn: ${state.turnNumber}`, new Vec(180, 20), 15, 'white')
-  if (!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, new Vec(245, 20), 15, 'white')
-  if (!preturn) drawText(c, 'City Points: **', new Vec(360, 20), 15, 'white')
-  drawText(c, `Game: ${state.gameName}`, new Vec(420, 40), 15, 'white')
-  if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, new Vec(420, 60), 15, 'white')
+  drawText(c, `Turn: ${state.turnNumber}`, 180, 20, 15, 'white')
+  if (!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, 245, 20, 15, 'white')
+  if (!preturn) drawText(c, 'City Points: **', 360, 20, 15, 'white')
+  drawText(c, `Game: ${state.gameName}`, 420, 40, 15, 'white')
+  if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, 420, 60, 15, 'white')
 }
 
-function drawMenu () {
+function drawMenu (view = views.menu) {
+  const xy = (h) => getXYfromHex(h, 45).add(view.offset)
+
   const ss = screenSettings
   const c = document.getElementById('mainMenu').getContext('2d')
   c.clearRect(0, 0, 800, 800)
 
-  for (const [id, tile] of state.tiles) {
-    const { x, y } = getXYfromHex(tile.hex)// .subtract(new Vec(screenSettings.hexSize,screenSettings.hexSize))
-    drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), () => 'rgba(37,32,45, 0.5)', 0.5)
-    // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex, 45).add(ss.techTreeOffset), 45, 1, 'rgb(37,32,45)', 'rgb(18,15,34)')
+  for (const a of Hex.findWithin(Math.floor(view.center.x / view.hexSize))) {
+    drawFromData(c, 'hexVert', ...xy(a), () => 'rgba(137,132,145, 0.3)', 0.5)
   }
 
   if (menuData.Screen === 'MainMenu') {
     data.mainMenu.forEach((t) => {
-      const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
-      const { x, y } = center
-
+      const { x, y } = xy(t.hex)
       drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
-      drawText(c, `${t.name}`, center.add(new Vec(-30, 25)), 12, 'rgb(159,216,206)')
+      drawText(c, `${t.name}`, x - 30, y + 25, 12, 'rgb(159,216,206)')
     })
   }
 
   if (menuData.Screen === 'loadGameMenu') {
     data.loadGameMenu.forEach((t) => {
-      const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
-      const { x, y } = center
+      const { x, y } = xy(t.hex)
       drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
 
       let valueToOutput = menuData.LoadGameOptions[t.name] || ''
@@ -372,17 +366,14 @@ function drawMenu () {
           valueToOutput = cacheGameList[numm][1].name
         }
       }
-      //   else valueToOutput = menuData.OfflinePlayers[t.num][t.name]
-      // }
-      drawText(c, `     ${valueToOutput}`, center.add(new Vec(-40, 5)), 14, 'rgb(159,216,206)')
-      drawText(c, `${t.name} ${[t.num] || '1'}`, center.add(new Vec(-30, 25)), 12, 'rgb(159,216,206)')
+      drawText(c, `     ${valueToOutput}`, x - 40, y + 5, 14, 'rgb(159,216,206)')
+      drawText(c, `${t.name} ${[t.num] || '1'}`, x - 30, y + 25, 12, 'rgb(159,216,206)')
     })
   }
 
   if (menuData.Screen === 'NewGame') {
     data.newGameMenu.forEach((t) => {
-      const center = getXYfromHex(t.hex, 45).add(ss.techTreeOffset)
-      const { x, y } = center
+      const { x, y } = xy(t.hex)
       drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
 
       let valueToOutput = menuData.NewGameData[t.name] || ''
@@ -390,13 +381,15 @@ function drawMenu () {
         if (menuData.NewGameData.Online) valueToOutput = menuData.OnlinePlayers[t.num][t.name]
         else valueToOutput = menuData.OfflinePlayers[t.num][t.name]
       }
-      drawText(c, `${valueToOutput}`, center.add(new Vec(-30, 5)), 14, 'rgb(159,216,206)')
-      drawText(c, `${t.name} ${[t.num] || '1'}`, center.add(new Vec(-30, 25)), 12, 'rgb(159,216,206)')
+      drawText(c, `${valueToOutput}`, x - 30, y + 5, 14, 'rgb(159,216,206)')
+      drawText(c, `${t.name} ${[t.num] || '1'}`, x - 30, y + 25, 12, 'rgb(159,216,206)')
     })
   }
 }
 
-function drawTechTree () {
+function drawTechTree (view = views.techTree) {
+  const xy = (h) => getXYfromHex(h, view.hexSize).add(view.offset)
+
   const arrows = []
   const ss = screenSettings
   const c = document.getElementById('techTree').getContext('2d')
@@ -409,12 +402,12 @@ function drawTechTree () {
   })
 
   arrows.forEach(a => {
-    drawArrow(c, getXYfromHex(a[1], 35).add(ss.techTreeOffset), getXYfromHex(a[0], 35).add(ss.techTreeOffset))
+    drawArrow(c, xy(a[1]), xy(a[0]))
   })
 
   data.techs.forEach((t) => {
-    const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
-    const { x, y } = center
+   // const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
+    const { x, y } = xy(t.hex)
     const draw = t.cost < 99
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
@@ -438,33 +431,14 @@ function drawTechTree () {
         drawFromData(c, s[0], x + s[1], y + s[2], getColMap(state.playerTurn, 1), 0.55 * s[3])
       })
     }
-    if (draw || debug) drawText(c, `${t.name}`, center.add(new Vec(-30, 25)), 12, 'rgb(159,216,206)')
-    if (draw || debug) drawText(c, `${t.cost}`, center.add(new Vec(-40, +6)), 12, 'rgb(159,216,206)')
+    if (draw || debug) drawText(c, `${t.name}`, x - 30, y + 25, 12, 'rgb(159,216,206)')
+    if (draw || debug) drawText(c, `${t.cost}`, x - 40, y + 6, 12, 'rgb(159,216,206)')
   })
 }
 
-// function drawPoly (c, pointVec, center = new Vec(0, 0), scale = 50, width, sColor, fColor) {
-//   const { x: xx, y: yy } = center
-//   //  if(!isOnScreen(xx,yy)) return;
-//   if (width) { c.lineWidth = width }
-//   if (sColor) { c.strokeStyle = sColor }
-//   if (fColor) { c.fillStyle = fColor }
-
-//   c.lineWidth = 3
-//   c.moveTo(pointVec[0].x, pointVec[0].y)
-//   c.beginPath()
-//   for (const point of pointVec) {
-//     const { x, y } = point.scale(scale).add(center)
-//     c.lineTo(x, y)
-//   }
-//   c.closePath()
-//   c.stroke()
-//   if (fColor) { c.fill() }
-//   c.beginPath(); c.closePath() // Hack to stop drawing after clear
-// }
+// Drawing functions
 
 function drawArrow (c, start, end, width = 3, color = 'white') {
-//  console.log(start,end);
   const midpoint = start.add(end).scale(0.5)
   c.strokeStyle = color // keep col form last func
   c.lineWidth = width
@@ -537,8 +511,7 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scaleFacto
   if (c.data) return c.data
 }
 
-function drawText (c, text, center = new Vec(0, 0), size = 28, color = 'blue', font = 'Helvetica') {
-  const { x, y } = center
+function drawText (c, text, x = 0, y = 0, size = 28, color = 'blue', font = 'Helvetica') {
   c.font = `${size}px ${font}`
   c.fillStyle = color
   c.fillText(text, x, y)
