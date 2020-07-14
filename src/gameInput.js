@@ -53,13 +53,12 @@ function mouseWheel (event) {
 
 function drag (e, view = views.spaceView) {
   const offset = new Vec(e.offsetX, e.offsetY)
-  // if (mouseDownLocationABS.scale(-1).add(offset).scale(-1 / (view.zoom)).mag > 20) {
-     sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-  // //  drawScreen()
-  // }
+  const dif = mouseDownLocation.subtract(offset)
+  if (mouseDownLocationABS.subtract(offset).mag > 20) {
+    sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+  }
   e.preventDefault()
   e.stopPropagation()
-  const dif = mouseDownLocation.subtract(offset)
   translateView(dif)
   mouseDownLocation = offset
   drawViewfromBuffer()
