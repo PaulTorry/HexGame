@@ -13,7 +13,6 @@ cacheGameList
 */
 
 /* eslint-disable no-unused-vars, dot-notation */
-//  document.getElementById("menu").height = 500;
 
 function getPlayerColour (player = state.playerTurn, opacity = 1, mid = false, dark = false) {
   const playerColours = ['green', 'red', 'lightblue', 'orange', 'purple', 'brown']
@@ -46,21 +45,14 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen () {
+  const c = screenSettings.currentCanvas
   drawTopPanel()
-  switch (screenSettings.currentCanvas) {
-    case 'nextTurnScreen': drawBuffer(views.nextTurn, drawNextTurnScreen); drawViewfromBuffer(views.nextTurn)
-      break
-    case 'mainMenu': drawBuffer(views.menu, drawMenu); drawViewfromBuffer(views.menu)
-      break
-    case 'board': drawBuffer(views.space, drawBoard); drawViewfromBuffer(views.space)
-      break
-    case 'techTree': drawBuffer(views.techTree, drawTechTree); drawViewfromBuffer(views.techTree)
-      break
-    default: console.log('drawfail')
-  }
+  if (views[c]) {
+    drawBuffer(views[c], drawFunctions[c]); drawViewfromBuffer(views[c])
+  } else console.log('drawfail')
 }
 
-function drawBuffer (view = views.space, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
+function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
   const ss = screenSettings
   const b = view.buffer
   const c = b.getContext('2d')
@@ -71,7 +63,7 @@ function drawBuffer (view = views.space, drawfunc = (b) => b.getContext('2d').fi
   c.translate(...view.center.scale(-1))
 }
 
-function drawViewfromBuffer (view = views.space) {
+function drawViewfromBuffer (view = views.spaceView) {
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   screen.clearRect(0, 0, ...view.center.scale(2))
@@ -85,7 +77,14 @@ function drawViewfromBuffer (view = views.space) {
   )
 }
 
-function drawNextTurnScreen (v) {
+const drawFunctions = {
+  nextTurnView: drawNextTurnView,
+  menuView: drawMenu,
+  spaceView: drawBoard,
+  techTreeView: drawTechTree
+}
+
+function drawNextTurnView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
   c.clearRect(-99999, -99999, 199999, 199999)
@@ -350,7 +349,7 @@ function drawMenu (v) {
 
 function drawTechTree (v) {
   const c = v.buffer.getContext('2d')
-  //const view = views.techTree
+  // const view = views.techTree
   const xy = (h) => getXYfromHex(h, v.hexSize)
 
   const arrows = []

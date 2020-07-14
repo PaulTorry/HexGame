@@ -53,7 +53,7 @@ function replaceState (newState) {
   state = newState
   if (state.meta.online) setlocalGameInfo() // localGameInfo = setlocalGameInfo();
   preturn = true
-  changeCanvas('nextTurnScreen')
+  changeCanvas('nextTurnView')
   drawScreen()
 }
 

@@ -279,7 +279,7 @@ function turnLogic () {
 
   toggleTechTree(false)
   preturn = true
-  changeCanvas('nextTurnScreen')
+  changeCanvas('nextTurnView')
 
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
 
