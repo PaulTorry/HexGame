@@ -17,7 +17,7 @@ alert,
 
 /* eslint-disable no-unused-vars */
 
-function onHexClicked (clickHex) {
+function onSpaceHexClicked (clickHex) {
 //  if(preturn){preturn = false; return }
   const viewMask = getUpdatedViewMask(state)
 

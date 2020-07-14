@@ -19,8 +19,13 @@ class Vec {
   dot (b) { return this.x * b.x + this.y * b.y }
   invert () { return this.scale(-1) }
   bounds (b1, b2 = b1.invert()) {
-    const x = Math.max(b2.x, Math.min(b1.x, this.x))
-    const y = Math.max(b2.y, Math.min(b1.y, this.y))
+    const x2 = Math.min(b2.x, b1.x), x1 = Math.max(b2.x, b1.x); 
+    const y2 = Math.min(b2.y, b1.y), y1 = Math.max(b2.y, b1.y); 
+    const x = Math.max(x2, Math.min(x1, this.x))
+    const y = Math.max(y2, Math.min(y1, this.y))
+    // const x = Math.max(b2.x, Math.min(b1.x, this.x))
+    // const y = Math.max(b2.y, Math.min(b1.y, this.y))
+    console.log(b1,b2,x2,x1,y2,y1,x,y);
     return new Vec(x, y)
     }
   

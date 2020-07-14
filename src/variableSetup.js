@@ -3,6 +3,8 @@
 /* global Hex, Vec,       */
 /* eslint-disable no-unused-vars */
 
+console.log(Vec.zero)
+
 const data = {
 
   mainMenu: [
@@ -159,12 +161,11 @@ const sessionInfo = {
 const screenSettings = {
   lowRes: false,
   openTechTree: false, // to depreciate
-  screenCenter: new Vec(400, 400),
+  screenCenter: new Vec(400, 200),
   techTreeOffset: new Vec(400, 400),
   hexSize: 75,
   showTrails: true,
-  currentCanvas: 'nextTurnView',
-  currentView: 'nextTurnView'
+  currentCanvas: 'nextTurnView'
 }
 
 const views = {

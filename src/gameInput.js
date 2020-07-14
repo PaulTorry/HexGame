@@ -7,7 +7,7 @@ drawViewfromBuffer,
 state, debug, loggedInPlayer
 views,
 drawScreen, drawMenu, screenSettings, interactiveConsole
-nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onHexClicked,
+nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onSpaceHexClicked,
 preturn:true,
 */
 
@@ -17,20 +17,27 @@ let mouseDownLocation = new Vec()
 let mouseDownLocationABS = new Vec()
 let fingerDistance = null
 
-function scaleView (sc, view = views.spaceView) {
-  const newZoom = view.zoom * sc
-  view.zoom = Math.max(0.2, Math.min(5, newZoom))
+function getViewXYfromScreenXY (pt, view = views.spaceView) {
+  return pt.subtract(screenSettings.screenCenter).scale(view.zoom).add(view.offset)
 }
 
-function translateView (dif, view = views.spaceView) {
+function scaleView (sc, view = views[screenSettings.currentCanvas]) {
+  const newZoom = view.zoom * sc
+  view.zoom = Math.max(0.2, Math.min(5, newZoom))
+  translateView(Vec.zero, view)
+}
+
+function translateView (dif, view = views[screenSettings.currentCanvas]) { // views.spaceView) {
   const newOffset = view.offset.add(dif.scale(view.zoom))
-  view.offset = newOffset.bounds(view.center)
+  view.offset = newOffset.bounds(view.center.subtract(screenSettings.screenCenter.scale(view.zoom)))
 }
 
 function translateViewTo (loc, view = views.spaceView) {
   const newOffset = loc
   view.offset = newOffset.bounds(view.center)
 }
+
+
 
 function mousedown (event) {
   mouseDownLocationABS = new Vec(event.offsetX, event.offsetY)
@@ -89,7 +96,7 @@ function topPanelClick (event) {
   }
 
   drawScreen()
-  //drawMenu()
+
 }
 
 function toggleTechTree (newState) {
@@ -97,18 +104,6 @@ function toggleTechTree (newState) {
   screenSettings.openTechTree = newState
   if (newState) changeCanvas('techTreeView')
   else { changeCanvas('spaceView') }
-}
-
-function techTreeClick (event) {
-  if (event.offsetX > 720 && event.offsetY > 720) interactiveConsole()
-  const offset = new Vec(event.offsetX, event.offsetY)
-  const clickHex = Hex.getUnitHexFromXY((offset.add(screenSettings.techTreeOffset.invert())).scale(1 / 35))
-  onTechHexClicked(clickHex)
-  drawScreen()
-}
-
-function getBufferXYfromViewXY (pt, view = views.spaceView) {
-  return pt.subtract(screenSettings.screenCenter).scale(view.zoom).add(view.offset)
 }
 
 function nextTurnScreenClick (event) {
@@ -121,7 +116,10 @@ function nextTurnScreenClick (event) {
   drawScreen()
 }
 
-function boardClick (event) {
+function boardClick (event, view = views.spaceView) {
+  const offset = new Vec(event.offsetX, event.offsetY)
+  const getHex = (o, v) => Hex.getUnitHexFromXY(getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
+
   if (screenSettings.currentCanvas === 'nextTurnView') {
     console.log('nextTurnScreenClick')
     if (!state.meta.online || debug || checkPlayerTurn()) {
@@ -129,23 +127,30 @@ function boardClick (event) {
       changeCanvas('spaceView')
       preturn = false
     }
-    drawScreen()
-  } else {
-    const offset = new Vec(event.offsetX, event.offsetY)
-    const bxy = getBufferXYfromViewXY(offset)
-    const uxy = bxy.scale(1 / views.spaceView.hexSize)
-    const hex = Hex.getUnitHexFromXY(uxy)
-    console.log(offset, bxy, uxy, hex)
-    onHexClicked(hex)
-    drawScreen()
+  } else if (screenSettings.currentCanvas === 'spaceView') {
+    onSpaceHexClicked(getHex(offset, views.spaceView))
+  } else if (screenSettings.currentCanvas === 'techTreeView') {
+    onTechHexClicked(getHex(offset, views.techTreeView))
+  } else if (screenSettings.currentCanvas === 'menuView') {
+    onMenuHexClicked(getHex(offset, views.menuView))
   }
+
+  drawScreen()
 }
+
+function techTreeClick (event) {
+  if (event.offsetX > 720 && event.offsetY > 720) interactiveConsole()
+  const offset = new Vec(event.offsetX, event.offsetY)
+  const clickHex = Hex.getUnitHexFromXY((offset.add(screenSettings.techTreeOffset.invert())).scale(1 / 35))
+  onTechHexClicked(clickHex)
+  drawScreen()
+}
+
 
 function mainMenuClick (event) {
   console.log('mainMenuClick')
   const clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX, event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1 / 45))
   onMenuHexClicked(clickHex)
-
   drawScreen()
 }
 

@@ -63,7 +63,7 @@ function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d'
   c.translate(...view.center.scale(-1))
 }
 
-function drawViewfromBuffer (view = views.spaceView) {
+function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   screen.clearRect(0, 0, ...view.center.scale(2))
@@ -252,11 +252,11 @@ function drawTopPanel () {
   const ss = screenSettings
   const c = document.getElementById('topPanel').getContext('2d')
   document.getElementById('topPanel').style.borderColor = getPlayerColour(state.playerTurn)
-  document.getElementById('topPanel').height = 100 // + 700 * ss.openTechTree;
+  document.getElementById('topPanel').height = 100
   c.clearRect(-99999, -99999, 199999, 199999)
   c.strokeStyle = 'white'
 
-  if (sel.menu && sel.menu.length > 0 && !screenSettings.openTechTree) {
+  if (sel.menu && sel.menu.length > 0 && screenSettings.currentCanvas === 'spaceView') {
     //    console.log(sel.menu);
     const menu = sel.menu
     for (let i = 0; i < menu.length; i++) {
