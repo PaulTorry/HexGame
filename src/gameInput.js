@@ -1,7 +1,7 @@
 'use strict'
 
 /* global
-Vec, Hex, sel:true, menuData
+Vec, Hex, sel:true, menuData,
 getXYfromHex,
 drawViewfromBuffer,
 state, debug, loggedInPlayer
@@ -36,8 +36,6 @@ function translateViewTo (loc, view = views.spaceView) {
   const newOffset = loc
   view.offset = newOffset.bounds(view.center)
 }
-
-
 
 function mousedown (event) {
   mouseDownLocationABS = new Vec(event.offsetX, event.offsetY)
@@ -83,20 +81,13 @@ function topPanelClick (event) {
       else changeCanvas('spaceView')
     } else changeCanvas('menuView')
     menuData.Screen = 'MainMenu'
-    // interactiveConsole();
-  } else if (event.offsetY < 90 && event.offsetY > 10 && !screenSettings.openTechTree) {
-    // console.log(event.offsetX)
-    // console.log((event.offsetX - 110), (event.offsetX - 110) / 70)
+  } else if (event.offsetY < 90 && event.offsetY > 10 && screenSettings.currentCanvas === 'spaceView') {
     const num = Math.ceil((event.offsetX - 110) / 70)
-    // console.log(num)
     if (num && sel.menu[num - 1]) {
-      // console.log(sel, sel.menu, sel.menu[num - 1])
       onTopPanelItemClicked(sel.menu[num - 1])
     }
   }
-
   drawScreen()
-
 }
 
 function toggleTechTree (newState) {
@@ -106,15 +97,15 @@ function toggleTechTree (newState) {
   else { changeCanvas('spaceView') }
 }
 
-function nextTurnScreenClick (event) {
-  console.log('nextTurnScreenClick')
-  if (!state.meta.online || debug || checkPlayerTurn()) {
-    translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
-    changeCanvas('spaceView')
-    preturn = false
-  }
-  drawScreen()
-}
+// function nextTurnScreenClick (event) {
+//   console.log('nextTurnScreenClick')
+//   if (!state.meta.online || debug || checkPlayerTurn()) {
+//     translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
+//     changeCanvas('spaceView')
+//     preturn = false
+//   }
+//   drawScreen()
+// }
 
 function boardClick (event, view = views.spaceView) {
   const offset = new Vec(event.offsetX, event.offsetY)
@@ -138,34 +129,32 @@ function boardClick (event, view = views.spaceView) {
   drawScreen()
 }
 
-function techTreeClick (event) {
-  if (event.offsetX > 720 && event.offsetY > 720) interactiveConsole()
-  const offset = new Vec(event.offsetX, event.offsetY)
-  const clickHex = Hex.getUnitHexFromXY((offset.add(screenSettings.techTreeOffset.invert())).scale(1 / 35))
-  onTechHexClicked(clickHex)
-  drawScreen()
-}
+// function techTreeClick (event) {
+//   if (event.offsetX > 720 && event.offsetY > 720) interactiveConsole()
+//   const offset = new Vec(event.offsetX, event.offsetY)
+//   const clickHex = Hex.getUnitHexFromXY((offset.add(screenSettings.techTreeOffset.invert())).scale(1 / 35))
+//   onTechHexClicked(clickHex)
+//   drawScreen()
+// }
 
 
-function mainMenuClick (event) {
-  console.log('mainMenuClick')
-  const clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX, event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1 / 45))
-  onMenuHexClicked(clickHex)
-  drawScreen()
-}
+// function mainMenuClick (event) {
+//   console.log('mainMenuClick')
+//   const clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX, event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1 / 45))
+//   onMenuHexClicked(clickHex)
+//   drawScreen()
+// }
 
-function loadGameMenuClick (event) {
-  console.log('loadGameMenuClick')
-}
+// function loadGameMenuClick (event) {
+//   console.log('loadGameMenuClick')
+// }
 
 function checkPlayerTurn () {
   const playerNum = state.meta.playergrid.filter((x) => x[1] === loggedInPlayer.handle)[0][0]
   return playerNum === state.playerTurn
 }
 
-function changeCanvas (canvas) {
-  screenSettings.currentCanvas = canvas
-}
+function changeCanvas (canvas) { screenSettings.currentCanvas = canvas }
 
 function touchstart (event) {
   const { pageX, pageY } = event.touches[0]
@@ -187,11 +176,11 @@ function touchdrag (event, view = views.spaceView) {
   event.stopPropagation()
   var c = document.getElementById('board').getContext('2d')
   const { pageX, pageY } = event.touches[0]
+  const t = event.touches.map(({ pageX, pageY }) => new Vec(pageX, pageY))
+  console.log(t)
   if (event.touches[1]) {
     const { pageX: x2, pageY: y2 } = event.touches[1]
-    //  console.log(pageX , x2 , pageY , y2)
     const fingerDistanceNew = Math.sqrt((pageX - x2) * (pageX - x2) + (pageY - y2) * (pageY - y2))
-    //  console.log(fingerDistanceNew + "fingerDistanceNew");
     if (fingerDistance) {
       scaleView(fingerDistance / fingerDistanceNew)
     }
@@ -207,8 +196,7 @@ function touchdrag (event, view = views.spaceView) {
 function keyHandle (e) {
   if (e.code === 'Tab') interactiveConsole()
   if (Number(e.key)) interactiveConsole(Number(e.key))
-  if (e.key === 'ArrowRight') theta += 0.1
-  if (e.key === 'ArrowLeft') theta -= 0.1
-
+  // if (e.key === 'ArrowRight') theta += 0.1
+  // if (e.key === 'ArrowLeft') theta -= 0.1
   drawScreen()
 }

@@ -277,7 +277,7 @@ function turnLogic () {
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
   // translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
 
-  toggleTechTree(false)
+  //toggleTechTree(false)
   preturn = true
   changeCanvas('nextTurnView')
 
