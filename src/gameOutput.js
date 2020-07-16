@@ -237,6 +237,7 @@ function drawBoard (v) {
     drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
     // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
   }
+  drawFloatingButtons(c)
 }
 
 function drawlog () {
@@ -246,6 +247,25 @@ function drawlog () {
     current = current + '<p>' + state.log[l] + '</p>'
   }
   log.innerHTML = current
+}
+
+function drawFloatingButtons (c) {
+  
+  const ss = screenSettings
+  //const c = v.buffer.getContext('2d')
+  const buttons = data.floatingButtons
+
+  buttons.forEach((b) => {
+    const xx = (ss.screenCenter.x * b.right * 2) + b.x
+    const yy = b.y
+    console.log(xx, yy)
+
+    drawFromData(c, b.sprite, xx, yy, getColMap(state.playerTurn, 1), 0.75, 0, true)
+  })
+
+  // drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
+  // drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.35, 0, true)
+  // drawFromData(c, 'techTreeButton', 700, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
 }
 
 function drawTopPanel () {
@@ -279,9 +299,9 @@ function drawTopPanel () {
     }
   }
   c.strokeStyle = getPlayerColour(state.playerTurn)
-  drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.15, 0, true)
-  drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.08, 0, true)
-  drawFromData(c, 'techTreeButton', 700, 0, getColMap(state.playerTurn, 1), 0.15, 0, true)
+  // drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
+  // drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.35, 0, true)
+  // drawFromData(c, 'techTreeButton', 700, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
   // c.rect(655, 5, 45, 45);
   c.stroke()
 

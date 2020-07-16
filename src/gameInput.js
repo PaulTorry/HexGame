@@ -62,8 +62,7 @@ function drag (e, view = views.spaceView) {
   if (mouseDownLocationABS.subtract(offset).mag > 20) {
     sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
   }
-  e.preventDefault()
-  e.stopPropagation()
+  e.preventDefault(); e.stopPropagation()
   translateView(dif)
   mouseDownLocation = offset
   drawViewfromBuffer()
@@ -97,16 +96,6 @@ function toggleTechTree (newState) {
   else { changeCanvas('spaceView') }
 }
 
-// function nextTurnScreenClick (event) {
-//   console.log('nextTurnScreenClick')
-//   if (!state.meta.online || debug || checkPlayerTurn()) {
-//     translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
-//     changeCanvas('spaceView')
-//     preturn = false
-//   }
-//   drawScreen()
-// }
-
 function boardClick (event, view = views.spaceView) {
   const offset = new Vec(event.offsetX, event.offsetY)
   const getHex = (o, v) => Hex.getUnitHexFromXY(getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
@@ -129,26 +118,6 @@ function boardClick (event, view = views.spaceView) {
   drawScreen()
 }
 
-// function techTreeClick (event) {
-//   if (event.offsetX > 720 && event.offsetY > 720) interactiveConsole()
-//   const offset = new Vec(event.offsetX, event.offsetY)
-//   const clickHex = Hex.getUnitHexFromXY((offset.add(screenSettings.techTreeOffset.invert())).scale(1 / 35))
-//   onTechHexClicked(clickHex)
-//   drawScreen()
-// }
-
-
-// function mainMenuClick (event) {
-//   console.log('mainMenuClick')
-//   const clickHex = Hex.getUnitHexFromXY((new Vec(event.offsetX, event.offsetY).add(screenSettings.techTreeOffset.invert())).scale(1 / 45))
-//   onMenuHexClicked(clickHex)
-//   drawScreen()
-// }
-
-// function loadGameMenuClick (event) {
-//   console.log('loadGameMenuClick')
-// }
-
 function checkPlayerTurn () {
   const playerNum = state.meta.playergrid.filter((x) => x[1] === loggedInPlayer.handle)[0][0]
   return playerNum === state.playerTurn
@@ -170,26 +139,21 @@ function removeTouchmove (event) {
 }
 
 function touchdrag (event, view = views.spaceView) {
-  sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+  // sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+  event.preventDefault(); event.stopPropagation()
 
-  event.preventDefault()
-  event.stopPropagation()
-  var c = document.getElementById('board').getContext('2d')
-  const { pageX, pageY } = event.touches[0]
-  const t = event.touches.map(({ pageX, pageY }) => new Vec(pageX, pageY))
-  console.log(t)
+  const t1 = new Vec(event.touches[0].pageX, event.touches[0].pageY)
   if (event.touches[1]) {
-    const { pageX: x2, pageY: y2 } = event.touches[1]
-    const fingerDistanceNew = Math.sqrt((pageX - x2) * (pageX - x2) + (pageY - y2) * (pageY - y2))
+    const t2 = new Vec(event.touches[1].pageX, event.touches[1].pageY)
+    const fingerDistanceNew = t1.distance(t2)
     if (fingerDistance) {
       scaleView(fingerDistance / fingerDistanceNew)
     }
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
-  const dif = mouseDownLocation.subtract(new Vec(pageX, pageY))
 
-  translateView(dif)
-  mouseDownLocation = new Vec(pageX, pageY)
+  translateView(mouseDownLocation.subtract(t1))
+  mouseDownLocation = t1
   drawViewfromBuffer()
 }
 
@@ -199,4 +163,8 @@ function keyHandle (e) {
   // if (e.key === 'ArrowRight') theta += 0.1
   // if (e.key === 'ArrowLeft') theta -= 0.1
   drawScreen()
+}
+
+function resizeScreen (event) {
+  console.log(window.innerHeight, window.innerWidth)
 }

@@ -7,6 +7,12 @@ console.log(Vec.zero)
 
 const data = {
 
+  floatingButtons: [
+    { name: 'nextTurnButton', sprite: 'titanShip', right: false, x: 50, y: 50, size: 100 },
+    { name: 'menuButton', sprite: 'titanShip', right: true, x: -150, y: 25, size: 50 },
+    { name: 'techTreeButton', sprite: 'titanShip', right: true, x: -100, y: 50, size: 100 }
+  ],
+
   mainMenu: [
     { name: 'Quick Setup', colour: [50, 47, 73], hex: new Hex(-3, 0), sprite: [['titanShip', 0, -10, 1]] },
     { name: 'Login/Signup', colour: [50, 47, 73], hex: new Hex(0, -2), sprite: [['titanShip', 0, -10, 1]] },
