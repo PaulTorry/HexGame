@@ -10,6 +10,7 @@ const data = {
   floatingButtons: [
     { name: 'nextTurnButton', sprite: 'titanShip', right: false, x: 50, y: 50, size: 100 },
     { name: 'menuButton', sprite: 'titanShip', right: true, x: -150, y: 25, size: 50 },
+    
     { name: 'techTreeButton', sprite: 'titanShip', right: true, x: -100, y: 50, size: 100 }
   ],
 
