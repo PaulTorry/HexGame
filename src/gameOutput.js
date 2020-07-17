@@ -46,7 +46,7 @@ function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.get
 
 function drawScreen () {
   const c = screenSettings.currentCanvas
-  //drawTopPanel()
+  // drawTopPanel()
   const screen = document.body.querySelector('#board').getContext('2d')
   screen.clearRect(-99999, -99999, 199999, 199999)
   if (views[c]) {
@@ -70,7 +70,7 @@ function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
   drawTopPanel()
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
-  //screen.clearRect(0, 0, ...view.center.scale(2))
+  // screen.clearRect(0, 0, ...view.center.scale(2))
 
   screen.drawImage(
     view.buffer,
@@ -91,7 +91,7 @@ const drawFunctions = {
 function drawNextTurnView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  //c.clearRect(-99999, -99999, 199999, 199999)
+  // c.clearRect(-99999, -99999, 199999, 199999)
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
@@ -115,7 +115,7 @@ function drawBoard (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
   v.buffer.style.borderColor = getPlayerColour(state.playerTurn)
- // c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
+  // c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
   c.fillStyle = '#ff0000'
   c.strokeStyle = '#ff00ff'
   c.lineWidth = 5
@@ -272,37 +272,44 @@ function drawTopPanel () {
       //    console.log(details);
       if (details.sprite && details.sprite[0][0]) {
         const pos = Vec.unit.scale(50) // new Vec(110 + 70 * i, 30)
-        drawMenuItem (c, details, pos)
+        drawMenuItem(c, details, pos)
       } else (console.log('problem', details))
     }
   }
 
-  function drawMenuItem (c, details, pos) {
-    drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35)
-    drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35)
-    details.sprite.forEach(x => {
-      drawFromData(c, x[0], ...pos.addXY(x[1], x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
-    })
-    drawText(c, `${details.price}`, ...pos.addXY(-15, -20), 10, 'white')
-    drawText(c, `${details.name}`, ...pos.addXY(-25, 25), 10, 'white')
+  drawMoneyEtc(c)
+}
+
+function drawMenuItem (c, details, pos) {
+  drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35)
+  drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35)
+  details.sprite.forEach(x => {
+    drawFromData(c, x[0], ...pos.addXY(x[1], x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
+  })
+  drawText(c, `${details.price}`, ...pos.addXY(-15, -20), 10, 'white')
+  drawText(c, `${details.name}`, ...pos.addXY(-25, 25), 10, 'white')
+}
+
+function drawMoneyEtc (c) {
+  const player = state.playerTurn
+  const data = state.playerData[player]
+
+  drawText(c, 'Player', 140, 20, 15, 'white')
+  drawText(c, player, 160, 40, 15, 'white')
+
+  drawText(c, `Turn`, 200, 20, 15, 'white')
+  drawText(c, state.turnNumber, 212, 40, 15, 'white')
+
+  if (!preturn) {
+    drawText(c, 'Money', 245, 20, 15, 'white')
+    drawText(c, `${data.money}  ( ${data.income} )`, 255, 40, 15, 'white')
+    // drawText(c, 'City Points: **', 360, 20, 15, 'white')
   }
 
-
-
-  c.strokeStyle = getPlayerColour(state.playerTurn)
-  // drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
-  // drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.35, 0, true)
-  // drawFromData(c, 'techTreeButton', 700, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
-  // c.rect(655, 5, 45, 45);
-  c.stroke()
-
-  drawText(c, `Player: ${state.playerTurn}`, 100, 20, 15, 'white')
   if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
     drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, 100, 35, 15, 'white')
   }
-  drawText(c, `Turn: ${state.turnNumber}`, 180, 20, 15, 'white')
-  if (!preturn) drawText(c, `Money:  ${state.playerData[state.playerTurn].money}  ( ${state.playerData[state.playerTurn].income} )`, 245, 20, 15, 'white')
-  if (!preturn) drawText(c, 'City Points: **', 360, 20, 15, 'white')
+
   drawText(c, `Game: ${state.gameName}`, 420, 40, 15, 'white')
   if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, 420, 60, 15, 'white')
 }
@@ -375,7 +382,7 @@ function drawTechTree (v) {
 
   data.techs.forEach((t) => {
     // const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
-    const { x, y } = xy(t.hex)//.addXY(-48, -43)
+    const { x, y } = xy(t.hex)// .addXY(-48, -43)
     const draw = t.cost < 99
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
