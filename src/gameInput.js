@@ -70,17 +70,17 @@ function drag (e, view = views.spaceView) {
 
 function topPanelClick (event) {
   event.preventDefault()
-  if (event.offsetX < 90 && event.offsetY < 100) {
-    nextTurn()
-  } else if (event.offsetY < 90 && event.offsetX > 710) {
-    if (!preturn) toggleTechTree()
-  } else if (event.offsetX > 655 && event.offsetX < 700 && event.offsetY > 5 && event.offsetY < 50) {
-    if (screenSettings.currentCanvas === 'menuView') {
-      if (preturn) changeCanvas('nextTurnView')
-      else changeCanvas('spaceView')
-    } else changeCanvas('menuView')
-    menuData.Screen = 'MainMenu'
-  } else if (event.offsetY < 90 && event.offsetY > 10 && screenSettings.currentCanvas === 'spaceView') {
+  // if (event.offsetX < 90 && event.offsetY < 100) {
+  //   nextTurn()
+  //   buttonFunctions['nextTurnButton']()
+  // } else if (event.offsetY < 90 && event.offsetX > 710) {
+  //   // if (!preturn) toggleTechTree()
+  //   buttonFunctions['techTreeButton']()
+  // } else if (event.offsetX > 655 && event.offsetX < 700 && event.offsetY > 5 && event.offsetY < 50) {
+  //   // toggleMenu()
+  //   buttonFunctions['menuButton']()
+  // } else
+  if (event.offsetY < 90 && event.offsetY > 10 && screenSettings.currentCanvas === 'spaceView') {
     const num = Math.ceil((event.offsetX - 110) / 70)
     if (num && sel.menu[num - 1]) {
       onTopPanelItemClicked(sel.menu[num - 1])
@@ -89,29 +89,54 @@ function topPanelClick (event) {
   drawScreen()
 }
 
+const buttonFunctions = {
+  menuButton: toggleMenu,
+  techTreeButton: toggleTechTree,
+  nextTurnButton: nextTurn
+}
+
+function toggleMenu () {
+  if (screenSettings.currentCanvas === 'menuView') {
+    if (preturn) changeCanvas('nextTurnView')
+    else changeCanvas('spaceView')
+  } else changeCanvas('menuView')
+  menuData.Screen = 'MainMenu'
+}
+
 function toggleTechTree (newState) {
-  if (newState === undefined) newState = !screenSettings.openTechTree
-  screenSettings.openTechTree = newState
-  if (newState) changeCanvas('techTreeView')
-  else { changeCanvas('spaceView') }
+  if (!preturn) {
+    // if (newState === undefined) newState = !screenSettings.openTechTree
+    // screenSettings.openTechTree = newState
+    if (screenSettings.currentCanvas === 'spaceView') changeCanvas('techTreeView')
+    else { changeCanvas('spaceView') }
+  }
 }
 
 function boardClick (event, view = views.spaceView) {
+  const ss = screenSettings
   const offset = new Vec(event.offsetX, event.offsetY)
   const getHex = (o, v) => Hex.getUnitHexFromXY(getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
 
-  if (screenSettings.currentCanvas === 'nextTurnView') {
+  const buttonPressed = data.floatingButtons.find((b) => {
+    const pos = b.dimensionMultiplier.add(Vec.unit).scale2d(ss.screenCenter).add(b.offset)
+    console.log(offset, pos, b.size, offset.distance(pos) < b.size * 0.65)
+    return offset.distance(pos) < b.size
+  })
+
+  if (buttonPressed) {
+    buttonFunctions[buttonPressed.name]()
+  } else if (ss.currentCanvas === 'nextTurnView') {
     console.log('nextTurnScreenClick')
     if (!state.meta.online || debug || checkPlayerTurn()) {
       translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
       changeCanvas('spaceView')
       preturn = false
     }
-  } else if (screenSettings.currentCanvas === 'spaceView') {
+  } else if (ss.currentCanvas === 'spaceView') {
     onSpaceHexClicked(getHex(offset, views.spaceView))
-  } else if (screenSettings.currentCanvas === 'techTreeView') {
+  } else if (ss.currentCanvas === 'techTreeView') {
     onTechHexClicked(getHex(offset, views.techTreeView))
-  } else if (screenSettings.currentCanvas === 'menuView') {
+  } else if (ss.currentCanvas === 'menuView') {
     onMenuHexClicked(getHex(offset, views.menuView))
   }
 

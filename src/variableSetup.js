@@ -8,10 +8,9 @@ console.log(Vec.zero)
 const data = {
 
   floatingButtons: [
-    { name: 'nextTurnButton', sprite: 'titanShip', right: false, x: 50, y: 50, size: 100 },
-    { name: 'menuButton', sprite: 'titanShip', right: true, x: -150, y: 25, size: 50 },
-    
-    { name: 'techTreeButton', sprite: 'titanShip', right: true, x: -100, y: 50, size: 100 }
+    { name: 'nextTurnButton', sprite: 'nextTurnButton', dimensionMultiplier: new Vec(-1, -1), offset: new Vec(60, 50), size: 50 },
+    { name: 'menuButton', sprite: 'menuButton', dimensionMultiplier: new Vec(1, -1), offset: new Vec(-120, 25), size: 30 },
+    { name: 'techTreeButton', sprite: 'techTreeButton', dimensionMultiplier: new Vec(1, -1), offset: new Vec(-60, 50), size: 50 }
   ],
 
   mainMenu: [
@@ -198,6 +197,13 @@ const views = {
     zoom: 1
   },
   nextTurnView: {
+    center: new Vec(400, 400),
+    buffer: document.createElement('canvas'),
+    hexSize: 75,
+    offset: new Vec(0, 0),
+    zoom: 1
+  },
+  buttons: {
     center: new Vec(400, 400),
     buffer: document.createElement('canvas'),
     hexSize: 75,

@@ -15,11 +15,12 @@ class Vec {
   add (b) { return new Vec(this.x + b.x, this.y + b.y) }
   addXY (x, y) { return new Vec(this.x + x, this.y + y) }
   subtract (b) { return new Vec(this.x - b.x, this.y - b.y) }
+  scale2d (a) { return new Vec(this.x * a.x, this.y * a.y) }
   scale (m) { return new Vec(this.x * m, this.y * m) }
   dot (b) { return this.x * b.x + this.y * b.y }
   invert () { return this.scale(-1) }
   distance ( a ) {
-    console.log(this.subtract(a),this.subtract(a).mag )
+   // console.log(this.subtract(a),this.subtract(a).mag )
     return this.subtract(a).mag
   }
   bounds (b1, b2 = b1.invert()) {

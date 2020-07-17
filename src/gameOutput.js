@@ -46,10 +46,13 @@ function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.get
 
 function drawScreen () {
   const c = screenSettings.currentCanvas
-  drawTopPanel()
+  //drawTopPanel()
+  const screen = document.body.querySelector('#board').getContext('2d')
+  screen.clearRect(-99999, -99999, 199999, 199999)
   if (views[c]) {
     drawBuffer(views[c], drawFunctions[c]); drawViewfromBuffer(views[c])
   } else console.log('drawfail')
+  drawBuffer(views.buttons, drawFloatingButtons); drawViewfromBuffer(views.buttons)
 }
 
 function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
@@ -66,7 +69,7 @@ function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d'
 function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
-  screen.clearRect(0, 0, ...view.center.scale(2))
+  //screen.clearRect(0, 0, ...view.center.scale(2))
 
   screen.drawImage(
     view.buffer,
@@ -87,7 +90,7 @@ const drawFunctions = {
 function drawNextTurnView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  c.clearRect(-99999, -99999, 199999, 199999)
+  //c.clearRect(-99999, -99999, 199999, 199999)
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
@@ -110,7 +113,7 @@ function getAngleFromVariant (tile) {
 function drawBoard (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
+ // c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
   c.fillStyle = '#ff0000'
   c.strokeStyle = '#ff00ff'
   c.lineWidth = 5
@@ -140,19 +143,12 @@ function drawBoard (v) {
         if (nt.length) nt.forEach(([v, i]) => drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6))
         else drawFromData(c, 'navBeaconCross', x, y, getColMap(tile.navBeacon.owner))
       }
-      // if (tile.navBeacon) {
-      //   tile.hex.neighbours.forEach((v, i) => {
-      //     if (state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon) {
-      //       drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6)
-      //     }
-      //   })
-      // }
+
       const base = state.baseArray.find(b => b.hex.compare(tile.hex))
       if (base) {
         drawFromData(c, 'planetRing', x, y, getColMap(base.owner))
       }
       if (viewMask[id] === 1) {
-        // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(tile.hex), ss.hexSize, 1, 'rgba(200,200,200,0.1)', 'rgba(200,200,200,0.1)')
         drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
     }
@@ -237,7 +233,7 @@ function drawBoard (v) {
     drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
     // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
   }
-  drawFloatingButtons(c)
+  // drawFloatingButtons(c)
 }
 
 function drawlog () {
@@ -249,23 +245,16 @@ function drawlog () {
   log.innerHTML = current
 }
 
-function drawFloatingButtons (c) {
-  
+function drawFloatingButtons (v) {
   const ss = screenSettings
-  //const c = v.buffer.getContext('2d')
+  console.log(v)
+  const c = v.buffer.getContext('2d')
   const buttons = data.floatingButtons
 
   buttons.forEach((b) => {
-    const xx = (ss.screenCenter.x * b.right * 2) + b.x
-    const yy = b.y
-    console.log(xx, yy)
-
-    drawFromData(c, b.sprite, xx, yy, getColMap(state.playerTurn, 1), 0.75, 0, true)
+    const pos = b.dimensionMultiplier.scale2d(ss.screenCenter).add(b.offset)
+    drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
   })
-
-  // drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
-  // drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.35, 0, true)
-  // drawFromData(c, 'techTreeButton', 700, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
 }
 
 function drawTopPanel () {
