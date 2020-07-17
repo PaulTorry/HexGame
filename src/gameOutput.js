@@ -271,7 +271,7 @@ function drawTopPanel () {
       const details = data.thingList.find(t => t.thing === menu[i])
       //    console.log(details);
       if (details.sprite && details.sprite[0][0]) {
-        const pos = Vec.zero // new Vec(110 + 70 * i, 30)
+        const pos = Vec.unit.scale(50) // new Vec(110 + 70 * i, 30)
         drawMenuItem (c, details, pos)
       } else (console.log('problem', details))
     }
@@ -279,12 +279,12 @@ function drawTopPanel () {
 
   function drawMenuItem (c, details, pos) {
     drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35)
-    drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(36,34,73)', 0.35)
+    drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35)
     details.sprite.forEach(x => {
-      drawFromData(c, x[0], ...pos.addXY(30 + x[1], 30 + x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
+      drawFromData(c, x[0], ...pos.addXY(x[1], x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
     })
-    drawText(c, `${details.price}`, ...pos.addXY(15, 10), 10, 'white')
-    drawText(c, `${details.name}`, ...pos.addXY(15, 65), 10, 'white')
+    drawText(c, `${details.price}`, ...pos.addXY(-15, -20), 10, 'white')
+    drawText(c, `${details.name}`, ...pos.addXY(-25, 25), 10, 'white')
   }
 
 
@@ -320,7 +320,7 @@ function drawMenu (v) {
   if (menuData.Screen === 'MainMenu') {
     data.mainMenu.forEach((t) => {
       const { x, y } = xy(t.hex)
-      drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0, true)
       drawText(c, `${t.name}`, x - 30, y + 25, 12, 'rgb(159,216,206)')
     })
   }
@@ -328,7 +328,7 @@ function drawMenu (v) {
   if (menuData.Screen === 'loadGameMenu') {
     data.loadGameMenu.forEach((t) => {
       const { x, y } = xy(t.hex)
-      drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0, true)
 
       let valueToOutput = menuData.LoadGameOptions[t.name] || ''
       if (t.num || t.num === 0) {
@@ -345,7 +345,7 @@ function drawMenu (v) {
   if (menuData.Screen === 'NewGame') {
     data.newGameMenu.forEach((t) => {
       const { x, y } = xy(t.hex)
-      drawFromData(c, 'roundedHex', x - 58, y - 53, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0, true)
 
       let valueToOutput = menuData.NewGameData[t.name] || ''
       if (t.num || t.num === 0) {
@@ -375,23 +375,23 @@ function drawTechTree (v) {
 
   data.techs.forEach((t) => {
     // const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
-    const { x, y } = xy(t.hex)
+    const { x, y } = xy(t.hex)//.addXY(-48, -43)
     const draw = t.cost < 99
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
     if (t.cost > 99) {
-      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(30,30,30)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.55, 0, true)
     } else if (state.playerData[state.playerTurn].tech[t.tech]) {
-      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, 'roundedHexOutline', x - 48, y - 43, getColMap(state.playerTurn, 1), 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0, true)
+      drawFromData(c, 'roundedHexOutline', x, y, getColMap(state.playerTurn, 1), 0.55, 0, true)
     } else if (t.cost > 99 || (t.requires &&
       t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
     )) {
-      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, 'roundedHexOutline', x - 48, y - 43, x => 'rgb(36,34,73)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0, true)
+      drawFromData(c, 'roundedHexOutline', x, y, x => 'rgb(36,34,73)', 0.55, 0, true)
     } else { // if (draw){
-      drawFromData(c, 'roundedHex', x - 48, y - 43, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, 'roundedHexOutline', x - 48, y - 43, x => 'rgb(159,216,206)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0, true)
+      drawFromData(c, 'roundedHexOutline', x, y, x => 'rgb(159,216,206)', 0.55, 0, true)
     }
 
     if ((draw || debug) && t.sprite) {
