@@ -67,6 +67,7 @@ function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d'
 }
 
 function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
+  drawTopPanel()
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   //screen.clearRect(0, 0, ...view.center.scale(2))
@@ -113,6 +114,7 @@ function getAngleFromVariant (tile) {
 function drawBoard (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
+  v.buffer.style.borderColor = getPlayerColour(state.playerTurn)
  // c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
   c.fillStyle = '#ff0000'
   c.strokeStyle = '#ff00ff'
@@ -138,8 +140,6 @@ function drawBoard (v) {
       }
       if (tile.navBeacon) {
         const nt = tile.hex.neighbours.map((v, i) => [state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon, i]).filter(([t, i]) => t)
-        // console.log(nt, nt.length, nt.len);
-
         if (nt.length) nt.forEach(([v, i]) => drawFromData(c, 'navBeacon', x, y, getColMap(tile.navBeacon.owner), undefined, -i / 6))
         else drawFromData(c, 'navBeaconCross', x, y, getColMap(tile.navBeacon.owner))
       }
@@ -247,7 +247,7 @@ function drawlog () {
 
 function drawFloatingButtons (v) {
   const ss = screenSettings
-  console.log(v)
+  // console.log(v)
   const c = v.buffer.getContext('2d')
   const buttons = data.floatingButtons
 
@@ -266,27 +266,29 @@ function drawTopPanel () {
   c.strokeStyle = 'white'
 
   if (sel.menu && sel.menu.length > 0 && screenSettings.currentCanvas === 'spaceView') {
-    //    console.log(sel.menu);
     const menu = sel.menu
     for (let i = 0; i < menu.length; i++) {
       const details = data.thingList.find(t => t.thing === menu[i])
       //    console.log(details);
       if (details.sprite && details.sprite[0][0]) {
-        drawFromData(c, 'roundedHex', 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
-        drawFromData(c, 'roundedHexOutline', 110 + 70 * i, 30, x => 'rgb(36,34,73)', 0.35)
-        details.sprite.forEach(x => {
-          drawFromData(c, x[0], 140 + 70 * i + x[1], 60 + x[2], getColMap(state.playerTurn, 1), 0.5 * x[3])
-        })
-        drawText(c, `${details.price}`, 125 + 70 * i, 40, 10, 'white')
-        drawText(c, `${details.name}`, 115 + 70 * i, 95, 10, 'white')
-      } else if (gameSprites[menu[i]]) {
-        drawFromData(c, 'roundedHex', 110 + 70 * i, 30, getColMap(state.playerTurn, 1), 0.35)
-        drawFromData(c, menu[i], 140 + 70 * i, 60, getColMap(state.playerTurn, 1), 0.5)
-        drawText(c, `${details.price}`, 125 + 70 * i, 40, 10, 'white')
-        drawText(c, `${details.name}`, 115 + 70 * i, 95, 10, 'white')
+        const pos = Vec.zero // new Vec(110 + 70 * i, 30)
+        drawMenuItem (c, details, pos)
       } else (console.log('problem', details))
     }
   }
+
+  function drawMenuItem (c, details, pos) {
+    drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35)
+    drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(36,34,73)', 0.35)
+    details.sprite.forEach(x => {
+      drawFromData(c, x[0], ...pos.addXY(30 + x[1], 30 + x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
+    })
+    drawText(c, `${details.price}`, ...pos.addXY(15, 10), 10, 'white')
+    drawText(c, `${details.name}`, ...pos.addXY(15, 65), 10, 'white')
+  }
+
+
+
   c.strokeStyle = getPlayerColour(state.playerTurn)
   // drawFromData(c, 'nextTurnButton', 0, 0, getColMap(state.playerTurn, 1), 0.75, 0, true)
   // drawFromData(c, 'menuButton', 650, 0, getColMap(state.playerTurn, 1), 0.35, 0, true)

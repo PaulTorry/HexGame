@@ -119,7 +119,7 @@ function boardClick (event, view = views.spaceView) {
 
   const buttonPressed = data.floatingButtons.find((b) => {
     const pos = b.dimensionMultiplier.add(Vec.unit).scale2d(ss.screenCenter).add(b.offset)
-    console.log(offset, pos, b.size, offset.distance(pos) < b.size * 0.65)
+    //console.log(offset, pos, b.size, offset.distance(pos) < b.size * 0.65)
     return offset.distance(pos) < b.size
   })
 
