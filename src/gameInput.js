@@ -3,7 +3,6 @@
 /* global
 Vec, Hex, sel:true, menuData,
 getXYfromHex,
-drawViewfromBuffer,
 state, debug, loggedInPlayer
 views,
 drawScreen, drawMenu, screenSettings, interactiveConsole
@@ -53,7 +52,7 @@ function mouseWheel (event) {
   event.preventDefault()
   if (event.deltaY < 0) { scaleView(1 / 1.1) }
   if (event.deltaY > 0) { scaleView(1.1) }
-  drawViewfromBuffer()
+  drawScreen(false)
 }
 
 function drag (e, view = views.spaceView) {
@@ -61,33 +60,24 @@ function drag (e, view = views.spaceView) {
   const dif = mouseDownLocation.subtract(offset)
   if (mouseDownLocationABS.subtract(offset).mag > 20) {
     sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+    drawScreen()
   }
   e.preventDefault(); e.stopPropagation()
   translateView(dif)
   mouseDownLocation = offset
-  drawViewfromBuffer()
+  drawScreen(false)
 }
 
-function topPanelClick (event) {
-  event.preventDefault()
-  // if (event.offsetX < 90 && event.offsetY < 100) {
-  //   nextTurn()
-  //   buttonFunctions['nextTurnButton']()
-  // } else if (event.offsetY < 90 && event.offsetX > 710) {
-  //   // if (!preturn) toggleTechTree()
-  //   buttonFunctions['techTreeButton']()
-  // } else if (event.offsetX > 655 && event.offsetX < 700 && event.offsetY > 5 && event.offsetY < 50) {
-  //   // toggleMenu()
-  //   buttonFunctions['menuButton']()
-  // } else
-  if (event.offsetY < 90 && event.offsetY > 10 && screenSettings.currentCanvas === 'spaceView') {
-    const num = Math.ceil((event.offsetX - 110) / 70)
-    if (num && sel.menu[num - 1]) {
-      onTopPanelItemClicked(sel.menu[num - 1])
-    }
-  }
-  drawScreen()
-}
+// function topPanelClick (event) {
+//   event.preventDefault()
+//   if (event.offsetY < 90 && event.offsetY > 10 && screenSettings.currentCanvas === 'spaceView') {
+//     const num = Math.ceil((event.offsetX - 110) / 70)
+//     if (num && sel.menu[num - 1]) {
+//       onTopPanelItemClicked(sel.menu[num - 1])
+//     }
+//   }
+//   drawScreen()
+// }
 
 const buttonFunctions = {
   menuButton: toggleMenu,
@@ -116,15 +106,34 @@ function boardClick (event, view = views.spaceView) {
   const ss = screenSettings
   const offset = new Vec(event.offsetX, event.offsetY)
   const getHex = (o, v) => Hex.getUnitHexFromXY(getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
+  let menuItem = []
 
   const buttonPressed = data.floatingButtons.find((b) => {
-    const pos = b.dimensionMultiplier.add(Vec.unit).scale2d(ss.screenCenter).add(b.offset)
-    //console.log(offset, pos, b.size, offset.distance(pos) < b.size * 0.65)
+    const pos = b.dimensionMultiplier.add(Vec.unit).scaleByVec(ss.screenCenter).add(b.offset)
     return offset.distance(pos) < b.size
   })
 
+
+  if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
+    const ml = ss.thingMenuLocation
+    const posFunc = (i) => {
+      const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
+      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset)// .add(ss.screenCenter.scaleXY(-1, -1))
+    }
+    
+    menuItem = sel.menu.map((v, i) => [v, i]).find((v, i) => offset.distance(posFunc(i)) < ml.hexsize)
+    
+    // const details = data.thingList.find(t => t.thing === v)
+    // if (details.sprite && details.sprite[0][0]) {
+    //   drawMenuItem(c, details, posFunc(i))
+    // } else (console.log('problem', details))
+  }
+
   if (buttonPressed) {
     buttonFunctions[buttonPressed.name]()
+  } else if (menuItem && menuItem[0] && ss.currentCanvas === 'spaceView') {
+    console.log(menuItem)
+    onTopPanelItemClicked(menuItem[0])
   } else if (ss.currentCanvas === 'nextTurnView') {
     console.log('nextTurnScreenClick')
     if (!state.meta.online || debug || checkPlayerTurn()) {
@@ -176,10 +185,9 @@ function touchdrag (event, view = views.spaceView) {
     }
     fingerDistance = fingerDistanceNew
   } else fingerDistance = null
-
   translateView(mouseDownLocation.subtract(t1))
   mouseDownLocation = t1
-  drawViewfromBuffer()
+  drawScreen(false)
 }
 
 function keyHandle (e) {
@@ -191,5 +199,13 @@ function keyHandle (e) {
 }
 
 function resizeScreen (event) {
-  console.log(window.innerHeight, window.innerWidth)
+  // console.log(window.innerHeight, window.innerWidth)
+  const roundedHalfMin = (a) => Math.max(Math.floor(a / 2), 200)
+  const center = new Vec(roundedHalfMin(window.innerWidth) - 3, roundedHalfMin(window.innerHeight) - 3)
+  const canvas = document.getElementById('board')
+  screenSettings.screenCenter = center
+  views.buttons.center = center
+  canvas.width = center.x * 2
+  canvas.height = center.y * 2
+  drawScreen()
 }

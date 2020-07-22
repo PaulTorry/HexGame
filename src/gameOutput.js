@@ -44,15 +44,19 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 
 function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
-function drawScreen () {
+function drawScreen (fullUpdate = true) {
   const c = screenSettings.currentCanvas
   // drawTopPanel()
   const screen = document.body.querySelector('#board').getContext('2d')
   screen.clearRect(-99999, -99999, 199999, 199999)
+
   if (views[c]) {
-    drawBuffer(views[c], drawFunctions[c]); drawViewfromBuffer(views[c])
+    if (fullUpdate) drawBuffer(views[c], drawFunctions[c]);
+    drawViewfromBuffer(views[c])
   } else console.log('drawfail')
-  drawBuffer(views.buttons, drawFloatingButtons); drawViewfromBuffer(views.buttons)
+
+  if (fullUpdate) drawBuffer(views.buttons, drawFloatingButtons);
+  drawViewfromBuffer(views.buttons)
 }
 
 function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
@@ -67,7 +71,7 @@ function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d'
 }
 
 function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
-  drawTopPanel()
+  // drawTopPanel()
   const screen = document.body.querySelector('#board').getContext('2d')
   const ss = screenSettings
   // screen.clearRect(0, 0, ...view.center.scale(2))
@@ -114,12 +118,6 @@ function getAngleFromVariant (tile) {
 function drawBoard (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  v.buffer.style.borderColor = getPlayerColour(state.playerTurn)
-  // c.clearRect(-99999, -99999, 199999, 199999) // FIX THIS @TODO
-  c.fillStyle = '#ff0000'
-  c.strokeStyle = '#ff00ff'
-  c.lineWidth = 5
-
   const viewMask = getUpdatedViewMask(state)
 
   for (const [id, tile] of state.tiles) {
@@ -168,7 +166,7 @@ function drawBoard (v) {
       const planet = whichPlanetsTerritory(tile.hex)
       if (planet) drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => getPlayerColour(planet.owner, 0.5))
       if (debug) drawText(c, `${territoryState(tile.hex)}`, ...getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
-      if (debug) drawText(c, `${tile.hex.id}`, ...getXYfromHex(tile.hex).add(new Vec(-40, +40)), 14, 'grey')
+      if (debug) drawText(c, `${tile.hex.id}`, ...getXYfromHex(tile.hex).addXY(-40, +40), 14, 'grey')
     }
   }
 
@@ -204,8 +202,6 @@ function drawBoard (v) {
 
       drawText(c, `${Math.round(ship.shield + ship.hull)}`, ...getXYfromHex(ship.hex).add(new Vec(-20, 45)), 20, 'white')
       drawText(c, `(${Math.round(ship.hull)})`, ...getXYfromHex(ship.hex).add(new Vec(10, 45)), 15, 'orange')
-      // drawText(c, `${ship.hulltype.actionList}`, getXYfromHex(ship.hex).add(new Vec(-40, 25)), 15, 'gray')
-      // drawText(c, `${ship.actionsRemaining}`, getXYfromHex(ship.hex).add(new Vec(-40, 5)), 15, 'white')
 
       let actionIconColour = 'blue'
       for (const a in ship.hulltype.actionList) {
@@ -225,15 +221,11 @@ function drawBoard (v) {
         drawFromData(c, 'warningIconGreen', x, y)
       }
       drawFromData(c, 'hexVert', ...getXYfromHex(move), () => 'rgb(166,191,187)', 0.90)
-      // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(move), ss.hexSize - 5, 3, 'rgb(166,191,187)')
     } for (const attack of sel.actions.attacks) {
       drawFromData(c, 'hexVert', ...getXYfromHex(attack), () => 'red', 0.90)
-      //   drawPoly(c, simpleShapes['hexVert'], getXYfromHex(attack), ss.hexSize - 5, 3, 'red')
     }
     drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
-    // drawPoly(c, simpleShapes['hexVert'], getXYfromHex(sel.hex), ss.hexSize - 5, 3, selectedColour[sel.state])
   }
-  // drawFloatingButtons(c)
 }
 
 function drawlog () {
@@ -247,71 +239,83 @@ function drawlog () {
 
 function drawFloatingButtons (v) {
   const ss = screenSettings
-  // console.log(v)
   const c = v.buffer.getContext('2d')
   const buttons = data.floatingButtons
 
+  document.getElementById('board').style.borderColor = getPlayerColour(state.playerTurn)
+
   buttons.forEach((b) => {
-    const pos = b.dimensionMultiplier.scale2d(ss.screenCenter).add(b.offset)
+    const pos = b.dimensionMultiplier.scaleByVec(v.center).add(b.offset)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
   })
-}
+  console.log(v.center.scaleXY(1, 1))
 
-function drawTopPanel () {
-  const ss = screenSettings
-  const c = document.getElementById('topPanel').getContext('2d')
-  document.getElementById('topPanel').style.borderColor = getPlayerColour(state.playerTurn)
-  document.getElementById('topPanel').height = 100
-  c.clearRect(-99999, -99999, 199999, 199999)
-  c.strokeStyle = 'white'
+  // thing menu
 
-  if (sel.menu && sel.menu.length > 0 && screenSettings.currentCanvas === 'spaceView') {
-    const menu = sel.menu
-    for (let i = 0; i < menu.length; i++) {
-      const details = data.thingList.find(t => t.thing === menu[i])
-      //    console.log(details);
-      if (details.sprite && details.sprite[0][0]) {
-        const pos = Vec.unit.scale(50) // new Vec(110 + 70 * i, 30)
-        drawMenuItem(c, details, pos)
-      } else (console.log('problem', details))
+  if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
+    const ml = ss.thingMenuLocation
+    const posFunc = (i) => {
+      const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
+      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset).add(ss.screenCenter.scaleXY(-1, -1))
     }
+    sel.menu.forEach((v, i) => {
+      const details = data.thingList.find(t => t.thing === v)
+      if (details.sprite && details.sprite[0][0]) {
+        drawMenuItem(c, details, posFunc(i))
+      } else (console.log('problem', details))
+    })
   }
 
-  drawMoneyEtc(c)
+  // Text info
+  const { x, y } = v.center.scaleXY(0, -1)
+  const player = state.playerTurn
+  const pdata = state.playerData[player]
+  drawText(c, 'Player', x - 200, y + 20, 15, 'white')
+  drawText(c, player, x - 180, y + 40, 15, 'white')
+  drawText(c, 'Turn', x - 150, y + 20, 15, 'white')
+  drawText(c, state.turnNumber, x - 125, y + 40, 15, 'white')
+  if (!preturn) {
+    drawText(c, 'Money', x - 105, y + 20, 15, 'white')
+    drawText(c, `${pdata.money}  ( ${pdata.income} )`, x - 105, y + 40, 15, 'white')
+    // drawText(c, 'City Points: **', 360, 20, 15, 'white')
+  }
+  if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
+    drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, x - 300, y + 35, 15, 'white')
+  }
+  drawText(c, `Game: ${state.gameName}`, x + 20, y + 40, 15, 'white')
+  if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, x + 20, y + 60, 15, 'white')
 }
 
+// function drawTopPanel () {
+//   const ss = screenSettings
+//   const c = document.getElementById('topPanel').getContext('2d')
+//   document.getElementById('topPanel').style.borderColor = getPlayerColour(state.playerTurn)
+//   document.getElementById('topPanel').height = 100
+//   c.clearRect(-99999, -99999, 199999, 199999)
+//   c.strokeStyle = 'white'
+
+//   if (sel.menu && sel.menu.length > 0 && screenSettings.currentCanvas === 'spaceView') {
+//     const posFunc = (i) => {
+//       const hex = Hex.nToHex(i, Math.floor((screenSettings.screenCenter.x * 2 - 200) / 70), true)
+//       return Hex.getXYfromUnitHex(hex, true).scale(35).addXY(150, 90)
+//     }
+//     sel.menu.forEach((v, i) => {
+//       const details = data.thingList.find(t => t.thing === v)
+//       if (details.sprite && details.sprite[0][0]) {
+//         drawMenuItem(c, details, posFunc(i))
+//       } else (console.log('problem', details))
+//     })
+//   }
+// }
+
 function drawMenuItem (c, details, pos) {
-  drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35)
-  drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35)
+  drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35, 1 / 12)
+  drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35, 1 / 12)
   details.sprite.forEach(x => {
     drawFromData(c, x[0], ...pos.addXY(x[1], x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
   })
   drawText(c, `${details.price}`, ...pos.addXY(-15, -20), 10, 'white')
   drawText(c, `${details.name}`, ...pos.addXY(-25, 25), 10, 'white')
-}
-
-function drawMoneyEtc (c) {
-  const player = state.playerTurn
-  const data = state.playerData[player]
-
-  drawText(c, 'Player', 140, 20, 15, 'white')
-  drawText(c, player, 160, 40, 15, 'white')
-
-  drawText(c, `Turn`, 200, 20, 15, 'white')
-  drawText(c, state.turnNumber, 212, 40, 15, 'white')
-
-  if (!preturn) {
-    drawText(c, 'Money', 245, 20, 15, 'white')
-    drawText(c, `${data.money}  ( ${data.income} )`, 255, 40, 15, 'white')
-    // drawText(c, 'City Points: **', 360, 20, 15, 'white')
-  }
-
-  if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
-    drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, 100, 35, 15, 'white')
-  }
-
-  drawText(c, `Game: ${state.gameName}`, 420, 40, 15, 'white')
-  if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, 420, 60, 15, 'white')
 }
 
 function drawMenu (v) {

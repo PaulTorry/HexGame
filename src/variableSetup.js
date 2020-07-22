@@ -167,11 +167,11 @@ const sessionInfo = {
 const screenSettings = {
   lowRes: false,
   openTechTree: false, // to depreciate
-  screenCenter: new Vec(400, 200),
-  techTreeOffset: new Vec(400, 400),
+  screenCenter: new Vec(400, 400),
   hexSize: 75,
   showTrails: true,
-  currentCanvas: 'nextTurnView'
+  currentCanvas: 'nextTurnView',
+  thingMenuLocation: { hexsize: 35, offset: new Vec(130, 90) }
 }
 
 const views = {
@@ -206,7 +206,7 @@ const views = {
   buttons: {
     center: new Vec(400, 400),
     buffer: document.createElement('canvas'),
-    hexSize: 75,
+    hexSize: 35,
     offset: new Vec(0, 0),
     zoom: 1
   }
