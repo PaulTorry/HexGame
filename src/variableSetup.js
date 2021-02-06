@@ -3,8 +3,6 @@
 /* global Hex, Vec,       */
 /* eslint-disable no-unused-vars */
 
-console.log(Vec.zero)
-
 const data = {
 
   floatingButtons: [

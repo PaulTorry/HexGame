@@ -246,7 +246,7 @@ function drawFloatingButtons (v) {
     const pos = b.dimensionMultiplier.scaleByVec(v.center).add(b.offset)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
   })
-  console.log(v.center.scaleXY(1, 1))
+  // console.log(v.center.scaleXY(1, 1))
 
   // thing menu
 
