@@ -49,11 +49,11 @@ function drawScreen (fullUpdate = true) {
   screen.clearRect(-99999, -99999, 199999, 199999)
 
   if (views[c]) {
-    if (fullUpdate) drawBuffer(views[c], drawFunctions[c]);
+    if (fullUpdate) drawBuffer(views[c], drawFunctions[c])
     drawViewfromBuffer(views[c])
   } else console.log('drawfail')
 
-  if (fullUpdate) drawBuffer(views.buttons, drawFloatingButtons);
+  if (fullUpdate) drawBuffer(views.buttons, drawFloatingButtons)
   drawViewfromBuffer(views.buttons)
 }
 
