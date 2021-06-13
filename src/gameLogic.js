@@ -34,7 +34,8 @@ function onSpaceHexClicked (clickHex) {
       sel.ship = ship
     } else {
       ship.attacked = true
-      sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
+      //sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
+      sel = { state: 2, hex: clickHex, actions: { moves: [], attacks: [] }, menu: makeBuildBar(clickHex) }
     }
   }
 
