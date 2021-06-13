@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unused-vars, object-property-newline */
 
-function json (a) { return JSON.stringify(a) }
+// function json (a) { return JSON.stringify(a) }
 
 class Vec {
   constructor (x = 0, y = 0) { this.x = x; this.y = y }
@@ -246,14 +246,7 @@ function cloneFunc (ob) {
 
 Object.defineProperty(Object.prototype, 'clone', { value: clone, enumerable: false })
 
-const PaulsMath = {
-  lowestArrayIndex: function (a, b) {
-    if (a === -1 && b === -1) return 0
-    else if (a === -1) return b
-    else if (b === -1) return a
-    else return (Math.min(a, b))
-  }
-}
+
 
 
 

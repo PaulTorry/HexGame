@@ -10,12 +10,18 @@ drawMenu, getUpdatedViewMask
 data
 subTurn,
 autoSave, changeCanvas, toggleTechTree,
-saveToServer, debug, takeAIturn, PaulsMath,
-checkForUpdatedServerGame, loadGameFromID,
+saveToServer, debug, takeAIturn, checkForUpdatedServerGame, loadGameFromID,
 alert,
 */
 
 /* eslint-disable no-unused-vars */
+
+const lowestArrayIndex = function (a, b) {
+  if (a === -1 && b === -1) return 0
+  else if (a === -1) return b
+  else if (b === -1) return a
+  else return (Math.min(a, b))
+}
 
 function onSpaceHexClicked (clickHex) {
 //  if(preturn){preturn = false; return }
@@ -34,7 +40,7 @@ function onSpaceHexClicked (clickHex) {
       sel.ship = ship
     } else {
       ship.attacked = true
-      //sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
+      // sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
       sel = { state: 2, hex: clickHex, actions: { moves: [], attacks: [] }, menu: makeBuildBar(clickHex) }
     }
   }
@@ -50,7 +56,7 @@ function onSpaceHexClicked (clickHex) {
         sel.ship.hex = clickHex
         state.history[subTurn()].push({ type: 'move', rand: Math.random(), path: sel.actions.moves.find(e => e[0].compare(clickHex)) })
         const ar = sel.ship.actionsRemaining
-        sel.ship.actionsRemaining = ar.slice(PaulsMath.lowestArrayIndex(ar.indexOf('m'), ar.indexOf('mm')) + 1)
+        sel.ship.actionsRemaining = ar.slice(lowestArrayIndex(ar.indexOf('m'), ar.indexOf('mm')) + 1)
         sel.hex = clickHex
 
         applyTerrainDamage(sel.ship, getTerrainDamage(sel.ship, clickHex))
@@ -278,15 +284,15 @@ function turnLogic () {
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
   // translateContextTo(getXYfromHex(state.playerData[state.playerTurn].capital));
 
-  //toggleTechTree(false)
+  // toggleTechTree(false)
   preturn = true
   changeCanvas('nextTurnView')
 
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
 
   sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-  //drawMenu();
-   drawScreen()
+  // drawMenu();
+  drawScreen()
 }
 
 function reSetIncomes () {
