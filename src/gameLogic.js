@@ -6,10 +6,10 @@ state,
 preturn:true, makeBuildBar,
 findPossibleAttacks, getShipOnHex, findPossibleMoves,
 buildShip,
-drawMenu, getUpdatedViewMask
+getUpdatedViewMask
 data
 subTurn,
-autoSave, changeCanvas, toggleTechTree,
+autoSave, changeCanvas,
 saveToServer, debug, takeAIturn, checkForUpdatedServerGame, loadGameFromID,
 alert,
 */
