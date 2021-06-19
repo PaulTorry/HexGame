@@ -82,7 +82,7 @@ function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
     view.buffer,
     ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
     ...ss.screenCenter.scale(view.zoom * 2),
-    ...Vec.zero,
+    ...new Vec(0, 0),
     ...ss.screenCenter.scale(2)
   )
 }

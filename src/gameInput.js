@@ -4,8 +4,8 @@
 Vec, Hex, sel:true, menuData,
 getXYfromHex,
 state, debug, loggedInPlayer
-views,
-drawScreen, drawMenu, screenSettings, interactiveConsole
+views, data,
+drawScreen, screenSettings, interactiveConsole
 nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onSpaceHexClicked,
 preturn:true,
 */
@@ -23,7 +23,7 @@ function getViewXYfromScreenXY (pt, view = views.spaceView) {
 function scaleView (sc, view = views[screenSettings.currentCanvas]) {
   const newZoom = view.zoom * sc
   view.zoom = Math.max(0.2, Math.min(5, newZoom))
-  translateView(Vec.zero, view)
+  translateView(new Vec(0, 0), view)
 }
 
 function translateView (dif, view = views[screenSettings.currentCanvas]) { // views.spaceView) {
@@ -60,7 +60,7 @@ function drag (e, view = views.spaceView) {
   const dif = mouseDownLocation.subtract(offset)
   if (mouseDownLocationABS.subtract(offset).mag > 20) {
     sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-    //drawScreen()
+    // drawScreen()
   }
   e.preventDefault(); e.stopPropagation()
   translateView(dif)
@@ -109,10 +109,9 @@ function boardClick (event, view = views.spaceView) {
   let menuItem = []
 
   const buttonPressed = data.floatingButtons.find((b) => {
-    const pos = b.dimensionMultiplier.add(Vec.unit).scaleByVec(ss.screenCenter).add(b.offset)
+    const pos = b.dimensionMultiplier.add(new Vec(1, 1)).scaleByVec(ss.screenCenter).add(b.offset)
     return offset.distance(pos) < b.size
   })
-
 
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
@@ -120,9 +119,9 @@ function boardClick (event, view = views.spaceView) {
       const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
       return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset)// .add(ss.screenCenter.scaleXY(-1, -1))
     }
-    
+
     menuItem = sel.menu.map((v, i) => [v, i]).find((v, i) => offset.distance(posFunc(i)) < ml.hexsize)
-    
+
     // const details = data.thingList.find(t => t.thing === v)
     // if (details.sprite && details.sprite[0][0]) {
     //   drawMenuItem(c, details, posFunc(i))
