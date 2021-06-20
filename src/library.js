@@ -242,13 +242,13 @@ function cloneFunc (ob) {
   return newObj
 }
 
-class view {
-  constructor (board, screenSize = new Vec(800, 800), center = new Vec(800, 800), zoom = 1, offset = new Vec(0, 0)) {
-    this.board = board
+class View {
+  constructor (screenSize = new Vec(800, 800), center = new Vec(800, 800), zoom = 1, offset = new Vec(0, 0)) {
     this.zoom = zoom
     this.offset = offset
     this.screenCenter = screenSize.scale(0.5) // Integer vector
     this.center = center
+    this.buffer = document.createElement('canvas')
   }
 
   getViewXYfromScreenXY (pt) {
@@ -258,7 +258,7 @@ class view {
   scaleView (sc) {
     const newZoom = this.zoom * sc
     this.zoom = Math.max(0.2, Math.min(5, newZoom))
-    this.translateView(Vec.zero)
+    this.translateView(new Vec(0, 0))
   }
 
   translateView (dif) {
@@ -270,9 +270,18 @@ class view {
     const newOffset = loc
     this.offset = newOffset.bounds(this.center)
   }
+
+  drawBuffer (drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
+    const c = this.buffer.getContext('2d')
+    this.buffer.height = this.center.y * 2
+    this.buffer.width = this.center.x * 2
+    c.translate(...this.center)
+    drawfunc(this)
+    c.translate(...this.center.scale(-1))
+  }
 }
 
-class board {
+class Board {
   constructor (canvasElement, view, returnFunctions) {
     this.canvasElement = canvasElement
     this.view = view
@@ -280,18 +289,33 @@ class board {
     this.mouseDownLocation = new Vec()
     this.mouseDownLocationABS = new Vec()
     this.fingerDistance = null
+    canvasElement.addEventListener('click', this.boardClick.bind(this))
+    canvasElement.addEventListener('mousedown', this.mousedown.bind(this))
+    canvasElement.addEventListener('wheel', this.mouseWheel.bind(this))
+    canvasElement.addEventListener('touchstart', this.touchstart.bind(this))
+    window.onresize = this.resizeScreen.bind(this)
+    // console.log(this.canvasElement)
+    // console.log(this.view)
+    // console.log(this.returnFunctions)
+    this.dra = this.drag.bind(this)
+    this.rem = this.removeMousemove.bind(this)
   }
 
   mousedown (event) {
+    // console.log(this.canvasElement)
+    // console.log(this.view)
+    // console.log(this.returnFunctions)
     this.mouseDownLocationABS = new Vec(event.offsetX, event.offsetY)
     this.mouseDownLocation = new Vec(event.offsetX, event.offsetY)
-    this.canvasElement.addEventListener('mousemove', this.drag)
-    this.canvasElement.addEventListener('mouseup', this.removeMousemove)
+    this.canvasElement.addEventListener('mousemove', this.dra)
+    this.canvasElement.addEventListener('mouseup', this.rem)
   }
 
   removeMousemove (event) {
-    this.canvasElement.removeEventListener('mousemove', this.drag)
-    this.canvasElement.removeEventListener('mouseup', this.removeMousemove)
+    // console.log('remove mouse move')
+    this.canvasElement.removeEventListener('mousemove', this.dra)
+    this.canvasElement.removeEventListener('mouseup', this.rem)
+    // console.log(this.canvasElement)
   }
 
   mouseWheel (event) {
@@ -305,7 +329,8 @@ class board {
     const offset = new Vec(e.offsetX, e.offsetY)
     const dif = this.mouseDownLocation.subtract(offset)
     if (this.mouseDownLocationABS.subtract(offset).mag > 20) {
-      this.returnFunctions.deselect()
+      // console.log(this.returnFunctions)
+      this.returnFunctions.deSelect()
     }
     e.preventDefault(); e.stopPropagation()
     this.view.translateView(dif)
@@ -316,14 +341,14 @@ class board {
   touchstart (event) {
     const { pageX, pageY } = event.touches[0]
     this.mouseDownLocation = new Vec(pageX, pageY)
-    this.canvasElement.addEventListener('touchmove', this.touchdrag)
-    this.canvasElement.addEventListener('touchend', this.removeTouchmove)
+    this.canvasElement.addEventListener('touchmove', this.touchdrag.bind(this))
+    this.canvasElement.addEventListener('touchend', this.removeTouchmove.bind(this))
   }
 
   removeTouchmove (event) {
     this.fingerDistance = null
-    this.canvasElement.removeEventListener('touchmove', this.touchdrag)
-    this.canvasElement.removeEventListener('touchend', this.removeTouchmove)
+    this.canvasElement.removeEventListener('touchmove', this.touchdrag.bind(this))
+    this.canvasElement.removeEventListener('touchend', this.removeTouchmove.bind(this))
   }
 
   touchdrag (event) {
@@ -341,15 +366,7 @@ class board {
     } else this.fingerDistance = null
     this.view.translateView(this.mouseDownLocation.subtract(t1))
     this.mouseDownLocation = t1
-    this.view.drawScreen(false)
-  }
-
-  keyHandle (e) {
-    if (e.code === 'Tab') this.returnFunctions.interactiveConsole()
-    if (Number(e.key)) this.returnFunctions.interactiveConsole(Number(e.key))
-    // if (e.key === 'ArrowRight') theta += 0.1
-    // if (e.key === 'ArrowLeft') theta -= 0.1
-    this.returnFunctions.drawScreen()
+    this.returnFunctions.drawScreen(false)
   }
 
   resizeScreen (event) {

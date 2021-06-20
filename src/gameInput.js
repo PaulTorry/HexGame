@@ -1,83 +1,24 @@
 'use strict'
 
 /* global
+Board,
+views, screenSettings,
 Vec, Hex, sel:true, menuData,
 getXYfromHex,
 state, debug, loggedInPlayer
-views, data,
-drawScreen, screenSettings, interactiveConsole
+data,
+drawScreen, interactiveConsole
 nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onSpaceHexClicked,
 preturn:true,
 */
 
 /* eslint-disable no-unused-vars, one-var, */
 
-let mouseDownLocation = new Vec()
-let mouseDownLocationABS = new Vec()
-let fingerDistance = null
-
-function getViewXYfromScreenXY (pt, view = views.spaceView) {
-  return pt.subtract(screenSettings.screenCenter).scale(view.zoom).add(view.offset)
-}
-
-function scaleView (sc, view = views[screenSettings.currentCanvas]) {
-  const newZoom = view.zoom * sc
-  view.zoom = Math.max(0.2, Math.min(5, newZoom))
-  translateView(new Vec(0, 0), view)
-}
-
-function translateView (dif, view = views[screenSettings.currentCanvas]) { // views.spaceView) {
-  const newOffset = view.offset.add(dif.scale(view.zoom))
-  view.offset = newOffset.bounds(view.center.subtract(screenSettings.screenCenter.scale(view.zoom)))
-}
-
-function translateViewTo (loc, view = views.spaceView) {
-  const newOffset = loc
-  view.offset = newOffset.bounds(view.center)
-}
-
-function mousedown (event) {
-  mouseDownLocationABS = new Vec(event.offsetX, event.offsetY)
-  mouseDownLocation = new Vec(event.offsetX, event.offsetY)
-  document.getElementById('board').addEventListener('mousemove', drag)
-  document.getElementById('board').addEventListener('mouseup', removeMousemove)
-}
-
-function removeMousemove (event) {
-  document.getElementById('board').removeEventListener('mousemove', drag)
-  document.getElementById('board').removeEventListener('mouseup', removeMousemove)
-}
-
-function mouseWheel (event) {
-  event.preventDefault()
-  if (event.deltaY < 0) { scaleView(1 / 1.1) }
-  if (event.deltaY > 0) { scaleView(1.1) }
-  drawScreen(false)
-}
-
-function drag (e, view = views.spaceView) {
-  const offset = new Vec(e.offsetX, e.offsetY)
-  const dif = mouseDownLocation.subtract(offset)
-  if (mouseDownLocationABS.subtract(offset).mag > 20) {
-    sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-    // drawScreen()
-  }
-  e.preventDefault(); e.stopPropagation()
-  translateView(dif)
-  mouseDownLocation = offset
-  drawScreen(false)
-}
-
-// function topPanelClick (event) {
-//   event.preventDefault()
-//   if (event.offsetY < 90 && event.offsetY > 10 && screenSettings.currentCanvas === 'spaceView') {
-//     const num = Math.ceil((event.offsetX - 110) / 70)
-//     if (num && sel.menu[num - 1]) {
-//       onTopPanelItemClicked(sel.menu[num - 1])
-//     }
-//   }
-//   drawScreen()
-// }
+const board = new Board(document.getElementById('board'), views.spaceView, {
+  drawScreen: drawScreen,
+  deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
+  boardClick: boardClick
+})
 
 const buttonFunctions = {
   menuButton: toggleMenu,
@@ -95,17 +36,14 @@ function toggleMenu () {
 
 function toggleTechTree (newState) {
   if (!preturn) {
-    // if (newState === undefined) newState = !screenSettings.openTechTree
-    // screenSettings.openTechTree = newState
     if (screenSettings.currentCanvas === 'spaceView') changeCanvas('techTreeView')
     else { changeCanvas('spaceView') }
   }
 }
 
-function boardClick (event, view = views.spaceView) {
+function boardClick (offset, view = views.spaceView) {
   const ss = screenSettings
-  const offset = new Vec(event.offsetX, event.offsetY)
-  const getHex = (o, v) => Hex.getUnitHexFromXY(getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
+  const getHex = (o, v) => Hex.getUnitHexFromXY(view.getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
   let menuItem = []
 
   const buttonPressed = data.floatingButtons.find((b) => {
@@ -136,7 +74,7 @@ function boardClick (event, view = views.spaceView) {
   } else if (ss.currentCanvas === 'nextTurnView') {
     console.log('nextTurnScreenClick')
     if (!state.meta.online || debug || checkPlayerTurn()) {
-      translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
+      view.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
       changeCanvas('spaceView')
       preturn = false
     }
@@ -156,39 +94,6 @@ function checkPlayerTurn () {
   return playerNum === state.playerTurn
 }
 
-function changeCanvas (canvas) { screenSettings.currentCanvas = canvas }
-
-function touchstart (event) {
-  const { pageX, pageY } = event.touches[0]
-  mouseDownLocation = new Vec(pageX, pageY)
-  document.getElementById('board').addEventListener('touchmove', touchdrag)
-  document.getElementById('board').addEventListener('touchend', removeTouchmove)
-}
-
-function removeTouchmove (event) {
-  fingerDistance = null
-  document.getElementById('board').removeEventListener('touchmove', touchdrag)
-  document.getElementById('board').removeEventListener('touchend', removeTouchmove)
-}
-
-function touchdrag (event, view = views.spaceView) {
-  // sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-  event.preventDefault(); event.stopPropagation()
-
-  const t1 = new Vec(event.touches[0].pageX, event.touches[0].pageY)
-  if (event.touches[1]) {
-    const t2 = new Vec(event.touches[1].pageX, event.touches[1].pageY)
-    const fingerDistanceNew = t1.distance(t2)
-    if (fingerDistance) {
-      scaleView(fingerDistance / fingerDistanceNew)
-    }
-    fingerDistance = fingerDistanceNew
-  } else fingerDistance = null
-  translateView(mouseDownLocation.subtract(t1))
-  mouseDownLocation = t1
-  drawScreen(false)
-}
-
 function keyHandle (e) {
   if (e.code === 'Tab') interactiveConsole()
   if (Number(e.key)) interactiveConsole(Number(e.key))
@@ -197,14 +102,6 @@ function keyHandle (e) {
   drawScreen()
 }
 
-function resizeScreen (event) {
-  // console.log(window.innerHeight, window.innerWidth)
-  const roundedHalfMin = (a) => Math.max(Math.floor(a / 2), 200)
-  const center = new Vec(roundedHalfMin(window.innerWidth) - 3, roundedHalfMin(window.innerHeight) - 3)
-  const canvas = document.getElementById('board')
-  screenSettings.screenCenter = center
-  views.buttons.center = center
-  canvas.width = center.x * 2
-  canvas.height = center.y * 2
-  drawScreen()
+function changeCanvas (canvas) {
+  screenSettings.currentCanvas = canvas
 }

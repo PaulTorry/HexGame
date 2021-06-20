@@ -62,7 +62,7 @@ function drawScreen (fullUpdate = true) {
 }
 
 function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
-  const ss = screenSettings
+  // const ss = screenSettings
   const b = view.buffer
   const c = b.getContext('2d')
   b.height = view.center.y * 2

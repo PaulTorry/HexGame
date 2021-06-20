@@ -1,6 +1,6 @@
 'use strict'
 
-/* global Hex, Vec,       */
+/* global Hex, Vec, View       */
 /* eslint-disable no-unused-vars */
 
 const data = {
@@ -174,39 +174,9 @@ const screenSettings = {
 }
 
 const views = {
-  spaceView: {
-    center: new Vec(1600, 1600),
-    buffer: document.createElement('canvas'),
-    hexSize: 75,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  techTreeView: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 35,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  menuView: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 45,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  nextTurnView: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 75,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  buttons: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 35,
-    offset: new Vec(0, 0),
-    zoom: 1
-  }
+  spaceView: new View(new Vec(1600, 1600)),
+  techTreeView: new View(new Vec(400, 400)),
+  menuView: new View(new Vec(400, 400)),
+  nextTurnView: new View(new Vec(400, 400)),
+  buttons: new View(new Vec(400, 400))
 }
