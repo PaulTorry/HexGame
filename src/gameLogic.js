@@ -25,6 +25,8 @@ const lowestArrayIndex = function (a, b) {
 
 function onSpaceHexClicked (clickHex) {
 //  if(preturn){preturn = false; return }
+  // console.log('onSpaceHexClicked', clickHex)
+
   const viewMask = getUpdatedViewMask(state)
 
   let possibleActions = { moves: [], attacks: [] }

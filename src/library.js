@@ -243,12 +243,24 @@ function cloneFunc (ob) {
 }
 
 class View {
-  constructor (screenSize = new Vec(800, 800), center = new Vec(800, 800), zoom = 1, offset = new Vec(0, 0)) {
+  constructor (
+    name = 'unnamed',
+    hexsize = 75,
+    clickFunction = console.log,
+    screenSize = new Vec(800, 800),
+    center = new Vec(800, 800),
+    zoom = 1, offset = new Vec(0, 0)
+    // clickFunction = console.log
+  ) {
+    this.name = name
+    this.hexSize = hexsize
     this.zoom = zoom
     this.offset = offset
     this.screenCenter = screenSize.scale(0.5) // Integer vector
     this.center = center
+    this.clickFunction = clickFunction
     this.buffer = document.createElement('canvas')
+    this.changes = { moved: true, redrawn: true }
   }
 
   getViewXYfromScreenXY (pt) {
@@ -279,13 +291,21 @@ class View {
     drawfunc(this)
     c.translate(...this.center.scale(-1))
   }
+
+  transmitClick (location) {
+    this.clickFunction(location.scale(this.zoom).add(this.offset))
+    drawScreen()
+  }
 }
 
 class Board {
-  constructor (canvasElement, view, returnFunctions) {
+  constructor (canvasElement, view, overlay, returnFunctions, screenCenter = new Vec(800, 800)) {
     this.canvasElement = canvasElement
+    this.context = canvasElement.getContext('2d')
     this.view = view
+    this.overlay = overlay
     this.returnFunctions = returnFunctions
+    this.screenCenter = screenCenter
     this.mouseDownLocation = new Vec()
     this.mouseDownLocationABS = new Vec()
     this.fingerDistance = null
@@ -335,6 +355,7 @@ class Board {
     e.preventDefault(); e.stopPropagation()
     this.view.translateView(dif)
     this.mouseDownLocation = offset
+    // console.log(this.returnFunctions)
     this.returnFunctions.drawScreen(false)
   }
 
@@ -381,93 +402,22 @@ class Board {
   }
 
   boardClick (event) {
-    const offset = new Vec(event.offsetX, event.offsetY)
-    this.returnFunctions.boardClick(offset)
+    const offset = new Vec(event.offsetX, event.offsetY).subtract(this.screenCenter)
+    this.view.transmitClick(offset)
+    // this.returnFunctions.boardClick(offset)
   }
+
+  drawViewfromBuffer (view = this.view) {
+    this.context.drawImage(
+      view.buffer,
+      ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+      ...this.screenCenter.scale(view.zoom * 2),
+      ...new Vec(0, 0),
+      ...this.screenCenter.scale(2)
+    )
+  }
+
+  clear () { this.context.clearRect(-99999, -99999, 199999, 199999) }
 }
 
-// function boardClick (event, view = views.spaceView) {
-//   const ss = screenSettings
-//   const offset = new Vec(event.offsetX, event.offsetY)
-//   const getHex = (o, v) => Hex.getUnitHexFromXY(getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
-//   let menuItem = []
-
-//   const buttonPressed = data.floatingButtons.find((b) => {
-//     const pos = b.dimensionMultiplier.add(Vec.unit).scaleByVec(ss.screenCenter).add(b.offset)
-//     return offset.distance(pos) < b.size
-//   })
-
-//   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
-//     const ml = ss.thingMenuLocation
-//     const posFunc = (i) => {
-//       const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
-//       return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset)// .add(ss.screenCenter.scaleXY(-1, -1))
-//     }
-
-//     menuItem = sel.menu.map((v, i) => [v, i]).find((v, i) => offset.distance(posFunc(i)) < ml.hexsize)
-
-//     // const details = data.thingList.find(t => t.thing === v)
-//     // if (details.sprite && details.sprite[0][0]) {
-//     //   drawMenuItem(c, details, posFunc(i))
-//     // } else (console.log('problem', details))
-//   }
-
-//   if (buttonPressed) {
-//     buttonFunctions[buttonPressed.name]()
-//   } else if (menuItem && menuItem[0] && ss.currentCanvas === 'spaceView') {
-//     console.log(menuItem)
-//     onTopPanelItemClicked(menuItem[0])
-//   } else if (ss.currentCanvas === 'nextTurnView') {
-//     console.log('nextTurnScreenClick')
-//     if (!state.meta.online || debug || checkPlayerTurn()) {
-//       translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
-//       changeCanvas('spaceView')
-//       preturn = false
-//     }
-//   } else if (ss.currentCanvas === 'spaceView') {
-//     onSpaceHexClicked(getHex(offset, views.spaceView))
-//   } else if (ss.currentCanvas === 'techTreeView') {
-//     onTechHexClicked(getHex(offset, views.techTreeView))
-//   } else if (ss.currentCanvas === 'menuView') {
-//     onMenuHexClicked(getHex(offset, views.menuView))
-//   }
-
-//   drawScreen()
-// }
-
-// function checkPlayerTurn () {
-//   const playerNum = state.meta.playergrid.filter((x) => x[1] === loggedInPlayer.handle)[0][0]
-//   return playerNum === state.playerTurn
-// }
-
-// function changeCanvas (canvas) { screenSettings.currentCanvas = canvas }
-
-// const buttonFunctions = {
-//   menuButton: toggleMenu,
-//   techTreeButton: toggleTechTree,
-//   nextTurnButton: nextTurn
-// }
-
-// function toggleMenu () {
-//   if (screenSettings.currentCanvas === 'menuView') {
-//     if (preturn) changeCanvas('nextTurnView')
-//     else changeCanvas('spaceView')
-//   } else changeCanvas('menuView')
-//   menuData.Screen = 'MainMenu'
-// }
-
-// function toggleTechTree (newState) {
-//   if (!preturn) {
-//     // if (newState === undefined) newState = !screenSettings.openTechTree
-//     // screenSettings.openTechTree = newState
-//     if (screenSettings.currentCanvas === 'spaceView') changeCanvas('techTreeView')
-//     else { changeCanvas('spaceView') }
-//   }
-// }
-
 Object.defineProperty(Object.prototype, 'clone', { value: clone, enumerable: false })
-
-// for (let i = 0; i <= 40; i++) {
-//   console.log(Hex.nToHex(i, 7, true).id)
-//   console.log(Hex.hexToN(Hex.nToHex(i, 7, true), 7, true))
-// }

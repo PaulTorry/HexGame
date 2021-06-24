@@ -3,7 +3,7 @@
 /* global
 screenSettings, Vec, Hex,
 sel, state,
-getUpdatedViewMask,
+getUpdatedViewMask, board,
 getTerrainDamage, views,
  preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
@@ -44,48 +44,46 @@ function getColMap (player, transparency = 1) {
 
 const selectedColour = ['white', 'purple', 'blue', 'orange']
 
-function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
+function getXYfromHex (hexCoord, size = 75) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen (fullUpdate = true) {
   const c = screenSettings.currentCanvas
-  // drawTopPanel()
-  const screen = document.body.querySelector('#board').getContext('2d')
-  screen.clearRect(-99999, -99999, 199999, 199999)
 
+  board.clear()
   if (views[c]) {
-    if (fullUpdate) drawBuffer(views[c], drawFunctions[c])
-    drawViewfromBuffer(views[c])
+    if (fullUpdate) views[c].drawBuffer(drawFunctions[c])
+    board.drawViewfromBuffer(views[c])
   } else console.log('drawfail')
 
-  if (fullUpdate) drawBuffer(views.buttons, drawFloatingButtons)
-  drawViewfromBuffer(views.buttons)
+  if (fullUpdate) views.buttons.drawBuffer(drawFloatingButtons)
+  board.drawViewfromBuffer(views.buttons)
 }
 
-function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
-  // const ss = screenSettings
-  const b = view.buffer
-  const c = b.getContext('2d')
-  b.height = view.center.y * 2
-  b.width = view.center.x * 2
-  c.translate(...view.center)
-  drawfunc(view)
-  c.translate(...view.center.scale(-1))
-}
+// function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
+//   // const ss = screenSettings
+//   const b = view.buffer
+//   const c = b.getContext('2d')
+//   b.height = view.center.y * 2
+//   b.width = view.center.x * 2
+//   c.translate(...view.center)
+//   drawfunc(view)
+//   c.translate(...view.center.scale(-1))
+// }
 
-function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
-  // drawTopPanel()
-  const screen = document.body.querySelector('#board').getContext('2d')
-  const ss = screenSettings
-  // screen.clearRect(0, 0, ...view.center.scale(2))
+// function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
+//   // drawTopPanel()
+//   const screen = document.body.querySelector('#board').getContext('2d')
+//   const ss = screenSettings
+//   // screen.clearRect(0, 0, ...view.center.scale(2))
 
-  screen.drawImage(
-    view.buffer,
-    ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
-    ...ss.screenCenter.scale(view.zoom * 2),
-    ...new Vec(0, 0),
-    ...ss.screenCenter.scale(2)
-  )
-}
+//   screen.drawImage(
+//     view.buffer,
+//     ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+//     ...ss.screenCenter.scale(view.zoom * 2),
+//     ...new Vec(0, 0),
+//     ...ss.screenCenter.scale(2)
+//   )
+// }
 
 const drawFunctions = {
   nextTurnView: drawNextTurnView,
@@ -175,7 +173,7 @@ function drawBoard (v) {
   if (screenSettings.showTrails) {
     for (let h = subTurn(); h >= Math.max(subTurn() - state.numPlayers + 1, 0); h--) {
       for (const { type, rand, path } of state.history[h]) {
-        const randomOffset = new Vec(((rand * 123432 % 1) - 0.5) * screenSettings.hexSize / 3, ((rand * 1232632 % 1) - 0.5) * screenSettings.hexSize / 3)
+        const randomOffset = new Vec(((rand * 123432 % 1) - 0.5) * 25, ((rand * 1232632 % 1) - 0.5) * 25)
         if (type === 'move') {
           for (let i = 0; i < path.length - 1; i++) {
             if (path[i] && path[i + 1] && (debug || viewMask[path[1].id] > 1 || viewMask[path[1].id] > 1)) {
@@ -250,9 +248,6 @@ function drawFloatingButtons (v) {
     const pos = b.dimensionMultiplier.scaleByVec(v.center).add(b.offset)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
   })
-  // console.log(v.center.scaleXY(1, 1))
-
-  // thing menu
 
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
