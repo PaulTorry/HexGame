@@ -47,16 +47,11 @@ function overlayClick (offset, view = views.spaceView) {
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
     const posFunc = (i) => {
-      const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
+      const hex = Hex.nToHex(i, Math.floor((board.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
       return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset) // .add(ss.screenCenter.scaleXY(-1, -1))
     }
 
     menuItem = sel.menu.map((v, i) => [v, i]).find((v, i) => offset.distance(posFunc(i)) < ml.hexsize)
-
-    const details = data.thingList.find(t => t.thing === v)
-    if (details.sprite && details.sprite[0][0]) {
-      console.log('problem', details) // drawMenuItem(c, details, posFunc(i))  
-    } else (console.log('problem', details))
   }
 
   if (buttonPressed) {
@@ -66,6 +61,8 @@ function overlayClick (offset, view = views.spaceView) {
     onTopPanelItemClicked(menuItem[0])
   }
   drawScreen()
+  console.log('button', buttonPressed, menuItem[0])
+  return buttonPressed
 }
 
 function nextTurnScreenClick () {
@@ -92,20 +89,25 @@ function keyHandle (e) {
   drawScreen()
 }
 
-const views = {
-  spaceView: new View('spaceView', 75, (l) => onSpaceHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 75))), new Vec(1600, 1600)),
-  techTreeView: new View('techTreeView', 35, (l) => onTechHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 35))), new Vec(400, 400)),
-  menuView: new View('menuView', 45, (l) => onMenuHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 45))), new Vec(400, 400)),
-  nextTurnView: new View('nextTurnView', 75, nextTurnScreenClick, new Vec(400, 400)),
-  buttons: new View('buttons', 35, () => null, new Vec(400, 400))
-}
-
-const board = new Board(document.getElementById('board'), views.nextTurnView, views.buttons, {
+const board = new Board(document.getElementById('board'), undefined, undefined, {
   drawScreen: drawScreen,
   deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
   boardClick: overlayClick
-}, new Vec(300, 300)
+}, new Vec(400, 400)
 )
+
+const views = {
+  spaceView: new View(new Vec(1600, 1600), board, (l) => onSpaceHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 75)))),
+  techTreeView: new View(new Vec(400, 400), board, (l) => onTechHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 35)))),
+  menuView: new View(new Vec(400, 400), board, (l) => onMenuHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 45)))),
+  nextTurnView: new View(new Vec(400, 400), board, nextTurnScreenClick, new Vec(400, 400)),
+  buttons: new View(new Vec(400, 400), board)
+}
+
+board.view = views.nextTurnView
+board.overlay = views.buttons
+
+console.log(board)
 
 function changeCanvas (canvas) {
   screenSettings.currentCanvas = canvas

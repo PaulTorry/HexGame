@@ -252,12 +252,13 @@ function drawFloatingButtons (v) {
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
     const posFunc = (i) => {
-      const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
-      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset).add(ss.screenCenter.scaleXY(-1, -1))
+      const hex = Hex.nToHex(i, Math.floor((board.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
+      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset).add(board.screenCenter.scaleXY(-1, -1))
     }
     sel.menu.forEach((v, i) => {
       const details = data.thingList.find(t => t.thing === v)
       if (details.sprite && details.sprite[0][0]) {
+        console.log(details, posFunc(i))
         drawMenuItem(c, details, posFunc(i))
       } else (console.log('problem', details))
     })

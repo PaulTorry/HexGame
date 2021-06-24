@@ -244,27 +244,22 @@ function cloneFunc (ob) {
 
 class View {
   constructor (
-    name = 'unnamed',
-    hexsize = 75,
+    center,
+    board,
     clickFunction = console.log,
-    screenSize = new Vec(800, 800),
-    center = new Vec(800, 800),
     zoom = 1, offset = new Vec(0, 0)
-    // clickFunction = console.log
   ) {
-    this.name = name
-    this.hexSize = hexsize
     this.zoom = zoom
     this.offset = offset
-    this.screenCenter = screenSize.scale(0.5) // Integer vector
     this.center = center
+    this.board = board
     this.clickFunction = clickFunction
     this.buffer = document.createElement('canvas')
     this.changes = { moved: true, redrawn: true }
   }
 
   getViewXYfromScreenXY (pt) {
-    return pt.subtract(this.screenCenter).scale(this.zoom).add(this.offset)
+    return pt.subtract(this.board.screenCenter).scale(this.zoom).add(this.offset)
   }
 
   scaleView (sc) {
@@ -275,7 +270,7 @@ class View {
 
   translateView (dif) {
     const newOffset = this.offset.add(dif.scale(this.zoom))
-    this.offset = newOffset.bounds(this.center.subtract(this.screenCenter.scale(this.zoom)))
+    this.offset = newOffset.bounds(this.center.subtract(this.board.screenCenter.scale(this.zoom)))
   }
 
   translateViewTo (loc) {
@@ -293,6 +288,7 @@ class View {
   }
 
   transmitClick (location) {
+    console.log('tr click', this)
     this.clickFunction(location.scale(this.zoom).add(this.offset))
     drawScreen()
   }
@@ -403,7 +399,8 @@ class Board {
 
   boardClick (event) {
     const offset = new Vec(event.offsetX, event.offsetY).subtract(this.screenCenter)
-    this.view.transmitClick(offset)
+    console.log(offset)
+    this.overlay.transmitClick(offset) || this.view.transmitClick(offset)
     // this.returnFunctions.boardClick(offset)
   }
 

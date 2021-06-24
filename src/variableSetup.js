@@ -172,5 +172,3 @@ const screenSettings = {
   currentCanvas: 'nextTurnView',
   thingMenuLocation: { hexsize: 35, offset: new Vec(130, 90) }
 }
-
-
