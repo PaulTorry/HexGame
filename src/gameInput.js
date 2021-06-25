@@ -1,7 +1,7 @@
 'use strict'
 
 /* global
-Board, View
+Board, View, Overlay
 screenSettings, data,
 Vec, Hex, sel:true, menuData,
 getXYfromHex,
@@ -34,15 +34,23 @@ function toggleTechTree (newState) {
   }
 }
 
+function buttonCLick (offset, view = views.spaceView) {
+  const buttonPressed = data.floatingButtons.find((b) => {
+    const pos = b.dimensionMultiplier.add(new Vec(1, 1)).scaleByVec(board.screenCenter).add(b.offset)
+    // console.log(offset, pos)
+    return offset.distance(pos) < b.size
+  })
+  if (buttonPressed) {
+    buttonFunctions[buttonPressed.name]()
+  }
+  drawScreen()
+  return buttonPressed
+}
+
 function overlayClick (offset, view = views.spaceView) {
   const ss = screenSettings
   const getHex = (o, v) => Hex.getUnitHexFromXY(view.getViewXYfromScreenXY(o, v).scale(1 / v.hexSize))
   let menuItem = []
-
-  const buttonPressed = data.floatingButtons.find((b) => {
-    const pos = b.dimensionMultiplier.add(new Vec(1, 1)).scaleByVec(ss.screenCenter).add(b.offset)
-    return offset.distance(pos) < b.size
-  })
 
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
@@ -54,22 +62,20 @@ function overlayClick (offset, view = views.spaceView) {
     menuItem = sel.menu.map((v, i) => [v, i]).find((v, i) => offset.distance(posFunc(i)) < ml.hexsize)
   }
 
-  if (buttonPressed) {
-    buttonFunctions[buttonPressed.name]()
-  } else if (menuItem && menuItem[0] && ss.currentCanvas === 'spaceView') {
-    console.log(menuItem)
+  if (menuItem && menuItem[0]) {
+    // console.log(menuItem)
     onTopPanelItemClicked(menuItem[0])
   }
   drawScreen()
-  console.log('button', buttonPressed, menuItem[0])
-  return buttonPressed
+  // console.log('button', buttonPressed)
+  return menuItem && menuItem[0]
 }
 
 function nextTurnScreenClick () {
   console.log('nextTurnScreenClick')
   if (!state.meta.online || debug || checkPlayerTurn()) {
-    console.log('nextTurnScreenClick')
-    board.view.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
+    // console.log('nextTurnScreenClick')
+    board.currentView.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
     changeCanvas('spaceView')
     preturn = false
   }
@@ -89,27 +95,38 @@ function keyHandle (e) {
   drawScreen()
 }
 
-const board = new Board(document.getElementById('board'), undefined, undefined, {
+const board = new Board(document.getElementById('board'), undefined, undefined, undefined, {
   drawScreen: drawScreen,
   deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
   boardClick: overlayClick
 }, new Vec(400, 400)
 )
 
-const views = {
-  spaceView: new View(new Vec(1600, 1600), board, (l) => onSpaceHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 75)))),
-  techTreeView: new View(new Vec(400, 400), board, (l) => onTechHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 35)))),
-  menuView: new View(new Vec(400, 400), board, (l) => onMenuHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 45)))),
-  nextTurnView: new View(new Vec(400, 400), board, nextTurnScreenClick, new Vec(400, 400)),
-  buttons: new View(new Vec(400, 400), board)
+// const viewSize = new Vec(400, 400)
+
+const inputFunctions = {
+  spaceView: (l) => onSpaceHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 75))),
+  techTreeView: (l) => onTechHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 35))),
+  menuView: (l) => onMenuHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 45)))
 }
 
-board.view = views.nextTurnView
-board.overlay = views.buttons
+const views = {
+  spaceView: new View(inputFunctions.spaceView, new Vec(1600, 1600)),
+  techTreeView: new View(inputFunctions.techTreeView),
+  menuView: new View(inputFunctions.menuView),
+
+  nextTurnView: new View(nextTurnScreenClick),
+  buttons: new Overlay(overlayClick),
+  floatingButtons: new Overlay(buttonCLick)
+}
+
+board.views = views
+board.currentView = views.spaceView
+board.overlays = [views.buttons, views.floatingButtons]
 
 console.log(board)
 
 function changeCanvas (canvas) {
   screenSettings.currentCanvas = canvas
-  board.view = views[canvas]
+  board.currentView = views[canvas]
 }

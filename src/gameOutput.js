@@ -59,32 +59,6 @@ function drawScreen (fullUpdate = true) {
   board.drawViewfromBuffer(views.buttons)
 }
 
-// function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
-//   // const ss = screenSettings
-//   const b = view.buffer
-//   const c = b.getContext('2d')
-//   b.height = view.center.y * 2
-//   b.width = view.center.x * 2
-//   c.translate(...view.center)
-//   drawfunc(view)
-//   c.translate(...view.center.scale(-1))
-// }
-
-// function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
-//   // drawTopPanel()
-//   const screen = document.body.querySelector('#board').getContext('2d')
-//   const ss = screenSettings
-//   // screen.clearRect(0, 0, ...view.center.scale(2))
-
-//   screen.drawImage(
-//     view.buffer,
-//     ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
-//     ...ss.screenCenter.scale(view.zoom * 2),
-//     ...new Vec(0, 0),
-//     ...ss.screenCenter.scale(2)
-//   )
-// }
-
 const drawFunctions = {
   nextTurnView: drawNextTurnView,
   menuView: drawMenu,
@@ -237,17 +211,26 @@ function drawlog () {
   log.innerHTML = current
 }
 
-function drawFloatingButtons (v) {
-  const ss = screenSettings
+function drawButtons (v) {
   const c = v.buffer.getContext('2d')
   const buttons = data.floatingButtons
-
-  document.getElementById('board').style.borderColor = getPlayerColour(state.playerTurn)
+  // c.fillStyle = 'blue'
+  // c.fillRect(-888, -888, 888, 888)
+  // c.stroke()
 
   buttons.forEach((b) => {
-    const pos = b.dimensionMultiplier.scaleByVec(v.center).add(b.offset)
+    const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
+    // console.log(pos)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
   })
+}
+
+function drawFloatingButtons (v) {
+  drawButtons(v)
+  const ss = screenSettings
+  const c = v.buffer.getContext('2d')
+
+  document.getElementById('board').style.borderColor = getPlayerColour(state.playerTurn)
 
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
@@ -258,7 +241,7 @@ function drawFloatingButtons (v) {
     sel.menu.forEach((v, i) => {
       const details = data.thingList.find(t => t.thing === v)
       if (details.sprite && details.sprite[0][0]) {
-        console.log(details, posFunc(i))
+        // console.log(details, posFunc(i))
         drawMenuItem(c, details, posFunc(i))
       } else (console.log('problem', details))
     })

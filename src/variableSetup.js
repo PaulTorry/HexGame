@@ -1,6 +1,6 @@
 'use strict'
 
-/* global Hex, Vec, View       */
+/* global Hex, Vec      */
 /* eslint-disable no-unused-vars */
 
 const data = {
