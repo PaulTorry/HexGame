@@ -67,13 +67,6 @@
 
 <script>
 
-// <canvas id="topPanel" width="800" height="100" style="border:1px solid #d3d3d3;"></canvas>
-
-// document.body.querySelector("#board").addEventListener("click", boardClick) ;
-// document.body.querySelector("#board").addEventListener("mousedown", mousedown);
-// document.body.querySelector("#board").addEventListener("wheel", mouseWheel);
-// // document.body.querySelector("#topPanel").addEventListener("click", topPanelClick);
-// document.body.querySelector("#board").addEventListener("touchstart", touchstart);
 document.body.addEventListener("keydown", keyHandle);
 
 window.onload = () => {
@@ -82,11 +75,6 @@ window.onload = () => {
   firebase.auth().onAuthStateChanged(authStateChangeHandler);
   
   load("a", true)
-
- // replaceState( setup(5, 9, 2, false, "default", generateID(20)))
-  // window.onresize = resizeScreen
-  // document.body.querySelector("#board").requestFullscreen()
-  // resizeScreen()
   drawScreen(); 
   
 }

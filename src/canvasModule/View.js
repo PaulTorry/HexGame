@@ -11,6 +11,7 @@ Vec, drawScreen
 class View {
   constructor (
     clickFunction = console.log,
+    drawFunction = console.log,
     center = new Vec(400, 400),
     screenCenter = new Vec(400, 400),
     zoom = 1, offset = new Vec(0, 0)
@@ -20,6 +21,7 @@ class View {
     this.center = center
     this.screenCenter = screenCenter
     this.clickFunction = clickFunction
+    this.drawFunction = drawFunction
     this.buffer = document.createElement('canvas')
     this.changes = { moved: true, redrawn: true }
   }
@@ -48,7 +50,7 @@ class View {
     this.offset = newOffset.bounds(this.center)
   }
 
-  drawBuffer (drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
+  drawBuffer (drawfunc = this.drawFunction) {
     const c = this.buffer.getContext('2d')
     this.buffer.height = this.center.y * 2
     this.buffer.width = this.center.x * 2

@@ -47,16 +47,17 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = 75) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen (fullUpdate = true) {
-  const c = screenSettings.currentCanvas
+  board.drawScreen()
+  // const c = screenSettings.currentCanvas
 
-  board.clear()
-  if (views[c]) {
-    if (fullUpdate) views[c].drawBuffer(drawFunctions[c])
-    board.drawViewfromBuffer(views[c])
-  } else console.log('drawfail')
+  // board.clear()
+  // if (views[c]) {
+  //   if (fullUpdate) views[c].drawBuffer(drawFunctions[c])
+  //   board.drawViewfromBuffer(views[c])
+  // } else console.log('drawfail')
 
-  if (fullUpdate) views.buttons.drawBuffer(drawFloatingButtons)
-  board.drawViewfromBuffer(views.buttons)
+  // if (fullUpdate) views.buttons.drawBuffer(drawFloatingButtons)
+  // board.drawViewfromBuffer(views.buttons)
 }
 
 const drawFunctions = {
@@ -226,7 +227,7 @@ function drawButtons (v) {
 }
 
 function drawFloatingButtons (v) {
-  drawButtons(v)
+  // drawButtons(v)
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
 

@@ -106,9 +106,10 @@ class Board {
   boardClick (event) {
     const offset = new Vec(event.offsetX, event.offsetY).subtract(this.screenCenter)
     // console.log(offset)
-    const checklist = this.overlays.map(c => c.transmitClick)
+    const checklist = this.overlays.map(c => c.transmitClick(offset))
+    console.log(checklist)
     const result = checklist.reduce((p, c, i, a) => p || c, false)
-    !result || this.currentView.transmitClick(offset)
+    result || this.currentView.transmitClick(offset)
     // this.returnFunctions.boardClick(offset)
   }
 
@@ -120,6 +121,15 @@ class Board {
       ...new Vec(0, 0),
       ...this.screenCenter.scale(2)
     )
+  }
+
+  drawScreen (fullUpdate = true) {
+    this.clear()
+    if (fullUpdate) this.currentView.drawBuffer()
+    this.drawViewfromBuffer(this.currentView)
+
+    if (fullUpdate) this.overlays.forEach(o => o.drawBuffer())
+    this.overlays.forEach(o => this.drawViewfromBuffer(o))
   }
 
   clear () { this.context.clearRect(-99999, -99999, 199999, 199999) }

@@ -13,12 +13,6 @@ preturn:true,
 
 /* eslint-disable no-unused-vars, one-var, */
 
-const buttonFunctions = {
-  menuButton: toggleMenu,
-  techTreeButton: toggleTechTree,
-  nextTurnButton: nextTurn
-}
-
 function toggleMenu () {
   if (screenSettings.currentCanvas === 'menuView') {
     if (preturn) changeCanvas('nextTurnView')
@@ -35,14 +29,22 @@ function toggleTechTree (newState) {
 }
 
 function buttonCLick (offset, view = views.spaceView) {
+  const buttonFunctions = {
+    menuButton: toggleMenu,
+    techTreeButton: toggleTechTree,
+    nextTurnButton: nextTurn
+  }
+  console.log(data.floatingButtons)
   const buttonPressed = data.floatingButtons.find((b) => {
     const pos = b.dimensionMultiplier.add(new Vec(1, 1)).scaleByVec(board.screenCenter).add(b.offset)
-    // console.log(offset, pos)
+    console.log('buttonclick', offset, pos, offset.distance(pos), b.size, offset.distance(pos) < b.size)
     return offset.distance(pos) < b.size
   })
+  console.log(buttonPressed)
   if (buttonPressed) {
     buttonFunctions[buttonPressed.name]()
   }
+  // console.log(buttonPressed)
   drawScreen()
   return buttonPressed
 }
@@ -99,8 +101,7 @@ const board = new Board(document.getElementById('board'), undefined, undefined, 
   drawScreen: drawScreen,
   deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
   boardClick: overlayClick
-}, new Vec(400, 400)
-)
+}, new Vec(400, 400))
 
 // const viewSize = new Vec(400, 400)
 
@@ -111,20 +112,20 @@ const inputFunctions = {
 }
 
 const views = {
-  spaceView: new View(inputFunctions.spaceView, new Vec(1600, 1600)),
-  techTreeView: new View(inputFunctions.techTreeView),
-  menuView: new View(inputFunctions.menuView),
+  spaceView: new View(inputFunctions.spaceView, drawBoard, new Vec(1600, 1600)),
+  techTreeView: new View(inputFunctions.techTreeView, drawTechTree),
+  menuView: new View(inputFunctions.menuView, drawMenu),
 
-  nextTurnView: new View(nextTurnScreenClick),
-  buttons: new Overlay(overlayClick),
-  floatingButtons: new Overlay(buttonCLick)
+  nextTurnView: new View(nextTurnScreenClick, drawNextTurnView),
+  buttons: new Overlay(overlayClick, drawButtons),
+  floatingButtons: new Overlay(buttonCLick, drawFloatingButtons)
 }
 
 board.views = views
 board.currentView = views.spaceView
 board.overlays = [views.buttons, views.floatingButtons]
 
-console.log(board)
+// console.log(board)
 
 function changeCanvas (canvas) {
   screenSettings.currentCanvas = canvas
