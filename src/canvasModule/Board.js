@@ -2,8 +2,6 @@
 
 /* eslint-disable no-unused-vars, object-property-newline */
 
-// function json (a) { return JSON.stringify(a) }
-
 /* global
 Vec, views
 */
@@ -74,7 +72,7 @@ class Board {
   }
 
   touchdrag (event) {
-    // sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
+    this.returnFunctions.deSelect()
     event.preventDefault(); event.stopPropagation()
 
     const t1 = new Vec(event.touches[0].pageX, event.touches[0].pageY)
@@ -105,12 +103,10 @@ class Board {
 
   boardClick (event) {
     const offset = new Vec(event.offsetX, event.offsetY).subtract(this.screenCenter)
-    // console.log(offset)
     const checklist = this.overlays.map(c => c.transmitClick(offset))
     console.log(checklist)
     const result = checklist.reduce((p, c, i, a) => p || c, false)
     result || this.currentView.transmitClick(offset)
-    // this.returnFunctions.boardClick(offset)
   }
 
   drawViewfromBuffer (view = this.currentView) {

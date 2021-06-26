@@ -44,7 +44,6 @@ function buttonCLick (offset, view = views.spaceView) {
   if (buttonPressed) {
     buttonFunctions[buttonPressed.name]()
   }
-  // console.log(buttonPressed)
   drawScreen()
   return buttonPressed
 }
@@ -58,25 +57,21 @@ function overlayClick (offset, view = views.spaceView) {
     const ml = ss.thingMenuLocation
     const posFunc = (i) => {
       const hex = Hex.nToHex(i, Math.floor((board.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
-      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset) // .add(ss.screenCenter.scaleXY(-1, -1))
+      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset)
     }
-
     menuItem = sel.menu.map((v, i) => [v, i]).find((v, i) => offset.distance(posFunc(i)) < ml.hexsize)
   }
 
   if (menuItem && menuItem[0]) {
-    // console.log(menuItem)
     onTopPanelItemClicked(menuItem[0])
   }
   drawScreen()
-  // console.log('button', buttonPressed)
   return menuItem && menuItem[0]
 }
 
 function nextTurnScreenClick () {
   console.log('nextTurnScreenClick')
   if (!state.meta.online || debug || checkPlayerTurn()) {
-    // console.log('nextTurnScreenClick')
     board.currentView.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
     changeCanvas('spaceView')
     preturn = false
@@ -97,14 +92,6 @@ function keyHandle (e) {
   drawScreen()
 }
 
-const board = new Board(document.getElementById('board'), undefined, undefined, undefined, {
-  drawScreen: drawScreen,
-  deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
-  boardClick: overlayClick
-}, new Vec(400, 400))
-
-// const viewSize = new Vec(400, 400)
-
 const inputFunctions = {
   spaceView: (l) => onSpaceHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 75))),
   techTreeView: (l) => onTechHexClicked(Hex.getUnitHexFromXY(l.scale(1 / 35))),
@@ -121,11 +108,13 @@ const views = {
   floatingButtons: new Overlay(buttonCLick, drawFloatingButtons)
 }
 
-board.views = views
-board.currentView = views.spaceView
-board.overlays = [views.buttons, views.floatingButtons]
-
-// console.log(board)
+const board = new Board(document.getElementById('board'), views, views.spaceView,
+  [views.buttons, views.floatingButtons], {
+    drawScreen: drawScreen,
+    deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
+    boardClick: overlayClick
+  }, new Vec(400, 400)
+)
 
 function changeCanvas (canvas) {
   screenSettings.currentCanvas = canvas

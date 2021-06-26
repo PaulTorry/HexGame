@@ -4,7 +4,7 @@
 screenSettings, Vec, Hex,
 sel, state,
 getUpdatedViewMask, board,
-getTerrainDamage, views,
+getTerrainDamage,
  preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 data, subTurn,
@@ -48,16 +48,6 @@ function getXYfromHex (hexCoord, size = 75) { return Hex.getXYfromUnitHex(hexCoo
 
 function drawScreen (fullUpdate = true) {
   board.drawScreen()
-  // const c = screenSettings.currentCanvas
-
-  // board.clear()
-  // if (views[c]) {
-  //   if (fullUpdate) views[c].drawBuffer(drawFunctions[c])
-  //   board.drawViewfromBuffer(views[c])
-  // } else console.log('drawfail')
-
-  // if (fullUpdate) views.buttons.drawBuffer(drawFloatingButtons)
-  // board.drawViewfromBuffer(views.buttons)
 }
 
 const drawFunctions = {

@@ -2,10 +2,8 @@
 
 /* eslint-disable no-unused-vars, object-property-newline */
 
-// function json (a) { return JSON.stringify(a) }
-
 /* global
-drawScreen, Vec
+Vec
 */
 
 class Overlay {
@@ -35,7 +33,6 @@ class Overlay {
   }
 
   drawBuffer (drawfunc = this.drawFunction) {
-    // console.log(this.center, this.screenCenter, drawfunc)
     const c = this.buffer.getContext('2d')
     this.buffer.height = this.center.y * 2
     this.buffer.width = this.center.x * 2
@@ -45,8 +42,6 @@ class Overlay {
   }
 
   transmitClick (location) {
-    // console.log('tr click', this)
     return this.clickFunction(this.getViewXYfromScreenXY(location))
-    // drawScreen()
   }
 }
