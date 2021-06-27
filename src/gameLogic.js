@@ -25,6 +25,8 @@ const lowestArrayIndex = function (a, b) {
 
 function onSpaceHexClicked (clickHex) {
 //  if(preturn){preturn = false; return }
+  // console.log('onSpaceHexClicked', clickHex)
+
   const viewMask = getUpdatedViewMask(state)
 
   let possibleActions = { moves: [], attacks: [] }
@@ -107,6 +109,7 @@ function territoryState (hex) {
 }
 
 function onTopPanelItemClicked (item, hex = sel.hex) {
+  // console.log('topapnelitem', item, hex)
   const tile = state.tiles.get(hex.id)
   const ship = getShipOnHex(hex)
   const thing = data.thingList.find(t => t.thing === item)

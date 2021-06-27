@@ -1,6 +1,6 @@
 'use strict'
 
-/* global Hex, Vec,       */
+/* global Hex, Vec      */
 /* eslint-disable no-unused-vars */
 
 const data = {
@@ -164,49 +164,11 @@ const sessionInfo = {
 }
 
 const screenSettings = {
-  lowRes: false,
-  openTechTree: false, // to depreciate
-  screenCenter: new Vec(400, 400),
+  // lowRes: false,
+  // openTechTree: false, // to depreciate
+  // screenCenter: new Vec(400, 400),
   hexSize: 75,
   showTrails: true,
   currentCanvas: 'nextTurnView',
   thingMenuLocation: { hexsize: 35, offset: new Vec(130, 90) }
-}
-
-const views = {
-  spaceView: {
-    center: new Vec(1600, 1600),
-    buffer: document.createElement('canvas'),
-    hexSize: 75,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  techTreeView: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 35,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  menuView: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 45,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  nextTurnView: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 75,
-    offset: new Vec(0, 0),
-    zoom: 1
-  },
-  buttons: {
-    center: new Vec(400, 400),
-    buffer: document.createElement('canvas'),
-    hexSize: 35,
-    offset: new Vec(0, 0),
-    zoom: 1
-  }
 }

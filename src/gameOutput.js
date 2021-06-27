@@ -3,8 +3,8 @@
 /* global
 screenSettings, Vec, Hex,
 sel, state,
-getUpdatedViewMask,
-getTerrainDamage, views,
+getUpdatedViewMask, board,
+getTerrainDamage,
  preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
 data, subTurn,
@@ -44,60 +44,15 @@ function getColMap (player, transparency = 1) {
 
 const selectedColour = ['white', 'purple', 'blue', 'orange']
 
-function getXYfromHex (hexCoord, size = screenSettings.hexSize) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
+function getXYfromHex (hexCoord, size = 75) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen (fullUpdate = true) {
-  const c = screenSettings.currentCanvas
-  // drawTopPanel()
-  const screen = document.body.querySelector('#board').getContext('2d')
-  screen.clearRect(-99999, -99999, 199999, 199999)
-
-  if (views[c]) {
-    if (fullUpdate) drawBuffer(views[c], drawFunctions[c])
-    drawViewfromBuffer(views[c])
-  } else console.log('drawfail')
-
-  if (fullUpdate) drawBuffer(views.buttons, drawFloatingButtons)
-  drawViewfromBuffer(views.buttons)
-}
-
-function drawBuffer (view = views.spaceView, drawfunc = (b) => b.getContext('2d').fillRect(0, 0, 999, 999)) {
-  const ss = screenSettings
-  const b = view.buffer
-  const c = b.getContext('2d')
-  b.height = view.center.y * 2
-  b.width = view.center.x * 2
-  c.translate(...view.center)
-  drawfunc(view)
-  c.translate(...view.center.scale(-1))
-}
-
-function drawViewfromBuffer (view = views[screenSettings.currentCanvas]) {
-  // drawTopPanel()
-  const screen = document.body.querySelector('#board').getContext('2d')
-  const ss = screenSettings
-  // screen.clearRect(0, 0, ...view.center.scale(2))
-
-  screen.drawImage(
-    view.buffer,
-    ...ss.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
-    ...ss.screenCenter.scale(view.zoom * 2),
-    ...new Vec(0, 0),
-    ...ss.screenCenter.scale(2)
-  )
-}
-
-const drawFunctions = {
-  nextTurnView: drawNextTurnView,
-  menuView: drawMenu,
-  spaceView: drawBoard,
-  techTreeView: drawTechTree
+  board.drawScreen(fullUpdate)
 }
 
 function drawNextTurnView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  // c.clearRect(-99999, -99999, 199999, 199999)
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
@@ -117,7 +72,7 @@ function getAngleFromVariant (tile) {
   return angle
 }
 
-function drawBoard (v) {
+function drawSpaceView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
   const viewMask = getUpdatedViewMask(state)
@@ -175,7 +130,7 @@ function drawBoard (v) {
   if (screenSettings.showTrails) {
     for (let h = subTurn(); h >= Math.max(subTurn() - state.numPlayers + 1, 0); h--) {
       for (const { type, rand, path } of state.history[h]) {
-        const randomOffset = new Vec(((rand * 123432 % 1) - 0.5) * screenSettings.hexSize / 3, ((rand * 1232632 % 1) - 0.5) * screenSettings.hexSize / 3)
+        const randomOffset = new Vec(((rand * 123432 % 1) - 0.5) * 25, ((rand * 1232632 % 1) - 0.5) * 25)
         if (type === 'move') {
           for (let i = 0; i < path.length - 1; i++) {
             if (path[i] && path[i + 1] && (debug || viewMask[path[1].id] > 1 || viewMask[path[1].id] > 1)) {
@@ -239,26 +194,27 @@ function drawlog () {
   log.innerHTML = current
 }
 
+function drawButtons (v) {
+  drawOverlayText(v)
+  const c = v.buffer.getContext('2d')
+  const buttons = data.floatingButtons
+  buttons.forEach((b) => {
+    const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
+    drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
+  })
+}
+
 function drawFloatingButtons (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  const buttons = data.floatingButtons
 
   document.getElementById('board').style.borderColor = getPlayerColour(state.playerTurn)
-
-  buttons.forEach((b) => {
-    const pos = b.dimensionMultiplier.scaleByVec(v.center).add(b.offset)
-    drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
-  })
-  // console.log(v.center.scaleXY(1, 1))
-
-  // thing menu
 
   if (sel.menu && sel.menu.length > 0 && ss.currentCanvas === 'spaceView') {
     const ml = ss.thingMenuLocation
     const posFunc = (i) => {
-      const hex = Hex.nToHex(i, Math.floor((ss.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
-      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset).add(ss.screenCenter.scaleXY(-1, -1))
+      const hex = Hex.nToHex(i, Math.floor((board.screenCenter.x - ml.offset.x / 2) / (ml.hexsize)), true)
+      return Hex.getXYfromUnitHex(hex, true).scale(ml.hexsize).add(ml.offset).add(board.screenCenter.scaleXY(-1, -1))
     }
     sel.menu.forEach((v, i) => {
       const details = data.thingList.find(t => t.thing === v)
@@ -267,8 +223,10 @@ function drawFloatingButtons (v) {
       } else (console.log('problem', details))
     })
   }
+}
 
-  // Text info
+function drawOverlayText (v) {
+  const c = v.buffer.getContext('2d')
   const { x, y } = v.center.scaleXY(0, -1)
   const player = state.playerTurn
   const pdata = state.playerData[player]
@@ -279,7 +237,6 @@ function drawFloatingButtons (v) {
   if (!preturn) {
     drawText(c, 'Money', x - 105, y + 20, 15, 'white')
     drawText(c, `${pdata.money}  ( ${pdata.income} )`, x - 105, y + 40, 15, 'white')
-    // drawText(c, 'City Points: **', 360, 20, 15, 'white')
   }
   if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
     drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, x - 300, y + 35, 15, 'white')
@@ -301,7 +258,7 @@ function drawMenuItem (c, details, pos) {
 function drawMenu (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  const xy = (h) => getXYfromHex(h, v.hexSize)
+  const xy = (h) => getXYfromHex(h, 45)
   c.clearRect(0, 0, 800, 800)
 
   for (const a of Hex.findWithin(Math.floor(v.center.x / v.hexSize))) {
@@ -352,7 +309,8 @@ function drawMenu (v) {
 function drawTechTree (v) {
   const c = v.buffer.getContext('2d')
   // const view = views.techTree
-  const xy = (h) => getXYfromHex(h, v.hexSize)
+  console.log(v.hexsize, v)
+  const xy = (h) => getXYfromHex(h, 35)// v.hexSize)
 
   const arrows = []
   data.techs.forEach((t) => {

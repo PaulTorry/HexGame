@@ -36,7 +36,7 @@ function makeBuildBar (hex) {
   return data.thingList.filter(pos => {
     const checklist = checks.map(check => check(pos))
     const result = checklist.reduce((p, c, i, a) => p || c, false)
-    console.log(pos.name, checklist, result)
+    // console.log(pos.name, checklist, result)
     return !result
   }).map(pos => pos.thing)
 }
