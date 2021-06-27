@@ -47,20 +47,12 @@ const selectedColour = ['white', 'purple', 'blue', 'orange']
 function getXYfromHex (hexCoord, size = 75) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
 function drawScreen (fullUpdate = true) {
-  board.drawScreen()
-}
-
-const drawFunctions = {
-  nextTurnView: drawNextTurnView,
-  menuView: drawMenu,
-  spaceView: drawBoard,
-  techTreeView: drawTechTree
+  board.drawScreen(fullUpdate)
 }
 
 function drawNextTurnView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  // c.clearRect(-99999, -99999, 199999, 199999)
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
@@ -80,7 +72,7 @@ function getAngleFromVariant (tile) {
   return angle
 }
 
-function drawBoard (v) {
+function drawSpaceView (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
   const viewMask = getUpdatedViewMask(state)
@@ -203,21 +195,16 @@ function drawlog () {
 }
 
 function drawButtons (v) {
+  drawOverlayText(v)
   const c = v.buffer.getContext('2d')
   const buttons = data.floatingButtons
-  // c.fillStyle = 'blue'
-  // c.fillRect(-888, -888, 888, 888)
-  // c.stroke()
-
   buttons.forEach((b) => {
     const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
-    // console.log(pos)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
   })
 }
 
 function drawFloatingButtons (v) {
-  // drawButtons(v)
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
 
@@ -232,13 +219,14 @@ function drawFloatingButtons (v) {
     sel.menu.forEach((v, i) => {
       const details = data.thingList.find(t => t.thing === v)
       if (details.sprite && details.sprite[0][0]) {
-        // console.log(details, posFunc(i))
         drawMenuItem(c, details, posFunc(i))
       } else (console.log('problem', details))
     })
   }
+}
 
-  // Text info
+function drawOverlayText (v) {
+  const c = v.buffer.getContext('2d')
   const { x, y } = v.center.scaleXY(0, -1)
   const player = state.playerTurn
   const pdata = state.playerData[player]
@@ -249,7 +237,6 @@ function drawFloatingButtons (v) {
   if (!preturn) {
     drawText(c, 'Money', x - 105, y + 20, 15, 'white')
     drawText(c, `${pdata.money}  ( ${pdata.income} )`, x - 105, y + 40, 15, 'white')
-    // drawText(c, 'City Points: **', 360, 20, 15, 'white')
   }
   if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
     drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, x - 300, y + 35, 15, 'white')
@@ -271,7 +258,7 @@ function drawMenuItem (c, details, pos) {
 function drawMenu (v) {
   const ss = screenSettings
   const c = v.buffer.getContext('2d')
-  const xy = (h) => getXYfromHex(h, v.hexSize)
+  const xy = (h) => getXYfromHex(h, 45)
   c.clearRect(0, 0, 800, 800)
 
   for (const a of Hex.findWithin(Math.floor(v.center.x / v.hexSize))) {
@@ -322,7 +309,8 @@ function drawMenu (v) {
 function drawTechTree (v) {
   const c = v.buffer.getContext('2d')
   // const view = views.techTree
-  const xy = (h) => getXYfromHex(h, v.hexSize)
+  console.log(v.hexsize, v)
+  const xy = (h) => getXYfromHex(h, 35)// v.hexSize)
 
   const arrows = []
   data.techs.forEach((t) => {

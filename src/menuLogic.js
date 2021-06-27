@@ -1,7 +1,7 @@
 'use strict'
 /* global
 state, data, changeCanvas, randomName,
-drawScreen,
+drawScreen, interactiveConsole
 replaceState,  setupNew,
       updateHandleList, updateCacheGameList,
       loginSignupConsole, cacheHandleList, loadGameFromID, cacheGameList

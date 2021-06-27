@@ -104,7 +104,7 @@ class Board {
   boardClick (event) {
     const offset = new Vec(event.offsetX, event.offsetY).subtract(this.screenCenter)
     const checklist = this.overlays.map(c => c.transmitClick(offset))
-    console.log(checklist)
+    // console.log(checklist)
     const result = checklist.reduce((p, c, i, a) => p || c, false)
     result || this.currentView.transmitClick(offset)
   }

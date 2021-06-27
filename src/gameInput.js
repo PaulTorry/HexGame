@@ -5,6 +5,7 @@ Board, View, Overlay
 screenSettings, data,
 Vec, Hex, sel:true, menuData,
 getXYfromHex,
+drawSpaceView, drawTechTree, drawMenu, drawNextTurnView, drawButtons, drawFloatingButtons,
 state, debug, loggedInPlayer
 drawScreen, interactiveConsole
 nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onSpaceHexClicked,
@@ -13,34 +14,30 @@ preturn:true,
 
 /* eslint-disable no-unused-vars, one-var, */
 
-function toggleMenu () {
-  if (screenSettings.currentCanvas === 'menuView') {
-    if (preturn) changeCanvas('nextTurnView')
-    else changeCanvas('spaceView')
-  } else changeCanvas('menuView')
-  menuData.Screen = 'MainMenu'
-}
-
-function toggleTechTree (newState) {
-  if (!preturn) {
-    if (screenSettings.currentCanvas === 'spaceView') changeCanvas('techTreeView')
-    else { changeCanvas('spaceView') }
-  }
-}
-
 function buttonCLick (offset, view = views.spaceView) {
   const buttonFunctions = {
-    menuButton: toggleMenu,
-    techTreeButton: toggleTechTree,
+    menuButton: () => {
+      if (board.currentView === board.views.menuView) {
+        if (preturn) changeCanvas('nextTurnView')
+        else changeCanvas('spaceView')
+      } else changeCanvas('menuView')
+      menuData.Screen = 'MainMenu'
+    },
+    techTreeButton: (newState) => {
+      if (!preturn) {
+        if (screenSettings.currentCanvas === 'spaceView') changeCanvas('techTreeView')
+        else { changeCanvas('spaceView') }
+      }
+    },
     nextTurnButton: nextTurn
   }
-  console.log(data.floatingButtons)
+  // console.log(data.floatingButtons)
   const buttonPressed = data.floatingButtons.find((b) => {
     const pos = b.dimensionMultiplier.add(new Vec(1, 1)).scaleByVec(board.screenCenter).add(b.offset)
-    console.log('buttonclick', offset, pos, offset.distance(pos), b.size, offset.distance(pos) < b.size)
+    // console.log('buttonclick', offset, pos, offset.distance(pos), b.size, offset.distance(pos) < b.size)
     return offset.distance(pos) < b.size
   })
-  console.log(buttonPressed)
+  // console.log(buttonPressed)
   if (buttonPressed) {
     buttonFunctions[buttonPressed.name]()
   }
@@ -72,8 +69,9 @@ function overlayClick (offset, view = views.spaceView) {
 function nextTurnScreenClick () {
   console.log('nextTurnScreenClick')
   if (!state.meta.online || debug || checkPlayerTurn()) {
-    board.currentView.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
+    // board.currentView.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
     changeCanvas('spaceView')
+    board.currentView.translateViewTo(getXYfromHex(state.playerData[state.playerTurn].capital))
     preturn = false
   }
   drawScreen()
@@ -99,7 +97,7 @@ const inputFunctions = {
 }
 
 const views = {
-  spaceView: new View(inputFunctions.spaceView, drawBoard, new Vec(1600, 1600)),
+  spaceView: new View(inputFunctions.spaceView, drawSpaceView, new Vec(1600, 1600)),
   techTreeView: new View(inputFunctions.techTreeView, drawTechTree),
   menuView: new View(inputFunctions.menuView, drawMenu),
 
