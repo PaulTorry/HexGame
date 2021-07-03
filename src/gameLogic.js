@@ -272,7 +272,7 @@ function turnLogic () {
 
   for (const ship of state.shipArray) {
     if (ship.owner === state.playerTurn) {
-      console.log(ship)
+      // console.log(ship)
       if (JSON.stringify(ship.actionsRemaining) === JSON.stringify(ship.hulltype.actionList)) repair(ship)
       ship.actionsRemaining = [...ship.hulltype.actionList]
       ship.moved = false

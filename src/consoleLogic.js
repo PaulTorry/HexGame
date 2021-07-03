@@ -1,16 +1,15 @@
 'use strict'
 
 /* global
-Hex, Map
+Hex, Map, cloneFunc,
 state:true
 drawScreen,
 debug:true,
 data,
 screenSettings,
-randomInt,
 firebase, loggedInPlayer, signupViaPrompt, checkForUpdatedServerGame,
 loginViaPrompt, localStorage,
-replaceState, setupNew, cacheHandleList, cacheGameList, loadGameFromID
+replaceState, setupNew, cacheHandleList, cacheGameList, loadGameFromID, setup, generateID
 saveToServer,
 prompt
 */
@@ -23,7 +22,7 @@ function randomName () {
     ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Neptune'],
     ['Io', 'Europa', 'Titan', 'Ganymede', 'Calisto']
   ]
-  return names[0][randomInt(names[0].length)] + names[1][randomInt(names[1].length)] + names[2][randomInt(names[2].length)]
+  return names.map(c => c[Math.floor(Math.random() * c.length)]).join('')
 }
 
 function interactiveConsole (num = '') {
@@ -225,7 +224,7 @@ function getTurnstamp () {
 }
 
 function packState () {
-  const savestate = state.clone()
+  const savestate = cloneFunc(state) // .clone()
   savestate.tiles = [...state.tiles]
   return JSON.stringify(savestate)
 }

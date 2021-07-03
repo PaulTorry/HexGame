@@ -37,11 +37,17 @@
 </div>
 </body>
 
-<script src="./src/firebasejs-7-6-1/firebase-app.js"></script>
+<!-- <script src="./src/firebasejs-7-6-1/firebase-app.js"></script>
 <script src="./src/firebasejs-7-6-1/firebase-firestore.js"></script>
-<script src="./src/firebasejs-7-6-1/firebase-auth.js"></script>
+<script src="./src/firebasejs-7-6-1/firebase-auth.js"></script> -->
 
-<script src="./src/library.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
+
+<script src="./src/library/Vec.js"></script>
+<script src="./src/library/Hex.js"></script>
+<script src="./src/library/library.js"></script>
 
 <script src="./src/CanvasModule/Board.js"></script>
 <script src="./src/CanvasModule/Overlay.js"></script>
@@ -57,7 +63,7 @@
 <script src="./src/consoleLogic.js"></script>
 <script src="./src/viewLogic.js"></script>
 <script src="./src/gameSprites.js"></script>
-<script src="./src/canvasFromCodes.js"></script>
+<script src="./src/CanvasModule/canvasFromCodes.js"></script>
 <script src="./src/gameOutput.js"></script>
 <script src="./src/gameInput.js"></script>
 <script src="./src/dataBaseLogic.js"></script>
@@ -70,9 +76,10 @@
 document.body.addEventListener("keydown", keyHandle);
 
 window.onload = () => {
-  console.log("Hi");
-  firebase.initializeApp(firebaseConfig);
-  firebase.auth().onAuthStateChanged(authStateChangeHandler);
+  const firebaseAvailable = typeof firebase !== 'undefined'
+  console.log("Window.onload, firebaseAvailable:", firebaseAvailable);
+  if(firebaseAvailable) firebase.initializeApp(firebaseConfig);
+  if(firebaseAvailable) firebase.auth().onAuthStateChanged(authStateChangeHandler);
   
   load("a", true)
   drawScreen(); 

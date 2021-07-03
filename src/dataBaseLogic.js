@@ -1,8 +1,10 @@
 /* global
-state:true
+
 replaceState, unpackState, packState, getTimestamp,
 firebase, localStorage, alert, prompt
 */
+
+// state:true
 
 /* eslint-disable no-unused-vars */
 
