@@ -70,7 +70,14 @@ function setupNew (config, meta = { online: false }) {
 
   for (const hex of Hex.findWithin(config.boardSize)) {
     const buildingHex = { hex: hex, terrain: 'space', station: null, resource: null }
-    if (Math.random() < 0.1) { buildingHex.terrain = 'nebula'; buildingHex.resource = 'hydrogen' } else if (Math.random() < 0.1) { buildingHex.terrain = 'nebula' } else if (Math.random() < 0.05) { buildingHex.terrain = 'protostar' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids'; buildingHex.resource = 'icyAsteroids' } else if (Math.random() < 0.05) { buildingHex.terrain = 'gasGiant' }
+  //   if (Math.random() < 0.1) { buildingHex.terrain = 'nebula'; buildingHex.resource = 'hydrogen' } else if (Math.random() < 0.1) { buildingHex.terrain = 'nebula' } else if (Math.random() < 0.05) { buildingHex.terrain = 'protostar' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids'; buildingHex.resource = 'icyAsteroids' } else if (Math.random() < 0.05) { buildingHex.terrain = 'gasGiant' }
+
+    for (const t of data.terrainSetupData) {
+      if (t.probability > Math.random()) {
+        buildingHex.terrain = t.terrain
+        buildingHex.resource = t.resource
+      }
+    }
 
     tiles.set(hex.id, buildingHex)
   }

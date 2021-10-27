@@ -148,7 +148,16 @@ const data = {
     protostar: { moveCost: 5 },
     star: { moveCost: 5, moveTech: 'none' },
     blackHole: { moveCost: 5, moveTech: 'none', damTech: 'none' }
-  }
+  },
+
+  terrainSetupData: [
+    { probability: 0.2, terrain: 'gasGiant' },
+    { probability: 0.15, terrain: 'protostar' },
+    { probability: 0.15, terrain: 'asteroids' },
+    { probability: 0.15, terrain: 'nebula' },
+    { probability: 0.1, terrain: 'asteroids', resource: 'icyAsteroids' },
+    { probability: 0.1, terrain: 'nebula', resource: 'hydrogen' }
+  ]
 }
 
 // const navBeaconCost = 0.25;
