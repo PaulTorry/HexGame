@@ -1,7 +1,7 @@
 'use strict'
 
 /* global
-Hex, Map, cloneFunc,
+Hex, Map, cloneFunc, fetch,
 state:true
 drawScreen,
 debug:true,
@@ -68,9 +68,43 @@ function interactiveConsole (num = '') {
   if (ans === '6') { loginSignupConsole() }
 
   if (ans === '7') { console.log(checkForUpdatedServerGame()) }
+  if (ans === '8') {
+    const source = prompt('Get Data from:',
+      // 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSYhLdBRN1JBn8oBybFWxXrX1Tn9ux0dYLUQK8HVH3hxKaUjgwSHzqmpZrM0MTDhk7S-M6wVR7KwnGb/pub?output=csv'
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSLaHGU-j5v8aXoy-eI3Gv2OQJ5a0IiU_Zd_bWaVEbroEfFout8yrB0LYORL4331_lCaCjEJ-7XuXD/pub?gid=2100232332&single=true&output=csv'
+    )
+    loadDataVariablesFrom(source)
+  }
   if (ans === '9') { console.log(state) }
 
   drawScreen()
+}
+
+function loadDataVariablesFrom (source) {
+  // console.log(JSON.stringify(data), '    ')
+  fetch(source)
+    .then((response) => {
+      console.log(response)
+      response.text().then((newData) => {
+        console.log(newData)
+        newData = JSON.parse(JSON.parse(newData).replaceAll('\'', '"'))
+
+        for (const d of Object.keys(newData)) {
+          if (Array.isArray(newData[d])) {
+            newData[d] = newData[d].map(f => {
+              if (f.hex) f.hex = Hex.getFromPQR(f.hex)
+              if (f.dimensionMultiplier) f.dimensionMultiplier = Vec.fromXY(f.dimensionMultiplier)
+              if (f.offset) f.offset = Vec.fromXY(f.offset)   // is this needed????
+              return f
+            })
+          }
+        }
+
+        console.log(newData)
+        data = newData
+      })
+    })
+    .catch((e) => { console.log(e, 'data') })
 }
 
 function loginSignupConsole () {

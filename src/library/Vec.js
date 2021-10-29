@@ -39,8 +39,11 @@ class Vec {
 
   static fromID (id) {
     const vals = id.split(',')
-
     return new Vec(...(id.split(',')).map(parseFloat))
+  }
+
+  static fromXY (xy) {
+    return new Vec(xy.x, xy.y)
   }
 
   static fromIdArray (idArray) {

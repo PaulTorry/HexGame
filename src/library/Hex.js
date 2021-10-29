@@ -9,6 +9,12 @@ Vec
 class Hex {
   constructor (p = 0, q = p, r = -p - q) { this.p = p; this.q = q; this.r = r }
 
+  * [Symbol.iterator] () {
+  yield this.p
+  yield this.q
+  yield this.r
+}
+
   add (b) { return new Hex(this.p + b.p, this.q + b.q, this.r + b.r) }
   subtract (b) { return new Hex(this.p - b.p, this.q - b.q, this.r - b.r) }
   compare (b) { return this.p === b.p && this.q === b.q && this.r === b.r }

@@ -324,7 +324,7 @@ function drawTechTree (v) {
 
   data.techs.forEach((t) => {
     // const center = getXYfromHex(t.hex, 35).add(ss.techTreeOffset)
-    const { x, y } = xy(t.hex)// .addXY(-48, -43)
+    const { x, y } = xy(new Hex(...t.hex))// .addXY(-48, -43)
     const draw = t.cost < 99
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 

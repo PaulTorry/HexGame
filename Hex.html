@@ -73,6 +73,24 @@
 
 <script>
 
+let aaa = new Hex()
+console.log(aaa);
+let bbb = new Hex(...aaa)
+console.log(
+  bbb
+);
+
+
+// fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSYhLdBRN1JBn8oBybFWxXrX1Tn9ux0dYLUQK8HVH3hxKaUjgwSHzqmpZrM0MTDhk7S-M6wVR7KwnGb/pub?output=csv")
+//     .then((response) => {
+//         response.json().then((data) => { 
+//             console.log(data);
+//         });
+//     })
+//     .catch((err) => { console.log("data") })
+
+
+
 document.body.addEventListener("keydown", keyHandle);
 
 window.onload = () => {
