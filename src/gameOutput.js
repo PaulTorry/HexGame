@@ -200,7 +200,7 @@ function drawButtons (v) {
   const buttons = data.floatingButtons
   buttons.forEach((b) => {
     const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
-    drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0, true)
+    drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0)
   })
 }
 
@@ -268,7 +268,7 @@ function drawMenu (v) {
   if (menuData.Screen === 'MainMenu') {
     data.mainMenu.forEach((t) => {
       const { x, y } = xy(t.hex)
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0)
       drawText(c, `${t.name}`, x - 30, y + 25, 12, 'rgb(159,216,206)')
     })
   }
@@ -276,7 +276,7 @@ function drawMenu (v) {
   if (menuData.Screen === 'loadGameMenu') {
     data.loadGameMenu.forEach((t) => {
       const { x, y } = xy(t.hex)
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0)
 
       let valueToOutput = menuData.LoadGameOptions[t.name] || ''
       if (t.num || t.num === 0) {
@@ -293,7 +293,7 @@ function drawMenu (v) {
   if (menuData.Screen === 'NewGame') {
     data.newGameMenu.forEach((t) => {
       const { x, y } = xy(t.hex)
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.65, 0)
 
       let valueToOutput = menuData.NewGameData[t.name] || ''
       if (t.num || t.num === 0) {
@@ -329,18 +329,18 @@ function drawTechTree (v) {
     // let col = `rgb(${t.colour[0]},${t.colour[1]},${t.colour[2]})`
 
     if (t.cost > 99) {
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(30,30,30)', 0.55, 0)
     } else if (state.playerData[state.playerTurn].tech[t.tech]) {
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, 'roundedHexOutline', x, y, getColMap(state.playerTurn, 1), 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0)
+      drawFromData(c, 'roundedHexOutline', x, y, getColMap(state.playerTurn, 1), 0.55, 0)
     } else if (t.cost > 99 || (t.requires &&
       t.requires.find(r => !state.playerData[state.playerTurn].tech[r])
     )) {
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, 'roundedHexOutline', x, y, x => 'rgb(36,34,73)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0)
+      drawFromData(c, 'roundedHexOutline', x, y, x => 'rgb(36,34,73)', 0.55, 0)
     } else { // if (draw){
-      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0, true)
-      drawFromData(c, 'roundedHexOutline', x, y, x => 'rgb(159,216,206)', 0.55, 0, true)
+      drawFromData(c, 'roundedHex', x, y, x => 'rgb(18,15,34)', 0.55, 0)
+      drawFromData(c, 'roundedHexOutline', x, y, x => 'rgb(159,216,206)', 0.55, 0)
     }
 
     if ((draw || debug) && t.sprite) {
