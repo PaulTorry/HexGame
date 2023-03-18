@@ -14,8 +14,8 @@ cacheGameList, drawArrow, drawFromCode, drawText
 
 /* eslint-disable no-unused-vars, dot-notation */
 
-function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scaleFactor = 1, rotation = 0) {
-  drawFromCode(c, gameSprites[sprite], xx, yy, colourMap, scaleFactor, rotation)
+function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scaleFactor = 1, rotation = 0, reverse = false) {
+  drawFromCode(c, gameSprites[sprite], xx, yy, colourMap, scaleFactor, rotation, reverse)
 }
 
 function getPlayerColour (player = state.playerTurn, opacity = 1, mid = false, dark = false) {
@@ -59,7 +59,7 @@ function drawNextTurnView (v) {
   drawText(c, 'Click to Start', -80, 50, 30, 'white')
 }
 
-function getAngleFromVariant (tile) {
+function randomiseTextureRotation (tile) {
   let angle = 0
   switch (tile.terrain) {
     case 'planet':
@@ -69,7 +69,9 @@ function getAngleFromVariant (tile) {
     case 'gasGiant':
       angle = -tile.variant / 6
   }
-  return angle
+  const reverse = Math.abs(Math.floor(angle * 10000)) % 2 === 0
+  // console.log(reverse, angle);
+  return [angle, reverse]
 }
 
 function drawSpaceView (v) {
@@ -84,14 +86,14 @@ function drawSpaceView (v) {
       drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
 
       if (gameSprites[tile.terrain]) {
-        drawFromData(c, tile.terrain, x, y, undefined, undefined, getAngleFromVariant(tile))
+        drawFromData(c, tile.terrain, x, y, undefined, undefined, ...randomiseTextureRotation(tile))
       }
       if (gameSprites[tile.resource]) {
-        drawFromData(c, tile.resource, x, y, undefined, undefined, getAngleFromVariant(tile))
+        drawFromData(c, tile.resource, x, y, undefined, undefined, ...randomiseTextureRotation(tile))
       }
 
       if (tile.station) {
-        drawFromData(c, tile.station.type, x, y, getColMap(tile.station.owner))
+        drawFromData(c, tile.station.type, x, y, getColMap(tile.station.owner), undefined, ...randomiseTextureRotation(tile))
       }
       if (tile.navBeacon) {
         const nt = tile.hex.neighbours.map((v, i) => [state.tiles.get(v.id) && state.tiles.get(v.id).navBeacon, i]).filter(([t, i]) => t)

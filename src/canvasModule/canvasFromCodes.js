@@ -16,7 +16,8 @@ function drawArrow (c, start, end, width = 3, color = 'white') {
   c.closePath()
 }
 
-function drawFromCode (c, data, xx = 0, yy = 0, colourMap = x => x, scaleFactor = 1, rotation = 0) {
+function drawFromCode (c, data, xx = 0, yy = 0, colourMap = x => x, scaleFactor = 1, rotation = 0, reverse = false) {
+  // console.log(rotation, reverse);
   // const scale = scaleFactor * screenSettings.resolutionLevel
 //   const data = gameSprites[sprite] // || []
   const startTime = new Date()
@@ -25,11 +26,11 @@ function drawFromCode (c, data, xx = 0, yy = 0, colourMap = x => x, scaleFactor 
   const rotateMath = (x, y, th) => [x * Math.cos(th) + y * Math.sin(th), x * -Math.sin(th) + y * Math.cos(th)]
   const rotate = (a, th) => a.reduce(pack2, []).map((a) => rotateMath(...a, th)).flat()
 
-  const add = (a, x, y, s = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s + x)
+  const add = (a, x, y, s = 1, r = 1) => a.map((v, i) => i % 2 ? v * s + y : v * s * r + x)
 
-  const transform = (a, x, y, t) => {
-    if (t) return add(rotate(add(a, x, y), t), xx, yy, scaleFactor)
-    else return add(add(a, x, y), xx, yy, scaleFactor)
+  const transform = (a, x, y, t, r = reverse ? -1 : 1) => {
+    if (t) return add(rotate(add(a, x, y), t), xx, yy, scaleFactor, r)
+    else return add(add(a, x, y), xx, yy, scaleFactor, r)
   }
 
   let gradient
