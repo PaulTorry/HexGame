@@ -47,6 +47,10 @@ class Hex {
     return new Hex(obj.p, obj.q)
   }
 
+  static getFromPQ (obj) {
+    return new Hex(obj.p, obj.q)
+  }
+
   static getFromID (id) {
     const coords = id.split(',').map(x => parseInt(x))
     return new Hex(...coords)
