@@ -18,8 +18,9 @@ function drawFromData (c, sprite, xx = 0, yy = 0, colourMap = x => x, scaleFacto
   drawFromCode(c, gameSprites[sprite], xx, yy, colourMap, scaleFactor, rotation, reverse)
 }
 
-function getPlayerColour (player = state.playerTurn, opacity = 1, mid = false, dark = false) {
-  const playerColours = ['green', 'red', 'lightblue', 'orange', 'purple', 'brown']
+function getPlayerColour (player = state.playerTurn, opacity = 1, mid = 0, dark = false) {
+  // if (mid || dark) console.log('md', mid, dark);
+  //  const playerColours = ['green', 'red', 'lightblue', 'orange', 'purple', 'brown']
   const playerColoursNew = [[33, 163, 79], [216, 36, 53], [124, 0, 255], [0, 131, 219], [177, 0, 95], [158, 170, 30], [216, 130, 25]]
   const playerColoursMid = [[3, 124, 52], [158, 28, 35], [95, 0, 186], [0, 107, 188], [139, 0, 73], [126, 137, 20], [172, 104, 14]]
   const playerColoursDark = [[0, 110, 43], [130, 6, 20], [58, 5, 161], [0, 74, 156], [122, 0, 62], [101, 112, 8], [142, 85, 1]]
@@ -36,6 +37,7 @@ function getColMap (player, transparency = 1) {
     else if (string === 'rgb(158, 28, 35)') return getPlayerColour(player, transparency, 1)
     else if (string === 'rgb(215, 35, 53)') return getPlayerColour(player, transparency)
     else if (string === 'rgba(215, 35, 53, 0.00)') return getPlayerColour(player, 0)
+    else if (string === 'rgba(215, 35, 53, 0.40)') return getPlayerColour(player, 0.4)
     else return string
   }
 }
