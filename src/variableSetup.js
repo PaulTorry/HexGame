@@ -5,6 +5,10 @@
 
 let data = {
 
+  colour: {
+    highlightSelection: ['white', 'purple', 'blue', 'orange']
+  },
+
   floatingButtons: [
     { name: 'nextTurnButton', sprite: 'nextTurnButton', dimensionMultiplier: new Vec(-1, -1), offset: new Vec(60, 50), size: 50 },
     { name: 'menuButton', sprite: 'menuButton', dimensionMultiplier: new Vec(1, -1), offset: new Vec(-120, 25), size: 30 },

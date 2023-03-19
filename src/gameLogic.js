@@ -294,7 +294,6 @@ function turnLogic () {
   state.log.push(`newturn: turn${state.turnNumber}, player ${state.playerTurn}`)
 
   sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] }
-  // drawMenu();
   drawScreen()
 }
 

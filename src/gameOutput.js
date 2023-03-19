@@ -30,8 +30,6 @@ function getPlayerColour (player = state.playerTurn, opacity = 1, mid = false, d
   return `rgba(${r},${g},${b},${opacity})`
 }
 
-// let colour = (x) => { return (y) => `rgb(${x[0]},${x[1]},${x[2]})` }
-
 function getColMap (player, transparency = 1) {
   return (string) => {
     if (string === 'rgb(130, 6, 20)') return getPlayerColour(player, transparency, 1) // MAYBE 0,1)
@@ -42,13 +40,11 @@ function getColMap (player, transparency = 1) {
   }
 }
 
-const selectedColour = ['white', 'purple', 'blue', 'orange']
+//  const selectedColour = ['white', 'purple', 'blue', 'orange']
 
 function getXYfromHex (hexCoord, size = 75) { return Hex.getXYfromUnitHex(hexCoord).scale(size) }
 
-function drawScreen (fullUpdate = true) {
-  board.drawScreen(fullUpdate)
-}
+function drawScreen (fullUpdate = true) { board.drawScreen(fullUpdate) }
 
 function drawNextTurnView (v) {
   const ss = screenSettings
@@ -57,21 +53,6 @@ function drawNextTurnView (v) {
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
   drawText(c, 'Click to Start', -80, 50, 30, 'white')
-}
-
-function randomiseTextureRotation (tile) {
-  let angle = 0
-  switch (tile.terrain) {
-    case 'planet':
-    case 'asteroids':
-      angle = tile.variant
-      break
-    case 'gasGiant':
-      angle = -tile.variant / 6
-  }
-  const reverse = Math.abs(Math.floor(angle * 10000)) % 2 === 0
-  // console.log(reverse, angle);
-  return [angle, reverse]
 }
 
 function drawSpaceView (v) {
@@ -183,7 +164,22 @@ function drawSpaceView (v) {
     } for (const attack of sel.actions.attacks) {
       drawFromData(c, 'hexVert', ...getXYfromHex(attack), () => 'red', 0.90)
     }
-    drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => selectedColour[sel.state], 0.90)
+    drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => data.colour.highlightSelection[sel.state], 0.90)
+  }
+
+  function randomiseTextureRotation (tile) {
+    let angle = 0
+    switch (tile.terrain) {
+      case 'planet':
+      case 'asteroids':
+        angle = tile.variant
+        break
+      case 'gasGiant':
+        angle = -tile.variant / 6
+    }
+    const reverse = Math.abs(Math.floor(angle * 10000)) % 2 === 0
+    // console.log(reverse, angle);
+    return [angle, reverse]
   }
 }
 
@@ -204,6 +200,26 @@ function drawButtons (v) {
     const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0)
   })
+
+  function drawOverlayText (v) {
+    const c = v.buffer.getContext('2d')
+    const { x, y } = v.center.scaleXY(0, -1)
+    const player = state.playerTurn
+    const pdata = state.playerData[player]
+    drawText(c, 'Player', x - 200, y + 20, 15, 'white')
+    drawText(c, player, x - 180, y + 40, 15, 'white')
+    drawText(c, 'Turn', x - 150, y + 20, 15, 'white')
+    drawText(c, state.turnNumber, x - 125, y + 40, 15, 'white')
+    if (!preturn) {
+      drawText(c, 'Money', x - 105, y + 20, 15, 'white')
+      drawText(c, `${pdata.money}  ( ${pdata.income} )`, x - 105, y + 40, 15, 'white')
+    }
+    if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
+      drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, x - 300, y + 35, 15, 'white')
+    }
+    drawText(c, `Game: ${state.gameName}`, x + 20, y + 40, 15, 'white')
+    if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, x + 20, y + 60, 15, 'white')
+  }
 }
 
 function drawFloatingButtons (v) {
@@ -221,40 +237,20 @@ function drawFloatingButtons (v) {
     sel.menu.forEach((v, i) => {
       const details = data.thingList.find(t => t.thing === v)
       if (details.sprite && details.sprite[0][0]) {
-        drawMenuItem(c, details, posFunc(i))
+        drawFloatingButton(c, details, posFunc(i))
       } else (console.log('problem', details))
     })
   }
-}
 
-function drawOverlayText (v) {
-  const c = v.buffer.getContext('2d')
-  const { x, y } = v.center.scaleXY(0, -1)
-  const player = state.playerTurn
-  const pdata = state.playerData[player]
-  drawText(c, 'Player', x - 200, y + 20, 15, 'white')
-  drawText(c, player, x - 180, y + 40, 15, 'white')
-  drawText(c, 'Turn', x - 150, y + 20, 15, 'white')
-  drawText(c, state.turnNumber, x - 125, y + 40, 15, 'white')
-  if (!preturn) {
-    drawText(c, 'Money', x - 105, y + 20, 15, 'white')
-    drawText(c, `${pdata.money}  ( ${pdata.income} )`, x - 105, y + 40, 15, 'white')
+  function drawFloatingButton (c, details, pos) {
+    drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35, 1 / 12)
+    drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35, 1 / 12)
+    details.sprite.forEach(x => {
+      drawFromData(c, x[0], ...pos.addXY(x[1], x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
+    })
+    drawText(c, `${details.price}`, ...pos.addXY(-15, -20), 10, 'white')
+    drawText(c, `${details.name}`, ...pos.addXY(-25, 25), 10, 'white')
   }
-  if (state.meta.online && state.playerData[state.playerTurn].type === 'Human') {
-    drawText(c, `Handle: ${state.meta.playergrid.find(x => x[0] === state.playerTurn)[1]}`, x - 300, y + 35, 15, 'white')
-  }
-  drawText(c, `Game: ${state.gameName}`, x + 20, y + 40, 15, 'white')
-  if (loggedInPlayer) drawText(c, `Logged in Player: ${loggedInPlayer.handle}`, x + 20, y + 60, 15, 'white')
-}
-
-function drawMenuItem (c, details, pos) {
-  drawFromData(c, 'roundedHex', ...pos, getColMap(state.playerTurn, 1), 0.35, 1 / 12)
-  drawFromData(c, 'roundedHexOutline', ...pos, x => 'rgb(136,134,173)', 0.35, 1 / 12)
-  details.sprite.forEach(x => {
-    drawFromData(c, x[0], ...pos.addXY(x[1], x[2]), getColMap(state.playerTurn, 1), 0.5 * x[3])
-  })
-  drawText(c, `${details.price}`, ...pos.addXY(-15, -20), 10, 'white')
-  drawText(c, `${details.name}`, ...pos.addXY(-25, 25), 10, 'white')
 }
 
 function drawMenu (v) {

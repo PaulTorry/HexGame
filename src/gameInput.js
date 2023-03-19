@@ -31,7 +31,6 @@ function buttonCLick (offset, view = views.spaceView) {
     },
     nextTurnButton: nextTurn
   }
-  // console.log(data.floatingButtons)
   const buttonPressed = data.floatingButtons.find((b) => {
     const pos = b.dimensionMultiplier.add(new Vec(1, 1)).scaleByVec(board.screenCenter).add(b.offset)
     // console.log('buttonclick', offset, pos, offset.distance(pos), b.size, offset.distance(pos) < b.size)
