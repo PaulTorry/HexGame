@@ -109,14 +109,22 @@ class Board {
     result || this.currentView.transmitClick(offset)
   }
 
-  drawViewfromBuffer (view = this.currentView) {
+  drawViewfromSingleBuffer (view = this.currentView, buffer = view.buffer) {
     this.context.drawImage(
-      view.buffer,
+      buffer,
       ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
       ...this.screenCenter.scale(view.zoom * 2),
       ...new Vec(0, 0),
       ...this.screenCenter.scale(2)
     )
+  }
+
+  drawViewFromBuffers (view = this.currentView) {
+    view.buffers.forEach(b => this.drawViewfromSingleBuffer(view, b))
+  }
+
+  drawViewfromBuffer (view = this.currentView) {
+    this.drawViewfromSingleBuffer(view)
   }
 
   drawScreen (fullUpdate = true) {

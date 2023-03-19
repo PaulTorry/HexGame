@@ -13,6 +13,7 @@ class View {
     clickFunction = console.log,
     drawFunction = console.log,
     center = new Vec(400, 400),
+    numberOfBuffers = 1,
     screenCenter = new Vec(400, 400),
     zoom = 1, offset = new Vec(0, 0)
   ) {
@@ -22,7 +23,10 @@ class View {
     this.screenCenter = screenCenter
     this.clickFunction = clickFunction
     this.drawFunction = drawFunction
+    this.buffers = Array.from({length: 3}).map(x => document.createElement('canvas'))
     this.buffer = document.createElement('canvas')
+    this.buffer2 = document.createElement('canvas')
+    this.buffer3 = document.createElement('canvas')
     this.changes = { moved: true, redrawn: true }
   }
 

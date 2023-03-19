@@ -105,6 +105,8 @@ const views = {
   floatingButtons: new Overlay(buttonCLick, drawFloatingButtons)
 }
 
+// console.log('buffer', views.spaceView.buffers[1])
+
 const board = new Board(document.getElementById('board'), views, views.spaceView,
   [views.buttons, views.floatingButtons], {
     drawScreen: drawScreen,
