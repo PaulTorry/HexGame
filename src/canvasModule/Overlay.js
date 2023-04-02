@@ -26,8 +26,8 @@ class Overlay {
   reCenterScreen (screenCenter) {
     this.screenCenter = screenCenter
     this.center = screenCenter
-    this.buffers.forEach(b => b.height = this.center.y * 2)
-    this.buffers.forEach(b => b.width = this.center.x * 2)
+    this.buffers.forEach(b => { b.height = this.center.y * 2 })
+    this.buffers.forEach(b => { b.width = this.center.x * 2 })
     // this.buffers[b].height = this.center.y * 2
     // this.buffers[b].width = this.center.x * 2
   }

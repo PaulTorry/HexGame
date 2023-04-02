@@ -97,7 +97,7 @@ const inputFunctions = {
 }
 
 const views = {
-  spaceView: new View(inputFunctions.spaceView, [drawSpaceView, drawAssetsAndChangeables, drawSelectedHexes], new Vec(1600, 1600)),
+  spaceView: new View(inputFunctions.spaceView, [drawSpaceView, drawFogOfWar, drawAssetsAndChangeables, drawSelectedHexes], new Vec(1600, 1600)),
   techTreeView: new View(inputFunctions.techTreeView, [drawTechTree]),
   menuView: new View(inputFunctions.menuView, [drawMenu]),
 

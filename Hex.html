@@ -35,9 +35,11 @@
 <canvas id="test0" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
 <canvas id="test1" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
 <canvas id="test2" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
+<canvas id="test3" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
 <canvas id="space0" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
 <canvas id="space1" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
 <canvas id="space2" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
+<canvas id="space3" width="80" height="80" style="border:1px solid #5f3333;"></canvas>
 
 
 <canvas id="board" width="800" height="800" style="border:1px solid #d3d3d3;"></canvas>
@@ -108,8 +110,9 @@ window.onload = () => {
   if(firebaseAvailable) firebase.auth().onAuthStateChanged(authStateChangeHandler);
   
   load("a", true)
+ 
   board.resizeScreen() // needed to set the board sizes for buffers
-  drawScreen(rue); 
+  drawScreen(true); 
   
 }
 

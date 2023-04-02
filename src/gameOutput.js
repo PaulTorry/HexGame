@@ -3,7 +3,7 @@
 /* global
 screenSettings, Vec, Hex,
 sel, state,
-getUpdatedViewMask, board,
+getUpdatedViewMask, board, stale,
 getTerrainDamage,
  preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,
@@ -59,7 +59,7 @@ function drawNextTurnView (v) {
 }
 
 function drawSpaceView (v, i = 0) {
-  if (!stale.terrain){console.log("stale terrain");  return}
+  if (!stale.terrain) { console.log('stale terrain'); return }
   stale.terrain = false
   const ss = screenSettings
   const c = v.buffers[i].getContext('2d')
@@ -69,9 +69,7 @@ function drawSpaceView (v, i = 0) {
 
   for (const [id, tile] of state.tiles) {
     const { x, y } = getXYfromHex(tile.hex)
-    if (viewMask[id] || debug) {
-      
-
+    if (viewMask[id] || debug || true) {
       drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
 
       if (gameSprites[tile.terrain]) {
@@ -98,9 +96,9 @@ function drawSpaceView (v, i = 0) {
         drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
     } else {
-      drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
+      // drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
     }
-    drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
+    // drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
   }
 
   for (const [id, tile] of state.tiles) {
@@ -115,8 +113,28 @@ function drawSpaceView (v, i = 0) {
   // clear(c)
 }
 
+function drawFogOfWar (v, i = 1) {
+  if (!stale.fog) { console.log('stale assets'); return }
+  stale.fog = false
+  const ss = screenSettings
+  const c = v.buffers[i].getContext('2d')
+  clear(c)
+  const viewMask = getUpdatedViewMask(state)
+
+  for (const [id, tile] of state.tiles) {
+    const { x, y } = getXYfromHex(tile.hex)
+    if (!viewMask[id] && !debug) {
+      drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
+    }
+    if (viewMask[id] === 1) {
+      drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
+    }
+    // drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
+  }
+}
+
 function drawAssetsAndChangeables (v, i = 1) {
-  if (!stale.assets){console.log("stale assets"); return}
+  if (!stale.assets) { console.log('stale assets'); return }
   stale.assets = false
   const ss = screenSettings
   const c = v.buffers[i].getContext('2d')
@@ -191,7 +209,7 @@ function randomiseTextureRotation (tile) {
 }
 
 function drawSelectedHexes (v, i) {
-  if (!stale.selection){ console.log("stale selection"); return }
+  if (!stale.selection) { console.log('stale selection'); return }
   stale.selection = false
   const c = v.buffers[i].getContext('2d') // @TODO
   clear(c)

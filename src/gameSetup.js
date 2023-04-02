@@ -12,8 +12,8 @@ let state = {}
 
 let sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } // eslint-disable-line prefer-const
 
-const stale = { terrain: true, assets: true, selection: true }
-const makeStale = () => { stale.terrain = true; stale.assets = true; stale.selection = true }
+const stale = { terrain: true, fog: true, assets: true, selection: true }
+const makeStale = () => { stale.terrain = true; stale.fog = true; stale.assets = true; stale.selection = true }
 // replaceState( setup(5, 9, 2, false, "default", generateID(20)))
 
 function setup (numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTogetherP = false, gameNameP = 'noName', meta = { online: false }) {
@@ -119,8 +119,6 @@ function setupNew (config, meta = { online: false }) {
   })
 
   tiles.forEach((_v, k) => { tiles.get(k).variant = Math.random() })
-
-  board.resizeScreen()
 
   return {
     meta: meta,
