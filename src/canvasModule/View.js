@@ -11,9 +11,8 @@ Vec, drawScreen
 class View {
   constructor (
     clickFunction = console.log,
-    drawFunction = console.log,
+    drawFunctions = [console.log],
     center = new Vec(400, 400),
-    numberOfBuffers = 1,
     screenCenter = new Vec(400, 400),
     zoom = 1, offset = new Vec(0, 0)
   ) {
@@ -22,16 +21,15 @@ class View {
     this.center = center
     this.screenCenter = screenCenter
     this.clickFunction = clickFunction
-    this.drawFunction = drawFunction
-    this.buffers = Array.from({length: 3}).map(x => document.createElement('canvas'))
-    this.buffer = document.createElement('canvas')
-    this.buffer2 = document.createElement('canvas')
-    this.buffer3 = document.createElement('canvas')
+    this.drawFunctions = drawFunctions
+    this.buffers = drawFunctions.map(x => document.createElement('canvas'))
     this.changes = { moved: true, redrawn: true }
   }
 
   reCenterScreen (screenCenter) {
     this.screenCenter = screenCenter
+    this.buffers.forEach(b => b.height = this.center.y * 2)
+    this.buffers.forEach(b => b.width = this.center.x * 2)
   }
 
   getViewXYfromScreenXY (pt) {
@@ -54,13 +52,18 @@ class View {
     this.offset = newOffset.bounds(this.center)
   }
 
-  drawBuffer (drawfunc = this.drawFunction) {
-    const c = this.buffer.getContext('2d')
-    this.buffer.height = this.center.y * 2
-    this.buffer.width = this.center.x * 2
+  drawBuffer (drawfunc = this.drawFunctions[0], bi = 0) {
+    // console.log(drawfunc, bi)
+    const c = this.buffers[bi].getContext('2d')
+    // this.buffers[bi].height = this.center.y * 2
+    // this.buffers[bi].width = this.center.x * 2
     c.translate(...this.center)
-    drawfunc(this)
+    drawfunc(this, bi)
     c.translate(...this.center.scale(-1))
+  }
+
+  drawBuffers (drawFuncs = this.drawFunctions) {
+    drawFuncs.forEach((v, i, a) => this.drawBuffer(v, i))
   }
 
   transmitClick (location) {

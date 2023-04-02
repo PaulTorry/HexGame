@@ -75,7 +75,7 @@ function interactiveConsole (num = '') {
     )
     loadDataVariablesFrom(source)
   }
-  if (ans === '9') { console.log(state) }
+  if (ans === '9') { console.log(state); makeStale() }
 
   drawScreen()
 }

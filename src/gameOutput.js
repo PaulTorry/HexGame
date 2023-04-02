@@ -50,21 +50,27 @@ function drawScreen (fullUpdate = true) { board.drawScreen(fullUpdate) }
 
 function drawNextTurnView (v) {
   const ss = screenSettings
-  const c = v.buffer.getContext('2d')
+  const c = v.buffers[0].getContext('2d')
+  clear(c)
   const logoSize = 0.3
   drawFromData(c, 'logo', -300 * logoSize, -150 - 300 * logoSize, (x) => x, logoSize)
   drawText(c, `Player ${state.playerTurn} . ${localGameInfo.player}`, -80, 10, 50, getPlayerColour(state.playerTurn))
   drawText(c, 'Click to Start', -80, 50, 30, 'white')
 }
 
-function drawSpaceView (v) {
+function drawSpaceView (v, i = 0) {
+  if (!stale.terrain){console.log("stale terrain");  return}
+  stale.terrain = false
   const ss = screenSettings
-  const c = v.buffer.getContext('2d')
+  const c = v.buffers[i].getContext('2d')
+  clear(c)
+  // const c = b.getContext('2d')
   const viewMask = getUpdatedViewMask(state)
 
   for (const [id, tile] of state.tiles) {
+    const { x, y } = getXYfromHex(tile.hex)
     if (viewMask[id] || debug) {
-      const { x, y } = getXYfromHex(tile.hex)
+      
 
       drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
 
@@ -91,6 +97,8 @@ function drawSpaceView (v) {
       if (viewMask[id] === 1) {
         drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
+    } else {
+      drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
     }
     drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
   }
@@ -102,6 +110,18 @@ function drawSpaceView (v) {
       //  if (gameSprites[tile.terrain]) { drawFromData(c, gameSprites[tile.terrain], x, y, x => x, 1, 0, true) }
     }
   }
+  // drawAssetsAndChangeables(v)
+  // drawSelectedHexes(v)
+  // clear(c)
+}
+
+function drawAssetsAndChangeables (v, i = 1) {
+  if (!stale.assets){console.log("stale assets"); return}
+  stale.assets = false
+  const ss = screenSettings
+  const c = v.buffers[i].getContext('2d')
+  clear(c)
+  const viewMask = getUpdatedViewMask(state)
 
   for (const [id, tile] of state.tiles) {
     if (viewMask[id] || debug) {
@@ -153,7 +173,28 @@ function drawSpaceView (v) {
       }
     }
   }
+}
 
+function randomiseTextureRotation (tile) {
+  let angle = 0
+  switch (tile.terrain) {
+    case 'planet':
+    case 'asteroids':
+      angle = tile.variant
+      break
+    case 'gasGiant':
+      angle = -tile.variant / 6
+  }
+  const reverse = Math.abs(Math.floor(angle * 10000)) % 2 === 0
+  // console.log(reverse, angle);
+  return [angle, reverse]
+}
+
+function drawSelectedHexes (v, i) {
+  if (!stale.selection){ console.log("stale selection"); return }
+  stale.selection = false
+  const c = v.buffers[i].getContext('2d') // @TODO
+  clear(c)
   if (sel.hex) {
     for (const [move, ...hist] of sel.actions.moves) {
       const { x, y } = getXYfromHex(move)
@@ -168,21 +209,6 @@ function drawSpaceView (v) {
     }
     drawFromData(c, 'hexVert', ...getXYfromHex(sel.hex), () => data.colour.highlightSelection[sel.state], 0.90)
   }
-
-  function randomiseTextureRotation (tile) {
-    let angle = 0
-    switch (tile.terrain) {
-      case 'planet':
-      case 'asteroids':
-        angle = tile.variant
-        break
-      case 'gasGiant':
-        angle = -tile.variant / 6
-    }
-    const reverse = Math.abs(Math.floor(angle * 10000)) % 2 === 0
-    // console.log(reverse, angle);
-    return [angle, reverse]
-  }
 }
 
 function drawlog () {
@@ -196,7 +222,8 @@ function drawlog () {
 
 function drawButtons (v) {
   drawOverlayText(v)
-  const c = v.buffer.getContext('2d')
+  const c = v.buffers[0].getContext('2d')
+  clear(c)
   const buttons = data.floatingButtons
   buttons.forEach((b) => {
     const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
@@ -204,7 +231,7 @@ function drawButtons (v) {
   })
 
   function drawOverlayText (v) {
-    const c = v.buffer.getContext('2d')
+    const c = v.buffers[0].getContext('2d')
     const { x, y } = v.center.scaleXY(0, -1)
     const player = state.playerTurn
     const pdata = state.playerData[player]
@@ -226,7 +253,8 @@ function drawButtons (v) {
 
 function drawFloatingButtons (v) {
   const ss = screenSettings
-  const c = v.buffer.getContext('2d')
+  const c = v.buffers[0].getContext('2d')
+  clear(c)
 
   document.getElementById('board').style.borderColor = getPlayerColour(state.playerTurn)
 
@@ -257,9 +285,10 @@ function drawFloatingButtons (v) {
 
 function drawMenu (v) {
   const ss = screenSettings
-  const c = v.buffer.getContext('2d')
+  const c = v.buffers[0].getContext('2d')
+  clear(c)
   const xy = (h) => getXYfromHex(h, 45)
-  c.clearRect(0, 0, 800, 800)
+  // c.clearRect(0, 0, 800, 800)
 
   for (const a of Hex.findWithin(Math.floor(v.center.x / v.hexSize))) {
     drawFromData(c, 'hexVert', ...xy(a), () => 'rgba(137,132,145, 0.3)', 0.5)
@@ -307,7 +336,8 @@ function drawMenu (v) {
 }
 
 function drawTechTree (v) {
-  const c = v.buffer.getContext('2d')
+  const c = v.buffers[0].getContext('2d')
+  clear(c)
   // const view = views.techTree
   console.log(v.hexsize, v)
   const xy = (h) => getXYfromHex(h, 35)// v.hexSize)
@@ -352,3 +382,5 @@ function drawTechTree (v) {
     if (draw || debug) drawText(c, `${t.cost}`, x - 40, y + 6, 12, 'rgb(159,216,206)')
   })
 }
+
+function clear (c) { c.clearRect(-9999, -9999, 19999, 19999) }

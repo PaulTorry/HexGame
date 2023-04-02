@@ -26,13 +26,14 @@ const lowestArrayIndex = function (a, b) {
 function onSpaceHexClicked (clickHex) {
 //  if(preturn){preturn = false; return }
   // console.log('onSpaceHexClicked', clickHex)
-
+  stale.selection = true
   const viewMask = getUpdatedViewMask(state)
 
   let possibleActions = { moves: [], attacks: [] }
   sel.menu = []
 
   function setShipActions (clickHex, ship) {
+    stale.assets = true
     possibleActions = findPossibleActions(clickHex, ship)
     if (possibleActions.attacks.length || possibleActions.moves.length) {
       sel.state = 1
@@ -109,6 +110,7 @@ function territoryState (hex) {
 }
 
 function onTopPanelItemClicked (item, hex = sel.hex) {
+  stale.assets = true
   // console.log('topapnelitem', item, hex)
   const tile = state.tiles.get(hex.id)
   const ship = getShipOnHex(hex)

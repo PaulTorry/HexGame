@@ -109,7 +109,8 @@ class Board {
     result || this.currentView.transmitClick(offset)
   }
 
-  drawViewfromSingleBuffer (view = this.currentView, buffer = view.buffer) {
+  drawViewfromSingleBuffer (view = this.currentView, buffer = view.buffer, i) {
+    // console.log(view, buffer, i)
     this.context.drawImage(
       buffer,
       ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
@@ -117,24 +118,44 @@ class Board {
       ...new Vec(0, 0),
       ...this.screenCenter.scale(2)
     )
+
+    document.getElementById('test' + i).getContext('2d').clearRect(-99999, -99999, 199999, 199999)
+    document.getElementById('test' + i).getContext('2d').drawImage(
+      buffer,
+      ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+      ...this.screenCenter.scale(view.zoom * 20),
+      ...new Vec(0, 0),
+      ...this.screenCenter.scale(2)
+    )
+    document.getElementById('space' + i).getContext('2d').clearRect(-99999, -99999, 199999, 199999)
+    document.getElementById('space' + i).getContext('2d').drawImage(
+      this.views.spaceView.buffers[i],
+      ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+      ...this.screenCenter.scale(view.zoom * 20),
+      ...new Vec(0, 0),
+      ...this.screenCenter.scale(2)
+    )
   }
 
-  drawViewFromBuffers (view = this.currentView) {
-    view.buffers.forEach(b => this.drawViewfromSingleBuffer(view, b))
+  drawViewFromBuffers (view = this.currentView, clear = false) {
+    if (clear) this.context.clearRect(0, 0, ...this.screenCenter.scale(2))
+    view.buffers.forEach((b, i) => { this.drawViewfromSingleBuffer(view, b, i) })
   }
 
-  drawViewfromBuffer (view = this.currentView) {
-    this.drawViewfromSingleBuffer(view)
+  // drawViewfromBuffer (view = this.currentView, i) {
+  //   this.drawViewfromSingleBuffer(view, i) //                                           Todo sort i b
+  // }
+
+  drawScreen (bufferUpdate = true) {
+  // this.clear()
+    console.log(stale)
+
+    if (bufferUpdate) this.currentView.drawBuffers()
+    this.drawViewFromBuffers(this.currentView, true)
+
+    if (bufferUpdate) this.overlays.forEach(o => o.drawBuffers())
+    this.overlays.forEach(o => this.drawViewFromBuffers(o, false))
   }
 
-  drawScreen (fullUpdate = true) {
-    this.clear()
-    if (fullUpdate) this.currentView.drawBuffer()
-    this.drawViewfromBuffer(this.currentView)
-
-    if (fullUpdate) this.overlays.forEach(o => o.drawBuffer())
-    this.overlays.forEach(o => this.drawViewfromBuffer(o))
-  }
-
-  clear () { this.context.clearRect(-99999, -99999, 199999, 199999) }
+  // clear () { this.context.clearRect(-99999, -99999, 199999, 199999) }
 }

@@ -5,7 +5,7 @@ Board, View, Overlay
 screenSettings, data,
 Vec, Hex, sel:true, menuData,
 getXYfromHex,
-drawSpaceView, drawTechTree, drawMenu, drawNextTurnView, drawButtons, drawFloatingButtons,
+drawSpaceView, drawAssetsAndChangeables, drawSelectedHexes, drawTechTree, drawMenu, drawNextTurnView, drawButtons, drawFloatingButtons,
 state, debug, loggedInPlayer
 drawScreen, interactiveConsole
 nextTurn,  onTopPanelItemClicked,  onTechHexClicked, onMenuHexClicked, onSpaceHexClicked,
@@ -83,6 +83,7 @@ function checkPlayerTurn () {
 
 function keyHandle (e) {
   if (e.code === 'Tab') interactiveConsole()
+  if (e.key === 'a') { makeStale(), console.log(stale.terrain); drawScreen() }
   if (Number(e.key)) interactiveConsole(Number(e.key))
   // if (e.key === 'ArrowRight') theta += 0.1
   // if (e.key === 'ArrowLeft') theta -= 0.1
@@ -96,13 +97,13 @@ const inputFunctions = {
 }
 
 const views = {
-  spaceView: new View(inputFunctions.spaceView, drawSpaceView, new Vec(1600, 1600)),
-  techTreeView: new View(inputFunctions.techTreeView, drawTechTree),
-  menuView: new View(inputFunctions.menuView, drawMenu),
+  spaceView: new View(inputFunctions.spaceView, [drawSpaceView, drawAssetsAndChangeables, drawSelectedHexes], new Vec(1600, 1600)),
+  techTreeView: new View(inputFunctions.techTreeView, [drawTechTree]),
+  menuView: new View(inputFunctions.menuView, [drawMenu]),
 
-  nextTurnView: new View(nextTurnScreenClick, drawNextTurnView),
-  buttons: new Overlay(overlayClick, drawButtons),
-  floatingButtons: new Overlay(buttonCLick, drawFloatingButtons)
+  nextTurnView: new View(nextTurnScreenClick, [drawNextTurnView]),
+  buttons: new Overlay(overlayClick, [drawButtons]),
+  floatingButtons: new Overlay(buttonCLick, [drawFloatingButtons])
 }
 
 // console.log('buffer', views.spaceView.buffers[1])

@@ -12,6 +12,8 @@ let state = {}
 
 let sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } // eslint-disable-line prefer-const
 
+const stale = { terrain: true, assets: true, selection: true }
+const makeStale = () => { stale.terrain = true; stale.assets = true; stale.selection = true }
 // replaceState( setup(5, 9, 2, false, "default", generateID(20)))
 
 function setup (numPlayersP, boardSizeP = 8, numHumansP = numPlayersP, playersTogetherP = false, gameNameP = 'noName', meta = { online: false }) {
@@ -70,7 +72,7 @@ function setupNew (config, meta = { online: false }) {
 
   for (const hex of Hex.findWithin(config.boardSize)) {
     const buildingHex = { hex: hex, terrain: 'space', station: null, resource: null }
-  //   if (Math.random() < 0.1) { buildingHex.terrain = 'nebula'; buildingHex.resource = 'hydrogen' } else if (Math.random() < 0.1) { buildingHex.terrain = 'nebula' } else if (Math.random() < 0.05) { buildingHex.terrain = 'protostar' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids'; buildingHex.resource = 'icyAsteroids' } else if (Math.random() < 0.05) { buildingHex.terrain = 'gasGiant' }
+    //   if (Math.random() < 0.1) { buildingHex.terrain = 'nebula'; buildingHex.resource = 'hydrogen' } else if (Math.random() < 0.1) { buildingHex.terrain = 'nebula' } else if (Math.random() < 0.05) { buildingHex.terrain = 'protostar' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids' } else if (Math.random() < 0.15) { buildingHex.terrain = 'asteroids'; buildingHex.resource = 'icyAsteroids' } else if (Math.random() < 0.05) { buildingHex.terrain = 'gasGiant' }
 
     for (const t of data.terrainSetupData) {
       if (t.probability > Math.random()) {
@@ -117,6 +119,8 @@ function setupNew (config, meta = { online: false }) {
   })
 
   tiles.forEach((_v, k) => { tiles.get(k).variant = Math.random() })
+
+  board.resizeScreen()
 
   return {
     meta: meta,
