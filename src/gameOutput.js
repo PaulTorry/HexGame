@@ -3,7 +3,7 @@
 /* global
 screenSettings, Vec, Hex,
 sel, state,
-getUpdatedViewMask, board, stale,
+getUpdatedViewMask,
 getTerrainDamage,
  preturn, menuData,
 gameSprites, debug, territoryState,  whichPlanetsTerritory,

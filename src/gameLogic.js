@@ -50,6 +50,7 @@ function onSpaceHexClicked (clickHex) {
 
   if (viewMask[clickHex.id] === 2) {
     if (sel.state === 2) {
+      stale.fog = true
       sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
       // else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
     } else if (sel.state === 1) {

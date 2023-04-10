@@ -28,8 +28,8 @@ class View {
 
   reCenterScreen (screenCenter) {
     this.screenCenter = screenCenter
-    this.buffers.forEach(b => b.height = this.center.y * 2)
-    this.buffers.forEach(b => b.width = this.center.x * 2)
+    this.buffers.forEach(b => { b.height = this.center.y * 2 })
+    this.buffers.forEach(b => { b.width = this.center.x * 2 })
   }
 
   getViewXYfromScreenXY (pt) {
