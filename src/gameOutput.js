@@ -92,7 +92,7 @@ function drawSpaceView (v, i = 0) {
       if (base) {
         drawFromData(c, 'planetRing', x, y, getColMap(base.owner))
       }
-      if (viewMask[id] === 1) {
+      if (viewMask[id] === 1 || true) {
         drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
       }
     } else {

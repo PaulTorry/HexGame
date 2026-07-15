@@ -148,7 +148,7 @@ class Board {
 
   drawScreen (bufferUpdate = true) {
   // this.clear()
-    console.log(stale)
+   // console.log(stale)
 
     if (bufferUpdate) this.currentView.drawBuffers()
     this.drawViewFromBuffers(this.currentView, true)

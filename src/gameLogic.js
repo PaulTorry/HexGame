@@ -49,6 +49,10 @@ function onSpaceHexClicked (clickHex) {
   }
 
   if (viewMask[clickHex.id] === 2) {
+        stale.selection = true
+        stale.fog = true
+        stale.assets = true
+        stale.terrain
     if (sel.state === 2) {
       sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
       // else sel = {state:2, hex:clickHex, moves:[], attacks:[], menu: makeBuildBar(clickHex)};
@@ -84,6 +88,7 @@ function onSpaceHexClicked (clickHex) {
       }
     }
   } else sel = { state: 0, actions: { moves: [], attacks: [] }, menu: [] }
+  drawScreen()
 }
 
 function findPossibleActions (clickHex, ship) {
@@ -111,6 +116,9 @@ function territoryState (hex) {
 
 function onTopPanelItemClicked (item, hex = sel.hex) {
   stale.assets = true
+  stale.selection = true
+  stale.fog = true
+  stale.terrain = true
   // console.log('topapnelitem', item, hex)
   const tile = state.tiles.get(hex.id)
   const ship = getShipOnHex(hex)
@@ -254,6 +262,9 @@ function repair (ship) {
 }
 
 async function nextTurn () {
+  stale.selection = true
+  stale.fog = true
+  stale.assets = true
   if (!preturn || debug) {
     turnLogic()
     while (state.playerData[state.playerTurn].type === 'AI') { takeAIturn(); turnLogic() }
