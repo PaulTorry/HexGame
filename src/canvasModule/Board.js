@@ -99,6 +99,7 @@ class Board {
     this.overlays.forEach(overlay => overlay.reCenterScreen(center))
     this.currentView.reCenterScreen(center)
     Object.values(this.views).forEach(view => view.reCenterScreen(center)) // @TODO
+    makeStale()
   }
 
   boardClick (event) {
@@ -119,22 +120,22 @@ class Board {
       ...this.screenCenter.scale(2)
     )
 
-    document.getElementById('test' + i).getContext('2d').clearRect(-99999, -99999, 199999, 199999)
-    document.getElementById('test' + i).getContext('2d').drawImage(
-      buffer,
-      ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
-      ...this.screenCenter.scale(view.zoom * 20),
-      ...new Vec(0, 0),
-      ...this.screenCenter.scale(2)
-    )
-    document.getElementById('space' + i).getContext('2d').clearRect(-99999, -99999, 199999, 199999)
-    document.getElementById('space' + i).getContext('2d').drawImage(
-      this.views.spaceView.buffers[i],
-      ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
-      ...this.screenCenter.scale(view.zoom * 20),
-      ...new Vec(0, 0),
-      ...this.screenCenter.scale(2)
-    )
+    // document.getElementById('test' + i).getContext('2d').clearRect(-99999, -99999, 199999, 199999)
+    // document.getElementById('test' + i).getContext('2d').drawImage(
+    //   buffer,
+    //   ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+    //   ...this.screenCenter.scale(view.zoom * 20),
+    //   ...new Vec(0, 0),
+    //   ...this.screenCenter.scale(2)
+    // )
+    // document.getElementById('space' + i).getContext('2d').clearRect(-99999, -99999, 199999, 199999)
+    // document.getElementById('space' + i).getContext('2d').drawImage(
+    //   this.views.spaceView.buffers[i],
+    //   ...this.screenCenter.scale(-view.zoom).add(view.offset).add(view.center),
+    //   ...this.screenCenter.scale(view.zoom * 20),
+    //   ...new Vec(0, 0),
+    //   ...this.screenCenter.scale(2)
+    // )
   }
 
   drawViewFromBuffers (view = this.currentView, clear = false) {

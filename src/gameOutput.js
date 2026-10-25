@@ -127,7 +127,8 @@ function drawFogOfWar (v, i = 1) {
       drawFromData(c, 'fillHexVert', x, y, () => 'rgb(18,15,34)')
     }
     if (viewMask[id] === 1) {
-      drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
+      //drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgba(200,200,200,0.1)')
+      drawFromData(c, 'fillHexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45,0.7)')
     }
     // drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => 'rgb(37,32,45)')
   }
@@ -145,8 +146,9 @@ function drawAssetsAndChangeables (v, i = 1) {
     if (viewMask[id] || debug) {
       const planet = whichPlanetsTerritory(tile.hex)
       if (planet) drawFromData(c, 'hexVert', ...getXYfromHex(tile.hex), () => getPlayerColour(planet.owner, 0.5))
-      if (debug) drawText(c, `${territoryState(tile.hex)}`, ...getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
+      if (debug) drawText(c, `TS:${territoryState(tile.hex)}`, ...getXYfromHex(tile.hex).add(new Vec(-30, -30)), 14)
       if (debug) drawText(c, `${tile.hex.id}`, ...getXYfromHex(tile.hex).addXY(-40, +40), 14, 'grey')
+      if (true) drawText(c, `V:${viewMask[id]}`, ...getXYfromHex(tile.hex).addXY(+40, 0), 14, 'green')
     }
   }
 
@@ -175,9 +177,7 @@ function drawAssetsAndChangeables (v, i = 1) {
 
       if (gameSprites[ship.type]) {
         const { x, y } = getXYfromHex(ship.hex)
-        let transparency = 1
-        if (ship.owner !== state.playerTurn || (ship.moved && ship.attacked)) { transparency = 0.4 }
-        drawFromData(c, ship.type, x, y, getColMap(ship.owner, transparency))
+        drawFromData(c, ship.type, x, y, getColMap(ship.owner))
       }
 
       drawText(c, `${Math.round(ship.shield + ship.hull)}`, ...getXYfromHex(ship.hex).add(new Vec(-20, 45)), 20, 'white')
@@ -239,7 +239,8 @@ function drawlog () {
 }
 
 function drawButtons (v) {
-  drawOverlayText(v)
+  //console.log("drawing plater text");
+  //drawOverlayText(v)
   const c = v.buffers[0].getContext('2d')
   clear(c)
   const buttons = data.floatingButtons
@@ -247,16 +248,20 @@ function drawButtons (v) {
     const pos = b.dimensionMultiplier.scaleByVec(v.screenCenter).add(b.offset)
     drawFromData(c, b.sprite, ...pos, getColMap(state.playerTurn, 1), b.size / 100, 0)
   })
+  drawOverlayText(v)
+    //drawText(c, 'Player',  20, 20, 15, 'white')
 
   function drawOverlayText (v) {
     const c = v.buffers[0].getContext('2d')
     const { x, y } = v.center.scaleXY(0, -1)
     const player = state.playerTurn
     const pdata = state.playerData[player]
-    drawText(c, 'Player', x - 200, y + 20, 15, 'white')
+    console.log("drawing plater text");
+    
+    drawText(c, 'Player', x -200,  y + 20, 15, 'white')
     drawText(c, player, x - 180, y + 40, 15, 'white')
     drawText(c, 'Turn', x - 150, y + 20, 15, 'white')
-    drawText(c, state.turnNumber, x - 125, y + 40, 15, 'white')
+    drawText(c, state.turnNumber, x - 150, y + 40, 15, 'white')
     if (!preturn) {
       drawText(c, 'Money', x - 105, y + 20, 15, 'white')
       drawText(c, `${pdata.money}  ( ${pdata.income} )`, x - 105, y + 40, 15, 'white')

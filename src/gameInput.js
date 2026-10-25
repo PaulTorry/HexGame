@@ -111,7 +111,9 @@ const views = {
 const board = new Board(document.getElementById('board'), views, views.spaceView,
   [views.buttons, views.floatingButtons], {
     drawScreen: drawScreen,
-    deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } },
+    deSelect: function () { sel = { state: 0, actions: { attacks: [], menu: [] }, moves: [] } 
+      stale.selection = true
+    },    
     boardClick: overlayClick
   }, new Vec(400, 400)
 )

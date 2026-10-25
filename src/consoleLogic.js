@@ -39,6 +39,7 @@ function interactiveConsole (num = '') {
 
   if (ans === '1') {
     setupGameViaPrompt()
+    makeStale()
   }
   if (ans === '2') {
     const saveLoad = prompt('Load or Save\n 1: Load\n 2: Save', '1')
@@ -48,6 +49,7 @@ function interactiveConsole (num = '') {
   if (ans === '3') {
     const saveLoad = prompt('Load or Save\n 1: Load\n 2: Save', '1')
     if (saveLoad === '1') { loadNetworkGameConsole() } else if (saveLoad === '2') { saveToServer() }
+    makeStale()
   }
   if (ans === '4') {
     const cheat = prompt('How do you want to cheat\n 1: Money\n 2: Tech\n 3: View and debug\n 4: All', '1')
@@ -63,6 +65,7 @@ function interactiveConsole (num = '') {
       data.techs.forEach(t => { state.playerData[state.playerTurn].tech[t.tech] = true })
       state.playerData[state.playerTurn].money = 999
     }
+    makeStale()
   }
   if (ans === '5') { screenSettings.showTrails = !screenSettings.showTrails }
   if (ans === '6') { loginSignupConsole() }
